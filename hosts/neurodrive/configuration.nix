@@ -237,6 +237,7 @@
       prusa-slicer
       intel-gpu-tools
       rustup
+      nixd
     
       (koboldcpp.override {
         cublasSupport = true;
@@ -248,23 +249,29 @@
 
       (vscode-with-extensions.override {
          vscodeExtensions = with vscode-extensions; [
-           bbenoist.nix
-	   ms-python.python
-           ms-azuretools.vscode-docker
-           ms-vscode-remote.remote-ssh
-           
-	   vadimcn.vscode-lldb
-	   rust-lang.rust-analyzer
-	   mhutchie.git-graph
+           mhutchie.git-graph
            donjayamanne.githistory
            eamodio.gitlens
-	 ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-	   {
-	     name = "openscad";
-	     publisher = "Antyos";
-	     version = "1.3.1";
-	     sha256 = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
-	   }  
+           ms-vscode-remote.remote-ssh
+           vadimcn.vscode-lldb
+           mkhl.direnv
+
+           jnoortheen.nix-ide
+           arrterian.nix-env-selector
+
+           ms-python.python
+
+           ms-azuretools.vscode-docker
+           
+           rust-lang.rust-analyzer
+
+         ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+           {
+             name = "openscad";
+             publisher = "Antyos";
+             version = "1.3.1";
+             sha256 = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
+           }  
          ];
       })
     ];
