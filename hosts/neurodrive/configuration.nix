@@ -12,7 +12,6 @@ in
   ];
 
   nixpkgs.config = {
-    allowUnfree = true;
     cudaSupport = true;
     cudnnSupport = true;
 
@@ -22,57 +21,12 @@ in
     joypixels.acceptLicense = true;
   };
   
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 14d";
-  };
-
   nix.settings = {
     # Logical cores: 12
     max-jobs = 10;
     # Max make some builds non deterministic
     cores = 10;
   };
-
-  nix.optimise = {
-    automatic = true;
-    dates = [
-      "15:00"
-    ];
-  };
-
-  programs.nix-ld.enable = true;
-  programs.appimage.binfmt = true;
-
-  security.sudo = {
-    enable = true;
-    extraConfig = ''
-      @includedir ${builtins.dirOf config.sops.secrets."sudoers/optional".path} 
-    '';
-  };
-
-  security.polkit.enable = true;
-  security.polkit.extraConfig = ''
-    polkit.addRule(function(action, subject) {
-      if (
-        subject.isInGroup("users")
-          && (
-            action.id == "org.freedesktop.login1.hibernate" ||
-            action.id == "org.freedesktop.login1.hibernate-multiple-sessions"
-          )
-        )
-      {
-        return polkit.Result.YES;
-      }
-    });
-  '';
-
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;	
@@ -465,7 +419,6 @@ in
       PasswordAuthentication = false;
     };
   };
-
   
   programs.steam = {
     enable = true;
@@ -510,7 +463,6 @@ in
     # May have improved now
     open = true;
   };
-
 
   security.wrappers.restic = {
     source = "${pkgs.restic.out}/bin/restic";

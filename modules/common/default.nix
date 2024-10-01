@@ -1,8 +1,31 @@
-{ config, lib, pkgs, inputs, ...} : {
-  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+{ config, lib, ... }: {
+  imports = [
+    ./security.nix
+  ];
+  
+  nixpkgs.config.allowUnfree = true;
 
-  sops.secrets."sudoers/optional" = {
-    format = "binary";
-    sopsFile = ../../secrets/common/sudoers;
-  };  
+  nix = {
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+    };  
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 2w";
+    };
+    optimise = {
+      automatic = true;
+      dates = [
+        "15:00"
+      ];
+    };
+  };
+  programs.nix-ld.enable = true;
+  programs.appimage.binfmt = true;
+  
+  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 }  
