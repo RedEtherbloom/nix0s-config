@@ -142,6 +142,7 @@
     #["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
   };
 
+  myOptions.basePkgs.enabled = true;
   users.users.inf = {
     isNormalUser = true;
     description = "Infinity";
@@ -153,73 +154,7 @@
       "lp"
     ];
     packages = with pkgs; [
-      firefox
-      chromium
-      kate
-      vlc
-      mpv
-      feh
-      flameshot
-      prusa-slicer
-      taskwarrior3
-      taskwarrior-tui
-
-      kdePackages.kalk
-      libreoffice-qt
-      hunspell
-      hunspellDicts.en_US
-      hunspellDicts.de_DE
-      gimp
-
-      thunderbird
-      #Redundant?
-      bitwarden
-      bitwarden-cli
-      telegram-desktop
-      threema-desktop
-      signal-desktop
-      discord
-      betterdiscordctl
-      obsidian
-      element-desktop-wayland
-
-      steam
-      mindustry-wayland
-      gcs
-
-      restic
-      autorestic
-      intel-gpu-tools
-      wireguard-tools
-      warp
-      zbar
-      gst_all_1.gst-plugins-good
-      gst_all_1.gst-plugins-bad
-      shotcut
-      nushell
-      kitty
-
-      simple-scan
-      rustup
-      pavucontrol
-
-      wireshark
-      aircrack-ng
-
-      (vscode-with-extensions.override {
-        vscodeExtensions = with vscode-extensions; [
-          bbenoist.nix
-          ms-python.python
-          ms-azuretools.vscode-docker
-          ms-vscode-remote.remote-ssh
-
-          vadimcn.vscode-lldb
-          rust-lang.rust-analyzer
-          mhutchie.git-graph
-          donjayamanne.githistory
-          eamodio.gitlens
-        ];
-      })
+      aircrack-ng   
     ];
   };
 
@@ -258,61 +193,6 @@
     histSize = 10000;
   };
   users.defaultUserShell = pkgs.zsh;
-
-  environment.systemPackages = with pkgs; [
-    file
-    htop
-    powertop
-    ncdu
-    dust
-    lshw
-    comma
-    zip
-    unzip
-    unar
-    sshfs
-    dig
-    nmap
-    wget
-    git
-    git-lfs
-    mosh
-    magic-wormhole
-    magic-wormhole-rs
-    hyfetch
-    thefuck
-    wl-clipboard
-
-    gnupg
-    pinentry-qt
-
-    ripgrep
-    # PDFs etc
-    ripgrep-all
-    fd
-    jq
-    fzf
-    poppler_utils
-
-    neovim
-    ranger
-
-    # ZSH
-    zoxide
-
-    pciutils
-    usbutils
-
-    clang
-    clang-tools
-    direnv
-    python3
-  ];
-
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-qt;
-  };
 
   environment.variables.EDITOR = "nvim";
 
