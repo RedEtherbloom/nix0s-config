@@ -17,13 +17,6 @@
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;
-
-    allowUnfreePredicate =
-      pkg:
-      builtins.elem (lib.getName pkg) [
-        "joypixels"
-      ];
-    joypixels.acceptLicense = true;
   };
 
   nix.settings = {
