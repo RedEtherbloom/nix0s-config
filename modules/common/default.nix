@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ ... }:
 {
   imports = [
     ./base_pkgs.nix
