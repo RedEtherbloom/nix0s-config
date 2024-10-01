@@ -237,7 +237,6 @@
       prusa-slicer
       intel-gpu-tools
       rustup
-      nixd
     
       (koboldcpp.override {
         cublasSupport = true;
@@ -356,6 +355,9 @@
      python3Full
      clang
      clang-tools
+     nixfmt-rfc-style
+     nixd
+     direnv
 
      wireguard-tools
 
