@@ -175,6 +175,7 @@
     #};
   };
 
+  myOptions.basePkgs.enabled = true;
   users.users.inf = {
     isNormalUser = true;
     description = "Infinity";
@@ -188,102 +189,15 @@
     ];
 
     packages = with pkgs; [
+      krita
+
+      # FNV Mod launcher
       zenity
       yad
-
-      tor-browser
-      chromium
-      kate
-      obsidian
-      vlc
-      mpv
-      yt-dlp
-      feh
-      gimp
-      krita
-      simple-scan
-      flameshot
-      thunderbird
-      bitwarden
-      bitwarden-cli
-      obsidian
-      taskwarrior3
-      taskwarrior-tui
-      nushell
-      kitty
-      kdePackages.kalk
-
-      libreoffice-qt
-      hunspell
-      hunspellDicts.de_DE
-
-      shotcut
-      audacity
-      helvum
-      pavucontrol
-
-      warp
-      kdePackages.kdeconnect-kde
-      wl-clipboard
-
-      joypixels
-
-      telegram-desktop
-      threema-desktop
-      signal-desktop
-      mumble
-      discord
-      betterdiscordctl
-      # Is this just for the desktop file?
-      element-desktop
-      element-desktop-wayland
-
-      mindustry-wayland
-
-      kicad
-      openscad-unstable
-      prusa-slicer
-      intel-gpu-tools
-      rustup
-
-      (koboldcpp.override {
-        cublasSupport = true;
-      })
-      wireshark
-
       # Does my bar approach need this?
       openal
 
-      (vscode-with-extensions.override {
-        vscodeExtensions =
-          with vscode-extensions;
-          [
-            mhutchie.git-graph
-            donjayamanne.githistory
-            eamodio.gitlens
-            ms-vscode-remote.remote-ssh
-            vadimcn.vscode-lldb
-            mkhl.direnv
-
-            jnoortheen.nix-ide
-            arrterian.nix-env-selector
-
-            ms-python.python
-
-            ms-azuretools.vscode-docker
-
-            rust-lang.rust-analyzer
-
-          ]
-          ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-            {
-              name = "openscad";
-              publisher = "Antyos";
-              version = "1.3.1";
-              sha256 = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
-            }
-          ];
-      })
+      koboldcpp
     ];
   };
 
@@ -314,87 +228,14 @@
   users.defaultUserShell = pkgs.zsh;
 
   environment.systemPackages = with pkgs; [
-    age
-    file
-    htop
-    powertop
-    dust
-    dua
-    ddrescue
-    # losetup etc.
-    util-linux
-    zip
-    unzip
-    unar
-    p7zip
-    wget
-    psmisc
-    git
-    git-lfs
-    mosh
-    tmux
-    sshfs
-    magic-wormhole
-    magic-wormhole-rs
-    hyfetch
-    comma
-    restic
-    autorestic
-
-    appimage-run
-    fuse3
-    fuse
-
-    gnupg
-    pinentry-qt
-
-    ripgrep
-    # pdfs 
-    ripgrep-all
-    fd
-    jq
-    fzf
-    poppler_utils
-    unixtools.xxd
-    dig
-
-    neovim
-    ranger
-
-    zoxide
-
-    python3Full
-    clang
-    clang-tools
-    nixfmt-rfc-style
-    nixd
-    direnv
-
-    wireguard-tools
-
     cachix
     cudaPackages.cudatoolkit
     cudaPackages.cudnn
     nvtopPackages.full
-
-    # KDE info packages
-    clinfo
-    glxinfo
-    vulkan-tools
-    wayland-utils
-    pciutils
-    aha
-
-    ffmpeg-full
   ];
 
   services.fwupd.enable = true;
   programs.adb.enable = true;
-
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-qt;
-  };
 
   environment.variables.EDITOR = "nvim";
   environment.sessionVariables = {
