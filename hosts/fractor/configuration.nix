@@ -1,0 +1,357 @@
+{ config, fetchurl, inputs, lib, pkgs, ... }:
+let 
+  wireguard = import ../../modules/wireguard/default.nix;
+in  
+{
+  imports = [
+    ../../modules/common/default.nix
+
+    ./hardware-configuration.nix
+  ];
+
+  # X230 has 2 Cores, a 4 logical cores
+  nix.settings = {
+    max-jobs = 3;
+    cores = 3;
+  };  
+
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.resumeDevice = "/dev/disk/by-uuid/8b4a84dd-2d8e-4236-b3bf-c5b961edc815";
+  boot.initrd.luks.devices."crypt-nixos" = {
+    device = "/dev/disk/by-uuid/6e00cfe8-f82f-4ca1-ad93-32bea67951c6";
+    bypassWorkqueues = true;
+    # Potential security implications
+    allowDiscards = true;
+  };
+  services.fstrim.enable = true;
+
+  networking.hostName = "fractor";
+  networking.networkmanager.enable = true;
+  networking.networkmanager.wifi.powersave = false;
+  systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
+  
+  networking.firewall.allowedTCPPorts = [
+    #TODO: Pulseaudio Network Sharing. Probably only needed for publush
+    4713
+  ];
+  networking.firewall.allowedUDPPorts = [] ++ (lib.attrsets.mapAttrsToList 
+    (name: value: value.listenPort) config.networking.wireguard.interfaces
+  );
+
+  sops.secrets."wireguard/wg0_private" = {
+    format = "binary";
+    sopsFile = "${inputs.our-secrets}/secrets/fractor/wireguard/wg0.priv";
+  };  
+  sops.secrets."wireguard/wg1_private" = {
+    format = "binary";
+    sopsFile = "${inputs.our-secrets}/secrets/fractor/wireguard/wg1.priv";
+  };  
+  networking.wireguard.interfaces = {
+    wg0 = wireguard.wg0 // {
+      ips = [ "10.69.0.2/32" ];
+      privateKeyFile = config.sops.secrets."wireguard/wg0_private".path;
+    };  
+    wg1 = wireguard.wg1 // {
+      ips = [ "10.68.0.2/32" ];
+      privateKeyFile = config.sops.secrets."wireguard/wg1_private".path;
+    };  
+  };  
+
+  # Affects LUKS unlock
+  console.keyMap = "de";
+
+  # Should hopefully not mess with KDE
+  services.power-profiles-daemon.enable = false;
+  # Power managment, whoop whoop!
+  # Valerie: Think this causes sleep issues :/
+  services.tlp.enable = true;
+  # Maybe this fixes it?
+  services.tlp.settings = {
+    WIFI_PWR_ON_BAT = "off";
+  };
+
+  # Set your time zone.
+  time.timeZone = "Europe/Berlin";
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "de_DE.UTF-8";
+    LC_IDENTIFICATION = "de_DE.UTF-8";
+    LC_MEASUREMENT = "de_DE.UTF-8";
+    LC_MONETARY = "de_DE.UTF-8";
+    LC_NAME = "de_DE.UTF-8";
+    LC_NUMERIC = "de_DE.UTF-8";
+    LC_PAPER = "de_DE.UTF-8";
+    LC_TELEPHONE = "de_DE.UTF-8";
+    LC_TIME = "de_DE.UTF-8";
+  };
+
+  services.displayManager.sddm.wayland.enable = true;
+  # This separate configuration is necessary?
+  services.displayManager.sddm.enable = true;
+  services.desktopManager.plasma6.enable = true;
+
+  # Configure keymap in X11
+  services.xserver.enable = false;
+  services.xserver.xkb = {
+    layout = "de";
+  };
+
+  services.printing.enable = true;
+  services.printing.drivers = with pkgs; [
+    gutenprint
+    foomatic-db
+    foomatic-db-nonfree
+    
+    (callPackage ../../modules/drivers/printers/kyocera-classic-universal-kpdl/default.nix {})
+  ];
+  hardware.sane.enable = true;
+  hardware.sane.drivers.scanSnap.enable = true;
+
+  hardware.pulseaudio.enable = false;
+  # Just for the Port. Need to check if I have to do this
+  hardware.pulseaudio.zeroconf.discovery.enable = true;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+    wireplumber.enable = true;
+  };
+
+  hardware.enableAllFirmware = true;
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+  # Clara: Disable built-in bluetooth. It breaks and crashes frequently
+  services.udev.extraRules = ''
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="0a5c", ATTRS{idProduct}=="21e6", ATTR{authorized}="0"
+  '';  
+
+  hardware.bluetooth.settings = {
+    General = {
+      Experimental = true;
+      ControllerMode = "bredr";
+      
+      # Die HFP mode, die, die, die!
+      Disable = "Headset";
+    };
+  };
+
+  environment.etc = {
+	"wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
+		bluez_monitor.properties = {
+			["bluez5.enable-sbc-xq"] = true,
+			["bluez5.enable-msbc"] = true,
+			["bluez5.enable-hw-volume"] = true,
+                }
+	'';
+	# Trying to disable headset mode, some of these aren't as attrocious as I originally thought though
+	#["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
+  };
+
+  users.users.inf = {
+    isNormalUser = true;
+    description = "Infinity";
+    extraGroups = [ "networkmanager" "wheel" "adbusers" "scanner" "lp" ];
+    packages = with pkgs; [
+      firefox
+      chromium
+      kate
+      vlc
+      mpv
+      feh
+      flameshot
+      prusa-slicer
+      taskwarrior3
+      taskwarrior-tui
+      
+      kdePackages.kalk
+      libreoffice-qt
+      hunspell
+      hunspellDicts.en_US
+      hunspellDicts.de_DE
+      gimp
+
+      thunderbird
+      #Redundant?
+      bitwarden
+      bitwarden-cli
+      telegram-desktop
+      threema-desktop
+      signal-desktop
+      discord
+      betterdiscordctl
+      obsidian
+      element-desktop-wayland
+
+      steam
+      mindustry-wayland
+      gcs
+
+      restic
+      autorestic
+      intel-gpu-tools
+      wireguard-tools
+      warp
+      zbar
+      gst_all_1.gst-plugins-good
+      gst_all_1.gst-plugins-bad
+      shotcut
+      nushell
+      kitty
+
+      simple-scan
+      rustup
+      pavucontrol
+
+      wireshark
+      aircrack-ng
+
+      (vscode-with-extensions.override {
+         vscodeExtensions = with vscode-extensions; [
+           bbenoist.nix
+           ms-python.python
+           ms-azuretools.vscode-docker
+           ms-vscode-remote.remote-ssh
+           
+	   vadimcn.vscode-lldb
+	   rust-lang.rust-analyzer
+	   mhutchie.git-graph
+           donjayamanne.githistory
+           eamodio.gitlens
+         ];
+      })
+    ];
+  };
+  
+  programs.kdeconnect.enable = true;
+
+  # ZSH
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    vteIntegration = true;
+    autosuggestions = {
+      enable = true;
+      strategy = [
+        "match_prev_cmd"
+        "history"
+        "completion"
+      ];
+    };  
+    syntaxHighlighting.enable = true;
+
+    ohMyZsh = {
+      enable = true;
+      theme = "ys";
+      plugins = [
+        "git"
+        "thefuck"
+      ];  
+    };
+
+    shellAliases = {
+      ll = "ls -l";
+      check-nix-config = "sudo nix-instantiate '<nixpkgs/nixos>' -A system";
+      zix-shell = "nix-shell --command 'zsh'";
+    };
+
+    histSize = 10000;
+  };
+  users.defaultUserShell = pkgs.zsh;
+
+  environment.systemPackages = with pkgs; [
+     file
+     htop
+     powertop
+     ncdu
+     dust
+     lshw
+     comma
+     zip
+     unzip
+     unar
+     sshfs
+     dig
+     nmap
+     wget
+     git
+     git-lfs
+     mosh
+     magic-wormhole
+     magic-wormhole-rs
+     hyfetch
+     thefuck
+     wl-clipboard
+     
+     gnupg
+     pinentry-qt
+
+     ripgrep
+     # PDFs etc
+     ripgrep-all
+     fd
+     jq
+     fzf
+     poppler_utils
+     
+     neovim
+     ranger
+
+     # ZSH
+     zoxide
+
+     pciutils
+     usbutils
+     
+     clang
+     clang-tools
+     direnv
+     python3
+  ];
+
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryPackage = pkgs.pinentry-qt;
+  };
+  
+  environment.variables.EDITOR = "nvim";
+  
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    nssmdns6 = true;
+    openFirewall = true;
+  };
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    # Probably only needed when hosting a source server? Stays disabled for now >:³
+    #dedicatedServer.openFirewall = true;
+  };
+
+  # IntelGPU Hardware Acceleration
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      #intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      libvdpau-va-gl
+    ];
+  };
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "i965"; };
+
+  # Android
+  programs.adb.enable = true;
+  
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "23.11"; # Did you read the comment?
+}

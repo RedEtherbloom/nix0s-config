@@ -97,11 +97,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1737550227,
-        "narHash": "sha256-zHD2Ex7FnNkmBSNhWAatPMFH0pUISpfsfp6/AOQdxLU=",
+        "lastModified": 1737550229,
+        "narHash": "sha256-a/ZMRB6C+eXj/RRJbHBz67AuDEE55eYv92jPlYmIPzQ=",
         "ref": "main",
-        "rev": "df4f0c7345cfc0109145230556dcc5adeb646478",
-        "revCount": 1,
+        "rev": "fd91457a22a643e90a3a0deb320a38af1afb670f",
+        "revCount": 2,
         "type": "git",
         "url": "https://github.com/RedEtherbloom/nix0s-secrets.git"
       },
