@@ -1,7 +1,8 @@
-{ stdenv
-, lib
-, fetchzip
-, locality ? "English"
+{
+  stdenv,
+  lib,
+  fetchzip,
+  locality ? "English",
 }:
 
 stdenv.mkDerivation rec {

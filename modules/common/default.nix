@@ -1,8 +1,9 @@
-{ config, lib, ... }: {
+{ config, lib, ... }:
+{
   imports = [
     ./security.nix
   ];
-  
+
   nixpkgs.config.allowUnfree = true;
 
   nix = {
@@ -11,7 +12,7 @@
         "nix-command"
         "flakes"
       ];
-    };  
+    };
     gc = {
       automatic = true;
       dates = "weekly";
@@ -26,6 +27,6 @@
   };
   programs.nix-ld.enable = true;
   programs.appimage.binfmt = true;
-  
+
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-}  
+}

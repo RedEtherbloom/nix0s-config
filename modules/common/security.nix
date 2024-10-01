@@ -1,4 +1,4 @@
-{ config, lib, ... }: 
+{ config, lib, ... }:
 with lib;
 let
   cfg = config.security.ownAdditional;
@@ -22,14 +22,14 @@ in
       sops.secrets."sudoers/optional" = {
         format = "binary";
         sopsFile = ../../secrets/common/sudoers;
-      };  
+      };
       security.sudo = {
         enable = true;
         extraConfig = ''
           @includedir ${builtins.dirOf config.sops.secrets."sudoers/optional".path} 
         '';
       };
-      
+
       # in µs
       security.pam.services.sudo.failDelay.delay = 200000;
     })
