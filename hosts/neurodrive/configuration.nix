@@ -1,8 +1,14 @@
-{ config, inputs, lib, pkgs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ../../modules/cachix.nix
-    
+
     ../../modules/common/default.nix
     ../../modules/wireguard/default.nix
 
@@ -13,12 +19,14 @@
     cudaSupport = true;
     cudnnSupport = true;
 
-    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-      "joypixels"
-    ];
+    allowUnfreePredicate =
+      pkg:
+      builtins.elem (lib.getName pkg) [
+        "joypixels"
+      ];
     joypixels.acceptLicense = true;
   };
-  
+
   nix.settings = {
     # Logical cores: 12
     max-jobs = 10;
@@ -27,7 +35,7 @@
   };
 
   boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;	
+  boot.loader.efi.canTouchEfiVariables = true;
   boot.consoleLogLevel = 7;
   # TODO: Redo
   boot.plymouth = with pkgs; {
@@ -55,12 +63,12 @@
     options = [
       "nofail"
     ];
-  };  
+  };
   services.fstrim.enable = true;
 
   # Networking
   time.timeZone = "Europe/Berlin";
-  networking.hostName = "neurodrive"; 
+  networking.hostName = "neurodrive";
   networking.networkmanager.enable = true;
   networking.interfaces."enp0s25".wakeOnLan.enable = true;
   # Issues with builds randomly failing
@@ -75,7 +83,7 @@
   networking.ownWireguard = {
     enabled = true;
     lastIPDigit = 3;
-  };  
+  };
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -91,7 +99,7 @@
     LC_TELEPHONE = "de_DE.UTF-8";
     LC_TIME = "de_DE.UTF-8";
   };
-  
+
   services.xserver.xkb = {
     layout = "de";
   };
@@ -128,7 +136,7 @@
       ControllerMode = "bredr";
     };
   };
-  
+
   services.pipewire.wireplumber.extraConfig = {
     "disable-hfp-autoswitch" = {
       "wireplumber.settings" = {
@@ -158,7 +166,7 @@
         }
       ];
     };
-    
+
     #"log-level-debug" = {
     #  "context.properties" = {
     #      # Output Debug log messages as opposed to only the default level (Notice)
@@ -170,7 +178,7 @@
   users.users.inf = {
     isNormalUser = true;
     description = "Infinity";
-    extraGroups = [ 
+    extraGroups = [
       "networkmanager"
       "wheel"
       "adbusers"
@@ -182,7 +190,7 @@
     packages = with pkgs; [
       zenity
       yad
-      
+
       tor-browser
       chromium
       kate
@@ -204,7 +212,7 @@
       nushell
       kitty
       kdePackages.kalk
-      
+
       libreoffice-qt
       hunspell
       hunspellDicts.de_DE
@@ -229,7 +237,7 @@
       # Is this just for the desktop file?
       element-desktop
       element-desktop-wayland
-      
+
       mindustry-wayland
 
       kicad
@@ -237,7 +245,7 @@
       prusa-slicer
       intel-gpu-tools
       rustup
-    
+
       (koboldcpp.override {
         cublasSupport = true;
       })
@@ -247,31 +255,34 @@
       openal
 
       (vscode-with-extensions.override {
-         vscodeExtensions = with vscode-extensions; [
-           mhutchie.git-graph
-           donjayamanne.githistory
-           eamodio.gitlens
-           ms-vscode-remote.remote-ssh
-           vadimcn.vscode-lldb
-           mkhl.direnv
+        vscodeExtensions =
+          with vscode-extensions;
+          [
+            mhutchie.git-graph
+            donjayamanne.githistory
+            eamodio.gitlens
+            ms-vscode-remote.remote-ssh
+            vadimcn.vscode-lldb
+            mkhl.direnv
 
-           jnoortheen.nix-ide
-           arrterian.nix-env-selector
+            jnoortheen.nix-ide
+            arrterian.nix-env-selector
 
-           ms-python.python
+            ms-python.python
 
-           ms-azuretools.vscode-docker
-           
-           rust-lang.rust-analyzer
+            ms-azuretools.vscode-docker
 
-         ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-           {
-             name = "openscad";
-             publisher = "Antyos";
-             version = "1.3.1";
-             sha256 = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
-           }  
-         ];
+            rust-lang.rust-analyzer
+
+          ]
+          ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+            {
+              name = "openscad";
+              publisher = "Antyos";
+              version = "1.3.1";
+              sha256 = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
+            }
+          ];
       })
     ];
   };
@@ -303,78 +314,78 @@
   users.defaultUserShell = pkgs.zsh;
 
   environment.systemPackages = with pkgs; [
-     age
-     file
-     htop
-     powertop
-     dust
-     dua
-     ddrescue
-     # losetup etc.
-     util-linux
-     zip
-     unzip
-     unar
-     p7zip
-     wget
-     psmisc
-     git
-     git-lfs
-     mosh
-     tmux
-     sshfs
-     magic-wormhole
-     magic-wormhole-rs
-     hyfetch
-     comma
-     restic
-     autorestic
-     
-     appimage-run
-     fuse3
-     fuse
+    age
+    file
+    htop
+    powertop
+    dust
+    dua
+    ddrescue
+    # losetup etc.
+    util-linux
+    zip
+    unzip
+    unar
+    p7zip
+    wget
+    psmisc
+    git
+    git-lfs
+    mosh
+    tmux
+    sshfs
+    magic-wormhole
+    magic-wormhole-rs
+    hyfetch
+    comma
+    restic
+    autorestic
 
-     gnupg
-     pinentry-qt
+    appimage-run
+    fuse3
+    fuse
 
-     ripgrep
-     # pdfs 
-     ripgrep-all
-     fd
-     jq
-     fzf
-     poppler_utils
-     unixtools.xxd
-     dig
+    gnupg
+    pinentry-qt
 
-     neovim
-     ranger
+    ripgrep
+    # pdfs 
+    ripgrep-all
+    fd
+    jq
+    fzf
+    poppler_utils
+    unixtools.xxd
+    dig
 
-     zoxide
-    
-     python3Full
-     clang
-     clang-tools
-     nixfmt-rfc-style
-     nixd
-     direnv
+    neovim
+    ranger
 
-     wireguard-tools
+    zoxide
 
-     cachix
-     cudaPackages.cudatoolkit
-     cudaPackages.cudnn
-     nvtopPackages.full
+    python3Full
+    clang
+    clang-tools
+    nixfmt-rfc-style
+    nixd
+    direnv
 
-     # KDE info packages
-     clinfo
-     glxinfo
-     vulkan-tools
-     wayland-utils
-     pciutils
-     aha
+    wireguard-tools
 
-     ffmpeg-full
+    cachix
+    cudaPackages.cudatoolkit
+    cudaPackages.cudnn
+    nvtopPackages.full
+
+    # KDE info packages
+    clinfo
+    glxinfo
+    vulkan-tools
+    wayland-utils
+    pciutils
+    aha
+
+    ffmpeg-full
   ];
 
   services.fwupd.enable = true;
@@ -384,14 +395,14 @@
     enable = true;
     pinentryPackage = pkgs.pinentry-qt;
   };
-  
+
   environment.variables.EDITOR = "nvim";
   environment.sessionVariables = {
     # Smooth scrolling
     MOZ_USE_XINPUT2 = "1";
   };
   environment.sessionVariables = {
-    LIBVA_DRIVER_NAME = "nvidia"; 
+    LIBVA_DRIVER_NAME = "nvidia";
     MOZ_DISABLE_RDD_SANDBOX = "1";
   };
 
@@ -409,7 +420,7 @@
       PasswordAuthentication = false;
     };
   };
-  
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
@@ -428,16 +439,16 @@
       nvidia-vaapi-driver
     ];
   };
- 
+
   boot.kernelPackages = pkgs.linuxPackages_latest;
   # Includes Wayland
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = true;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.latest;
-    
+
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
     powerManagement.finegrained = false;
@@ -468,6 +479,6 @@
     dataDir = "/mnt/restic_data/restic";
     listenAddress = "8193";
   };
-  
-  system.stateVersion = "24.05"; 
+
+  system.stateVersion = "24.05";
 }

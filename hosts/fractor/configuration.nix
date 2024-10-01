@@ -1,9 +1,15 @@
-{ config, fetchurl, lib, pkgs, ... }:
+{
+  config,
+  fetchurl,
+  lib,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ../../modules/common/default.nix
     ../../modules/wireguard/default.nix
-    
+
     ./hardware-configuration.nix
   ];
 
@@ -11,7 +17,7 @@
   nix.settings = {
     max-jobs = 3;
     cores = 3;
-  };  
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -29,7 +35,7 @@
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.powersave = false;
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
-  
+
   networking.firewall.allowedTCPPorts = [
     #TODO: Pulseaudio Network Sharing. Probably only needed for publush
     4713
@@ -87,8 +93,8 @@
     gutenprint
     foomatic-db
     foomatic-db-nonfree
-    
-    (callPackage ../../modules/drivers/printers/kyocera-classic-universal-kpdl/default.nix {})
+
+    (callPackage ../../modules/drivers/printers/kyocera-classic-universal-kpdl/default.nix { })
   ];
   hardware.sane.enable = true;
   hardware.sane.drivers.scanSnap.enable = true;
@@ -112,34 +118,40 @@
   # Clara: Disable built-in bluetooth. It breaks and crashes frequently
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ATTRS{idVendor}=="0a5c", ATTRS{idProduct}=="21e6", ATTR{authorized}="0"
-  '';  
+  '';
 
   hardware.bluetooth.settings = {
     General = {
       Experimental = true;
       ControllerMode = "bredr";
-      
+
       # Die HFP mode, die, die, die!
       Disable = "Headset";
     };
   };
 
   environment.etc = {
-	"wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
-		bluez_monitor.properties = {
-			["bluez5.enable-sbc-xq"] = true,
-			["bluez5.enable-msbc"] = true,
-			["bluez5.enable-hw-volume"] = true,
-                }
-	'';
-	# Trying to disable headset mode, some of these aren't as attrocious as I originally thought though
-	#["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
+    "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
+      		bluez_monitor.properties = {
+      			["bluez5.enable-sbc-xq"] = true,
+      			["bluez5.enable-msbc"] = true,
+      			["bluez5.enable-hw-volume"] = true,
+                      }
+      	'';
+    # Trying to disable headset mode, some of these aren't as attrocious as I originally thought though
+    #["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
   };
 
   users.users.inf = {
     isNormalUser = true;
     description = "Infinity";
-    extraGroups = [ "networkmanager" "wheel" "adbusers" "scanner" "lp" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "adbusers"
+      "scanner"
+      "lp"
+    ];
     packages = with pkgs; [
       firefox
       chromium
@@ -151,7 +163,7 @@
       prusa-slicer
       taskwarrior3
       taskwarrior-tui
-      
+
       kdePackages.kalk
       libreoffice-qt
       hunspell
@@ -195,22 +207,22 @@
       aircrack-ng
 
       (vscode-with-extensions.override {
-         vscodeExtensions = with vscode-extensions; [
-           bbenoist.nix
-           ms-python.python
-           ms-azuretools.vscode-docker
-           ms-vscode-remote.remote-ssh
-           
-	   vadimcn.vscode-lldb
-	   rust-lang.rust-analyzer
-	   mhutchie.git-graph
-           donjayamanne.githistory
-           eamodio.gitlens
-         ];
+        vscodeExtensions = with vscode-extensions; [
+          bbenoist.nix
+          ms-python.python
+          ms-azuretools.vscode-docker
+          ms-vscode-remote.remote-ssh
+
+          vadimcn.vscode-lldb
+          rust-lang.rust-analyzer
+          mhutchie.git-graph
+          donjayamanne.githistory
+          eamodio.gitlens
+        ];
       })
     ];
   };
-  
+
   programs.kdeconnect.enable = true;
 
   # ZSH
@@ -225,7 +237,7 @@
         "history"
         "completion"
       ];
-    };  
+    };
     syntaxHighlighting.enable = true;
 
     ohMyZsh = {
@@ -234,7 +246,7 @@
       plugins = [
         "git"
         "thefuck"
-      ];  
+      ];
     };
 
     shellAliases = {
@@ -248,62 +260,62 @@
   users.defaultUserShell = pkgs.zsh;
 
   environment.systemPackages = with pkgs; [
-     file
-     htop
-     powertop
-     ncdu
-     dust
-     lshw
-     comma
-     zip
-     unzip
-     unar
-     sshfs
-     dig
-     nmap
-     wget
-     git
-     git-lfs
-     mosh
-     magic-wormhole
-     magic-wormhole-rs
-     hyfetch
-     thefuck
-     wl-clipboard
-     
-     gnupg
-     pinentry-qt
+    file
+    htop
+    powertop
+    ncdu
+    dust
+    lshw
+    comma
+    zip
+    unzip
+    unar
+    sshfs
+    dig
+    nmap
+    wget
+    git
+    git-lfs
+    mosh
+    magic-wormhole
+    magic-wormhole-rs
+    hyfetch
+    thefuck
+    wl-clipboard
 
-     ripgrep
-     # PDFs etc
-     ripgrep-all
-     fd
-     jq
-     fzf
-     poppler_utils
-     
-     neovim
-     ranger
+    gnupg
+    pinentry-qt
 
-     # ZSH
-     zoxide
+    ripgrep
+    # PDFs etc
+    ripgrep-all
+    fd
+    jq
+    fzf
+    poppler_utils
 
-     pciutils
-     usbutils
-     
-     clang
-     clang-tools
-     direnv
-     python3
+    neovim
+    ranger
+
+    # ZSH
+    zoxide
+
+    pciutils
+    usbutils
+
+    clang
+    clang-tools
+    direnv
+    python3
   ];
 
   programs.gnupg.agent = {
     enable = true;
     pinentryPackage = pkgs.pinentry-qt;
   };
-  
+
   environment.variables.EDITOR = "nvim";
-  
+
   services.avahi = {
     enable = true;
     nssmdns4 = true;
@@ -327,11 +339,13 @@
       libvdpau-va-gl
     ];
   };
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "i965"; };
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "i965";
+  };
 
   # Android
   programs.adb.enable = true;
-  
+
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.11"; # Did you read the comment?

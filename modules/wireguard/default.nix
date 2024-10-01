@@ -11,7 +11,7 @@ in
         type = types.ints.u8;
         description = "Last digit in IPv4 to use for client";
       };
-    };  
+    };
   };
 
   config = mkIf cfg.enabled {
@@ -26,7 +26,7 @@ in
 
     networking.wireguard.interfaces = {
       wg0 = {
-        ips = [ ( "10.69.0." + toString cfg.lastIPDigit + "/32" ) ];
+        ips = [ ("10.69.0." + toString cfg.lastIPDigit + "/32") ];
         listenPort = 51820;
         privateKeyFile = config.sops.secrets."wireguard/wg0_private".path;
         peers = [
@@ -39,7 +39,7 @@ in
         ];
       };
       wg1 = {
-        ips = [ ( "10.68.0." + toString cfg.lastIPDigit + "/32" ) ];
+        ips = [ ("10.68.0." + toString cfg.lastIPDigit + "/32") ];
         listenPort = 51821;
         privateKeyFile = config.sops.secrets."wireguard/wg1_private".path;
         peers = [
@@ -51,9 +51,10 @@ in
           }
         ];
       };
-    };  
-    
-    networking.firewall.allowedUDPPorts = lib.attrsets.mapAttrsToList 
-      (name: value: value.listenPort) config.networking.wireguard.interfaces;
-  };  
+    };
+
+    networking.firewall.allowedUDPPorts = lib.attrsets.mapAttrsToList (
+      name: value: value.listenPort
+    ) config.networking.wireguard.interfaces;
+  };
 }

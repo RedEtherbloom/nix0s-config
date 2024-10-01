@@ -29,7 +29,7 @@ in
           @includedir ${builtins.dirOf config.sops.secrets."sudoers/optional".path} 
         '';
       };
-      
+
       # in µs
       security.pam.services.sudo.failDelay.delay = 200000;
     })
