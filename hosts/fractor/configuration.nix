@@ -1,6 +1,4 @@
 {
-  config,
-  fetchurl,
   lib,
   pkgs,
   ...
