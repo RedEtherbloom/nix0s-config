@@ -1,12 +1,10 @@
 { config, inputs, lib, pkgs, ... }:
-let 
-  wireguard = import ../../modules/wireguard/default.nix;
-in  
 {
   imports = [
     ../../modules/cachix.nix
     
     ../../modules/common/default.nix
+    ../../modules/wireguard/default.nix
 
     ./hardware-configuration.nix
   ];
@@ -73,27 +71,10 @@ in
     4713
     (lib.strings.toInt config.services.restic.server.listenAddress)
   ];
-  networking.firewall.allowedUDPPorts = [] ++ (lib.attrsets.mapAttrsToList 
-    (name: value: value.listenPort) config.networking.wireguard.interfaces
-  );
 
-  sops.secrets."wireguard/wg0_private" = {
-    format = "binary";
-    sopsFile = ../../secrets/neurodrive/wireguard/wg0.priv;
-  };  
-  sops.secrets."wireguard/wg1_private" = {
-    format = "binary";
-    sopsFile = ../../secrets/neurodrive/wireguard/wg1.priv;
-  };  
-  networking.wireguard.interfaces = {
-    wg0 = wireguard.wg0 // {
-      ips = [ "10.69.0.3/32" ];
-      privateKeyFile = config.sops.secrets."wireguard/wg0_private".path;
-    };  
-    wg1 = wireguard.wg1 // {
-      ips = [ "10.68.0.3/32" ];
-      privateKeyFile = config.sops.secrets."wireguard/wg1_private".path;
-    };  
+  networking.ownWireguard = {
+    enabled = true;
+    lastIPDigit = 3;
   };  
 
   # Select internationalisation properties.

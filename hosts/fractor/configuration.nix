@@ -1,11 +1,9 @@
 { config, fetchurl, lib, pkgs, ... }:
-let 
-  wireguard = import ../../modules/wireguard/default.nix;
-in  
 {
   imports = [
     ../../modules/common/default.nix
-
+    ../../modules/wireguard/default.nix;
+    
     ./hardware-configuration.nix
   ];
 
@@ -36,28 +34,11 @@ in
     #TODO: Pulseaudio Network Sharing. Probably only needed for publush
     4713
   ];
-  networking.firewall.allowedUDPPorts = [] ++ (lib.attrsets.mapAttrsToList 
-    (name: value: value.listenPort) config.networking.wireguard.interfaces
-  );
 
-  sops.secrets."wireguard/wg0_private" = {
-    format = "binary";
-    sopsFile = ../../secrets/fractor/wireguard/wg0.priv;
-  };  
-  sops.secrets."wireguard/wg1_private" = {
-    format = "binary";
-    sopsFile = ../../secrets/fractor/wireguard/wg1.priv;
-  };  
-  networking.wireguard.interfaces = {
-    wg0 = wireguard.wg0 // {
-      ips = [ "10.69.0.2/32" ];
-      privateKeyFile = config.sops.secrets."wireguard/wg0_private".path;
-    };  
-    wg1 = wireguard.wg1 // {
-      ips = [ "10.68.0.2/32" ];
-      privateKeyFile = config.sops.secrets."wireguard/wg1_private".path;
-    };  
-  };  
+  networking.ownWireguard = {
+    enabled = true;
+    lastIPDigit = 2
+  ];
 
   # Affects LUKS unlock
   console.keyMap = "de";
