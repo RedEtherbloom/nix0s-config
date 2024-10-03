@@ -170,10 +170,6 @@
   ];
 
   environment.sessionVariables = {
-    # Smooth scrolling
-    MOZ_USE_XINPUT2 = "1";
-  };
-  environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "nvidia";
     MOZ_DISABLE_RDD_SANDBOX = "1";
   };
