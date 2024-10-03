@@ -263,7 +263,6 @@
     ];
   };
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
   # Includes Wayland
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
