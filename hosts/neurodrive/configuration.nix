@@ -225,6 +225,7 @@ in
   };
 
   sops.secrets."restic_server/private_certificate" = {
+    owner = "restic";
     format = "binary";
     sopsFile = ../../secrets/neurodrive/restic_server/certificate.priv;
   };
@@ -236,8 +237,10 @@ in
     listenAddress = "8193";
     extraFlags = [
       "--tls"
-      "--tls-key ${restic_certificate}"
-      "--tls-cert ${restic_public_key}"
+      "--tls-key"
+      restic_certificate
+      "--tls-cert" 
+      restic_public_key
     ];
   };
 
