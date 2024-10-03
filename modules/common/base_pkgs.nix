@@ -223,7 +223,7 @@ in
         MOZ_USE_XINPUT2 = "1";
       };
     })
-    (mkIf (config.userPackages && config.steam) {
+    (mkIf (cfg.userPackages && cfg.steam) {
       programs.steam = {
         enable = true;
         remotePlay.openFirewall = true;
