@@ -5,6 +5,10 @@
   pkgs,
   ...
 }:
+let 
+  restic_certificate = config.sops.secrets."restic_server/private_certificate".path;
+  restic_public_key = config.sops.secrets."restic_server/public_certificate".path;
+in 
 {
   imports = [
     ../../modules/cachix.nix
@@ -233,8 +237,8 @@
     listenAddress = "8193";
     extraFlags = [
       "--tls"
-      "--tls-key ${config.sops.secrets."restic_server/private_certificate".path}"
-      "--tls-cert ${config.sops.secrets."restic_server/public_certificate".path}"
+      "--tls-key ${restic_certificate}"
+      "--tls-cert ${restic_public_key}"
     ];
   };
 
