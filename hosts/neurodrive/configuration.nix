@@ -217,7 +217,7 @@
     # Currently alpha-quality/buggy, so false is currently the recommended setting.
     #
     # May have improved now
-  open = true     ;
+    open = true;
   };
 
   sops.secrets."restic_server/private_certificate" = {
@@ -230,7 +230,11 @@
     privateRepos = true;
     dataDir = "/mnt/restic_data/restic";
     listenAddress = "8193";
-    extraFlags = [ "--tls-cert ${config.sops.secrets.restic_server.private_certificate.path}" ];
+    extraFlags = [
+      "--tls"
+      "--tls-key ${config.sops.secrets."restic_server/private_certificate".path}"
+      "--tls-cert ${config.sops.secrets."restic_server/public_certificate".path}"
+    ];
   };
 
   system.stateVersion = "24.05";
