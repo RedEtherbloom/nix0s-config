@@ -212,6 +212,11 @@ in
 
       programs.firefox.enable = true;
       programs.kdeconnect.enable = true;
+
+      environment.sessionVariables = {
+        # Smooth scrolling
+        MOZ_USE_XINPUT2 = "1";
+      };
     })
   ]);
 }
