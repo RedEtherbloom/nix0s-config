@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./base_pkgs.nix
@@ -29,6 +29,15 @@
   };
   programs.nix-ld.enable = true;
   programs.appimage.binfmt = true;
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.consoleLogLevel = 7;
+  # TODO: Redo
+  boot.plymouth = with pkgs; {
+    enable = true;
+    theme = "breeze";
+  };
 
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 }
