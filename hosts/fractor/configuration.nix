@@ -19,9 +19,6 @@
     cores = 3;
   };
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
   boot.resumeDevice = "/dev/disk/by-uuid/8b4a84dd-2d8e-4236-b3bf-c5b961edc815";
   boot.initrd.luks.devices."crypt-nixos" = {
     device = "/dev/disk/by-uuid/6e00cfe8-f82f-4ca1-ad93-32bea67951c6";

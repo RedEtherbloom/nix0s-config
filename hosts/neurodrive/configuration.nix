@@ -26,15 +26,6 @@
     cores = 10;
   };
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.consoleLogLevel = 7;
-  # TODO: Redo
-  boot.plymouth = with pkgs; {
-    enable = true;
-    theme = "breeze";
-  };
-
   # Filesystems
   boot.initrd.luks.devices."nixos-root" = {
     device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
@@ -42,7 +33,6 @@
     # Weakens security
     allowDiscards = true;
   };
-
   boot.initrd.luks.devices."nixos-swap" = {
     device = "/dev/disk/by-uuid/69bd8d21-1c47-4aff-8533-31bf2610c181";
     bypassWorkqueues = true;
