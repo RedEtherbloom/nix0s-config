@@ -3,6 +3,7 @@
   imports = [
     ./base_pkgs.nix
     ./localisation.nix
+    ./restic.nix
     ./security.nix
     ./zsh.nix
   ];
