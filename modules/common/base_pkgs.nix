@@ -113,6 +113,10 @@ in
         enable = true;
         defaultEditor = true;
       };
+
+      services.fwupd.enable = true;
+      services.fstrim.enable = true;
+      programs.adb.enable = true;
     })
     (mkIf cfg.userPackages {
       users.users.inf.packages = with pkgs; [

@@ -46,7 +46,6 @@
       "nofail"
     ];
   };
-  services.fstrim.enable = true;
 
   # Networking
   time.timeZone = "Europe/Berlin";
@@ -189,9 +188,6 @@
     cudaPackages.cudnn
     nvtopPackages.full
   ];
-
-  services.fwupd.enable = true;
-  programs.adb.enable = true;
 
   environment.sessionVariables = {
     # Smooth scrolling

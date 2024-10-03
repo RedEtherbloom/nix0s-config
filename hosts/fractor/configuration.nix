@@ -26,7 +26,6 @@
     # Potential security implications
     allowDiscards = true;
   };
-  services.fstrim.enable = true;
 
   networking.hostName = "fractor";
   networking.networkmanager.enable = true;
@@ -181,9 +180,6 @@
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "i965";
   };
-
-  # Android
-  programs.adb.enable = true;
 
   # TODO: Reread secrets managment with yaml
   sops.secrets."resticPassword" = {
