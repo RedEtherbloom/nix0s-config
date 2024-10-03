@@ -3,6 +3,7 @@
   imports = [
     ./base_pkgs.nix
     ./security.nix
+    ./zsh.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
