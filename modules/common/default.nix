@@ -2,6 +2,7 @@
 {
   imports = [
     ./base_pkgs.nix
+    ./localisation.nix
     ./security.nix
     ./zsh.nix
   ];
