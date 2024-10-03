@@ -57,7 +57,6 @@
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
-  # Configure keymap in X11
   services.xserver.enable = false;
 
   services.printing.enable = true;
@@ -135,13 +134,6 @@
     nssmdns4 = true;
     nssmdns6 = true;
     openFirewall = true;
-  };
-
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    # Probably only needed when hosting a source server? Stays disabled for now >:³
-    #dedicatedServer.openFirewall = true;
   };
 
   # IntelGPU Hardware Acceleration

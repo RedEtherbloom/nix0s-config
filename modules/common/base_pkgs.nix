@@ -21,6 +21,11 @@ in
       default = true;
       description = "Standard user packages";
     };
+    steam = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Steam";
+    };
   };
 
   config = mkIf cfg.enabled (mkMerge [
@@ -216,6 +221,19 @@ in
       environment.sessionVariables = {
         # Smooth scrolling
         MOZ_USE_XINPUT2 = "1";
+      };
+    })
+    (mkIf (config.userPackages && config.steam) {
+      programs.steam = {
+        enable = true;
+        remotePlay.openFirewall = true;
+        protontricks.enable = true;
+        # X11 -> Wayland Input translation
+        extest.enable = true;
+
+        extraCompatPackages = with pkgs; [
+          steamtinkerlaunch
+        ];
       };
     })
   ]);
