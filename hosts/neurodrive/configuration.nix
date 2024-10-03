@@ -183,32 +183,6 @@
     ];
   };
 
-  programs.firefox.enable = true;
-  programs.kdeconnect.enable = true;
-
-  # Needs home-manager
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    vteIntegration = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-
-    ohMyZsh = {
-      theme = "tonotdo";
-      enable = true;
-    };
-
-    shellAliases = {
-      ll = "ls -l";
-      check-nix-config = "sudo nix-instantiate '<nixpkgs/nixos>' -A system";
-      snvim = "sudo nvim";
-      zix-shell = "nix-shell --command 'zsh'";
-    };
-    histSize = 10000;
-  };
-  users.defaultUserShell = pkgs.zsh;
-
   environment.systemPackages = with pkgs; [
     cachix
     cudaPackages.cudatoolkit
@@ -219,7 +193,6 @@
   services.fwupd.enable = true;
   programs.adb.enable = true;
 
-  environment.variables.EDITOR = "nvim";
   environment.sessionVariables = {
     # Smooth scrolling
     MOZ_USE_XINPUT2 = "1";
