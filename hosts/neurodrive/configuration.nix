@@ -217,15 +217,12 @@
     # Currently alpha-quality/buggy, so false is currently the recommended setting.
     #
     # May have improved now
-    open = true;
+  open = true     ;
   };
 
-  security.wrappers.restic = {
-    source = "${pkgs.restic.out}/bin/restic";
-    owner = "restic";
-    group = "users";
-    permissions = "u=rwx,g=,o=";
-    capabilities = "cap_dac_read_search=+ep";
+  sops.secrets."restic_server/private_certificate" = {
+    format = "binary";
+    sopsFile = ../../secrets/neurodrive/restic_server/certificate.priv;
   };
 
   services.restic.server = {
@@ -233,6 +230,7 @@
     privateRepos = true;
     dataDir = "/mnt/restic_data/restic";
     listenAddress = "8193";
+    extraFlags = [ "--tls-cert ${config.sops.secrets.restic_server.private_certificate.path}" ];
   };
 
   system.stateVersion = "24.05";

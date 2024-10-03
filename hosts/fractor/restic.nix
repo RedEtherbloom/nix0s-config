@@ -17,9 +17,8 @@
       OnCalendar = "wednesday, friday, sunday 22:00";
       Persistent = true;
     };
-    # TODO: Generate Certfile and rollout #security
     # TODO: Reference neurodrive port
-    repository = "rest:http://192.168.178.56:8193/infinity-fractor/";
+    repository = "rest:https://10.69.0.3:8193/infinity-fractor/";
     pruneOpts = [
       "--keep-daily 3"
       "--keep-weekly 5"
@@ -31,8 +30,9 @@
     inhibitsSleep = true;
     extraBackupArgs = [
       "--exclude-caches"
-      "--exclude-file ${config.sops.secrets.resticExcludeFile.path}"
+      "--exclude-file ${config.sops.secrets.resticExcludeFile.path}"  
     ];
+    extraOptions = [ "local.layout='autodetect' --cacert ${config.sops.secrets."restic_server/public_certificate".path}" ];
     environmentFile = config.sops.secrets."resticRestOptions".path;
     createWrapper = true;
     # TODO: Write script that blocks if the wifi is a hotspot
