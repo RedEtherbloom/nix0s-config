@@ -23,9 +23,13 @@
       sops-nix,
       ...
     }@inputs:
+    let
+      system = "x86_64-linux";
+    in
     {
       nixosConfigurations = {
         neurodrive = nixpkgs.lib.nixosSystem {
+          inherit system;
           specialArgs = {
             inherit inputs;
           };
@@ -45,6 +49,7 @@
             ]);
         };
         fractor = nixpkgs.lib.nixosSystem {
+          inherit system;
           specialArgs = {
             inherit inputs;
           };
