@@ -91,6 +91,7 @@ in
         clang-tools
         nixfmt-rfc-style
         nixd
+        nil
         direnv
 
         # KDE info packages
