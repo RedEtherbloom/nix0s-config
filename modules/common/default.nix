@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
+    ./audio.nix
     ./base_pkgs.nix
     ./localisation.nix
     ./restic.nix
