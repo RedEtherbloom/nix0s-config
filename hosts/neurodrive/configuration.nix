@@ -15,6 +15,8 @@ in
     ../../modules/common/default.nix
     ../../modules/wireguard/default.nix
 
+    ../../modules/hdd.nix
+
     ./hardware-configuration.nix
   ];
 
