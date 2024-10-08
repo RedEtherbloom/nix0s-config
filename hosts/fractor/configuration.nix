@@ -125,6 +125,9 @@
     openFirewall = true;
   };
 
+  nixpkgs.config.packageOverrides = pkgs: {
+    intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+  };  
   # IntelGPU Hardware Acceleration
   hardware.graphics = {
     enable = true;
