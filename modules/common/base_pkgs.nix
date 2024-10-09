@@ -120,6 +120,12 @@ in
         defaultEditor = true;
       };
 
+      # TODO: Couple to VS-Code
+      programs.java = with pkgs; {
+        enable = true;
+        package = jdk22;
+      };
+
       services.fwupd.enable = true;
       services.fstrim.enable = true;
       programs.adb.enable = true;
@@ -203,6 +209,8 @@ in
               ms-azuretools.vscode-docker
 
               rust-lang.rust-analyzer
+
+              vscjava.vscode-java-pack
 
             ]
             ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
