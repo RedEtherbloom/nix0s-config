@@ -112,6 +112,7 @@
       "adbusers"
       "scanner"
       "lp"
+      "i2c"
     ];
     packages = with pkgs; [
       aircrack-ng

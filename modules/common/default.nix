@@ -46,4 +46,6 @@
   };
 
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
+  hardware.i2c.enable = true;
 }
