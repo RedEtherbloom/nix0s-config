@@ -4,10 +4,10 @@
   pkgs,
   ...
 }:
-let 
+let
   restic_certificate = config.sops.secrets."restic_server/private_certificate".path;
   restic_public_key = config.sops.secrets."restic_server/public_certificate".path;
-in 
+in
 {
   imports = [
     ../../modules/cachix.nix
@@ -31,6 +31,9 @@ in
     # Max make some builds non deterministic
     cores = 10;
   };
+
+  # Temporary to debug long resume from hiberate
+  boot.kernelModules = [ "rd.log" ];
 
   # Filesystems
   boot.initrd.luks.devices."nixos-root" = {
@@ -59,7 +62,7 @@ in
   networking.interfaces."enp0s25".wakeOnLan.enable = true;
   # Issues with builds randomly failing
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
-boot.kernelPackages = pkgs.linuxPackages_6_10;
+  boot.kernelPackages = pkgs.linuxPackages_6_10;
 
   networking.firewall.allowedTCPPorts = [
     #TODO: Pulseaudio Network Sharing. Probably only needed for publush
@@ -256,7 +259,7 @@ boot.kernelPackages = pkgs.linuxPackages_6_10;
       "--tls"
       "--tls-key"
       restic_certificate
-      "--tls-cert" 
+      "--tls-cert"
       restic_public_key
     ];
   };
