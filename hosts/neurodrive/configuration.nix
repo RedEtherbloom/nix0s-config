@@ -144,6 +144,7 @@ in
       "scanner"
       "lp"
       "docker"
+      "i2c"
     ];
 
     packages = with pkgs; [
