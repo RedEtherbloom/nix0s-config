@@ -132,7 +132,7 @@ in
     })
     (mkIf cfg.userPackages {
       users.users.inf.packages = with pkgs; [
-        chromium
+        (chromium.override { enableWideVine = true; })
         tor-browser
 
         thunderbird
