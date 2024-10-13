@@ -200,6 +200,7 @@ in
               ms-vscode-remote.remote-ssh
               vadimcn.vscode-lldb
               mkhl.direnv
+              streetsidesoftware.code-spell-checker
 
               jnoortheen.nix-ide
               arrterian.nix-env-selector
@@ -212,6 +213,8 @@ in
 
               vscjava.vscode-java-pack
 
+              # Accessibility
+              vscode-extensions.oderwat.indent-rainbow
             ]
             ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
               {
