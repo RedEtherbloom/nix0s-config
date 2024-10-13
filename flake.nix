@@ -30,25 +30,37 @@
       nixpkgs,
       home-manager,
       sops-nix,
+      nixos-hardware,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
+      homeManagerOptions = {
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+      };
     in
     {
       nixosConfigurations = {
         neurodrive = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit inputs;
+            inherit inputs homeManagerOptions;
           };
           modules =
             [
               ./hosts/neurodrive/configuration.nix
+              ./modules/desktop.nix
+              {
+                home-manager.users.inf.imports = [
+                  { home.stateVersion = "24.05"; }
+                  ./homeManagerModules/desktop.nix
+                ];
+              }
+              home-manager.nixosModules.home-manager
               sops-nix.nixosModules.sops
-              home-manager.nixosModules.default
             ]
-            ++ (with inputs.nixos-hardware.nixosModules; [
+            ++ (with nixos-hardware.nixosModules; [
               common-gpu-nvidia-nonprime
               common-hidpi
               # Xeon CPU
@@ -60,13 +72,20 @@
         fractor = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit inputs;
+            inherit inputs homeManagerOptions;
           };
           modules = [
             ./hosts/fractor/configuration.nix
+            ./modules/laptop.nix
+            {
+              home-manager.users.inf.imports = [
+                { home.stateVersion = "24.05"; }
+                ./homeManagerModules/laptop.nix
+              ];
+            }
+            home-manager.nixosModules.home-manager
             sops-nix.nixosModules.sops
-            home-manager.nixosModules.default
-            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x230
+            nixos-hardware.nixosModules.lenovo-thinkpad-x230
           ];
         };
       };
