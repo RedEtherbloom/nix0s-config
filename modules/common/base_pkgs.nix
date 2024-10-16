@@ -102,6 +102,9 @@ in
         pciutils
         aha
 
+        # Monitor brightness control
+        ddcutil
+
         usbutils
         intel-gpu-tools
 
