@@ -144,7 +144,8 @@ in
         kdePackages.kalk
         taskwarrior3
         taskwarrior-tui
-        bitwarden
+        # Broken atm until PR is built
+        # bitwarden
         bitwarden-cli
         wl-clipboard
         hyfetch
