@@ -146,18 +146,6 @@ in
       "docker"
       "i2c"
     ];
-
-    packages = with pkgs; [
-      krita
-
-      # FNV Mod launcher
-      zenity
-      yad
-      # Does my bar approach need this?
-      openal
-
-      koboldcpp
-    ];
   };
 
   environment.systemPackages = with pkgs; [
@@ -211,6 +199,8 @@ in
     };
   };
 
+  # Manage logitech options via solaar
+  hardware.logitech.wireless.enable = true;
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [

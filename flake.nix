@@ -41,6 +41,7 @@
           modules =
             [
               ./hosts/neurodrive/configuration.nix
+              ./hosts/neurodrive/home.nix
               ./modules/desktop.nix
               ./modules/gaming.nix
               {
