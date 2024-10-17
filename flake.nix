@@ -42,6 +42,7 @@
             [
               ./hosts/neurodrive/configuration.nix
               ./modules/desktop.nix
+              ./modules/gaming.nix
               {
                 home-manager.users.inf.imports = [
                   { home.stateVersion = "24.05"; }

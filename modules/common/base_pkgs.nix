@@ -21,11 +21,6 @@ in
       default = true;
       description = "Standard user packages";
     };
-    steam = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Steam";
-    };
   };
 
   config = mkIf cfg.enabled (mkMerge [
@@ -165,9 +160,6 @@ in
         audacity
         helvum
 
-        mindustry-wayland
-        gcs
-
         libreoffice-qt
         hunspell
         hunspellDicts.en_US
@@ -239,20 +231,6 @@ in
         MOZ_USE_XINPUT2 = "1";
         # Native Wayland for Chromium apps
         NIXOS_OZONE_WL = "1";  
-      };
-
-    })
-    (mkIf (cfg.userPackages && cfg.steam) {
-      programs.steam = {
-        enable = true;
-        remotePlay.openFirewall = true;
-        protontricks.enable = true;
-        # X11 -> Wayland Input translation
-        extest.enable = true;
-
-        extraCompatPackages = with pkgs; [
-          steamtinkerlaunch
-        ];
       };
     })
   ]);
