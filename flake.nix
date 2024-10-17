@@ -79,6 +79,7 @@
           modules = [
             ./hosts/fractor/configuration.nix
             ./modules/laptop.nix
+            ./modules/gaming.nix
             {
               home-manager.users.inf.imports = [
                 { home.stateVersion = "24.05"; }
