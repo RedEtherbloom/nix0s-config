@@ -14,7 +14,7 @@
   };
   services.restic.backups."root" = {
     timerConfig = {
-      OnCalendar = "wednesday, friday, sunday 22:00";
+      OnCalendar = "wednesday,friday,sunday 22:00";
       Persistent = true;
     };
     # TODO: Reference neurodrive port
