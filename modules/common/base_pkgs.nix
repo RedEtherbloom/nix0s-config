@@ -118,12 +118,6 @@ in
         defaultEditor = true;
       };
 
-      # TODO: Couple to VS-Code
-      programs.java = with pkgs; {
-        enable = true;
-        package = jdk22;
-      };
-
       services.fwupd.enable = true;
       services.fstrim.enable = true;
       programs.adb.enable = true;
@@ -185,42 +179,6 @@ in
         kitty
         nushell
         rustup
-
-        (vscode-with-extensions.override {
-          vscodeExtensions =
-            with vscode-extensions;
-            [
-              mhutchie.git-graph
-              donjayamanne.githistory
-              eamodio.gitlens
-              ms-vscode-remote.remote-ssh
-              vadimcn.vscode-lldb
-              mkhl.direnv
-              streetsidesoftware.code-spell-checker
-
-              jnoortheen.nix-ide
-              arrterian.nix-env-selector
-
-              ms-python.python
-
-              ms-azuretools.vscode-docker
-
-              rust-lang.rust-analyzer
-
-              vscjava.vscode-java-pack
-
-              # Accessibility
-              vscode-extensions.oderwat.indent-rainbow
-            ]
-            ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-              {
-                name = "openscad";
-                publisher = "Antyos";
-                version = "1.3.1";
-                sha256 = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
-              }
-            ];
-        })
       ];
 
       programs.firefox.enable = true;
