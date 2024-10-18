@@ -53,6 +53,7 @@
               ./hosts/neurodrive/home.nix
               ./modules/desktop.nix
               ./modules/gaming.nix
+              ./modules/development.nix
               {
                 home-manager.users.inf.imports = [
                   { home.stateVersion = "24.05"; }
@@ -80,6 +81,7 @@
             ./hosts/fractor/configuration.nix
             ./modules/laptop.nix
             ./modules/gaming.nix
+            ./modules/development.nix
             {
               home-manager.users.inf.imports = [
                 { home.stateVersion = "24.05"; }
