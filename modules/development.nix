@@ -22,13 +22,22 @@ in
     openscad = mkEnableOption "OpenSCAD and VS-Code plugin";
     vscode = mkEnableOption "Enable VS-Code and plugins";
     vscode-accessibility = mkEnableOption "Enable VS-Code accesibility plugins";
+    electronics = mkEnableOption "Electronics toolchain";
+    three-d-printing = mkEnableOption "3d printing toolchain and tools";
+    reverse-engineering = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Reverse engineering toolchain";
+    };
+    network-analysis = mkEnableOption "Toolchain for network analysis";
   };
 
   config = {
     home-manager.sharedModules = [
       {
-        home.packages = with pkgs; [
-          (mkIf cfg.vscode (
+        home.packages =
+          with pkgs;
+          lib.optionals cfg.vscode (
             vscode-with-extensions.override {
               vscodeExtensions =
                 with vscode-extensions;
@@ -70,8 +79,30 @@ in
                   }
                 ];
             }
-          ))
-        ];
+          )
+          ++ lib.optionals cfg.rust [
+            rustup
+            clang
+            clang-tools
+          ]
+          ++ lib.optionals cfg.openscad [
+            openscad-unstable
+          ]
+          ++ lib.optionals cfg.nix [
+            nixfmt-rfc-style
+            nixd
+            nil
+            direnv
+          ] ++ lib.optionals cfg.electronics [
+            kicad
+          ] ++ lib.optionals cfg.three-d-printing [
+            prusa-slicer
+          ] ++ lib.optionals cfg.reverse-engineering [
+            ghidra
+          ] ++ lib.optionals cfg.network-analysis [
+            nmap
+            wireshark
+          ];
       }
     ];
 
