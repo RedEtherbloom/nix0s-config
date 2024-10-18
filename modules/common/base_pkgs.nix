@@ -68,7 +68,6 @@ in
         ncdu
 
         dig
-        nmap
         wget
         curl
 
@@ -81,13 +80,8 @@ in
         autorestic
         wireguard-tools
 
+        # TODO. Refactgor into development.nix
         python3Full
-        clang
-        clang-tools
-        nixfmt-rfc-style
-        nixd
-        nil
-        direnv
 
         # KDE info packages
         clinfo
@@ -162,7 +156,6 @@ in
         gimp
 
         element-desktop-wayland
-
         telegram-desktop
         threema-desktop
         signal-desktop
@@ -170,15 +163,8 @@ in
         betterdiscordctl
         mumble
 
-        wireshark
-
-        kicad
-        openscad-unstable
-        prusa-slicer
-
         kitty
         nushell
-        rustup
       ];
 
       programs.firefox.enable = true;
