@@ -5,7 +5,27 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
-  hardware.enableRedistributableFirmware = true;
+
+  nix = {
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+    };
+    gc = {
+      automatic = true;
+      dates = "daily";
+      options = "--delete-older-than 14d";
+    };
+    optimise = {
+      automatic = true;
+      dates = [
+        "15:00"
+      ];
+    };
+  };
+  nixpkgs.config.allowUnfree = true;
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
@@ -88,6 +108,7 @@
     tmux
     dua
     ddcutil
+    git
 
     magic-wormhole
     mosh
@@ -112,6 +133,7 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
+  hardware.enableRedistributableFirmware = true;
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   # Advertise as Audio sink
