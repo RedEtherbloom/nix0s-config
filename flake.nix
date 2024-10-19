@@ -93,6 +93,23 @@
             nixos-hardware.nixosModules.lenovo-thinkpad-x230
           ];
         };
+        audiosink = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs homeManagerOptions;
+          };
+          modules = [
+            ./hosts/audiosink/configuration.nix
+            {
+              home-manager.users.inf.imports = [
+                { home.stateVersion = "24.05"; }
+              ];
+            }
+            home-manager.nixosModules.home-manager
+            sops-nix.nixosModules.sops
+            nixos-hardware.nixosModules.raspberry-pi-3
+          ];
+        };
       };
     };
 }
