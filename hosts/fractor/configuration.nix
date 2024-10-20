@@ -8,6 +8,7 @@
     ./restic.nix 
 
     ../../modules/common/default.nix
+    ../../modules/common/ssh.nix
     ../../modules/wireguard/default.nix
 
     ./hardware-configuration.nix
