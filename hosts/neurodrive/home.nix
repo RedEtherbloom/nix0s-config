@@ -12,5 +12,8 @@
     openal
 
     koboldcpp
+
+    # TODO: Maybe this will make KRunner less laggy
+    egl-wayland
   ];
 }
