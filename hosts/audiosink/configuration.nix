@@ -4,6 +4,8 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+
+    ../../modules/common/ssh.nix
   ];
 
   nix = {
@@ -128,10 +130,6 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-  # List services that you want to enable:
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
 
   hardware.enableRedistributableFirmware = true;
   hardware.bluetooth.enable = true;

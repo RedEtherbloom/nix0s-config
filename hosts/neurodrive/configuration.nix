@@ -14,6 +14,7 @@ in
     ../../modules/cachix.nix
 
     ../../modules/common/default.nix
+    ../../modules/common/ssh.nix
     ../../modules/wireguard/default.nix
 
     ../../modules/hdd.nix
@@ -199,14 +200,6 @@ in
     nssmdns4 = true;
     nssmdns6 = true;
     openFirewall = true;
-  };
-
-  services.openssh = {
-    enable = true;
-    openFirewall = true;
-    settings = {
-      PasswordAuthentication = false;
-    };
   };
 
   # Manage logitech options via solaar
