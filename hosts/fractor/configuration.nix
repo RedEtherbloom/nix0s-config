@@ -8,6 +8,7 @@
     ./restic.nix 
 
     ../../modules/common/default.nix
+    ../../modules/common/ssh.nix
     ../../modules/wireguard/default.nix
 
     ./hardware-configuration.nix
@@ -58,6 +59,7 @@
   services.desktopManager.plasma6.enable = true;
 
   services.xserver.enable = false;
+  services.xserver.videoDrivers = [ "intel" ];
 
   services.printing.enable = true;
   services.printing.drivers = with pkgs; [
