@@ -15,6 +15,8 @@ in{
         mindustry-wayland
         gcs
         (callPackage byar-launcher {})
+
+        dxvk_2
       ];
     }
   ];
@@ -29,5 +31,19 @@ in{
         extraCompatPackages = with pkgs; [
           steamtinkerlaunch
         ];
+	package = pkgs.steam.override {
+    extraPkgs = pkgs: with pkgs; [
+      libgdiplus
+      libpng
+      libpulseaudio
+      libvorbis
+      stdenv.cc.cc.lib
+      xorg.libXcursor
+      xorg.libXi
+      xorg.libXinerama
+      xorg.libXrandr
+      xorg.libXxf86vm
+    ];
+  };
       };
 }
