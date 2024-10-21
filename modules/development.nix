@@ -10,26 +10,67 @@ let
 in
 {
   options.myOptions.development = {
-    rust = mkEnableOption "rust toolchain and dev tools";
-    java = mkEnableOption "Java and vscode pack";
-    python = mkEnableOption "Python(Full) and vscode plugins";
+    rust = mkOption {
+  type = types.bool;
+  default = true;
+  description = "rust toolchain and dev tools";
+};
+    java = mkOption {
+  type = types.bool;
+  default = true;
+  description = "Java and vscode pack";
+};
+    python = mkOption {
+  type = types.bool;
+  default = true;
+  description = "Python(Full) and vscode plugins";
+};
     docker = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Enable docker service and docker vscode plugin";
-    };
-    nix = mkEnableOption "Enable Nix dev tools and VS-Code plugins";
-    openscad = mkEnableOption "OpenSCAD and VS-Code plugin";
-    vscode = mkEnableOption "Enable VS-Code and plugins";
-    vscode-accessibility = mkEnableOption "Enable VS-Code accesibility plugins";
-    electronics = mkEnableOption "Electronics toolchain";
-    three-d-printing = mkEnableOption "3d printing toolchain and tools";
+  type = types.bool;
+  default = false;
+  description = "Enable docker service and docker vscode plugin";
+};
+    nix = mkOption {
+  type = types.bool;
+  default = true;
+  description = "Enable Nix dev tools and VS-Code plugins";
+};
+    openscad = mkOption {
+  type = types.bool;
+  default = true;
+  description = "OpenSCAD and VS-Code plugin";
+};
+    vscode = mkOption {
+  type = types.bool;
+  default = true;
+  description = "Enable VS-Code and plugins";
+};
+    vscode-accessibility = mkOption {
+  type = types.bool;
+  default = true;
+  description = "Enable VS-Code accesibility plugins";
+};
+    # Disabled due to PR for Kicad dependency still building https://github.com/NixOS/nixpkgs/issues/349248
+    electronics = mkOption {
+  type = types.bool;
+  default = false;
+  description = "Electronics toolchain";
+};
+    three-d-printing = mkOption {
+  type = types.bool;
+  default = true;
+  description = "3d printing toolchain and tools";
+};
     reverse-engineering = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Reverse engineering toolchain";
-    };
-    network-analysis = mkEnableOption "Toolchain for network analysis";
+  type = types.bool;
+  default = false; 
+  description = "Reverse engineering toolchain";
+};
+    network-analysis = mkOption {
+  type = types.bool;
+  default = true;
+  description = "Toolchain for network analysis";
+};
   };
 
   config = {
@@ -37,8 +78,9 @@ in
       {
         home.packages =
           with pkgs;
-          lib.optionals cfg.vscode (
-            vscode-with-extensions.override {
+          lib.optionals cfg.vscode [
+	    # TODO: Does this need mkIf?
+            (vscode-with-extensions.override {
               vscodeExtensions =
                 with vscode-extensions;
                 # TODO: Rewrite with mkIf/mkMerge to make the evaluation lazy(I think)
@@ -70,16 +112,16 @@ in
                 ++ lib.optionals cfg.java [
                   vscjava.vscode-java-pack
                 ]
-                ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace lib.optionals cfg.openscad [
+                ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace (lib.optionals cfg.openscad [
                   {
                     name = "openscad";
                     publisher = "Antyos";
                     version = "1.3.1";
                     sha256 = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
                   }
-                ];
+                ]);
             }
-          )
+          )]
           ++ lib.optionals cfg.rust [
             rustup
             clang

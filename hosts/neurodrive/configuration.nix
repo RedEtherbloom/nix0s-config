@@ -38,6 +38,12 @@ in
   # Quarry: Cross-compilation support for audiosink
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
+  # Cache for krita...
+  programs.ccache.enable = true;
+  nix.settings.extra-sandbox-paths = [ config.programs.ccache.cacheDir ];
+  #ä Although this may not work, as using krita directly here leads to a werid home-manager crash about stdenv. Maybe the CCache wrappers still needs to be added for this host?
+  programs.ccache.packageNames = [ "krita-unwrapped" ];
+
   # Filesystems
   boot.initrd.luks.devices."nixos-root" = {
     device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
@@ -206,6 +212,7 @@ in
   hardware.logitech.wireless.enable = true;
   hardware.graphics = {
     enable = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
       nvidia-vaapi-driver
     ];
