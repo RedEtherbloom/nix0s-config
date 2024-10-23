@@ -5,7 +5,7 @@
 }:
 {
   imports = [
-    ./restic.nix 
+    ./restic.nix
 
     ../../modules/common/default.nix
     ../../modules/common/ssh.nix

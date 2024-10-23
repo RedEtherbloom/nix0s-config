@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   hardware.pulseaudio.enable = false;
   # Just for the Port. Need to check if I have to do this
   hardware.pulseaudio.zeroconf.discovery.enable = true;

@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   # TODO: Reread secrets managment with yaml
   sops.secrets."resticPassword" = {
     format = "binary";
@@ -30,9 +31,11 @@
     inhibitsSleep = true;
     extraBackupArgs = [
       "--exclude-caches"
-      "--exclude-file ${config.sops.secrets.resticExcludeFile.path}"  
+      "--exclude-file ${config.sops.secrets.resticExcludeFile.path}"
     ];
-    extraOptions = [ "local.layout='autodetect' --cacert ${config.sops.secrets."restic_server/public_certificate".path}" ];
+    extraOptions = [
+      "local.layout='autodetect' --cacert ${config.sops.secrets."restic_server/public_certificate".path}"
+    ];
     environmentFile = config.sops.secrets."resticRestOptions".path;
     createWrapper = true;
     # TODO: Write script that blocks if the wifi is a hotspot

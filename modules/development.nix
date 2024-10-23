@@ -11,66 +11,66 @@ in
 {
   options.myOptions.development = {
     rust = mkOption {
-  type = types.bool;
-  default = true;
-  description = "rust toolchain and dev tools";
-};
+      type = types.bool;
+      default = true;
+      description = "rust toolchain and dev tools";
+    };
     java = mkOption {
-  type = types.bool;
-  default = true;
-  description = "Java and vscode pack";
-};
+      type = types.bool;
+      default = true;
+      description = "Java and vscode pack";
+    };
     python = mkOption {
-  type = types.bool;
-  default = true;
-  description = "Python(Full) and vscode plugins";
-};
+      type = types.bool;
+      default = true;
+      description = "Python(Full) and vscode plugins";
+    };
     docker = mkOption {
-  type = types.bool;
-  default = false;
-  description = "Enable docker service and docker vscode plugin";
-};
+      type = types.bool;
+      default = false;
+      description = "Enable docker service and docker vscode plugin";
+    };
     nix = mkOption {
-  type = types.bool;
-  default = true;
-  description = "Enable Nix dev tools and VS-Code plugins";
-};
+      type = types.bool;
+      default = true;
+      description = "Enable Nix dev tools and VS-Code plugins";
+    };
     openscad = mkOption {
-  type = types.bool;
-  default = true;
-  description = "OpenSCAD and VS-Code plugin";
-};
+      type = types.bool;
+      default = true;
+      description = "OpenSCAD and VS-Code plugin";
+    };
     vscode = mkOption {
-  type = types.bool;
-  default = true;
-  description = "Enable VS-Code and plugins";
-};
+      type = types.bool;
+      default = true;
+      description = "Enable VS-Code and plugins";
+    };
     vscode-accessibility = mkOption {
-  type = types.bool;
-  default = true;
-  description = "Enable VS-Code accesibility plugins";
-};
+      type = types.bool;
+      default = true;
+      description = "Enable VS-Code accesibility plugins";
+    };
     # Disabled due to PR for Kicad dependency still building https://github.com/NixOS/nixpkgs/issues/349248
     electronics = mkOption {
-  type = types.bool;
-  default = false;
-  description = "Electronics toolchain";
-};
+      type = types.bool;
+      default = false;
+      description = "Electronics toolchain";
+    };
     three-d-printing = mkOption {
-  type = types.bool;
-  default = true;
-  description = "3d printing toolchain and tools";
-};
+      type = types.bool;
+      default = true;
+      description = "3d printing toolchain and tools";
+    };
     reverse-engineering = mkOption {
-  type = types.bool;
-  default = false; 
-  description = "Reverse engineering toolchain";
-};
+      type = types.bool;
+      default = false;
+      description = "Reverse engineering toolchain";
+    };
     network-analysis = mkOption {
-  type = types.bool;
-  default = true;
-  description = "Toolchain for network analysis";
-};
+      type = types.bool;
+      default = true;
+      description = "Toolchain for network analysis";
+    };
   };
 
   config = {
@@ -79,7 +79,7 @@ in
         home.packages =
           with pkgs;
           lib.optionals cfg.vscode [
-	    # TODO: Does this need mkIf?
+            # TODO: Does this need mkIf?
             (vscode-with-extensions.override {
               vscodeExtensions =
                 with vscode-extensions;
@@ -112,16 +112,18 @@ in
                 ++ lib.optionals cfg.java [
                   vscjava.vscode-java-pack
                 ]
-                ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace (lib.optionals cfg.openscad [
-                  {
-                    name = "openscad";
-                    publisher = "Antyos";
-                    version = "1.3.1";
-                    sha256 = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
-                  }
-                ]);
-            }
-          )]
+                ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace (
+                  lib.optionals cfg.openscad [
+                    {
+                      name = "openscad";
+                      publisher = "Antyos";
+                      version = "1.3.1";
+                      sha256 = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
+                    }
+                  ]
+                );
+            })
+          ]
           ++ lib.optionals cfg.rust [
             rustup
             clang
@@ -135,13 +137,17 @@ in
             nixd
             nil
             direnv
-          ] ++ lib.optionals cfg.electronics [
+          ]
+          ++ lib.optionals cfg.electronics [
             kicad
-          ] ++ lib.optionals cfg.three-d-printing [
+          ]
+          ++ lib.optionals cfg.three-d-printing [
             prusa-slicer
-          ] ++ lib.optionals cfg.reverse-engineering [
+          ]
+          ++ lib.optionals cfg.reverse-engineering [
             ghidra
-          ] ++ lib.optionals cfg.network-analysis [
+          ]
+          ++ lib.optionals cfg.network-analysis [
             nmap
             wireshark
           ];
