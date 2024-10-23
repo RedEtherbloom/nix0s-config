@@ -174,7 +174,7 @@ in
         # Smooth scrolling
         MOZ_USE_XINPUT2 = "1";
         # Native Wayland for Chromium apps
-        NIXOS_OZONE_WL = "1";  
+        NIXOS_OZONE_WL = "1";
       };
     })
   ]);
