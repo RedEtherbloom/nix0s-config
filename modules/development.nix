@@ -23,7 +23,7 @@ in
     python = mkOption {
       type = types.bool;
       default = true;
-      description = "Python(Full) and vscode plugins";
+      description = "Python tooling and vscode plugins";
     };
     docker = mkOption {
       type = types.bool;
@@ -101,6 +101,7 @@ in
                 ]
                 ++ lib.optionals cfg.python [
                   ms-python.python
+                  ms-python.flake8
                 ]
                 ++ lib.optionals cfg.docker [
                   ms-azuretools.vscode-docker
@@ -150,6 +151,9 @@ in
           ++ lib.optionals cfg.network-analysis [
             nmap
             wireshark
+          ]
+          ++ lib.optionals cfg.python [
+            flake8
           ];
       }
     ];
