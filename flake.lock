@@ -239,18 +239,18 @@
       },
       "locked": {
         "lastModified": 1737550229,
-        "narHash": "sha256-Ubh+FdUQb0fJ2RcWi0Ngc78SS6Pf7Gg91ZluQFhVznw=",
+        "narHash": "sha256-uNU2fOYRDsLAASOYF5NcMjGOseRYA5Qegjh1PVWImME=",
         "ref": "main",
-        "rev": "f614c1ccaa3146d734d95605af62034eb8030a19",
-        "revCount": 8,
+        "rev": "ffd8250a80ce161e67a9b0efd65421df04a89cd8",
+        "revCount": 11,
         "type": "git",
         "url": "https://github.com/RedEtherbloom/nix0s-secrets.git"
       },
       "original": {
         "owner": "RedEtherbloom",
         "repo": "nix0s-secrets",
-	"type": "github"
-      }	
+        "type": "github"
+      }
     },
     "plasma-manager": {
       "inputs": {
