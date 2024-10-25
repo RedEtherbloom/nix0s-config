@@ -153,7 +153,7 @@ in
             wireshark
           ]
           ++ lib.optionals cfg.python [
-            flake8
+            python3Packages.flake8
           ];
       }
     ];
