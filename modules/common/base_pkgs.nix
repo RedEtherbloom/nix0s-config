@@ -159,9 +159,11 @@ in
         telegram-desktop
         threema-desktop
         signal-desktop
-        discord
-        betterdiscordctl
         mumble
+        (pkgs.discord.override {
+          withOpenASAR = true;
+          withVencord = true;
+        })
 
         kitty
         nushell
