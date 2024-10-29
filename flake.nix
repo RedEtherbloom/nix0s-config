@@ -38,6 +38,8 @@
       homeManagerOptions = {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
+
+        # TODO: Figure out how to set extraSpecialArgs for all hosts
       };
     in
     {
@@ -55,10 +57,15 @@
               ./modules/gaming.nix
               ./modules/development.nix
               {
-                home-manager.users.inf.imports = [
-                  { home.stateVersion = "24.05"; }
-                  ./homeManagerModules/desktop.nix
-                ];
+                home-manager = {
+                  extraSpecialArgs = {
+                    inherit inputs homeManagerOptions;
+                  };
+                  users.inf.imports = [
+                    { home.stateVersion = "24.05"; }
+                    ./homeManagerModules/desktop.nix
+                  ];
+                };
               }
               home-manager.nixosModules.home-manager
               sops-nix.nixosModules.sops
@@ -84,16 +91,16 @@
             ./modules/development.nix
             {
               home-manager = {
-                  extraSpecialArgs = {
-                    inherit inputs homeManagerOptions;
-                  };
-                  users.inf.imports = [
-                    {
-                      home.stateVersion = "24.05";
-                    }
-                    ./homeManagerModules/desktop.nix
-              ];
+                extraSpecialArgs = {
+                  inherit inputs homeManagerOptions;
                 };
+                users.inf.imports = [
+                  {
+                    home.stateVersion = "24.05";
+                  }
+                  ./homeManagerModules/desktop.nix
+                ];
+              };
             }
             home-manager.nixosModules.home-manager
             sops-nix.nixosModules.sops
@@ -108,9 +115,14 @@
           modules = [
             ./hosts/audiosink/configuration.nix
             {
-              home-manager.users.inf.imports = [
-                { home.stateVersion = "24.05"; }
-              ];
+              home-manager = {
+                extraSpecialArgs = {
+                  inherit inputs homeManagerOptions;
+                };
+                users.inf.imports = [
+                  { home.stateVersion = "24.05"; }
+                ];
+              };
             }
             home-manager.nixosModules.home-manager
             sops-nix.nixosModules.sops
