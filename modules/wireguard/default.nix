@@ -3,40 +3,45 @@ with lib;
 let
   cfg = config.networking.ownWireguard;
   wireguardPeer =
-    { }:
+    { IP, publicKey, ... }:
     {
       options = {
         IP = mkOption {
-          description = "IP of the wireguard client";
-          type = types.IPv4;
+          description = "IPv4 of the wireguard client";
+          type = types.singleLineStr;
         };
         # How would I detect a miss-match?
         publicKey = mkOption {
           description = "Public key of the wireguard client";
-          type = types.str;
+          type = types.singleLineStr;
         };
       };
     };
   wireguardHost =
-    { }:
+    {
+      mainIP,
+      main,
+      unlock,
+      ...
+    }:
     {
       options = {
         # For easier access
         mainIP = mkOption {
-          description = "Main IP without suffix";
-          type = types.IPv4;
+          description = "Main IPv4 without suffix";
+          type = types.singleLineStr;
         };
         main = mkOption {
           description = "Main wireguard network";
-          type = wireguardPeer;
+          type = with types; submodule wireguardPeer;
         };
         unlock = mkOption {
           description = "Network for unlocking wireguard devices on boot";
-          type = wireguardPeer;
+          type = with types; submodule wireguardPeer;
         };
       };
     };
-  generateWireguardHost = lastIPDigit: mainPublicKey: unlockPublicKey: {
+  generateWireguardHost = lastIPDigit: mainPublicKey: unlockPublicKey: wireguardHost {
     mainIP = generateLastIPDigit mainPrefix lastIPDigit;
     main = generateWireguardPeer mainPrefix lastIPDigit mainPublicKey;
     unlock = generateWireguardPeer unlockPrefix lastIPDigit unlockPublicKey;
@@ -48,12 +53,10 @@ let
   generateWithSuffix =
     prefix: digit: suffix:
     (generateLastIPDigit prefix digit) "/" suffix;
-  generateWireguardPeer =
-    prefix: lastIPDigit: publicKey:
-    wireguardPeer {
-      IP = (generateWithSuffix prefix lastIPDigit "32");
-      publicKey = publicKey;
-    };
+  generateWireguardPeer = prefix: lastIPDigit: publicKey: {
+    IP = (generateWithSuffix prefix lastIPDigit "32");
+    publicKey = publicKey;
+  };
 in
 {
   options = {
@@ -67,15 +70,15 @@ in
       # TODO: Rewrite with attrset(I think one can modularize)
       hosts = mkOption {
         description = "Listing of our wireguard hosts for easy cross-reference";
-        type = types.attrsOf wireguardHost;
+        type = with types; attrsOf (submodule wireguardHost);
         default = {
           wireguardController =
-            generateWireguardHost "1" "d6yoEQMbMy4M4h45sj28RrgKxYZXRxDHAJ5ASRKZMmQ="
-              "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8=";
-          fractor = generateWireguardPeer "2" "" "";
+            (generateWireguardHost "1" "d6yoEQMbMy4M4h45sj28RrgKxYZXRxDHAJ5ASRKZMmQ="
+              "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8=");
+          fractor = (generateWireguardPeer "2" "" "");
           neurodrive =
-            generateWireguardPeer "3" "kEIYSz20OKCGyWcnXlRBSkWBt7DkjKhmb1Xu+0Kc3XY="
-              "3gMbw0t8dlUGUnRmmNJlNM75tKsygjpWYD/1fQaekXg=";
+            (generateWireguardPeer "3" "kEIYSz20OKCGyWcnXlRBSkWBt7DkjKhmb1Xu+0Kc3XY="
+              "3gMbw0t8dlUGUnRmmNJlNM75tKsygjpWYD/1fQaekXg=");
         };
       };
     };
@@ -99,12 +102,9 @@ in
           privateKeyFile = config.sops.secrets."wireguard/wg0_private".path;
           peers = [
             {
-              publicKey = cfg.hosts.wireguardController.main.publicKey;
+              publicKey = (cfg.hosts.wireguardController.main.publicKey);
               allowedIPs = [
-                generateWithSuffix
-                mainPrefix
-                "0"
-                "32"
+                (generateWithSuffix mainPrefix "0" "32")
               ];
               endpoint = "51.15.91.213:51820";
               persistentKeepalive = 25;
@@ -117,12 +117,9 @@ in
           privateKeyFile = config.sops.secrets."wireguard/wg1_private".path;
           peers = [
             {
-              publicKey = cfg.hosts.wireguardController.unlock.publicKey;
+              publicKey = (cfg.hosts.wireguardController.unlock.publicKey);
               allowedIPs = [
-                generateWithSuffix
-                unlockPrefix
-                "0"
-                "32"
+                (generateWithSuffix unlockPrefix "0" "32")
               ];
               endpoint = "51.15.91.213:51821";
               persistentKeepalive = 25;
