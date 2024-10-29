@@ -83,10 +83,17 @@
             ./modules/gaming.nix
             ./modules/development.nix
             {
-              home-manager.users.inf.imports = [
-                { home.stateVersion = "24.05"; }
-                ./homeManagerModules/laptop.nix
+              home-manager = {
+                  extraSpecialArgs = {
+                    inherit inputs homeManagerOptions;
+                  };
+                  users.inf.imports = [
+                    {
+                      home.stateVersion = "24.05";
+                    }
+                    ./homeManagerModules/desktop.nix
               ];
+                };
             }
             home-manager.nixosModules.home-manager
             sops-nix.nixosModules.sops
