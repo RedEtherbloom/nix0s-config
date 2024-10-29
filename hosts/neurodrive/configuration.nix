@@ -83,7 +83,7 @@ in
 
   networking.ownWireguard = {
     enabled = true;
-    lastIPDigit = 3;
+    currentHost = config.networking.ownWireguard.hosts.neurodrive;
   };
 
   services.displayManager.sddm.enable = true;

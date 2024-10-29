@@ -42,7 +42,7 @@
 
   networking.ownWireguard = {
     enabled = true;
-    lastIPDigit = 2;
+    currentHost = config.networking.ownWireguard.hosts.fractor;
   };
 
   # Should hopefully not mess with KDE
