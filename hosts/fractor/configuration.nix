@@ -53,6 +53,7 @@
   # Maybe this fixes it?
   services.tlp.settings = {
     WIFI_PWR_ON_BAT = "off";
+    USB_EXCLUDE_BTUSB = 1;
   };
 
   services.displayManager.sddm.wayland.enable = true;
