@@ -41,22 +41,26 @@ let
         };
       };
     };
-  generateWireguardHost = lastIPDigit: mainPublicKey: unlockPublicKey: wireguardHost {
-    mainIP = generateLastIPDigit mainPrefix lastIPDigit;
-    main = generateWireguardPeer mainPrefix lastIPDigit mainPublicKey;
-    unlock = generateWireguardPeer unlockPrefix lastIPDigit unlockPublicKey;
-  };
+  generateWireguardHost =
+    lastIPDigit: mainPublicKey: unlockPublicKey:
+    {
+      mainIP = (generateLastIPDigit mainPrefix lastIPDigit);
+      main = (generateWireguardPeer mainPrefix lastIPDigit mainPublicKey);
+      unlock = (generateWireguardPeer unlockPrefix lastIPDigit unlockPublicKey);
+    };
 
   mainPrefix = "10.69.0.";
   unlockPrefix = "10.68.0.";
-  generateLastIPDigit = prefix: digit: prefix digit;
+  generateLastIPDigit = prefix: digit: prefix + digit;
   generateWithSuffix =
     prefix: digit: suffix:
-    (generateLastIPDigit prefix digit) "/" suffix;
-  generateWireguardPeer = prefix: lastIPDigit: publicKey: {
-    IP = (generateWithSuffix prefix lastIPDigit "32");
-    publicKey = publicKey;
-  };
+    (generateLastIPDigit prefix digit) + "/" + suffix;
+  generateWireguardPeer =
+    prefix: lastIPDigit: publicKey:
+    {
+      IP = (generateWithSuffix prefix lastIPDigit "32");
+      publicKey = publicKey;
+    };
 in
 {
   options = {
@@ -71,20 +75,28 @@ in
       hosts = mkOption {
         description = "Listing of our wireguard hosts for easy cross-reference";
         type = with types; attrsOf (submodule wireguardHost);
-        default = {
-          wireguardController =
-            (generateWireguardHost "1" "d6yoEQMbMy4M4h45sj28RrgKxYZXRxDHAJ5ASRKZMmQ="
-              "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8=");
-          fractor = (generateWireguardPeer "2" "" "");
-          neurodrive =
-            (generateWireguardPeer "3" "kEIYSz20OKCGyWcnXlRBSkWBt7DkjKhmb1Xu+0Kc3XY="
-              "3gMbw0t8dlUGUnRmmNJlNM75tKsygjpWYD/1fQaekXg=");
-        };
+        default = { };
       };
     };
   };
 
   config = mkMerge [
+    {
+      networking.ownWireguard.hosts = {
+        wireguardController = (
+          generateWireguardHost "1" "d6yoEQMbMy4M4h45sj28RrgKxYZXRxDHAJ5ASRKZMmQ="
+            "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8="
+        );
+        fractor = (
+          generateWireguardHost "2" "NVntZ0W1QVee6AwXHgp8oxBqxBDbZPeZiDQ4Af2RY3k="
+            "N+EOs047k67li395wKrt94mDMSK64SG6xfCXKgrzmAk="
+        );
+        neurodrive = (
+          generateWireguardHost "3" "kEIYSz20OKCGyWcnXlRBSkWBt7DkjKhmb1Xu+0Kc3XY="
+            "3gMbw0t8dlUGUnRmmNJlNM75tKsygjpWYD/1fQaekXg="
+        );
+      };
+    }
     (mkIf cfg.enabled {
       sops.secrets."wireguard/wg0_private" = {
         format = "binary";
@@ -102,7 +114,7 @@ in
           privateKeyFile = config.sops.secrets."wireguard/wg0_private".path;
           peers = [
             {
-              publicKey = (cfg.hosts.wireguardController.main.publicKey);
+              publicKey = cfg.hosts.wireguardController.main.publicKey;
               allowedIPs = [
                 (generateWithSuffix mainPrefix "0" "32")
               ];
@@ -117,7 +129,7 @@ in
           privateKeyFile = config.sops.secrets."wireguard/wg1_private".path;
           peers = [
             {
-              publicKey = (cfg.hosts.wireguardController.unlock.publicKey);
+              publicKey = cfg.hosts.wireguardController.unlock.publicKey;
               allowedIPs = [
                 (generateWithSuffix unlockPrefix "0" "32")
               ];
