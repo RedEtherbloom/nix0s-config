@@ -2,8 +2,12 @@
 with lib;
 let
   cfg = config.networking.ownWireguard;
+
+  mainPrefix = "10.69.0.";
+  unlockPrefix = "10.68.0.";
+
   wireguardPeer =
-    { IP, publicKey, ... }:
+    { ... }:
     {
       options = {
         IP = mkOption {
@@ -18,12 +22,7 @@ let
       };
     };
   wireguardHost =
-    {
-      mainIP,
-      main,
-      unlock,
-      ...
-    }:
+    { ... } :
     {
       options = {
         # For easier access
@@ -33,34 +32,40 @@ let
         };
         main = mkOption {
           description = "Main wireguard network";
-          type = with types; submodule wireguardPeer;
+          type = with types; (submodule wireguardPeer);
         };
         unlock = mkOption {
           description = "Network for unlocking wireguard devices on boot";
-          type = with types; submodule wireguardPeer;
+          type = with types; (submodule wireguardPeer);
         };
       };
     };
-  generateWireguardHost =
-    lastIPDigit: mainPublicKey: unlockPublicKey:
-    {
-      mainIP = (generateLastIPDigit mainPrefix lastIPDigit);
-      main = (generateWireguardPeer mainPrefix lastIPDigit mainPublicKey);
-      unlock = (generateWireguardPeer unlockPrefix lastIPDigit unlockPublicKey);
-    };
-
-  mainPrefix = "10.69.0.";
-  unlockPrefix = "10.68.0.";
   generateLastIPDigit = prefix: digit: prefix + digit;
+
   generateWithSuffix =
     prefix: digit: suffix:
     (generateLastIPDigit prefix digit) + "/" + suffix;
+
   generateWireguardPeer =
     prefix: lastIPDigit: publicKey:
-    {
-      IP = (generateWithSuffix prefix lastIPDigit "32");
-      publicKey = publicKey;
-    };
+    let
+      peer = ({
+        IP = (generateWithSuffix prefix lastIPDigit "32");
+        publicKey = publicKey;
+      });
+    in
+    peer;
+
+  generateWireguardHost =
+    lastIPDigit: mainPublicKey: unlockPublicKey:
+    let
+      host = ({
+        mainIP = (generateLastIPDigit mainPrefix lastIPDigit);
+        main = (generateWireguardPeer mainPrefix lastIPDigit mainPublicKey);
+        unlock = (generateWireguardPeer unlockPrefix lastIPDigit unlockPublicKey);
+      });
+    in
+    host;
 in
 {
   options = {
@@ -83,21 +88,21 @@ in
   config = mkMerge [
     {
       networking.ownWireguard.hosts = {
-        wireguardController = (
+        wireguardController = debug.traceValSeq (
           generateWireguardHost "1" "d6yoEQMbMy4M4h45sj28RrgKxYZXRxDHAJ5ASRKZMmQ="
             "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8="
         );
-        fractor = (
+        fractor = debug.traceValSeq (
           generateWireguardHost "2" "NVntZ0W1QVee6AwXHgp8oxBqxBDbZPeZiDQ4Af2RY3k="
             "N+EOs047k67li395wKrt94mDMSK64SG6xfCXKgrzmAk="
         );
-        neurodrive = (
+        neurodrive = debug.traceValSeq (
           generateWireguardHost "3" "kEIYSz20OKCGyWcnXlRBSkWBt7DkjKhmb1Xu+0Kc3XY="
             "3gMbw0t8dlUGUnRmmNJlNM75tKsygjpWYD/1fQaekXg="
         );
       };
-    }
-    (mkIf cfg.enabled {
+    
+    mkIf cfg.enabled {
       sops.secrets."wireguard/wg0_private" = {
         format = "binary";
         sopsFile = "${inputs.our-secrets}/secrets/${config.networking.hostName}/wireguard/wg0.priv";
@@ -143,6 +148,6 @@ in
       networking.firewall.allowedUDPPorts = lib.attrsets.mapAttrsToList (
         name: value: value.listenPort
       ) config.networking.wireguard.interfaces;
-    })
+    }; 
   ];
 }

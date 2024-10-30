@@ -22,7 +22,7 @@
       sync = {
         encryption_secret = "!${config.sops.secrets.encryption_secret.path}";
         server = {
-          url = with osConfig.myOptions.taskchampion; "http://${taskchampionIP}:${taskchampionPort}";
+          url = with osConfig.myOptions.taskchampion; "http://${taskchampionIP}:${toString taskchampionPort}";
           client_id = "!${config.sops.secrets.client_id.path}";
         };
       };

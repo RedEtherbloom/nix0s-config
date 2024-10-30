@@ -10,15 +10,15 @@ in
       type = types.bool;
       default = false;
     };
-    taskchampionPort = {
+    taskchampionPort = mkOption {
       description = "Port that hosts the taskchampion server";
       type = types.port;
       # Default taskchampion port used by taskchampion
       default = 10222;
     };
-    taskchampionIP = {
+    taskchampionIP = mkOption {
       description = "IP under which the taskchampion server runs";
-      type = types.IPv4;
+      type = types.singleLineStr;
       default = config.networking.ownWireguard.hosts.neurodrive.mainIP;
     };
   };
