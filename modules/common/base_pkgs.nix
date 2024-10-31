@@ -116,6 +116,7 @@ in
       services.fstrim.enable = true;
       programs.adb.enable = true;
     })
+    # TODO: These belong in
     (mkIf cfg.userPackages {
       users.users.inf.packages = with pkgs; [
         (chromium.override { enableWideVine = true; })
