@@ -119,7 +119,7 @@ in
             {
               publicKey = cfg.hosts.wireguardController.main.publicKey;
               allowedIPs = [
-                (generateWithSuffix mainPrefix "0" "32")
+                (generateWithSuffix mainPrefix "0" "24")
               ];
               endpoint = "51.15.91.213:51820";
               persistentKeepalive = 25;
@@ -134,7 +134,7 @@ in
             {
               publicKey = cfg.hosts.wireguardController.unlock.publicKey;
               allowedIPs = [
-                (generateWithSuffix unlockPrefix "0" "32")
+                (generateWithSuffix unlockPrefix "0" "24")
               ];
               endpoint = "51.15.91.213:51821";
               persistentKeepalive = 25;
