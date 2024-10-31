@@ -12,23 +12,23 @@ let
       options = {
         IP = mkOption {
           description = "IPv4 of the wireguard client";
-          type = types.singleLineStr;
+          type = with types; str;
         };
         # How would I detect a miss-match?
         publicKey = mkOption {
           description = "Public key of the wireguard client";
-          type = types.singleLineStr;
+          type = with types; str;
         };
       };
     };
   wireguardHost =
-    { ... } :
+    { ... }:
     {
       options = {
         # For easier access
         mainIP = mkOption {
           description = "Main IPv4 without suffix";
-          type = types.singleLineStr;
+          type = with types; str;
         };
         main = mkOption {
           description = "Main wireguard network";
@@ -73,36 +73,34 @@ in
       enabled = mkEnableOption "Insert own standard wireguard config";
       currentHost = mkOption {
         description = "Current host to be configured";
-        type = wireguardHost;
+        type = with types; submodule wireguardHost;
       };
       # To be referenced in other files or services
       # TODO: Rewrite with attrset(I think one can modularize)
       hosts = mkOption {
         description = "Listing of our wireguard hosts for easy cross-reference";
         type = with types; attrsOf (submodule wireguardHost);
-        default = { };
+        # TODO: Check if it still crashes if I move this back into the config block
+        default = {
+          wireguardController = (
+            generateWireguardHost "1" "d6yoEQMbMy4M4h45sj28RrgKxYZXRxDHAJ5ASRKZMmQ="
+              "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8="
+          );
+          fractor = (
+            generateWireguardHost "2" "NVntZ0W1QVee6AwXHgp8oxBqxBDbZPeZiDQ4Af2RY3k="
+              "N+EOs047k67li395wKrt94mDMSK64SG6xfCXKgrzmAk="
+          );
+          neurodrive = (
+            generateWireguardHost "3" "kEIYSz20OKCGyWcnXlRBSkWBt7DkjKhmb1Xu+0Kc3XY="
+              "3gMbw0t8dlUGUnRmmNJlNM75tKsygjpWYD/1fQaekXg="
+          );
+        };
       };
     };
   };
 
   config = mkMerge [
-    {
-      networking.ownWireguard.hosts = {
-        wireguardController = debug.traceValSeq (
-          generateWireguardHost "1" "d6yoEQMbMy4M4h45sj28RrgKxYZXRxDHAJ5ASRKZMmQ="
-            "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8="
-        );
-        fractor = debug.traceValSeq (
-          generateWireguardHost "2" "NVntZ0W1QVee6AwXHgp8oxBqxBDbZPeZiDQ4Af2RY3k="
-            "N+EOs047k67li395wKrt94mDMSK64SG6xfCXKgrzmAk="
-        );
-        neurodrive = debug.traceValSeq (
-          generateWireguardHost "3" "kEIYSz20OKCGyWcnXlRBSkWBt7DkjKhmb1Xu+0Kc3XY="
-            "3gMbw0t8dlUGUnRmmNJlNM75tKsygjpWYD/1fQaekXg="
-        );
-      };
-    
-    mkIf cfg.enabled {
+    (mkIf cfg.enabled {
       sops.secrets."wireguard/wg0_private" = {
         format = "binary";
         sopsFile = "${inputs.our-secrets}/secrets/${config.networking.hostName}/wireguard/wg0.priv";
@@ -148,6 +146,6 @@ in
       networking.firewall.allowedUDPPorts = lib.attrsets.mapAttrsToList (
         name: value: value.listenPort
       ) config.networking.wireguard.interfaces;
-    }; 
+    })
   ];
 }
