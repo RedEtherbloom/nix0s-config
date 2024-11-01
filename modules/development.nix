@@ -138,6 +138,7 @@ in
             nixd
             nil
             direnv
+            nix-prefetch-scripts
           ]
           ++ lib.optionals cfg.electronics [
             kicad
