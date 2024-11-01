@@ -10,6 +10,7 @@ let
 in
 {
   imports = [
+    ../../modules/default.nix
     ../../modules/cachix.nix
 
     ../../modules/common/default.nix
@@ -256,6 +257,10 @@ in
       "--tls-cert"
       restic_public_key
     ];
+  };
+
+  myOptions.services.taskchampion = {
+    enable = true;
   };
 
   system.stateVersion = "24.05";
