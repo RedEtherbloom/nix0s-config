@@ -1,11 +1,11 @@
 { lib, config, ... }:
 with lib;
 let
-  cfg = config.myOptions.taskchampion;
+  cfg = config.myOptions.services.taskchampion;
 in
 {
-  options.myOptions.taskchampion = {
-    enableServer = mkOption {
+  options.myOptions.services.taskchampion = {
+    enable = mkOption {
       description = "Enable the taskchampion server on the current device";
       type = types.bool;
       default = false;
