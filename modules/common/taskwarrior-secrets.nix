@@ -20,7 +20,7 @@ in
     content = ''
     sync.encryption_secret = "${config.sops.placeholder.encryption_secret}"
     sync.server.client_id = "${config.sops.placeholder.client_id}" 
-    sync.server.url = "http://${functions.data-server-ip}:${toString config.myOptions.taskchampion.taskchampionPort}"
+    sync.server.url = "http://${functions.data-server-ip}:${toString config.myOptions.services.taskchampion.taskchampionPort}"
   '';
   };
 }
