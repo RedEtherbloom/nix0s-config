@@ -19,6 +19,7 @@ in
     taskchampionIP = mkOption {
       description = "IP under which the taskchampion server runs";
       type = types.singleLineStr;
+      # TODO: Make data-server-ip hm independent so that I can use it here
       default = config.networking.ownWireguard.hosts.neurodrive.mainIP;
     };
   };
