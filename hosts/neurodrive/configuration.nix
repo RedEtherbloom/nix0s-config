@@ -10,11 +10,15 @@ let
 in
 {
   imports = [
+    ../../modules/default.nix
     ../../modules/cachix.nix
 
     ../../modules/common/default.nix
     ../../modules/common/ssh.nix
     ../../modules/wireguard/default.nix
+
+    # TODO: Remove once hm sops-nix supports secrets
+    ../../modules/common/taskwarrior-secrets.nix
 
     ../../modules/hdd.nix
 
@@ -82,7 +86,7 @@ in
 
   networking.ownWireguard = {
     enabled = true;
-    lastIPDigit = 3;
+    currentHost = config.networking.ownWireguard.hosts.neurodrive;
   };
 
   services.displayManager.sddm.enable = true;
@@ -256,6 +260,10 @@ in
       "--tls-cert"
       restic_public_key
     ];
+  };
+
+  myOptions.services.taskchampion = {
+    enable = true;
   };
 
   system.stateVersion = "24.05";

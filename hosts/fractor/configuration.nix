@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -10,6 +11,9 @@
     ../../modules/common/default.nix
     ../../modules/common/ssh.nix
     ../../modules/wireguard/default.nix
+
+    # TODO: Remove once hm sops-nix supports secrets
+    ../../modules/common/taskwarrior-secrets.nix
 
     ./hardware-configuration.nix
   ];
@@ -40,7 +44,7 @@
 
   networking.ownWireguard = {
     enabled = true;
-    lastIPDigit = 2;
+    currentHost = config.networking.ownWireguard.hosts.fractor;
   };
 
   # Should hopefully not mess with KDE

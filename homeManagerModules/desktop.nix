@@ -1,3 +1,6 @@
 {
-  imports = [ ./graphical.nix ];
+  imports = [
+    ./graphical.nix
+    ./programs/taskwarrior.nix
+  ];
 }

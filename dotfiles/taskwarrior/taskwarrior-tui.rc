@@ -1,0 +1,48 @@
+# TODO: Move to main taskwarrior.nix
+# No idea what this does
+uda.taskwarrior-tui.task-report.jump-on-task-add=false
+
+# ADHD
+uda.taskwarrior-tui.selection.blink=yes
+uda.taskwarrior-tui.task-report.prompt-on-undo=true
+uda.taskwarrior-tui.task-report.looping=true
+# Hopefully less lag with huge jumps
+# Nope, made it worse. Now searching lags :/
+# Is this thing single threaded?!?
+#uda.taskwarrior-tui.task-report.task-detail-prefetch=100
+# We default for now, frrr
+#uda.taskwarrior-tui.task-report.task-detail-prefetch=20
+
+# Ivy: Neo2 approved
+# Valerie: And now we need to neo2 unapprove /o\
+uda.taskwarrior-tui.keyconfig.quit=q
+uda.taskwarrior-tui.keyconfig.refresh=c
+uda.taskwarrior-tui.keyconfig.go-to-bottom=O
+uda.taskwarrior-tui.keyconfig.go-to-top=o
+uda.taskwarrior-tui.keyconfig.down=n
+uda.taskwarrior-tui.keyconfig.up=r
+uda.taskwarrior-tui.keyconfig.page-down=N
+uda.taskwarrior-tui.keyconfig.page-up=R
+uda.taskwarrior-tui.keyconfig.delete=X
+uda.taskwarrior-tui.keyconfig.done=x
+uda.taskwarrior-tui.keyconfig.start-stop=s
+uda.taskwarrior-tui.keyconfig.quick-tag=w
+uda.taskwarrior-tui.keyconfig.undo=u
+#uda.taskwarrior-tui.keyconfig.edit=&
+#uda.taskwarrior-tui.keyconfig.duplicate=y
+uda.taskwarrior-tui.keyconfig.modify=m
+uda.taskwarrior-tui.keyconfig.shell=!
+uda.taskwarrior-tui.keyconfig.log=l
+uda.taskwarrior-tui.keyconfig.add=a
+uda.taskwarrior-tui.keyconfig.annotate=A
+uda.taskwarrior-tui.keyconfig.filter=/
+uda.taskwarrior-tui.keyconfig.zoom=z
+# No idea how to make special characters work here
+#uda.taskwarrior-tui.keyconfig.context-menu=ä
+uda.taskwarrior-tui.keyconfig.context-menu=h
+uda.taskwarrior-tui.keyconfig.next-tab=]
+uda.taskwarrior-tui.keyconfig.previous-tab=[
+
+uda.taskwarrior-tui.shortcuts.1=taskopen
+uda.taskwarrior-tui.shortcuts.2=task $selected_task_uuid modify +to_schedule
+uda.taskwarrior-tui.shortcuts.4=task duplicate $selected_task_uuid

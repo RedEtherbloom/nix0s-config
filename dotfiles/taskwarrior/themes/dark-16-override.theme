@@ -1,0 +1,4 @@
+include dark-blue-256.theme
+color.overdue=red
+color.scheduled=black on green
+color.tag.next=black on cyan

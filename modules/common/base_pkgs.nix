@@ -116,6 +116,7 @@ in
       services.fstrim.enable = true;
       programs.adb.enable = true;
     })
+    # TODO: These belong in
     (mkIf cfg.userPackages {
       users.users.inf.packages = with pkgs; [
         (chromium.override { enableWideVine = true; })
@@ -125,7 +126,6 @@ in
         kate
         obsidian
         kdePackages.kalk
-        taskwarrior3
         taskwarrior-tui
         # Broken atm until PR is built
         # bitwarden
