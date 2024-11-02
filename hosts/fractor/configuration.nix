@@ -124,6 +124,9 @@
     ];
   };
 
+  # Setup event setup and hardening etc.
+  myOptions.event-setup.enable = true;
+
   services.avahi = {
     enable = true;
     nssmdns4 = true;
