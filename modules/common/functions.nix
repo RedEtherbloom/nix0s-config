@@ -2,7 +2,7 @@
 # TODO: Merge those two
 { config }: let
   data-server-ip =
-    wgIpOrLocalhost config.networking.ownWireguard.neurodrive;
+    wgIpOrLocalhost config.networking.ownWireguard.hosts.neurodrive;
   wgIpOrLocalhost =
     wireguardHost:
     if
