@@ -126,7 +126,6 @@ in
         kate
         obsidian
         kdePackages.kalk
-        taskwarrior3
         taskwarrior-tui
         # Broken atm until PR is built
         # bitwarden
