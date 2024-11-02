@@ -1,12 +1,18 @@
 { config, osConfig, ... }:
 let
   data-server-ip =
+    wgIpOrLocalhost osConfig.networking.ownWireguard.neurodrive;
+  wgIpOrLocalhost =
+    wireguardHost:
     if
-      (osConfig.networking.ownWireguard.currentHost.mainIP == osConfig.networking.ownWireguard.hosts.neurodrive.mainIP)
+      (
+        osConfig.networking.ownWireguard.currentHost.mainIP
+        == wireguardHost.mainIP
+      )
     then
       "localhost"
     else
-      osConfig.networking.ownWireguard.hosts.neurodrive.mainIP;
+      wireguardHost.mainIP;
   own-hm-data-directory = "${config.xdg.dataHome}/data-for-home-manager";
 in
 {
