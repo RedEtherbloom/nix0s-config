@@ -24,7 +24,7 @@ in
     };
   };
 
-  config = mkIf cfg.enableServer {
+  config = mkIf cfg.enable {
     services.taskchampion-sync-server = {
       enable = true;
       port = config.myOptions.taskchampion.taskchampionPort;
