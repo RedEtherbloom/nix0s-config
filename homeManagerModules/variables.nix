@@ -18,5 +18,5 @@ in
 {
   xdg.dataFile."${builtins.baseNameOf own-hm-data-directory}/.keep".text = "";
 
-  inherit data-server-ip own-hm-data-directory;
+  inherit data-server-ip wgIpOrLocalhost own-hm-data-directory;
 }
