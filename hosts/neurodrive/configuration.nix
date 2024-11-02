@@ -72,7 +72,7 @@ in
   networking.interfaces."enp0s25".wakeOnLan.enable = true;
   # Issues with builds randomly failing
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
-  boot.kernelPackages = pkgs.linuxPackages_6_10;
+  boot.kernelPackages = pkgs.linuxPackages_6_11;
 
   networking.firewall.allowedTCPPorts = [
     #TODO: Pulseaudio Network Sharing. Probably only needed for publush
