@@ -10,11 +10,13 @@ in
 {
   options = {
     enable = mkEnableOption "System options for chaos events";
+    # TODO: Implement
     hardenSystem = mkOption {
       description = "STUB: Enable some extra hardening options";
       type = types.bool;
       default = true;
     };
+    # TODO: Implement
     closeUnnecessaryPorts = mkOption {
       description = "STUB: Enable some extra hardening options";
       type = types.bool;
@@ -25,6 +27,7 @@ in
       type = types.bool;
       default = true;
     };
+    # TODO: Implement
     enablePixelflutServer = mkOption {
       description = "STUB: Install and enable a pixelflut server";
       type = types.bool;
