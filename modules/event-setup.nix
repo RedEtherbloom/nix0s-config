@@ -5,10 +5,11 @@
   ...
 }:
 with lib;
-  let cfg = config.myOptions.event-setup;
+let
+  cfg = config.myOptions.event-setup;
 in
 {
-  options = {
+  options.myOptions.event-setup = {
     enable = mkEnableOption "System options for chaos events";
     # TODO: Implement
     hardenSystem = mkOption {
@@ -37,11 +38,15 @@ in
   # TODO: Harden system
   # TODO: Disable open ports
 
-  config = mkIf cfg.enable mkMerge [
+  config = mkIf cfg.enable (mkMerge [
     (mkIf cfg.enablePixelflutClient {
-      home.sharedModules = with pkgs; [
-        sturmflut
+      home-manager.sharedModules = [
+        {
+          home.packages = with pkgs; [
+            sturmflut
+          ];
+        }
       ];
     })
-  ];
+  ]);
 }
