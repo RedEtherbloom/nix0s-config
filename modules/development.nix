@@ -113,13 +113,14 @@ in
                 ++ lib.optionals cfg.java [
                   vscjava.vscode-java-pack
                 ]
+                # TODO: Replace once https://github.com/NixOS/nixpkgs/pull/353656 got merged
                 ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace (
                   lib.optionals cfg.openscad [
                     {
                       name = "openscad";
                       publisher = "Antyos";
                       version = "1.3.1";
-                      sha256 = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
+                      hash = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
                     }
                   ]
                 );
