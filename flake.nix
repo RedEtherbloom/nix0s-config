@@ -46,6 +46,7 @@
               ./hosts/neurodrive/home.nix
               ./modules/desktop.nix
               ./modules/gaming.nix
+              ./modules
               ./modules/development.nix
               {
                 home-manager = {
@@ -79,6 +80,7 @@
             ./hosts/fractor/configuration.nix
             ./modules/laptop.nix
             ./modules/gaming.nix
+            ./modules
             ./modules/development.nix
             {
               home-manager = {
@@ -104,6 +106,7 @@
             inherit inputs homeManagerOptions;
           };
           modules = [
+            ./modules
             ./hosts/audiosink/configuration.nix
             {
               home-manager = {

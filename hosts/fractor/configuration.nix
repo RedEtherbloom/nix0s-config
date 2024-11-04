@@ -8,9 +8,8 @@
   imports = [
     ./restic.nix
 
-    ../../modules/common/default.nix
     ../../modules/common/ssh.nix
-    ../../modules/wireguard/default.nix
+    ../../modules
 
     # TODO: Remove once hm sops-nix supports secrets
     ../../modules/common/taskwarrior-secrets.nix
@@ -123,6 +122,9 @@
       aircrack-ng
     ];
   };
+
+  # Setup event setup and hardening etc.
+  myOptions.event-setup.enable = true;
 
   services.avahi = {
     enable = true;

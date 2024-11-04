@@ -1,5 +1,8 @@
 {
   imports = [
-    ./services/default.nix
+    ./common
+    ./wireguard
+    ./services
+    ./event-setup.nix
   ];
 }
