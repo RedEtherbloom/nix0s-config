@@ -1,7 +1,7 @@
 {
   imports = [
     ./common
-    ./common/wireguard
+    ./wireguard
     ./services
     ./event-setup.nix
   ];
