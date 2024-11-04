@@ -125,7 +125,7 @@
   };
 
   # Setup event setup and hardening etc.
-  myOptions.event-setup.enable = true;
+  myOptions.event-setup.enable = false;
 
   services.avahi = {
     enable = true;
