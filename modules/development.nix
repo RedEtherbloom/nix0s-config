@@ -71,6 +71,11 @@ in
       default = true;
       description = "Toolchain for network analysis";
     };
+    git = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Git and accompanying defaults";
+    };
   };
 
   config = {
@@ -158,6 +163,16 @@ in
             python3Packages.flake8
           ];
       }
+      (mkIf cfg.git {
+        programs.git = {
+          enable = true;
+          extraConfig = {
+            push = {
+              autoSetupRemote = true;
+            };
+          };
+        };
+      })
     ];
 
     programs.java = mkIf cfg.java {
