@@ -13,6 +13,11 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -20,7 +25,6 @@
       self,
       nixpkgs,
       home-manager,
-      sops-nix,
       nixos-hardware,
       ...
     }@inputs:
@@ -60,7 +64,6 @@
                 };
               }
               home-manager.nixosModules.home-manager
-              sops-nix.nixosModules.sops
             ]
             ++ (with nixos-hardware.nixosModules; [
               common-gpu-nvidia-nonprime
@@ -96,7 +99,6 @@
               };
             }
             home-manager.nixosModules.home-manager
-            sops-nix.nixosModules.sops
             nixos-hardware.nixosModules.lenovo-thinkpad-x230
           ];
         };
@@ -119,7 +121,6 @@
               };
             }
             home-manager.nixosModules.home-manager
-            sops-nix.nixosModules.sops
             nixos-hardware.nixosModules.raspberry-pi-3
           ];
         };
