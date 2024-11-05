@@ -177,7 +177,7 @@ in
 
     programs.java = mkIf cfg.java {
       enable = true;
-      package = with pkgs; jdk22;
+      package = with pkgs; jdk23;
     };
   };
 }
