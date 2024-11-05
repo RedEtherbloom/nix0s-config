@@ -26,7 +26,6 @@ in
   config = mkIf cfg.enabled (mkMerge [
     (mkIf cfg.systemPackages {
       environment.systemPackages = with pkgs; [
-        comma
         age
         ssh-to-age
         sops
