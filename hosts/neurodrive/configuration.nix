@@ -220,7 +220,7 @@ in
     modesetting.enable = true;
     powerManagement.enable = true;
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.latest;
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
