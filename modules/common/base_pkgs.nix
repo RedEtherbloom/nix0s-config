@@ -1,5 +1,6 @@
 {
   config,
+  fetchFromGitHub,
   lib,
   pkgs,
   ...
@@ -31,7 +32,7 @@ in
         sops
 
         file
-        # losetup 
+        # For losetup 
         util-linux
         psmisc
         zip
@@ -115,7 +116,7 @@ in
       services.fstrim.enable = true;
       programs.adb.enable = true;
     })
-    # TODO: These belong in
+    # TODO: These belong in home-manager
     (mkIf cfg.userPackages {
       users.users.inf.packages = with pkgs; [
         (chromium.override { enableWideVine = true; })
@@ -125,16 +126,41 @@ in
         kate
         obsidian
         kdePackages.kalk
-        taskwarrior-tui
-        # Broken atm until PR is built
-        # bitwarden
+        (taskwarrior-tui.overrideAttrs (oldAttrs: rec {
+          version = oldAttrs.version + "-fix";
+
+          src = (
+            pkgs.fetchFromGitHub {
+              owner = "RedEtherbloom";
+              repo = "taskwarrior-tui";
+              hash = "sha256-YNd4vtaWm+1fsB8ly3toq2u74Nicmhx2ey1m557q4K8=";
+              rev = "ee24bfb4a36f246933e6d2502ab85d3fc6abb85b";
+            }
+          );
+
+          cargoDeps = oldAttrs.cargoDeps.overrideAttrs (
+            lib.const {
+              name = "taskwarrior-tui-vendor.tar.gz";
+              inherit src;
+              outputHash = "sha256-jtVUXWVrBq6xS4y9HKz+JtXHc6LvIk0cC7xmiPB1+ro=";
+            }
+          );
+        }))
+        bitwarden
         bitwarden-cli
         wl-clipboard
         hyfetch
 
+        # Attempts at notifications
+        kdePackages.kdialog
+        libnotify
+
+        # Do we still need this with stylix/noto?
         joypixels
         warp
+        # Needed for warp?
         zbar
+        # If spectactle has feature parity(for drawing): Drop
         flameshot
 
         vlc
@@ -164,6 +190,7 @@ in
           withVencord = true;
         })
 
+        # TODO: Turn these into home-manager options
         kitty
         nushell
       ];
