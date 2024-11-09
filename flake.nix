@@ -52,6 +52,8 @@
       homeManagerOptions = {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
+        # Wait, aren't these working??!
+        home-manager.backupFileExtension = "hm_backup_move";
 
         # TODO: Figure out how to set extraSpecialArgs for all hosts
       };
@@ -72,7 +74,9 @@
               ./modules
               ./modules/development.nix
               {
+                home-manager.backupFileExtension = "hm_backup_move";
                 home-manager = {
+                  # homeManagerOptions don't seem to get applieed for some reason
                   extraSpecialArgs = {
                     inherit inputs homeManagerOptions;
                   };
@@ -105,6 +109,7 @@
             ./modules
             ./modules/development.nix
             {
+              home-manager.backupFileExtension = "hm_backup_move";
               home-manager = {
                 extraSpecialArgs = {
                   inherit inputs homeManagerOptions;
@@ -130,6 +135,7 @@
             ./modules
             ./hosts/audiosink/configuration.nix
             {
+              home-manager.backupFileExtension = "hm_backup_move";
               home-manager = {
                 extraSpecialArgs = {
                   inherit inputs homeManagerOptions;
