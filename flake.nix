@@ -12,10 +12,15 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:RedEtherbloom/home-manager?rev=3c057e67fbd9eabd979813bf55424a0d22bb9a0c";
+      #url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs = {
@@ -27,9 +32,10 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
-    };  
+    };
   };
 
+  # TODO: Move most modules into their hosts. This is getting messy to read.
   outputs =
     {
       self,
@@ -40,21 +46,13 @@
     }@inputs:
     let
       system = "x86_64-linux";
-      homeManagerOptions = {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        # Wait, aren't these working??!
-        home-manager.backupFileExtension = "hm_backup_move";
-
-        # TODO: Figure out how to set extraSpecialArgs for all hosts
-      };
     in
     {
       nixosConfigurations = {
         neurodrive = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit inputs homeManagerOptions;
+            inherit inputs;
           };
           modules =
             [
@@ -65,11 +63,9 @@
               ./modules
               ./modules/development.nix
               {
-                home-manager.backupFileExtension = "hm_backup_move";
                 home-manager = {
-                  # homeManagerOptions don't seem to get applieed for some reason
                   extraSpecialArgs = {
-                    inherit inputs homeManagerOptions;
+                    inherit inputs;
                   };
                   users.inf.imports = [
                     { home.stateVersion = "24.05"; }
@@ -91,7 +87,7 @@
         fractor = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit inputs homeManagerOptions;
+            inherit inputs;
           };
           modules = [
             ./hosts/fractor/configuration.nix
@@ -100,10 +96,9 @@
             ./modules
             ./modules/development.nix
             {
-              home-manager.backupFileExtension = "hm_backup_move";
               home-manager = {
                 extraSpecialArgs = {
-                  inherit inputs homeManagerOptions;
+                  inherit inputs;
                 };
                 users.inf.imports = [
                   {
@@ -120,16 +115,15 @@
         audiosink = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           specialArgs = {
-            inherit inputs homeManagerOptions;
+            inherit inputs;
           };
           modules = [
             ./modules
             ./hosts/audiosink/configuration.nix
             {
-              home-manager.backupFileExtension = "hm_backup_move";
               home-manager = {
                 extraSpecialArgs = {
-                  inherit inputs homeManagerOptions;
+                  inherit inputs;
                 };
                 users.inf.imports = [
                   { home.stateVersion = "24.05"; }
