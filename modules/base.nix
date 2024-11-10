@@ -7,5 +7,10 @@
     ./default.nix
   ];
 
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.backupFileExtension = "home_manager_backup_move";
+  home-manager.verbose = true;
+
   programs.nix-index-database.comma.enable = lib.mkDefault true;
 }
