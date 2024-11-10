@@ -8,7 +8,7 @@
 
   stylix = {
     enable = true;
-    image = ../dotfiles/wallpaper/manaria_cuddles.jpg;
+    image = ../dotfiles/wallpaper/test_image.jpg;
     polarity = "dark";
   };
 }
