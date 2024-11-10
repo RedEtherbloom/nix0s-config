@@ -34,11 +34,10 @@
   programs.nix-ld.enable = true;
   programs.appimage.binfmt = true;
 
-
   hardware.i2c.enable = true;
 
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
-  
+
   # TODO: Replace with grub
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
