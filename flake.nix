@@ -69,6 +69,7 @@
               ./hosts/neurodrive/home.nix
               ./modules/desktop.nix
               ./modules/gaming.nix
+              ./modules/graphical.nix
               ./modules
               ./modules/development.nix
               {
