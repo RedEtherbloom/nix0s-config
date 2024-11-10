@@ -12,7 +12,10 @@
     source = ../../dotfiles/taskwarrior/themes;
   };
 
-  services.taskwarrior-sync.enable = true;
+  services.taskwarrior-sync = {
+    enable = true;
+    package = pkgs.taskwarrior3;
+  };
 
   programs.taskwarrior = {
     enable = true;
