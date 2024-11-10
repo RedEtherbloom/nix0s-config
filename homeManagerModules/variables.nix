@@ -1,6 +1,6 @@
 { config, osConfig, ... }:
 let
-  data-server-ip = wgIpOrLocalhost osConfig.networking.ownWireguard.neurodrive;
+  data-server-ip = wgIpOrLocalhost osConfig.networking.ownWireguard.hosts.neurodrive;
   wgIpOrLocalhost =
     wireguardHost:
     if (osConfig.networking.ownWireguard.currentHost.mainIP == wireguardHost.mainIP) then
