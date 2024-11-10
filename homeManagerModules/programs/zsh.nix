@@ -42,7 +42,7 @@
       tt = "taskwarrior-tui";
       check-nix-config = "sudo nix-instantiate '<nixpkgs/nixos>' -A system";
       zix-shell = "nix-shell --command 'zsh'";
-      ztheme= "(){ export ZSH_THEME=\"$@\" && source $ZSH/oh-my-zsh.sh }";
+      ztheme = "(){ export ZSH_THEME=\"$@\" && source $ZSH/oh-my-zsh.sh }";
 
       screen_aoc = "kscreen-doctor output.DP-3.enable output.DP-3.position.0,0 output.DP-2.disable output.DP-2.rotation.inverted";
       screen_benq = "kscreen-doctor output.DP-3.disable output.DP-2.enable output.DP-2.rotation.normal output.DP-2.position.0,0";

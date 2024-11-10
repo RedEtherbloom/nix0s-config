@@ -16,7 +16,9 @@
 
   programs.taskwarrior = {
     enable = true;
-    colorTheme = "${config.home.homeDirectory}/${config.xdg.configFile."task/themes".target}/dark-16-override";
+    colorTheme = "${config.home.homeDirectory}/${
+      config.xdg.configFile."task/themes".target
+    }/dark-16-override";
     package = pkgs.taskwarrior3;
     config = {
       "weekstart" = "monday";
