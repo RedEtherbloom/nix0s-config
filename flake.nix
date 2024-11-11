@@ -46,13 +46,22 @@
     }@inputs:
     let
       system = "x86_64-linux";
+      overlay = import ./pkgs;
+      pkgs = import nixpkgs {
+        inherit system;
+
+        config.allowUnfree = true;
+        config.joypixels.acceptLicense = true;
+        overlays = [ overlay ];
+      };
     in
     {
+      overlay.defaults = [ overlay ];
       nixosConfigurations = {
         neurodrive = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit inputs;
+            inherit inputs pkgs;
           };
           modules =
             [
@@ -88,7 +97,7 @@
         fractor = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit inputs;
+            inherit inputs pkgs;
           };
           modules = [
             ./hosts/fractor/configuration.nix
@@ -124,7 +133,7 @@
             {
               home-manager = {
                 extraSpecialArgs = {
-                  inherit inputs;
+                  inherit inputs pkgs;
                 };
                 users.inf.imports = [
                   { home.stateVersion = "24.05"; }
