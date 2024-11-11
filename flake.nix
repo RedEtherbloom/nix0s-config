@@ -80,7 +80,6 @@
                   users.inf.imports = [
                     { home.stateVersion = "24.05"; }
                     ./homeManagerModules/desktop.nix
-                    ./homeManagerModules/hosts/audiosink/fritz-logger-service.nix
                   ];
                 };
               }
