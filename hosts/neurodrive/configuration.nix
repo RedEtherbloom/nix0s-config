@@ -34,6 +34,7 @@ in
       common-gpu-nvidia-nonprime
     ]);
 
+  nixpkgs.system = "x86_64-linux";
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;
