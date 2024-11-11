@@ -10,7 +10,7 @@
     };
     Install = {
       # May need default.target tbh
-      WantedBy = [ "multi-user.target" ];
+      # WantedBy = [ "multi-user.target" ];
     };
     Service = {
       Type = "simple";
