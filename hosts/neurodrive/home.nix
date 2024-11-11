@@ -1,6 +1,11 @@
 { pkgs, ... }:
 {
-  home-manager.users.inf.home.packages = with pkgs; [
+  imports = [
+    ../../homeManagerModules/desktop.nix
+  ];  
+
+  home.stateVersion = "24.05";
+  home.packages = with pkgs; [
     solaar
 
     krita

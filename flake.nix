@@ -40,32 +40,24 @@
     };
   };
 
-  # TODO: Move most modules into their hosts. This is getting messy to read.
   outputs =
     {
       self,
       flake-utils,
       nixpkgs,
-      home-manager,
-      nixos-hardware,
       ...
     }@inputs:
     let
       overlay = import ./pkgs;
-    in
-    /*
-      pkgs = import nixpkgs {
-        inherit system;
-
-        config.allowUnfree = true;
-        config.joypixels.acceptLicense = true;
-        overlays = [ overlay ];
+      specialArgs = {
+        inherit inputs self;
       };
-    */
+    in
     # flake-utils has mostly been copied from feas config
     flake-utils.lib.eachDefaultSystem (
       system:
       let
+        # Still ugly tbh. E.g. allowunfree and other setting don't get applied. Maybe I should turn nixpkgs into it's own imported nix file
         pkgs = import nixpkgs {
           inherit system;
           overlays = [ self.overlays.default ];
@@ -83,98 +75,55 @@
         };
 
         inherit formatter;
-
-        # Exposes packages from ./packages that were imported in self.overlays.default
-        #packages = mapPackagesAttrs (name: _: pkgs.${name});
       }
     )
     // {
       overlay.defaults = [ overlay ];
+      # TODO: Can I change this with libGenAttrs?
       nixosConfigurations = {
         neurodrive = nixpkgs.lib.nixosSystem {
+          inherit specialArgs;
+
           system = "x86_64-linux";
-          specialArgs = {
-            inherit inputs self;
-          };
-          modules =
-            [
-              ./hosts/neurodrive/configuration.nix
-              ./hosts/neurodrive/home.nix
-              ./modules/desktop.nix
-              ./modules/gaming.nix
-              ./modules/graphical.nix
-              ./modules
-              ./modules/development.nix
-              {
-                home-manager = {
-                  extraSpecialArgs = {
-                    inherit inputs;
-                  };
-                  users.inf.imports = [
-                    { home.stateVersion = "24.05"; }
-                    ./homeManagerModules/desktop.nix
-                  ];
-                };
-              }
-              home-manager.nixosModules.home-manager
-            ]
-            ++ (with nixos-hardware.nixosModules; [
-              common-gpu-nvidia-nonprime
-              common-hidpi
-              # Xeon CPU
-              common-cpu-intel-cpu-only
-              common-pc
-              common-pc-ssd
-            ]);
-        };
-        fractor = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inherit inputs self;
-          };
           modules = [
-            ./hosts/fractor/configuration.nix
-            ./modules/laptop.nix
-            ./modules/gaming.nix
-            ./modules
-            ./modules/development.nix
+            ./hosts/neurodrive/configuration.nix
             {
               home-manager = {
-                extraSpecialArgs = {
-                  inherit inputs;
-                };
                 users.inf.imports = [
-                  {
-                    home.stateVersion = "24.05";
-                  }
-                  ./homeManagerModules/desktop.nix
+                  ./hosts/neurodrive/home.nix
                 ];
               };
             }
-            home-manager.nixosModules.home-manager
-            nixos-hardware.nixosModules.lenovo-thinkpad-x230
+          ];
+        };
+        fractor = nixpkgs.lib.nixosSystem {
+          inherit specialArgs;
+
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/fractor/configuration.nix
+            {
+              home-manager = {
+                users.inf.imports = [
+                  ./hosts/fractor/home.nix
+                ];
+              };
+            }
           ];
         };
         audiosink = nixpkgs.lib.nixosSystem {
+          inherit specialArgs;
+
           system = "aarch64-linux";
-          specialArgs = {
-            inherit inputs self;
-          };
           modules = [
-            ./modules
             ./hosts/audiosink/configuration.nix
             {
               home-manager = {
-                extraSpecialArgs = {
-                  inherit inputs;
-                };
                 users.inf.imports = [
-                  { home.stateVersion = "24.05"; }
+                  ./hosts/audiosink/home.nix
                 ];
               };
             }
-            home-manager.nixosModules.home-manager
-            nixos-hardware.nixosModules.raspberry-pi-3
           ];
         };
       };
