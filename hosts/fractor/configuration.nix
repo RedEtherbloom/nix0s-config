@@ -7,11 +7,15 @@
 }:
 {
   imports = [
+    inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x230
+
     ./restic.nix
 
-    ../../modules/common/ssh.nix
     ../../modules
-
+    ../../modules/common/ssh.nix
+    ../../modules/development.nix
+    ../../modules/gaming.nix
+    ../../modules/laptop.nix
     # TODO: Remove once hm sops-nix supports secrets
     ../../modules/common/taskwarrior-secrets.nix
 

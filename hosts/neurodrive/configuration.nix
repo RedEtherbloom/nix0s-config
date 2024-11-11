@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  inputs,
   pkgs,
   ...
 }:
@@ -10,19 +11,28 @@ let
   restic_public_key = config.sops.secrets."restic_server/public_certificate".path;
 in
 {
-  imports = [
-    ../../modules
-    ../../modules/cachix.nix
+  imports =
+    [
+      ../../modules
+      ../../modules/cachix.nix
+      ../../modules/common/ssh.nix
+      ../../modules/desktop.nix
+      ../../modules/development.nix
+      ../../modules/gaming.nix
+      ../../modules/hdd.nix
+      # TODO: Remove once hm sops-nix supports secrets
+      ../../modules/common/taskwarrior-secrets.nix
 
-    ../../modules/common/ssh.nix
-
-    # TODO: Remove once hm sops-nix supports secrets
-    ../../modules/common/taskwarrior-secrets.nix
-
-    ../../modules/hdd.nix
-
-    ./hardware-configuration.nix
-  ];
+      ./hardware-configuration.nix
+    ]
+    ++ (with inputs.nixos-hardware.nixosModules; [
+      common-pc
+      common-pc-ssd
+      common-hidpi
+      # Xeon CPU
+      common-cpu-intel-cpu-only
+      common-gpu-nvidia-nonprime
+    ]);
 
   nixpkgs.config = {
     cudaSupport = true;
