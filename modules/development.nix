@@ -50,7 +50,6 @@ in
       default = true;
       description = "Enable VS-Code accesibility plugins";
     };
-    # Disabled due to PR for Kicad dependency still building https://github.com/NixOS/nixpkgs/issues/349248
     electronics = mkOption {
       type = types.bool;
       default = false;
@@ -84,11 +83,9 @@ in
         home.packages =
           with pkgs;
           lib.optionals cfg.vscode [
-            # TODO: Does this need mkIf?
             (vscode-with-extensions.override {
               vscodeExtensions =
                 with vscode-extensions;
-                # TODO: Rewrite with mkIf/mkMerge to make the evaluation lazy(I think)
                 [
                   mhutchie.git-graph
                   donjayamanne.githistory
@@ -118,17 +115,9 @@ in
                 ++ lib.optionals cfg.java [
                   vscjava.vscode-java-pack
                 ]
-                # TODO: Replace once https://github.com/NixOS/nixpkgs/pull/353656 got merged
-                ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace (
-                  lib.optionals cfg.openscad [
-                    {
-                      name = "openscad";
-                      publisher = "Antyos";
-                      version = "1.3.1";
-                      hash = "sha256-J4lJgZT0HXRC2B1eFUl4MoP0YT5EZjLPl3yIY+VLBiI=";
-                    }
-                  ]
-                );
+                ++ lib.optionals cfg.openscad [
+                  antyos.openscad
+                ];
             })
           ]
           ++ lib.optionals cfg.rust [
@@ -139,6 +128,7 @@ in
           ++ lib.optionals cfg.openscad [
             openscad-unstable
           ]
+          # TODO: Merge with DevShell
           ++ lib.optionals cfg.nix [
             nixfmt-rfc-style
             nixd

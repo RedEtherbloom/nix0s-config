@@ -47,9 +47,6 @@ in
     cores = 10;
   };
 
-  # Temporary to debug long resume from hiberate
-  boot.kernelModules = [ "rd.log" ];
-
   # Quarry: Cross-compilation support for audiosink
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
@@ -158,6 +155,7 @@ in
   };
 
   myOptions.basePkgs.enabled = true;
+  myOptions.development.electronics = true;
   users.users.inf = {
     isNormalUser = true;
     description = "Infinity";
