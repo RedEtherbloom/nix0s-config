@@ -20,8 +20,10 @@
     };
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
     };
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -80,20 +82,23 @@
     // {
       overlay.defaults = [ overlay ];
       # TODO: Redo with flake-parts or flake-utils once we have the spoons again
-      nixosConfigurations = inputs.nixpkgs.lib.attrsets.genAttrs (inputs.nixpkgs.lib.attrsets.mapAttrsToList (name: _: name) (builtins.readDir ./hosts)) (
-        name:
-        nixpkgs.lib.nixosSystem {
-          inherit specialArgs;
-          
-          modules = [
-            ./hosts/${name}/configuration.nix
-            {
-              home-manager.users.inf.imports = [
-                ./hosts/${name}/home.nix
+      nixosConfigurations =
+        nixpkgs.lib.attrsets.genAttrs
+          (nixpkgs.lib.attrsets.mapAttrsToList (name: _: name) (builtins.readDir ./hosts))
+          (
+            name:
+            nixpkgs.lib.nixosSystem {
+              inherit specialArgs;
+
+              modules = [
+                ./hosts/${name}/configuration.nix
+                {
+                  home-manager.users.inf.imports = [
+                    ./hosts/${name}/home.nix
+                  ];
+                }
               ];
             }
-          ];
-        }
-      );
+          );
     };
 }
