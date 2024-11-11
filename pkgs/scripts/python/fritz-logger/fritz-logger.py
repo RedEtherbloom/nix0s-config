@@ -23,9 +23,9 @@ ip_address = os.environ.get("IP_ADDRESS", "192.168.178.1")
 password_file = os.environ.get("PASSWORD_FILE")
 password = Path(password_file).read_text().replace('\n', '')
 # Every n seconds
-query_period: int = os.environ.get("QUERY_PERIOD", 15 * 60)
+query_period: int = int(os.environ.get("QUERY_PERIOD", 15 * 60))
 # In days
-prune_older_than: int = os.environ.get("PRUNE_OLDER_THAN", 14)
+prune_older_than: int = int(os.environ.get("PRUNE_OLDER_THAN", 14))
 clear_screen: bool = os.environ.get("CLEAN_SCREEN", False)
 data_dir = os.environ.get("DATA_DIR")
 if data_dir is None:

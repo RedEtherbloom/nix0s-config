@@ -1,5 +1,6 @@
-{ ... }: {
-  imports =  [
+{ ... }:
+{
+  imports = [
     ./fritz-logger-service.nix
   ];
 }
