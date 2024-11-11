@@ -6,6 +6,8 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,8 +32,11 @@
     };
     stylix = {
       url = "github:danth/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
     };
 
     our-secrets = {
@@ -48,14 +53,16 @@
   outputs =
     {
       self,
+      flake-utils,
       nixpkgs,
       home-manager,
       nixos-hardware,
       ...
     }@inputs:
     let
-      system = "x86_64-linux";
       overlay = import ./pkgs;
+    in
+    /*
       pkgs = import nixpkgs {
         inherit system;
 
@@ -63,14 +70,40 @@
         config.joypixels.acceptLicense = true;
         overlays = [ overlay ];
       };
-    in
-    {
+    */
+    # flake-utils has mostly been copied from feas config
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ self.overlays.default ];
+        };
+        formatter = pkgs.nixfmt-rfc-style;
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          packages = [
+            formatter
+            pkgs.nil
+            pkgs.nixd
+            pkgs.nix-output-monitor
+          ];
+        };
+
+        inherit formatter;
+
+        # Exposes packages from ./packages that were imported in self.overlays.default
+        #packages = mapPackagesAttrs (name: _: pkgs.${name});
+      }
+    )
+    // {
       overlay.defaults = [ overlay ];
       nixosConfigurations = {
         neurodrive = nixpkgs.lib.nixosSystem {
-          inherit system;
+          system = "x86_64-linux";
           specialArgs = {
-            inherit inputs pkgs;
+            inherit inputs self;
           };
           modules =
             [
@@ -104,9 +137,9 @@
             ]);
         };
         fractor = nixpkgs.lib.nixosSystem {
-          inherit system;
+          system = "x86_64-linux";
           specialArgs = {
-            inherit inputs pkgs;
+            inherit inputs self;
           };
           modules = [
             ./hosts/fractor/configuration.nix
@@ -134,7 +167,7 @@
         audiosink = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           specialArgs = {
-            inherit inputs;
+            inherit inputs self;
           };
           modules = [
             ./modules
@@ -142,7 +175,7 @@
             {
               home-manager = {
                 extraSpecialArgs = {
-                  inherit inputs pkgs;
+                  inherit inputs;
                 };
                 users.inf.imports = [
                   { home.stateVersion = "24.05"; }

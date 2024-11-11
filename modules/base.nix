@@ -1,4 +1,4 @@
-{ lib, inputs, ... }:
+{ lib, inputs, self, ... }:
 {
   imports = [
     inputs.nix-index-database.nixosModules.nix-index
@@ -6,6 +6,10 @@
 
     ./default.nix
   ];
+
+  nixpkgs.overlays = self.overlay.defaults;
+  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.joypixels.acceptLicense = true;
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
