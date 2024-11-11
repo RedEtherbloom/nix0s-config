@@ -79,53 +79,21 @@
     )
     // {
       overlay.defaults = [ overlay ];
-      # TODO: Can I change this with libGenAttrs?
-      nixosConfigurations = {
-        neurodrive = nixpkgs.lib.nixosSystem {
+      # TODO: Redo with flake-parts or flake-utils once we have the spoons again
+      nixosConfigurations = inputs.nixpkgs.lib.attrsets.genAttrs (inputs.nixpkgs.lib.attrsets.mapAttrsToList (name: _: name) (builtins.readDir ./hosts)) (
+        name:
+        nixpkgs.lib.nixosSystem {
           inherit specialArgs;
-
-          system = "x86_64-linux";
+          
           modules = [
-            ./hosts/neurodrive/configuration.nix
+            ./hosts/${name}/configuration.nix
             {
-              home-manager = {
-                users.inf.imports = [
-                  ./hosts/neurodrive/home.nix
-                ];
-              };
+              home-manager.users.inf.imports = [
+                ./hosts/${name}/home.nix
+              ];
             }
           ];
-        };
-        fractor = nixpkgs.lib.nixosSystem {
-          inherit specialArgs;
-
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/fractor/configuration.nix
-            {
-              home-manager = {
-                users.inf.imports = [
-                  ./hosts/fractor/home.nix
-                ];
-              };
-            }
-          ];
-        };
-        audiosink = nixpkgs.lib.nixosSystem {
-          inherit specialArgs;
-
-          system = "aarch64-linux";
-          modules = [
-            ./hosts/audiosink/configuration.nix
-            {
-              home-manager = {
-                users.inf.imports = [
-                  ./hosts/audiosink/home.nix
-                ];
-              };
-            }
-          ];
-        };
-      };
+        }
+      );
     };
 }

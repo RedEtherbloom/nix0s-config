@@ -22,6 +22,7 @@
     ./hardware-configuration.nix
   ];
 
+  nixpkgs.system = "x86_64-linux";
   # X230 has 2 Cores, a 4 logical cores
   nix.settings = {
     max-jobs = 3;
