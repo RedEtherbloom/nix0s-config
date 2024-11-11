@@ -9,9 +9,6 @@
     ./zsh.nix
   ];
 
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.joypixels.acceptLicense = true;
-
   nix = {
     settings = {
       experimental-features = [
