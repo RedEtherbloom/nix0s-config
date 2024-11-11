@@ -1,4 +1,9 @@
-{ config, lib, osConfig, ... }:
+{
+  config,
+  lib,
+  osConfig,
+  ...
+}:
 let
   vars = import ../variables.nix { inherit config osConfig; };
 
@@ -6,9 +11,8 @@ let
   DEFAULT_SYNC_INTERVAL = 3600;
   OBSIDIAN_VAULTS = "Obsidian Vaults";
 
-  generate_vault_dir_path = 
-    config.xdg.userDirs.documents + "/" + OBSIDIAN_VAULTS;
-  
+  generate_vault_dir_path = config.xdg.userDirs.documents + "/" + OBSIDIAN_VAULTS;
+
   generate_repository = vault-name: {
     path = (generate_vault_dir_path + "/${vault-name}/");
     interval = DEFAULT_SYNC_INTERVAL;
