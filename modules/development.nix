@@ -75,6 +75,11 @@ in
       default = true;
       description = "Git and accompanying defaults";
     };
+    github = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Useful extensions and tools for github";
+    };
   };
 
   config = {
@@ -93,6 +98,7 @@ in
                   ms-vscode-remote.remote-ssh
                   mkhl.direnv
                   streetsidesoftware.code-spell-checker
+                  redhat.vscode-yaml
                 ]
                 ++ lib.optionals cfg.vscode-accessibility [
                   vscode-extensions.oderwat.indent-rainbow
@@ -117,6 +123,8 @@ in
                 ]
                 ++ lib.optionals cfg.openscad [
                   antyos.openscad
+                ] ++ lib.optionals cfg.github [
+                  github.vscode-github-actions
                 ];
             })
           ]
@@ -162,6 +170,9 @@ in
             };
           };
         };
+      })
+      (mkIf cfg.github {
+        programs.gh.enable = true;
       })
     ];
 
