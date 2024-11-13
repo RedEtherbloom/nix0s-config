@@ -9,7 +9,8 @@ let
 
   # A hour sounds like a good preset
   DEFAULT_SYNC_INTERVAL = 3600;
-  OBSIDIAN_VAULTS = "Obsidian Vaults";
+  # Spaces in name blocked by this: https://github.com/simonthum/git-sync/issues/33
+  OBSIDIAN_VAULTS = "Obsidian";
 
   generate_vault_dir_path = config.xdg.userDirs.documents + "/" + OBSIDIAN_VAULTS;
 
