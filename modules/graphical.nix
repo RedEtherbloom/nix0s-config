@@ -8,7 +8,7 @@
 
   stylix = {
     enable = true;
-    image = ../dotfiles/wallpaper/test_image.jpg;
+    image = ../dotfiles/wallpaper/catgirl.jpg;
     polarity = "dark";
   };
 }
