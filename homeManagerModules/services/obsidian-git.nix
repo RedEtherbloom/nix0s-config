@@ -20,7 +20,6 @@ let
   };
 in
 {
-  # TODO: Modularize
   services.git-sync = {
     enable = true;
     repositories = {
