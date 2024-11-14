@@ -49,4 +49,7 @@
       screen_dual = "kscreen-doctor output.DP-2.enable output.DP-2.position.0,0 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.inverted output.DP-3.position.1920,0";
     };
   };
+
+  programs.zoxide.enable = true;
+  programs.thefuck.enable = true;
 }

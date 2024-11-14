@@ -55,10 +55,6 @@ in
         gnupg
         pinentry-qt
 
-        # ZSH
-        zoxide
-        thefuck
-
         neovim
         ranger
         htop
