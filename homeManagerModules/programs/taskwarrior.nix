@@ -5,6 +5,10 @@
   ...
 }:
 {
+  home.packages = with pkgs; [
+    taskopen
+  ];
+
   xdg.configFile."task/taskwarrior-tui.rc" = {
     source = ../../dotfiles/taskwarrior/taskwarrior-tui.rc;
   };
