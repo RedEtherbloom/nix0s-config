@@ -71,7 +71,7 @@
         # Still ugly tbh. E.g. allowunfree and other setting don't get applied. Maybe I should turn nixpkgs into it's own imported nix file
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ self.overlays.default ];
+          overlays = self.overlay.defaults;
         };
         formatter = pkgs.nixfmt-rfc-style;
       in
@@ -86,6 +86,8 @@
         };
 
         inherit formatter;
+
+	packages = pkgs;
       }
     )
     // {
