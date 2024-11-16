@@ -1,8 +1,8 @@
-{ inputs, lib, ... }:
+{ lib, ... }:
 {
   imports = [
-    inputs.plasma-manager.homeManagerModules.plasma-manager
     ./base.nix
+    ./programs/plasma.nix
   ];
 
   # Remove files for stylix
