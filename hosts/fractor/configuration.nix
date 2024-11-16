@@ -113,6 +113,8 @@
   };
 
   myOptions.basePkgs.enabled = true;
+  # Setup event setup and hardening etc.
+  myOptions.event-setup.enable = false;
   users.users.inf = {
     isNormalUser = true;
     description = "Infinity";
@@ -128,9 +130,7 @@
       aircrack-ng
     ];
   };
-
-  # Setup event setup and hardening etc.
-  myOptions.event-setup.enable = false;
+  stylix.image = ../../dotfiles/wallpaper/kaiju_girl.jpg;
 
   services.avahi = {
     enable = true;

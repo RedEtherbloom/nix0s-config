@@ -168,6 +168,7 @@ in
       "i2c"
     ];
   };
+  stylix.image = ../../dotfiles/wallpaper/catgirl_waifu2x_noise2_scale4x.png;
 
   environment.systemPackages = with pkgs; [
     cachix
