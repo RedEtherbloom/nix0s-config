@@ -271,6 +271,18 @@ in
     ];
   };
 
+  services.smartd = {
+    enable = true;
+    notifications = {
+      test = true;
+      # Do we need this? https://search.nixos.org/options?channel=unstable&show=services.smartd.notifications.systembus-notify.enable
+      systembus-notify.enable = true;
+    };
+    # Short daily self-test, long weekly exteded test
+    # https://search.nixos.org/options?channel=unstable&show=services.smartd.defaults.monitored
+    defaults.monitored = "-a -o on -s (S/../.././02|L/../../7/04)";
+  };
+
   myOptions.services.taskchampion = {
     enable = true;
   };
