@@ -1,12 +1,9 @@
-{ config, ... }:
 {
-  # ZSH
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     enableVteIntegration = true;
     autosuggestion = {
-      # color = "fg=blue";
       highlight = "fg=#blue,bg=green,bold,underline";
       enable = true;
       strategy = [
@@ -40,6 +37,7 @@
     shellAliases = {
       ll = "ls -l";
       tt = "taskwarrior-tui";
+      # TODO: This probably needs a flake rewrite
       check-nix-config = "sudo nix-instantiate '<nixpkgs/nixos>' -A system";
       zix-shell = "nix-shell --command 'zsh'";
       ztheme = "(){ export ZSH_THEME=\"$@\" && source $ZSH/oh-my-zsh.sh }";
