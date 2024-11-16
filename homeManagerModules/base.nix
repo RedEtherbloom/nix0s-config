@@ -2,6 +2,7 @@
   config,
   inputs,
   osConfig,
+  pkgs,
   ...
 }:
 {
@@ -18,4 +19,19 @@
   programs.home-manager.enable = true;
 
   programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
+
+  home.packages = [
+    (pkgs.writeShellApplication {
+      name = "update-system";
+      runtimeInputs = [ pkgs.git ];
+      text = ''
+        # TODO: The hard-coded path is eww
+        cd ${config.home.homeDirectory}/Projects/nix0s-config 
+        git pull 
+        nix flake update -v
+        sudo nixos-rebuild --flake . switch -v -L --show-trace
+        git add .
+      '';
+    })
+  ];
 }
