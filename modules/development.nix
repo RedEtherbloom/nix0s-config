@@ -80,6 +80,11 @@ in
       default = true;
       description = "Useful extensions and tools for github";
     };
+    copilot = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Install the Github Copilot extension";
+    };
   };
 
   config = {
@@ -99,6 +104,10 @@ in
                   mkhl.direnv
                   streetsidesoftware.code-spell-checker
                   redhat.vscode-yaml
+                  wenfangdu.snippet-generator
+                  bierner.markdown-mermaid
+                  jebbs.plantuml
+                  hediet.vscode-drawio
                 ]
                 ++ lib.optionals cfg.vscode-accessibility [
                   vscode-extensions.oderwat.indent-rainbow
@@ -117,14 +126,19 @@ in
                 ++ lib.optionals cfg.rust [
                   vadimcn.vscode-lldb
                   rust-lang.rust-analyzer
+                  tamasfe.even-better-toml
                 ]
                 ++ lib.optionals cfg.java [
                   vscjava.vscode-java-pack
                 ]
                 ++ lib.optionals cfg.openscad [
                   antyos.openscad
-                ] ++ lib.optionals cfg.github [
+                ]
+                ++ lib.optionals cfg.github [
                   github.vscode-github-actions
+                ]
+                ++ lib.optionals cfg.copilot [
+                  github.copilot
                 ];
             })
           ]
