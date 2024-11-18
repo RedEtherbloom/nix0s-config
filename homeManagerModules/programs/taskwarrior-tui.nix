@@ -1,14 +1,19 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
 let
   cfg = config.myOptions.taskwarrior-tui;
 in
 {
-  options.myOptions.taskwarrior-rc = {
+  options.myOptions.taskwarrior-tui = {
     enable = mkOption {
-      description = "Enable taskwarrior-rc";
+      description = "Enable taskwarrior-tui";
       type = with types; bool;
       default = false;
+    };
+    package = mkOption {
+      description = "Taskwarrior-tui package to use";
+      type = with types; package;
+      default = pkgs.taskwarrior-tui;
     };
   };
 
