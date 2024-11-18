@@ -7,6 +7,8 @@
 with lib;
 let
   cfg = config.myOptions.development;
+  # TODO: Rebuilt againt home-manager programs package field
+  versions_for_vscode_version = (pkgs.forVSCodeVersion pkgs.vscode.version);
 in
 {
   options.myOptions.development = {
@@ -127,7 +129,7 @@ in
           ];
       }
       (mkIf cfg.vscode {
-        programs.vscode = {
+        programs.vscode = rec {
           enable = true;
           extensions = (
             with pkgs.vscode-extensions;
