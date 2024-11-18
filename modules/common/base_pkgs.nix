@@ -119,7 +119,6 @@ in
 
         thunderbird
         kate
-        obsidian
         kdePackages.kalk
         (taskwarrior-tui.overrideAttrs (oldAttrs: rec {
           version = oldAttrs.version + "-fix";
