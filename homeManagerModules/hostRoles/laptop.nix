@@ -1,0 +1,5 @@
+{
+  imports = [
+    ./neural-augmenter.nix
+  ];
+}

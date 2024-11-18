@@ -7,13 +7,13 @@
   ...
 }:
 {
-  imports = [
-    inputs.nix-index-database.hmModules.nix-index
-    inputs.sops-nix.homeManagerModules.sops
-
+  imports =
+    [
+      inputs.nix-index-database.hmModules.nix-index
+      inputs.sops-nix.homeManagerModules.sops
+    ]
     # I should redo this to import name.nix or name/default.nix. How though?
-    (lib.filesystems.listFilesRecursive ./programs)
-  ];
+    ++ (lib.filesystem.listFilesRecursive ../programs);
 
   sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
 

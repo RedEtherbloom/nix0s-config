@@ -15,7 +15,7 @@
     ../../modules/common/ssh.nix
     ../../modules/development.nix
     ../../modules/gaming.nix
-    ../../modules/laptop.nix
+    ../../modules/hostRoles/laptop.nix
     # TODO: Remove once hm sops-nix supports secrets
     ../../modules/common/taskwarrior-secrets.nix
 
@@ -66,6 +66,7 @@
   services.displayManager.sddm.wayland.enable = true;
   # This separate configuration is necessary?
   services.displayManager.sddm.enable = true;
+  # Does this have to be replaced with home-manager?
   services.desktopManager.plasma6.enable = true;
 
   services.xserver.enable = false;
