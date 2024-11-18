@@ -92,57 +92,7 @@ in
       {
         home.packages =
           with pkgs;
-          lib.optionals cfg.vscode [
-            (vscode-with-extensions.override {
-              vscodeExtensions =
-                with vscode-extensions;
-                [
-                  mhutchie.git-graph
-                  donjayamanne.githistory
-                  eamodio.gitlens
-                  ms-vscode-remote.remote-ssh
-                  mkhl.direnv
-                  streetsidesoftware.code-spell-checker
-                  redhat.vscode-yaml
-                  wenfangdu.snippet-generator
-                  bierner.markdown-mermaid
-                  jebbs.plantuml
-                  hediet.vscode-drawio
-                ]
-                ++ lib.optionals cfg.vscode-accessibility [
-                  vscode-extensions.oderwat.indent-rainbow
-                ]
-                ++ lib.optionals cfg.nix [
-                  jnoortheen.nix-ide
-                  arrterian.nix-env-selector
-                ]
-                ++ lib.optionals cfg.python [
-                  ms-python.python
-                  ms-python.flake8
-                ]
-                ++ lib.optionals cfg.docker [
-                  ms-azuretools.vscode-docker
-                ]
-                ++ lib.optionals cfg.rust [
-                  vadimcn.vscode-lldb
-                  rust-lang.rust-analyzer
-                  tamasfe.even-better-toml
-                ]
-                ++ lib.optionals cfg.java [
-                  vscjava.vscode-java-pack
-                ]
-                ++ lib.optionals cfg.openscad [
-                  antyos.openscad
-                ]
-                ++ lib.optionals cfg.github [
-                  github.vscode-github-actions
-                ]
-                ++ lib.optionals cfg.copilot [
-                  github.copilot
-                ];
-            })
-          ]
-          ++ lib.optionals cfg.rust [
+          lib.optionals cfg.rust [
             rustup
             clang
             clang-tools
@@ -157,6 +107,7 @@ in
             nil
             direnv
             nix-prefetch-scripts
+            nix-tree
           ]
           ++ lib.optionals cfg.electronics [
             kicad
@@ -175,6 +126,58 @@ in
             python3Packages.flake8
           ];
       }
+      (mkIf cfg.vscode {
+        programs.vscode = {
+          enable = true;
+          extensions = (
+            with pkgs.vscode-marketplace;
+            [
+              mhutchie.git-graph
+              donjayamanne.githistory
+              eamodio.gitlens
+              ms-vscode-remote.remote-ssh
+              mkhl.direnv
+              streetsidesoftware.code-spell-checker
+              redhat.vscode-yaml
+              wenfangdu.snippet-generator
+              bierner.markdown-mermaid
+              jebbs.plantuml
+              hediet.vscode-drawio
+            ]
+            ++ lib.optionals cfg.vscode-accessibility [
+              oderwat.indent-rainbow
+            ]
+            ++ lib.optionals cfg.nix [
+              jnoortheen.nix-ide
+              arrterian.nix-env-selector
+            ]
+            ++ lib.optionals cfg.python [
+              ms-python.python
+              ms-python.flake8
+            ]
+            ++ lib.optionals cfg.docker [
+              ms-azuretools.vscode-docker
+            ]
+            ++ lib.optionals cfg.rust [
+              vadimcn.vscode-lldb
+              rust-lang.rust-analyzer
+              tamasfe.even-better-toml
+            ]
+            ++ lib.optionals cfg.java [
+              vscjava.vscode-java-pack
+            ]
+            ++ lib.optionals cfg.openscad [
+              antyos.openscad
+            ]
+            ++ lib.optionals cfg.github [
+              github.vscode-github-actions
+            ]
+            ++ lib.optionals cfg.copilot [
+              github.copilot
+            ]
+          );
+        };
+      })
       (mkIf cfg.git {
         programs.git = {
           enable = true;

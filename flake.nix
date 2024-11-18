@@ -40,6 +40,13 @@
         home-manager.follows = "home-manager";
       };
     };
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs =
@@ -47,6 +54,7 @@
       self,
       flake-utils,
       nixpkgs,
+      nix-vscode-extensions,
       ...
     }@inputs:
     let
@@ -78,11 +86,11 @@
 
         inherit formatter;
 
-	packages = pkgs;
+        packages = pkgs;
       }
     )
     // {
-      overlay.defaults = [ overlay ];
+      overlay.defaults = [ overlay nix-vscode-extensions.overlays.default ];
       # TODO: Redo with flake-parts or flake-utils once we have the spoons again
       nixosConfigurations =
         nixpkgs.lib.attrsets.genAttrs
