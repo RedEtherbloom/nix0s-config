@@ -155,7 +155,7 @@ in
   };
 
   myOptions.basePkgs.enabled = true;
-  myOptions.development.electronics = true;
+  myOptions.development.electronics = false;
   users.users.inf = {
     isNormalUser = true;
     description = "Infinity";
