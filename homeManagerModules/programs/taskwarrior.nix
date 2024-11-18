@@ -46,8 +46,15 @@
       # Done due to prio-L blocking tasks being to high
       "urgency.blocking.coefficient" = "6";
 
+
       # Remove page limit for default report view
       "report.next.filter" = "status:pending -WAITING";
+      # Try a more focussed view
+      # wtf, how did this duplicate shit
+      #"report.next.filter" = "status:pending -WAITING scheduled.by:2w or due.by:2w";
+
+      # Only the main client should do recurrence
+      "recurrence" = "off";
 
       # Verbose
       # "report.next.labels"="ID,P,Sch,Due,Unt,Act,Age,Deps,Description,Tag,Project,Recur,Urg";
