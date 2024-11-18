@@ -156,17 +156,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1730806698,
-        "narHash": "sha256-SmPJvk51XOMJzkLy78ZM+cYyGWCUDeJtI+o0JSdro0s=",
-        "owner": "RedEtherbloom",
+        "lastModified": 1731887066,
+        "narHash": "sha256-uw7K/RsYioJicV79Nl39yjtfhdfTDU2aRxnBgvFhkZ8=",
+        "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "3c057e67fbd9eabd979813bf55424a0d22bb9a0c",
+        "rev": "f3a2ff69586f3a54b461526e5702b1a2f81e740a",
         "type": "github"
       },
       "original": {
-        "owner": "RedEtherbloom",
+        "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "3c057e67fbd9eabd979813bf55424a0d22bb9a0c",
         "type": "github"
       }
     },
