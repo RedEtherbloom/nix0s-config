@@ -14,8 +14,7 @@
     };
 
     home-manager = {
-      url = "github:RedEtherbloom/home-manager?rev=3c057e67fbd9eabd979813bf55424a0d22bb9a0c";
-      #url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     plasma-manager = {
