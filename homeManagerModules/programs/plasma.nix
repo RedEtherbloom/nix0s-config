@@ -1,10 +1,25 @@
-{ inputs, ... }: {
+{ config, inputs, lib, ... }:
+with lib;
+let
+  cfg = config.myOptions.plasma-manager;
+in
+{
   imports = [
     inputs.plasma-manager.homeManagerModules.plasma-manager
   ];
 
-  # Plasma Manager
-  programs.plasma = {
-    enable = true;
+  options.myOptions.plasma-manager = {
+    enable = mkOption {
+      description = "Enable plasma manager and applications";
+      type = with types; bool;
+      default = false;
+    };
+  };
+
+  config = mkIf cfg.enable {
+    # Plasma Manager
+    programs.plasma = {
+      enable = true;
+    };
   };
 }

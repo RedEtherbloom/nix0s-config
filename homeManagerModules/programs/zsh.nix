@@ -8,10 +8,10 @@ let
   cfg = config.myOptions.zsh;
 in
 {
-  options = {
+  options.myOptions.zsh = {
     enable = mkOption {
       description = "Enable ZSH and Oh-My-Zsh";
-      type = with types; boolean;
+      type = with types; bool;
       default = true;
     };
   };

@@ -15,7 +15,7 @@ in
       ../../modules
       ../../modules/cachix.nix
       ../../modules/common/ssh.nix
-      ../../modules/desktop.nix
+      ../../modules/hostRoles/desktop.nix
       ../../modules/development.nix
       ../../modules/gaming.nix
       ../../modules/hdd.nix
@@ -97,6 +97,7 @@ in
 
   services.displayManager.sddm.enable = true;
   services.displayManager.sddm.wayland.enable = true;
+  # Does this have to be replaced with home-manager?
   services.desktopManager.plasma6.enable = true;
 
   services.printing.enable = true;

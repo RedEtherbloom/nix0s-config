@@ -1,6 +1,6 @@
 {
   imports = [
-    ../../homeManagerModules/laptop.nix
+    ../../homeManagerModules/hostRoles/laptop.nix
   ];
 
   home.stateVersion = "24.05";

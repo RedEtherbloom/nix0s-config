@@ -12,12 +12,12 @@ in
   options.myOptions.obsidian = {
     enable = mkOption {
       description = "Enable Obsidian";
-      type = with types; boolean;
+      type = with types; bool;
       default = false;
     };
     enableSync = mkOption {
       description = "Enable the standard obsidian-git integration";
-      type = with types; boolean;
+      type = with types; bool;
       default = true;
     };
   };

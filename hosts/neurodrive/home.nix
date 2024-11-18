@@ -20,7 +20,7 @@ let
 in
 {
   imports = [
-    ../../homeManagerModules/desktop.nix
+    ../../homeManagerModules/hostRoles/desktop.nix
   ];
 
   config = lib.mkMerge [

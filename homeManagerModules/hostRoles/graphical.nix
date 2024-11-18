@@ -2,7 +2,6 @@
 {
   imports = [
     ./base.nix
-    ./programs/plasma.nix
   ];
 
   # Remove files for stylix
@@ -12,4 +11,6 @@
       run rm -rf ~/.config/gtk-3.0 ~/.config/gtk-4.0 ~/.gtkrc-2.0
     '';
   };
+
+  myOptions.plasma-manager.enable = true;
 }
