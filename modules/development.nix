@@ -130,7 +130,7 @@ in
         programs.vscode = {
           enable = true;
           extensions = (
-            with pkgs.vscode-marketplace;
+            with pkgs.vscode-extensions;
             [
               mhutchie.git-graph
               donjayamanne.githistory
@@ -139,10 +139,10 @@ in
               mkhl.direnv
               streetsidesoftware.code-spell-checker
               redhat.vscode-yaml
-              wenfangdu.snippet-generator
               bierner.markdown-mermaid
               jebbs.plantuml
               hediet.vscode-drawio
+              pkgs.vscode-marketplace.wenfangdu.snippet-generator
             ]
             ++ lib.optionals cfg.vscode-accessibility [
               oderwat.indent-rainbow
