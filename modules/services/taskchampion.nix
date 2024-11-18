@@ -29,6 +29,10 @@ in
       enable = true;
       port = config.myOptions.services.taskchampion.taskchampionPort;
       openFirewall = true;
+      snapshot = {
+        versions = 10;
+        days = 1;
+      };
     };
   };
 }
