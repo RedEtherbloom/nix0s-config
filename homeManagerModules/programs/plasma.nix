@@ -21,5 +21,10 @@ in
     programs.plasma = {
       enable = true;
     };
+
+    home.packages = with pkgs; [
+      kate
+      kdePackages.kalk
+    ];
   };
 }
