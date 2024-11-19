@@ -118,9 +118,6 @@ in
         tor-browser
 
         thunderbird
-        kate
-        kdePackages.kalk
-        
         bitwarden
         bitwarden-cli
         wl-clipboard
@@ -154,16 +151,6 @@ in
         hunspellDicts.de_DE
         simple-scan
         gimp
-
-        element-desktop-wayland
-        telegram-desktop
-        threema-desktop
-        signal-desktop
-        mumble
-        (pkgs.discord.override {
-          withOpenASAR = true;
-          withVencord = true;
-        })
 
         # TODO: Turn these into home-manager options
         kitty

@@ -35,4 +35,5 @@
         );
       }));
   };
+  myOptions.socials.enable = true;
 }
