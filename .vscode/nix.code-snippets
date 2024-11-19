@@ -1,0 +1,27 @@
+{
+	"cfg_module": {
+        "scope": "nix",
+        "prefix": "cfg_module",
+        "body": [
+            "{ config, lib, ... }:",
+            "with lib;",
+            "let",
+            "  cfg = config.${1:myOptions}.${TM_FILENAME_BASE};",
+            "in",
+            "{",
+            "  options.${1:myOptions}.${TM_FILENAME_BASE} = {",
+            "\tenable = mkOption {",
+            "\t  description = \"Enable ${TM_FILENAME_BASE}\";",
+            "\t  type = with types; bool;",
+            "\t  default = false;",
+            "\t};",
+            "  };",
+            "",
+            "  config = mkIf cfg.enable {",
+            "\t$0",
+            "  };",
+            "}",
+        ],
+        "description": "Standard nix module with cfg and options"
+    },
+}
