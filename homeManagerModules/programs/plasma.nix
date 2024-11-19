@@ -1,4 +1,4 @@
-{ config, inputs, lib, ... }:
+{ config, inputs, lib, pkgs, ... }:
 with lib;
 let
   cfg = config.myOptions.plasma-manager;
