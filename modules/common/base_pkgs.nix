@@ -120,6 +120,7 @@ in
         thunderbird
         bitwarden
         bitwarden-cli
+        
         wl-clipboard
         hyfetch
 
@@ -129,12 +130,7 @@ in
 
         # Do we still need this with stylix/noto?
         joypixels
-        warp
-        # Needed for warp?
-        zbar
-        # If spectactle has feature parity(for drawing): Drop
-        flameshot
-
+        
         vlc
         mpv
         feh
@@ -158,7 +154,6 @@ in
       ];
 
       programs.firefox.enable = true;
-      programs.kdeconnect.enable = true;
 
       environment.sessionVariables = {
         # Smooth scrolling
