@@ -169,7 +169,7 @@ in
       "i2c"
     ];
   };
-  stylix.image = ../../dotfiles/wallpaper/catgirl_waifu2x_noise2_scale4x.png;
+  stylix.image = ../../dotfiles/wallpaper/kaiju_girl.jpg;
 
   environment.systemPackages = with pkgs; [
     cachix
