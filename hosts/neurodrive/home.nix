@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ inputs, lib, pkgs, ... }:
 let
   generate-kscreen-doctor = name: text: hotkey: {
     home.packages = [
@@ -29,8 +29,6 @@ in
       home.packages = with pkgs; [
         solaar
 
-        krita
-
         # FNV Mod launcher
         zenity
         yad
@@ -41,6 +39,9 @@ in
 
         # TODO: Maybe this will make KRunner less laggy
         egl-wayland
+
+        comfyuiPackages.comfyui-with-extensions
+        comfyuiPackages.krita-with-extensions
       ];
     }
     # KDE: Screen monitors
