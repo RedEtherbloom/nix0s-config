@@ -18,6 +18,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    home.packages = [ cfg.package ];
+
     xdg.configFile."task/taskwarrior-tui.rc".source = ../../dotfiles/taskwarrior/taskwarrior-tui.rc;
 
     programs.taskwarrior.extraConfig = ''
