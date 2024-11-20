@@ -126,6 +126,10 @@ in
           ]
           ++ lib.optionals cfg.python [
             python3Packages.flake8
+          ] ++ lib.optionals cfg.git [
+            git
+            git-lfs
+            git-filter-repo
           ];
       }
       (mkIf cfg.vscode {
