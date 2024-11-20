@@ -182,13 +182,13 @@
       "locked": {
         "lastModified": 1729974238,
         "narHash": "sha256-lyzOuVFln5ZP78khTP9qAoCQ/Me+E2pVpaWL1FfbRxo=",
-        "owner": "haras",
+        "owner": "haras-unicorn",
         "repo": "nix-comfyui",
         "rev": "d62188b88aa951468bd9890be79e0b0ac5aab77c",
         "type": "github"
       },
       "original": {
-        "owner": "haras",
+        "owner": "haras-unicorn",
         "repo": "nix-comfyui",
         "rev": "d62188b88aa951468bd9890be79e0b0ac5aab77c",
         "type": "github"

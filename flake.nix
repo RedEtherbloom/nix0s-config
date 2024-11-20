@@ -51,7 +51,7 @@
       # default
       # url = "github:dyscorv/nix-comfyui";
       # pinned pr
-      url = "github:haras/nix-comfyui?rev=d62188b88aa951468bd9890be79e0b0ac5aab77c";
+      url = "github:haras-unicorn/nix-comfyui?rev=d62188b88aa951468bd9890be79e0b0ac5aab77c";
       inputs = {
         flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
