@@ -13,4 +13,6 @@
   };
 
   myOptions.plasma-manager.enable = true;
+
+  stylix.targets.vscode.enable = false;
 }

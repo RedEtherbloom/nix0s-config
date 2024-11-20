@@ -46,6 +46,17 @@
         flake-utils.follows = "flake-utils";
       };
     };
+
+    nix-comfyui = {
+      # default
+      # url = "github:dyscorv/nix-comfyui";
+      # pinned pr
+      url = "github:haras/nix-comfyui?rev=d62188b88aa951468bd9890be79e0b0ac5aab77c";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
   outputs =
@@ -53,6 +64,7 @@
       self,
       flake-utils,
       nixpkgs,
+      nix-comfyui,
       nix-vscode-extensions,
       ...
     }@inputs:
@@ -89,7 +101,7 @@
       }
     )
     // {
-      overlay.defaults = [ overlay nix-vscode-extensions.overlays.default ];
+      overlay.defaults = [ overlay nix-vscode-extensions.overlays.default nix-comfyui.overlays.default ];
       # TODO: Redo with flake-parts or flake-utils once we have the spoons again
       nixosConfigurations =
         nixpkgs.lib.attrsets.genAttrs
