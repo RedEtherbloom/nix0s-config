@@ -15,8 +15,6 @@ in
       ../../modules
       ../../modules/cachix.nix
       ../../modules/common/ssh.nix
-      ../../modules/hostRoles/desktop.nix
-      ../../modules/gaming.nix
       ../../modules/hdd.nix
       # TODO: Remove once hm sops-nix supports secrets
       ../../modules/common/taskwarrior-secrets.nix
@@ -153,6 +151,8 @@ in
     #};
   };
 
+  myOptions.hostRoles.desktop.enable = true;
+  myOptions.roles.gaming.enable = true;
   myOptions.basePkgs.enabled = true;
   users.users.inf = {
     isNormalUser = true;

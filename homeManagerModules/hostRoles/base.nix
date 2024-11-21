@@ -6,38 +6,43 @@
   pkgs,
   ...
 }:
-{
-  imports =
-    [
-      inputs.nix-index-database.hmModules.nix-index
-      inputs.sops-nix.homeManagerModules.sops
-
-      ../development.nix
-    ]
-    # I should redo this to import name.nix or name/default.nix. How though?
-    ++ (lib.filesystem.listFilesRecursive ../programs);
-
-  sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
-
-  xdg.userDirs.createDirectories = true;
-  programs.home-manager.enable = true;
-
-  programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
-
-  home.packages = [
-    (pkgs.writeShellApplication {
-      name = "update-system";
-      runtimeInputs = [ pkgs.git ];
-      text = ''
-        # TODO: The hard-coded path is eww
-        cd ${config.home.homeDirectory}/Projects/nix0s-config
-        git pull
-        git add dotfiles/wallpaper/*
-        nix flake update -v
-        sudo nixos-rebuild --flake . switch -v -L --show-trace
-        git restore --staged dotfiles/wallpaper/*
-        git add flake.lock
-      '';
-    })
+with lib; let
+  cfg = config.myOptions.hostRoles.base;
+in {
+  imports = [
+    inputs.nix-index-database.hmModules.nix-index
+    inputs.sops-nix.homeManagerModules.sops
   ];
+
+  options.myOptions.hostRoles.base.enable = mkOption {
+    description = "base options for hm settings";
+    type = with types; bool;
+    default = osConfig.myOptions.hostRoles.base.enable;
+  };
+
+  config = mkIf cfg.enable {
+    sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+
+    xdg.userDirs.createDirectories = true;
+    programs.home-manager.enable = true;
+
+    programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
+
+    home.packages = [
+      (pkgs.writeShellApplication {
+        name = "update-system";
+        runtimeInputs = [pkgs.git];
+        text = ''
+          # TODO: The hard-coded path is eww
+          cd ${config.home.homeDirectory}/Projects/nix0s-config
+          git pull
+          git add dotfiles/wallpaper/*
+          nix flake update -v
+          sudo nixos-rebuild --flake . switch -v -L --show-trace
+          git restore --staged dotfiles/wallpaper/*
+          git add flake.lock
+        '';
+      })
+    ];
+  };
 }

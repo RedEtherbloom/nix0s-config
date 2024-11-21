@@ -6,7 +6,7 @@
 }:
 with lib; let
   cfg = config.myOptions.vscode;
-  cfg_development = config.myOptions.development;
+  cfg_development = config.myOptions.roles.development;
 in {
   options.myOptions.vscode = {
     enable = mkOption {
@@ -95,5 +95,7 @@ in {
         redhat.telemetry.enabled = false;
       };
     };
+
+    stylix.targets.vscode.enable = false;
   };
 }

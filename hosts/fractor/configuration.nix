@@ -13,8 +13,6 @@
 
     ../../modules
     ../../modules/common/ssh.nix
-    ../../modules/gaming.nix
-    ../../modules/hostRoles/laptop.nix
     # TODO: Remove once hm sops-nix supports secrets
     ../../modules/common/taskwarrior-secrets.nix
 
@@ -112,6 +110,8 @@
     #["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
   };
 
+  myOptions.hostRoles.laptop.enable = true;
+  myOptions.roles.gaming.enable = true;
   myOptions.basePkgs.enabled = true;
   # Setup event setup and hardening etc.
   myOptions.event-setup.enable = false;
