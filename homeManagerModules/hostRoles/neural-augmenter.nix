@@ -4,6 +4,8 @@
     ./graphical.nix
   ];
 
+  myOptions.development.enable = true;
+  myOptions.vscode.enable = true;
   myOptions.obsidian.enable = true;
   myOptions.taskwarrior = {
     enable = true;

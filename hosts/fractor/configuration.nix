@@ -13,7 +13,6 @@
 
     ../../modules
     ../../modules/common/ssh.nix
-    ../../modules/development.nix
     ../../modules/gaming.nix
     ../../modules/hostRoles/laptop.nix
     # TODO: Remove once hm sops-nix supports secrets

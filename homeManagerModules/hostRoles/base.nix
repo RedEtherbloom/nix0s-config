@@ -11,6 +11,8 @@
     [
       inputs.nix-index-database.hmModules.nix-index
       inputs.sops-nix.homeManagerModules.sops
+
+      ../development.nix
     ]
     # I should redo this to import name.nix or name/default.nix. How though?
     ++ (lib.filesystem.listFilesRecursive ../programs);
