@@ -7,11 +7,14 @@
 with lib;
 let
   cfg = config.myOptions.development;
-  # TODO: Rebuilt againt home-manager programs package field
-  versions_for_vscode_version = (pkgs.forVSCodeVersion pkgs.vscode.version);
 in
 {
   options.myOptions.development = {
+    enable = mkOption {
+      description = "Enable development modules";
+      type = with types; bool;
+      default = false;
+    };
     rust = mkOption {
       type = types.bool;
       default = true;
@@ -89,10 +92,8 @@ in
     };
   };
 
-  config = {
-    home-manager.sharedModules = [
-      {
-        home.packages =
+  config = mkIf cfg.enable (mkMerge [
+        {home.packages =
           with pkgs;
           lib.optionals cfg.rust [
             rustup
@@ -105,6 +106,7 @@ in
           # TODO: Merge with DevShell
           ++ lib.optionals cfg.nix [
             nixfmt-rfc-style
+            alejandra
             nixd
             nil
             direnv
@@ -130,60 +132,7 @@ in
             git
             git-lfs
             git-filter-repo
-          ];
-      }
-      (mkIf cfg.vscode {
-        programs.vscode = rec {
-          enable = true;
-          extensions = (
-            with pkgs.vscode-extensions;
-            [
-              mhutchie.git-graph
-              donjayamanne.githistory
-              eamodio.gitlens
-              ms-vscode-remote.remote-ssh
-              mkhl.direnv
-              streetsidesoftware.code-spell-checker
-              redhat.vscode-yaml
-              bierner.markdown-mermaid
-              jebbs.plantuml
-              hediet.vscode-drawio
-              pkgs.vscode-marketplace.wenfangdu.snippet-generator
-            ]
-            ++ lib.optionals cfg.vscode-accessibility [
-              oderwat.indent-rainbow
-            ]
-            ++ lib.optionals cfg.nix [
-              jnoortheen.nix-ide
-              arrterian.nix-env-selector
-            ]
-            ++ lib.optionals cfg.python [
-              ms-python.python
-              ms-python.flake8
-            ]
-            ++ lib.optionals cfg.docker [
-              ms-azuretools.vscode-docker
-            ]
-            ++ lib.optionals cfg.rust [
-              vadimcn.vscode-lldb
-              rust-lang.rust-analyzer
-              tamasfe.even-better-toml
-            ]
-            ++ lib.optionals cfg.java [
-              vscjava.vscode-java-pack
-            ]
-            ++ lib.optionals cfg.openscad [
-              antyos.openscad
-            ]
-            ++ lib.optionals cfg.github [
-              github.vscode-github-actions
-            ]
-            ++ lib.optionals cfg.copilot [
-              github.copilot
-            ]
-          );
-        };
-      })
+          ];}
       (mkIf cfg.git {
         programs.git = {
           enable = true;
@@ -197,11 +146,11 @@ in
       (mkIf cfg.github {
         programs.gh.enable = true;
       })
-    ];
-
-    programs.java = mkIf cfg.java {
+      (mkIf cfg.java {
+        programs.java = {
       enable = true;
       package = with pkgs; jdk23;
     };
-  };
+      })
+  ]);
 }

@@ -17,7 +17,6 @@ in
       ../../modules/cachix.nix
       ../../modules/common/ssh.nix
       ../../modules/hostRoles/desktop.nix
-      ../../modules/development.nix
       ../../modules/gaming.nix
       ../../modules/hdd.nix
       # TODO: Remove once hm sops-nix supports secrets
@@ -156,7 +155,6 @@ in
   };
 
   myOptions.basePkgs.enabled = true;
-  myOptions.development.electronics = false;
   users.users.inf = {
     isNormalUser = true;
     description = "Infinity";

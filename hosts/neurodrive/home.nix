@@ -1,4 +1,4 @@
-{ inputs, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 let
   generate-kscreen-doctor = name: text: hotkey: {
     home.packages = [
@@ -43,6 +43,8 @@ in
         comfyuiPackages.comfyui-with-extensions
         comfyuiPackages.krita-with-extensions
       ];
+
+      config.myOptions.development.electronics = true;
     }
     # KDE: Screen monitors
     # Ivy: These sadly break with missing monitors :/

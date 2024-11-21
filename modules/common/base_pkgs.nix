@@ -95,6 +95,8 @@ in
         ffmpeg-full
         gst_all_1.gst-plugins-good
         gst_all_1.gst-plugins-bad
+
+        git
       ];
 
       programs.gnupg.agent = {

@@ -1,10 +1,15 @@
 {
+  config,
   lib,
   inputs,
   self,
   specialArgs,
   ...
 }:
+with lib;
+let 
+  cfg = config.myOptions.hostRoles.base;
+in
 {
   imports = [
     inputs.home-manager.nixosModules.home-manager
@@ -14,12 +19,22 @@
     ../default.nix
   ];
 
-  nixpkgs = {
+  options.myOptions.hostRoles.base.enable = mkOption {
+    description = "The base role required by pretty much all hosts";
+    type = with types; bool;
+    default = true;
+  };
+
+  config = mkIf cfg.enable {
+    nixpkgs = {
     overlays = self.overlay.defaults;
     config = {
       allowUnfree = true;
     };
   };
+  
+  # Supposedly required by nixd
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
   home-manager = {
     backupFileExtension = "home_manager_backup_move";
@@ -29,4 +44,5 @@
   };
 
   programs.nix-index-database.comma.enable = lib.mkDefault true;
+  };
 }
