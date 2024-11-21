@@ -67,6 +67,7 @@ in {
           ]
           ++ lib.optionals cfg_development.copilot [
             github.copilot
+            github.copilot-chat
           ]
       );
       userSettings = {
