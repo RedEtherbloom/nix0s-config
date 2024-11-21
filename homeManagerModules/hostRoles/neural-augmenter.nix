@@ -1,22 +1,35 @@
-{ pkgs, ... }:
 {
-  imports = [
-    ./graphical.nix
-  ];
-
-  myOptions.development.enable = true;
-  myOptions.vscode.enable = true;
-  myOptions.obsidian.enable = true;
-  myOptions.taskwarrior = {
-    enable = true;
-    enableSync = true;
-    taskopen = true;
+  config,
+  lib,
+  osConfig,
+  pkgs,
+  ...
+}:
+with lib; let
+  cfg = config.myOptions.hostRoles.neural-augmenter;
+in {
+  options.myOptions.hostRoles.neural-augmenter = {
+    enable = mkOption {
+      description = "workstation hm settings";
+      type = with types; bool;
+      default = osConfig.myOptions.hostRoles.neural-augmenter.enable;
+    };
   };
-  myOptions.taskwarrior-tui = {
-    enable = true;
-    package =
-      with pkgs;
-      (taskwarrior-tui.overrideAttrs (oldAttrs: rec {
+
+  config = mkIf cfg.enable {
+    myOptions.hostRoles.graphical.enable = mkDefault true;
+
+    myOptions.roles.development.enable = true;
+    myOptions.vscode.enable = true;
+    myOptions.obsidian.enable = true;
+    myOptions.taskwarrior = {
+      enable = true;
+      enableSync = true;
+      taskopen = true;
+    };
+    myOptions.taskwarrior-tui = {
+      enable = true;
+      package = with pkgs; (taskwarrior-tui.overrideAttrs (oldAttrs: rec {
         version = oldAttrs.version + "-fix";
 
         src = (
@@ -36,6 +49,7 @@
           }
         );
       }));
+    };
+    myOptions.socials.enable = true;
   };
-  myOptions.socials.enable = true;
 }

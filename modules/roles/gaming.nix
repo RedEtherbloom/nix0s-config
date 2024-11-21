@@ -1,0 +1,38 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
+  cfg = config.myOptions.roles.gaming;
+in {
+  options.myOptions.roles.gaming.enable = mkEnableOption "steam and gaming";
+
+  config = mkIf cfg.enable {
+    programs.steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+      protontricks.enable = true;
+      # X11 -> Wayland Input translation
+      extest.enable = true;
+
+      package = pkgs.steam.override {
+        extraPkgs = pkgs:
+          with pkgs; [
+            libgdiplus
+            libpng
+            libpulseaudio
+            libvorbis
+            stdenv.cc.cc.lib
+            xorg.libXcursor
+            xorg.libXi
+            xorg.libXinerama
+            xorg.libXrandr
+            xorg.libXxf86vm
+          ];
+      };
+    };
+  };
+}

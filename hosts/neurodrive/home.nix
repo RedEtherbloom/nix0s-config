@@ -1,26 +1,28 @@
-{ lib, pkgs, ... }:
-let
+{
+  lib,
+  pkgs,
+  ...
+}: let
   generate-kscreen-doctor = name: text: hotkey: {
     home.packages = [
       (pkgs.writeShellApplication {
         inherit name text;
 
-        runtimeInputs = [ pkgs.kdePackages.libkscreen ];
+        runtimeInputs = [pkgs.kdePackages.libkscreen];
       })
     ];
 
     programs.plasma.hotkeys.commands = {
       "${name}" = {
         command = name;
-        keys = [ hotkey ];
+        keys = [hotkey];
         comment = "Home screen layout";
       };
     };
   };
-in
-{
+in {
   imports = [
-    ../../homeManagerModules/hostRoles/desktop.nix
+    ../../homeManagerModules
   ];
 
   config = lib.mkMerge [
@@ -44,7 +46,7 @@ in
         comfyuiPackages.krita-with-extensions
       ];
 
-      config.myOptions.development.electronics = true;
+      myOptions.roles.development.electronics = true;
     }
     # KDE: Screen monitors
     # Ivy: These sadly break with missing monitors :/

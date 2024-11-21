@@ -6,10 +6,10 @@
 }:
 with lib;
 let
-  cfg = config.myOptions.development;
+  cfg = config.myOptions.roles.development;
 in
 {
-  options.myOptions.development = {
+  options.myOptions.roles.development = {
     enable = mkOption {
       description = "Enable development modules";
       type = with types; bool;

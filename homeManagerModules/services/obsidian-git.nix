@@ -1,10 +1,12 @@
 {
   config,
+  lib,
   osConfig,
   ...
 }:
-let
-  vars = import ../variables.nix { inherit config osConfig; };
+with lib; let
+  cfg = config.myOptions.obsidian-git;
+  vars = import ../variables.nix {inherit config osConfig;};
 
   # A hour sounds like a good preset
   DEFAULT_SYNC_INTERVAL = 3600;
@@ -14,16 +16,19 @@ let
   generate_vault_dir_path = config.xdg.userDirs.documents + "/" + OBSIDIAN_VAULTS;
 
   generate_repository = vault-name: {
-    path = (generate_vault_dir_path + "/${vault-name}/");
+    path = generate_vault_dir_path + "/${vault-name}/";
     interval = DEFAULT_SYNC_INTERVAL;
     uri = "ssh://${config.home.username}@${vars.data-server-ip}${vars.own-hm-data-directory}/obsidian-vaults/${vault-name}";
   };
-in
-{
-  services.git-sync = {
-    enable = true;
-    repositories = {
-      obsidian-default-vault = generate_repository "default";
+in {
+  options.myOptions.obsidian-git.enable = mkEnableOption "obsidian vault git sync";
+
+  config = mkIf cfg.enable {
+    services.git-sync = {
+      enable = true;
+      repositories = {
+        obsidian-default-vault = generate_repository "default";
+      };
     };
   };
 }

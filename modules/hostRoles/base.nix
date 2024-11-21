@@ -6,17 +6,13 @@
   specialArgs,
   ...
 }:
-with lib;
-let 
+with lib; let
   cfg = config.myOptions.hostRoles.base;
-in
-{
+in {
   imports = [
     inputs.home-manager.nixosModules.home-manager
     inputs.nix-index-database.nixosModules.nix-index
     inputs.sops-nix.nixosModules.sops
-
-    ../default.nix
   ];
 
   options.myOptions.hostRoles.base.enable = mkOption {
@@ -27,22 +23,22 @@ in
 
   config = mkIf cfg.enable {
     nixpkgs = {
-    overlays = self.overlay.defaults;
-    config = {
-      allowUnfree = true;
+      overlays = self.overlay.defaults;
+      config = {
+        allowUnfree = true;
+      };
     };
-  };
-  
-  # Supposedly required by nixd
-  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
-  home-manager = {
-    backupFileExtension = "home_manager_backup_move";
-    extraSpecialArgs = specialArgs;
-    useGlobalPkgs = true;
-    useUserPackages = true;
-  };
+    # Supposedly required by nixd
+    nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
 
-  programs.nix-index-database.comma.enable = lib.mkDefault true;
+    home-manager = {
+      backupFileExtension = "home_manager_backup_move";
+      extraSpecialArgs = specialArgs;
+      useGlobalPkgs = true;
+      useUserPackages = true;
+    };
+
+    programs.nix-index-database.comma.enable = lib.mkDefault true;
   };
 }

@@ -1,8 +1,10 @@
+{ lib, ... }:
 {
   imports = [
     ./common
-    ./wireguard
-    ./services
     ./event-setup.nix
-  ];
+    ./hostRoles
+    ./services
+    ./wireguard
+  ] ++ (lib.flatten (lib.map (folder: lib.filesystem.listFilesRecursive folder) [./roles]));
 }

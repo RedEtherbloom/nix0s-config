@@ -1,9 +1,13 @@
-{ config, inputs, lib, pkgs, ... }:
-with lib;
-let
-  cfg = config.myOptions.plasma-manager;
-in
 {
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
+  cfg = config.myOptions.plasma-manager;
+in {
   imports = [
     inputs.plasma-manager.homeManagerModules.plasma-manager
   ];
@@ -20,6 +24,11 @@ in
     # Plasma Manager
     programs.plasma = {
       enable = true;
+    };
+
+    services.kdeconnect = {
+      enable = true;
+      indicator = false;
     };
 
     home.packages = with pkgs; [
