@@ -127,9 +127,6 @@ in
         # Attempts at notifications
         kdePackages.kdialog
         libnotify
-
-        # Do we still need this with stylix/noto?
-        joypixels
         
         vlc
         mpv

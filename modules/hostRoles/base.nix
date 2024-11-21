@@ -18,7 +18,6 @@
     overlays = self.overlay.defaults;
     config = {
       allowUnfree = true;
-      joypixels.acceptLicense = true;
     };
   };
 
@@ -27,7 +26,6 @@
     extraSpecialArgs = specialArgs;
     useGlobalPkgs = true;
     useUserPackages = true;
-    verbose = true;
   };
 
   programs.nix-index-database.comma.enable = lib.mkDefault true;
