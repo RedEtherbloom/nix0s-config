@@ -46,9 +46,9 @@ in {
         comfyuiPackages.krita-with-extensions
       ];
 
-      myOptions.roles.development.electronics = true;
+      # Part of valerie: Broken on 22.11.24
+      # myOptions.roles.development.electronics = true;
     }
-    # KDE: Screen monitors
     # Ivy: These sadly break with missing monitors :/
     (generate-kscreen-doctor "screen-benq" "kscreen-doctor output.DP-3.disable output.DP-2.enable output.DP-2.rotation.normal output.DP-2.position.0,0" "ctrl+shift+f1")
     (generate-kscreen-doctor "screen-dual" "kscreen-doctor output.DP-2.enable output.DP-2.position.0,0 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.inverted output.DP-3.position.1920,0" "ctrl+shift+f2")
