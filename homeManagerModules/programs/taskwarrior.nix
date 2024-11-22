@@ -87,32 +87,28 @@ in
           "uda.blocked.type" = "string";
           "uda.blocked.label" = "Blocked";
 
-          # TODO: Move to end of taskrc so that it becomes mutable. But then I'll have to somehow link .taskrc back to the dotfiles...
-          "context.Due.read" = "+DUE or +OVERDUE";
-          # Better or worse?
-          #"context.Due.read" = "due:today";
+          "context.Next 2 Weeks.read" = "(scheduled.by:2w or due.by:2w)";
+          "context.Next 2 Weeks.write" = "due:2w";
           "context.Easy🦿.read" = "+last_mile or +easy";
           "context.Easy🦿.write" = "+easy";
           "context.Hard🧠.read" = "+hard or +dry or +draining";
           "context.Hard🧠.write" = "+hard";
-          "context.transition.read" = "project:transition";
-          "context.transition.write" = "project:transition";
-          "context.home.read" = "+home";
-          "context.home.write" = "+home";
-          "context.entropia.read" = "+entropia";
-          "context.entropia.write" = "+entropia";
-          "context.system.read" = "+headmate or +system or +system_fight or +system_work or +system_organization";
-          "context.all_tasks.read" = "(status:waiting or status:pending) all";
-          "context.all_tasks.write" = "(status:waiting or status:pending) all";
-          "context.transport.read" = "+transport";
-          "context.transport.write" = "+transport";
-          "context.shop💴.read" = "+shopping or +buy";
-          "context.shop💴.write" = "+shopping";
-          "context.system.write" = "+system";
-          "context.to_plan🕛.read" = "+to_schedule or +to_plan";
-          "context.to_plan🕛.write" = "+to_schedule";
           "context.Fun.read" = "+fun or +infotainment or +entertainment or +video_game or +movie or +novel or +anime or +cartoon";
           "context.Fun.write" = "+fun";
+          "context.Transition.read" = "project:transition";
+          "context.Transition.write" = "project:transition";
+          "context.home.read" = "+home";
+          "context.home.write" = "+home";
+          "context.hackerspace.read" = "+entropia or +rzl";
+          "context.hackerspace.write" = "+entropia";
+          "context.system.read" = "+headmate or +system or +system_fight or +system_work or +system_organization";
+          "context.system.write" = "+system";
+          "context.transport.read" = "+transport";
+          "context.transport.write" = "+transport";
+          "context.shop.read" = "+shopping or +buy";
+          "context.shop.write" = "+shopping";
+          "context.to_plan.read" = "+to_schedule or +to_plan";
+          "context.to_plan.write" = "+to_schedule";
         };
       };
     }
