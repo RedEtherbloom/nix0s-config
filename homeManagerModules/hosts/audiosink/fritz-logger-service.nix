@@ -22,6 +22,7 @@
       Environment = [
         "IP_ADDRESS=192.168.178.1"
         "PASSWORD_FILE=${config.sops.secrets.fritz_box_password.path}"
+        "FRITZ_DAEMON_MODE=1"
         "PRUNE_OLDER_THAN=14"
         "QUERY_PERIOD=${toString (15 * 60)}"
       ];
