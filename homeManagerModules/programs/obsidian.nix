@@ -4,11 +4,9 @@
   pkgs,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.myOptions.obsidian;
-in
-{
+in {
   options.myOptions.obsidian = {
     enable = mkOption {
       description = "Enable Obsidian";
@@ -22,14 +20,9 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      home.packages = with pkgs; [
-        obsidian
-      ];
-    }
-    (mkIf cfg.enableSync {
-      
-    })
-  ]);
+  config = mkIf cfg.enable {
+    home.packages = with pkgs; [
+      obsidian
+    ];
+  };
 }
