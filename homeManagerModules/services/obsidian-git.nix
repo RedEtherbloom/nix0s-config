@@ -8,8 +8,7 @@ with lib; let
   cfg = config.myOptions.obsidian;
   vars = import ../variables.nix {inherit config osConfig;};
 
-  # A hour sounds like a good preset
-  DEFAULT_SYNC_INTERVAL = 3600;
+  DEFAULT_SYNC_INTERVAL = 900;
   OBSIDIAN_VAULTS = "Obsidian";
 
   generate_vault_dir_path = config.xdg.userDirs.documents + "/" + OBSIDIAN_VAULTS;
