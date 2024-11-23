@@ -14,7 +14,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager?ref=pull/6129/head";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     plasma-manager = {
