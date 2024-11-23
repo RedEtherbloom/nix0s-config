@@ -29,6 +29,7 @@ in {
     services.kdeconnect = {
       enable = true;
       indicator = false;
+      package = with pkgs; kdePackages.kdeconnect-kde;
     };
 
     home.packages = with pkgs; [
