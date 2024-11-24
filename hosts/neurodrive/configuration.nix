@@ -272,7 +272,6 @@ in
   services.smartd = {
     enable = true;
     notifications = {
-      test = true;
       # Do we need this? https://search.nixos.org/options?channel=unstable&show=services.smartd.notifications.systembus-notify.enable
       systembus-notify.enable = true;
     };
