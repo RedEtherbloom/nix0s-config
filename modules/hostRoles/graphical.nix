@@ -22,6 +22,12 @@ in {
       polarity = "dark";
     };
 
+    # Open the ports for KDE-Connect and install it here as well.
+    # HM can't open ports sadly.
+    programs.kdeconnect = {
+      enable = true;
+    };
+
     # For some reason this keeps getting pulled in since stlix and then recycled by ghc
     environment.systemPackages = with pkgs; [
       ghc
