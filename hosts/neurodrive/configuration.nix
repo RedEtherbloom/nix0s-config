@@ -2,7 +2,6 @@
   config,
   inputs,
   lib,
-  inputs,
   pkgs,
   ...
 }:
@@ -168,7 +167,7 @@ in
       "i2c"
     ];
   };
-  stylix.image = ../../dotfiles/wallpaper/kaiju_girl.jpg;
+  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/kaiju_girl_extended.png";
 
   environment.systemPackages = with pkgs; [
     cachix
