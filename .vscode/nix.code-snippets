@@ -24,4 +24,16 @@
         ],
         "description": "Standard nix module with cfg and options"
     },
+    "cfgOption": {
+        "scope": "nix",
+        "prefix": "cfgOption",
+        "body": [
+            "$1 = mkOption {",
+            "\t  description = \"Enable ${2:$1}\";",
+            "\t  type = types.bool;",
+            "\t  default = false;",
+            "};"
+        ],
+        "description": "Insert a standard nix cfg option"
+    },
 }
