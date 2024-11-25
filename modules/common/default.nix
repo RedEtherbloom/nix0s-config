@@ -37,8 +37,30 @@
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
 
   # TODO: Replace with grub
-  boot.loader.systemd-boot.enable = true;
+  #boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  # See this thread: https://discourse.nixos.org/t/configure-grub-on-efi-system/2926
+  boot.loader.grub = {
+    enable = true;
+    # I think this is neccessary for LUKS? 50/50
+    enableCryptodisk = true;
+    efiSupport =  true;
+    copyKernels = true;
+    fsIdentifier = "uuid";
+    useOSProber = true;
+    device = "nodev";
+
+    memtest86.enable = true;
+    extraEntries = ''
+      menuentry "Poweroff" {
+        halt
+      }
+
+      menuentry "Reboot" {
+        reboot
+      }
+    '';
+  };
   # TODO: This is a bit too verbose for my taste
   # Sedna: Can we build a second boot entry that uses this consoleLogLevel? 
   boot.consoleLogLevel = 7;
