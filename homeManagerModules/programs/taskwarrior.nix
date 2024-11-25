@@ -5,11 +5,9 @@
   pkgs,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.myOptions.taskwarrior;
-in
-{
+in {
   options.myOptions.taskwarrior = {
     enable = mkOption {
       description = "Enable taskwarrior";
@@ -24,6 +22,11 @@ in
     taskopen = mkOption {
       description = "Enable taskopen";
       type = with types; bool;
+      default = false;
+    };
+    vit = mkOption {
+      description = "Enable vit";
+      type = types.bool;
       default = false;
     };
   };
@@ -87,8 +90,8 @@ in
           "uda.blocked.type" = "string";
           "uda.blocked.label" = "Blocked";
 
-          "context.Next 2 Weeks.read" = "(scheduled.by:2w or due.by:2w)";
-          "context.Next 2 Weeks.write" = "due:2w";
+          "context.Next_2_weeks.read" = "(scheduled.by:2w or due.by:2w)";
+          "context.Next_2_weeks.write" = "due:2w";
           "context.Easy🦿.read" = "+last_mile or +easy";
           "context.Easy🦿.write" = "+easy";
           "context.Hard🧠.read" = "+hard or +dry or +draining";
@@ -117,15 +120,11 @@ in
         enable = true;
         package = pkgs.taskwarrior3;
       };
-
       programs.taskwarrior.extraConfig = ''
         include ${osConfig.sops.templates."taskwarrior-sync.rc".path}
       '';
     })
-    (mkIf cfg.taskopen {
-      home.packages = with pkgs; [
-        taskopen
-      ];
-    })
+    (mkIf cfg.taskopen {home.packages = [pkgs.taskopen];})
+    (mkIf cfg.vit {home.packages = [pkgs.wit];})
   ]);
 }
