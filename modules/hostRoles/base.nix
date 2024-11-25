@@ -40,5 +40,7 @@ in {
     };
 
     programs.nix-index-database.comma.enable = lib.mkDefault true;
+
+    myOptions.utilities.enable = true;
   };
 }

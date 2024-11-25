@@ -55,7 +55,6 @@ in
         gnupg
         pinentry-qt
 
-        neovim
         ranger
         htop
         dust
@@ -66,14 +65,8 @@ in
         wget
         curl
 
-        sshfs
-        mosh
-        tmux
-        magic-wormhole
-        magic-wormhole-rs
         restic
         autorestic
-        wireguard-tools
 
         # TODO. Refactgor into development.nix
         python3Full
