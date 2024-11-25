@@ -11,23 +11,23 @@ in {
   options.myOptions.taskwarrior = {
     enable = mkOption {
       description = "Enable taskwarrior";
-      type = with types; bool;
+      type = types.bool;
       default = false;
     };
     enableSync = mkOption {
       description = "Enable taskwarrior sync with secrets";
-      type = with types; bool;
-      default = false;
+      type = types.bool;
+      default = true;
     };
     taskopen = mkOption {
       description = "Enable taskopen";
-      type = with types; bool;
-      default = false;
+      type = types.bool;
+      default = true;
     };
     vit = mkOption {
       description = "Enable vit";
       type = types.bool;
-      default = false;
+      default = true;
     };
   };
 
@@ -125,6 +125,10 @@ in {
       '';
     })
     (mkIf cfg.taskopen {home.packages = [pkgs.taskopen];})
-    (mkIf cfg.vit {home.packages = [pkgs.wit];})
+    (mkIf cfg.vit {
+      home.packages = with pkgs; [
+        (callPackage vit.override {taskwarrior2 = pkgs.taskwarrior3;})
+      ];
+    })
   ]);
 }
