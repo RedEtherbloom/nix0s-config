@@ -46,8 +46,7 @@ in {
         comfyuiPackages.krita-with-extensions
       ];
 
-      # Part of valerie: Broken on 22.11.24
-      # myOptions.roles.development.electronics = true;
+      myOptions.roles.development.electronics = true;
     }
     # Ivy: These sadly break with missing monitors :/
     (generate-kscreen-doctor "screen-benq" "kscreen-doctor output.DP-3.disable output.DP-2.enable output.DP-2.rotation.normal output.DP-2.position.0,0" "ctrl+shift+f1")
