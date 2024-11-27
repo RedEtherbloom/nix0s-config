@@ -51,5 +51,9 @@ in {
       }));
     };
     myOptions.socials.enable = true;
+
+    home.packages = with pkgs; [
+      comfyuiPackages.krita-with-extensions
+    ];
   };
 }

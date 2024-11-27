@@ -43,7 +43,6 @@ in {
         egl-wayland
 
         comfyuiPackages.comfyui-with-extensions
-        comfyuiPackages.krita-with-extensions
       ];
 
       myOptions.roles.development.electronics = true;
