@@ -1,7 +1,9 @@
 {
   config,
   lib,
+  osConfig,
   pkgs,
+  self,
   ...
 }:
 with lib; let
@@ -77,13 +79,14 @@ in {
           serverSettings = {
             nixd = {
               formatting.command = ["alejandra"];
-              /*
-                options = {
-                  home-manager = {
-                      expr = "(builtins.getFlake \"/absolute/path/to/flake\").homeConfigurations.<name>.options";
-                  };
+
+              options = let
+                nixos = "(builtins.getFlake \"${self}\").nixosConfigurations.${osConfig.networking.hostName}.options";
+              in {
+                nixos.expr = nixos;
+                # TODO: Rewrite flake.nix with homeManagerConfigurations in mind(read docs for that) as our own options are missing
+                home-manager.expr = nixos + ".home-manager.users.type.getSubOptions []";
               };
-              */
             };
           };
         };
