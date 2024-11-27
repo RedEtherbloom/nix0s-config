@@ -144,6 +144,20 @@ in {
           name: value: value.listenPort
         )
         config.networking.wireguard.interfaces;
+
+      # Ports for e.g. comfyui
+      networking.firewall.interfaces."wg0".allowedTCPPortRanges = [
+        {
+          from = 8000;
+          to = 8999;
+        }
+      ];
+      networking.firewall.interfaces."wg0".allowedUDPPortRanges = [
+        {
+          from = 8000;
+          to = 8999;
+        }
+      ];
     })
   ];
 }
