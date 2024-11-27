@@ -1,8 +1,7 @@
 {
+  pkgs,
   config,
   lib,
-  nixpkgs-stable,
-  pkgs,
   ...
 }:
 with lib;
@@ -115,7 +114,7 @@ in
             nix-tree
           ]
           ++ lib.optionals cfg.electronics [
-            nixpkgs-stable.kicad
+            kicad
           ]
           ++ lib.optionals cfg.three-d-printing [
             prusa-slicer
