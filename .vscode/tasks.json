@@ -31,7 +31,7 @@
         {
             "label": "Launch NixOs REPL",
             "type": "shell",
-            "command": "sudo nixos-rebuild repl --flake ."
+            "command": "nixos-rebuild repl --flake ."
         },
         {
             "label": "Collect & optimise",
