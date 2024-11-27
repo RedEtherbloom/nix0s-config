@@ -70,7 +70,6 @@
       self,
       flake-utils,
       nixpkgs,
-      nixpkgs-stable,
       nix-comfyui,
       nix-vscode-extensions,
       ...
@@ -78,7 +77,7 @@
     let
       overlay = import ./pkgs;
       specialArgs = {
-        inherit inputs self nixpkgs-stable;
+        inherit inputs self;
       };
     in
     # flake-utils has mostly been copied from feas config
