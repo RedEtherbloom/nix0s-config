@@ -29,8 +29,6 @@ in {
     {
       home.stateVersion = "24.05";
       home.packages = with pkgs; [
-        solaar
-
         # FNV Mod launcher
         zenity
         yad
@@ -44,6 +42,11 @@ in {
 
         comfyuiPackages.comfyui-with-extensions
       ];
+
+      myOptions.solaar = {
+        enable = true;
+        autostart.enable = true;
+      };
 
       # Part of valerie: Broken on 22.11.24
       # myOptions.roles.development.electronics = true;
