@@ -32,9 +32,10 @@ in {
       package = with pkgs; kdePackages.kdeconnect-kde;
     };
 
-    home.packages = with pkgs; [
+    home.packages = with pkgs.kdePackages; [
       kate
-      kdePackages.kalk
+      kalk
+      krohnkite
     ];
   };
 }
