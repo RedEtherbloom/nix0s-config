@@ -26,6 +26,7 @@
     cores = 3;
   };
 
+  boot.loader.grub.gfxmodeEfi = "1366x768";
   boot.resumeDevice = "/dev/disk/by-uuid/8b4a84dd-2d8e-4236-b3bf-c5b961edc815";
   boot.initrd.luks.devices."crypt-nixos" = {
     device = "/dev/disk/by-uuid/6e00cfe8-f82f-4ca1-ad93-32bea67951c6";
