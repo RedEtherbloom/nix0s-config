@@ -20,6 +20,7 @@ in {
     stylix = {
       enable = true;
       polarity = "light";
+      targets.grub.useImage = true;
     };
 
     # Open the ports for KDE-Connect and install it here as well.
