@@ -19,13 +19,14 @@ in {
 
     stylix = {
       enable = true;
-      polarity = "dark";
+      polarity = "light";
     };
 
     # Open the ports for KDE-Connect and install it here as well.
     # HM can't open ports sadly.
     programs.kdeconnect = {
       enable = true;
+      package = mkForce pkgs.kdePackages.kdeconnect-kde;
     };
 
     # For some reason this keeps getting pulled in since stlix and then recycled by ghc
