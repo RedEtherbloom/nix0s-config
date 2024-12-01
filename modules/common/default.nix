@@ -35,14 +35,9 @@
   hardware.i2c.enable = true;
 
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
-
-  # TODO: Replace with grub
-  #boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  # See this thread: https://discourse.nixos.org/t/configure-grub-on-efi-system/2926
   boot.loader.grub = {
     enable = true;
-    # I think this is neccessary for LUKS? 50/50
     enableCryptodisk = true;
     efiSupport =  true;
     copyKernels = true;
@@ -59,12 +54,17 @@
       menuentry "Reboot" {
         reboot
       }
+
+      menuentry "UEFI Setup" {
+        fwsetup
+      }
     '';
   };
-  # TODO: This is a bit too verbose for my taste
-  # Sedna: Can we build a second boot entry that uses this consoleLogLevel? 
-  boot.consoleLogLevel = 7;
-  # TODO: Redo
+  # Generate a second, much more verbose boot entry
+  specialisation.verbose-boot.configuration.boot.consoleLogLevel = 7;
+
+  # Required for plymouth to work in luks
+  boot.initrd.systemd.enable = true;
   boot.plymouth.enable = true;
 
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
