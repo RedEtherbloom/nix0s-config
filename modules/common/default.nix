@@ -1,5 +1,8 @@
-{ lib, pkgs, ... }:
 {
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     ./audio.nix
     ./base_pkgs.nix
@@ -36,10 +39,11 @@
 
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.timeout = 2;
   boot.loader.grub = {
     enable = true;
     enableCryptodisk = true;
-    efiSupport =  true;
+    efiSupport = true;
     copyKernels = true;
     fsIdentifier = "uuid";
     useOSProber = true;
@@ -61,11 +65,14 @@
     '';
   };
   # Generate a second, much more verbose boot entry
-  specialisation.verbose-boot.configuration.boot.consoleLogLevel = 7;
+  specialisation.verbose-boot.configuration = {
+    boot.consoleLogLevel = 7;
+    boot.plymouth.enable = false;
+  };
 
   # Required for plymouth to work in luks
   boot.initrd.systemd.enable = true;
-  boot.plymouth.enable = true;
+  boot.plymouth.enable = lib.mkDefault true;
 
-  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+  sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
 }
