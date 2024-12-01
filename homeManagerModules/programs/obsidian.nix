@@ -6,7 +6,7 @@
 }:
 with lib; let
   cfg = config.myOptions.obsidian;
-  vars = import ../variables.nix {inherit config osConfig pkgs;};
+  vars = import ../variables.nix {inherit config lib osConfig pkgs;};
 in {
   options.myOptions.obsidian = {
     enable = mkOption {

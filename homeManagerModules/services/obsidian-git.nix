@@ -8,7 +8,7 @@
 }:
 with lib; let
   cfg = config.myOptions.obsidian;
-  vars = import ../variables.nix {inherit config osConfig pkgs;};
+  vars = import ../variables.nix {inherit config lib osConfig pkgs;};
 
   DEFAULT_SYNC_INTERVAL = 900;
   OBSIDIAN_VAULTS = "Obsidian";
