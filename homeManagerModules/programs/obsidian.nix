@@ -16,7 +16,7 @@ in {
     enableSync = mkOption {
       description = "Enable the standard obsidian-git integration";
       type = with types; bool;
-      default = false;
+      default = true;
     };
   };
 
