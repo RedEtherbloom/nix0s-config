@@ -16,6 +16,11 @@ in {
       type = with types; bool;
       default = false;
     };
+    vimMode = mkOption {
+      description = "Enable Vim mode plugin";
+      type = types.bool;
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -38,6 +43,9 @@ in {
             jebbs.plantuml
             hediet.vscode-drawio
             pkgs.vscode-marketplace.wenfangdu.snippet-generator
+          ]
+          ++ lib.optionals cfg.vimMode [
+            asvetliakov.vscode-neovim
           ]
           ++ lib.optionals cfg_development.vscode-accessibility [
             oderwat.indent-rainbow
@@ -96,6 +104,9 @@ in {
         };
         gitlens.views.branches.branches.layout = "list";
         redhat.telemetry.enabled = false;
+        extensions.experimental.affinity = attrsets.optionalAttrs cfg.vimMode {
+          asvetliakov.vscode-neovim = 1;
+        };
       };
     };
 
