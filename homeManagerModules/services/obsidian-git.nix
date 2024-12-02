@@ -21,6 +21,7 @@ with lib; let
   };
 in {
   config = mkIf cfg.enableSync {
+    # TODO: Needs to be reloaded after config changes
     services.git-sync = {
       enable = true;
       repositories = {
