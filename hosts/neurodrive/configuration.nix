@@ -284,5 +284,7 @@ in
     enable = true;
   };
 
+  myOptions.services.gitea.enable = true;
+
   system.stateVersion = "24.05";
 }
