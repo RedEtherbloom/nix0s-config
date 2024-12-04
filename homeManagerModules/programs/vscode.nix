@@ -45,7 +45,7 @@ in {
             pkgs.vscode-marketplace.wenfangdu.snippet-generator
           ]
           ++ lib.optionals cfg.vimMode [
-            asvetliakov.vscode-neovim
+            vscodevim.vim
           ]
           ++ lib.optionals cfg_development.vscode-accessibility [
             oderwat.indent-rainbow
@@ -104,8 +104,14 @@ in {
         };
         gitlens.views.branches.branches.layout = "list";
         redhat.telemetry.enabled = false;
-        extensions.experimental.affinity = attrsets.optionalAttrs cfg.vimMode {
-          asvetliakov.vscode-neovim = 1;
+        "extensions.experimental.affinity" = attrsets.optionalAttrs cfg.vimMode {
+          "vscodevim.vim" = 1;
+        };
+        vim.handleKeys = {
+          # Clara: Reenable filepicker(although we really need a good one for Vim in general)
+          "<C-p>" = false;
+          # Valerie: Reenable new file
+          "<C-n>" = false;
         };
       };
     };
