@@ -51,5 +51,8 @@ in {
         passwordFile = config.sops.secrets."gitea/database_password".path;
       };
     };
+
+    networking.firewall.interfaces."wg0".allowedTCPPorts = [ GITEA_PORT ];
+    networking.firewall.interfaces."wg0".allowedUDPPorts = [ GITEA_PORT ];
   };
 }
