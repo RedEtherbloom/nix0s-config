@@ -1,0 +1,19 @@
+.include shared_variables.cnf
+
+[ req ]
+default_bits = 4096
+default_days = 3420
+default_keyfile = root_CA.key
+encrypt_key = no
+default_md = sha256
+prompt = no
+utf8 = yes
+distinguished_name = req_distinguished_name
+x509_extensions = v3_ca
+
+
+[ v3_ca ]
+keyUsage=critical, digitalSignature, keyEncipherment, keyCertSign
+basicConstraints=critical,CA:TRUE
+extendedKeyUsage=critical,serverAuth
+subjectKeyIdentifier = hash
