@@ -27,15 +27,8 @@ in {
       owner = config.services.gitea.user;
       group = config.services.gitea.group;
     };
-    sops.secrets."gitea/cert.pem" = {
-      sopsFile = "${GITEA_SECRET_DIRECTORY}/cert.pem.encrypted";
-      format = "binary";
-      restartUnits = ["gitea.service"];
-      owner = config.services.gitea.user;
-      group = config.services.gitea.group;
-    };
-    sops.secrets."gitea/key.pem" = {
-      sopsFile = "${GITEA_SECRET_DIRECTORY}/key.pem.encrypted";
+    sops.secrets."gitea/gitea.key" = {
+      sopsFile = "${GITEA_SECRET_DIRECTORY}/gitea.key";
       format = "binary";
       restartUnits = ["gitea.service"];
       owner = config.services.gitea.user;
@@ -49,8 +42,8 @@ in {
           PROTOCOL = "https";
           DOMAIN = GITEA_DOMAIN;
           HTTP_PORT = GITEA_PORT;
-          CERT_FILE = config.sops.secrets."gitea/cert.pem".path;
-          KEY_FILE = config.sops.secrets."gitea/key.pem".path;
+          CERT_FILE = (builtins.toString "${inputs.our-secrets}/secrets/services/gitea/gitea.crt)");
+          KEY_FILE = config.sops.secrets."gitea/gitea.key".path;
         };
       };
       lfs.enable = true;

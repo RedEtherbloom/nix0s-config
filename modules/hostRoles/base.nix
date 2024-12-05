@@ -41,6 +41,10 @@ in {
 
     programs.nix-index-database.comma.enable = lib.mkDefault true;
 
+    security.pki.certificateFiles = [
+      "${inputs.our-secrets}/secrets/root_ca/root_CA.crt"
+    ];
+
     myOptions.utilities.enable = true;
   };
 }
