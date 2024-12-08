@@ -27,12 +27,6 @@
   networking.hostName = "audiosink"; # Define your hostname.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
-  time.timeZone = "Europe/Berlin";
-
-  # Ireland as english AND correct formatting(e.g. time)
-  i18n.defaultLocale = "en_IE.UTF-8";
-  console.keyMap = "de";
-
   myOptions.hostRoles.graphical.enable = true;
   myOptions.utilities.enable = true;
 
