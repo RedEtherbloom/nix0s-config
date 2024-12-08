@@ -18,6 +18,11 @@ in {
       type = with types; bool;
       default = false;
     };
+    krohnkite = mkOption {
+      description = "Enable krohnkite tiling WM shortcuts";
+      type = types.bool;
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -32,10 +37,11 @@ in {
       package = with pkgs; kdePackages.kdeconnect-kde;
     };
 
-    home.packages = with pkgs.kdePackages; [
-      kate
-      kalk
-      krohnkite
-    ];
+    home.packages = with pkgs.kdePackages;
+      [
+        kate
+        kalk
+      ]
+      ++ lib.optionals cfg.krohnkite [krohnkite];
   };
 }
