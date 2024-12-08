@@ -1,28 +1,76 @@
 {
   config,
   inputs,
+  lib,
   pkgs,
   ...
 }: {
   imports = [
     inputs.nixos-hardware.nixosModules.raspberry-pi-3
+    inputs.raspberry-pi-nix.nixosModules.raspberry-pi
 
     ../../modules
     ../../modules/common/ssh.nix
 
     ./hardware-configuration.nix
   ];
+
+  nix.settings = {
+    substituters = [
+      "https://nix-community.cachix.org/"
+    ];
+
+    trusted-public-keys = ["nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="];
+  };
+
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
   boot.loader.generic-extlinux-compatible.enable = true;
 
-  boot.loader.raspberryPi.firmwareConfig = ''
-    dtparam=audio=on
-  '';
   # Warning: Early Boot UART will be garbled due to the default 400MHz CPU freq
   boot.kernelParams = [
     "console=ttyS1,115200n8"
   ];
+  
+  raspberry-pi-nix.board = "bcm2711";
+  hardware.raspberry-pi.config = {
+    all = {
+      options = {
+        # The firmware will start our u-boot binary rather than a
+        # linux kernel.
+        kernel = {
+          enable = true;
+          value = lib.mkForce "u-boot-rpi-arm64.bin";
+        };
+        arm_64bit = {
+          enable = true;
+          value = true;
+        };
+        enable_uart = {
+          enable = true;
+          value = true;
+        };
+        disable_overscan = {
+          enable = true;
+          value = true;
+        };
+      };
+      base-dt-params = {
+        krnbt = {
+          enable = true;
+          value = "on";
+        };
+        spi = {
+          enable = true;
+          value = "on";
+        };
+        audio = {
+          enable = true;
+          value = "on";
+        };
+      };
+    };
+  };
 
   networking.hostName = "audiosink"; # Define your hostname.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.

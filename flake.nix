@@ -54,6 +54,11 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+
+    raspberry-pi-nix = {
+      url = "git+https://github.com/nix-community/raspberry-pi-nix?tag=v0.4.1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
