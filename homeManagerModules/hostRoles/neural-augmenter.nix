@@ -18,7 +18,7 @@ in {
 
   config = mkIf cfg.enable {
     myOptions.hostRoles.graphical.enable = mkDefault true;
-
+    myOptions.socials.enable = true;
     myOptions.roles.development.enable = true;
     myOptions.vscode.enable = true;
     myOptions.obsidian.enable = true;
@@ -50,10 +50,44 @@ in {
         );
       }));
     };
-    myOptions.socials.enable = true;
+
+    programs.firefox.enable = true;
+    programs.nushell.enable = true;
 
     home.packages = with pkgs; [
+      (chromium.override {enableWideVine = true;})
+      tor-browser
+      bitwarden
+      bitwarden-cli
+
       comfyuiPackages.krita-with-extensions
+      yt-dlp
+
+      # KDE info packages
+      clinfo
+      glxinfo
+      vulkan-tools
+      wayland-utils
+      pciutils
+      aha
+      # Monitor brightness control
+      ddcutil
+      usbutils
+
+      # TODO: Move to restic module
+      restic
+      autorestic
+
+      ffmpeg-full
+      gst_all_1.gst-plugins-good
+      gst_all_1.gst-plugins-bad
     ];
+
+    environment.sessionVariables = {
+      # Smooth scrolling
+      MOZ_USE_XINPUT2 = "1";
+      # Native Wayland for Chromium apps
+      NIXOS_OZONE_WL = "1";
+    };
   };
 }

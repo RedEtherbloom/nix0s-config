@@ -2,6 +2,7 @@
   config,
   lib,
   osConfig,
+  pkgs,
   ...
 }:
 with lib; let
@@ -17,5 +18,9 @@ in {
 
   config = mkIf cfg.enable {
     myOptions.hostRoles.neural-augmenter.enable = mkDefault true;
+
+    home.packages = with pkgs; [
+        intel-gpu-tools
+    ];
   };
 }

@@ -5,7 +5,6 @@
 }: {
   imports = [
     ./audio.nix
-    ./base_pkgs.nix
     ./localisation.nix
     ./restic.nix
     ./security.nix
@@ -34,6 +33,8 @@
   };
   programs.nix-ld.enable = true;
   programs.appimage.binfmt = true;
+
+  environment.systemPackages = [pkgs.appimage-run];
 
   hardware.i2c.enable = true;
 

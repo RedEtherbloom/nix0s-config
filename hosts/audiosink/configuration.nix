@@ -1,6 +1,9 @@
-{ inputs, pkgs, ... }:
-
 {
+  config,
+  inputs,
+  pkgs,
+  ...
+}: {
   imports = [
     inputs.nixos-hardware.nixosModules.raspberry-pi-3
 
@@ -9,11 +12,8 @@
 
     ./hardware-configuration.nix
   ];
-
-  nixpkgs.system = "aarch64-linux";
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
-  # Enables the generation of /boot/extlinux/extlinux.conf
   boot.loader.generic-extlinux-compatible.enable = true;
 
   boot.loader.raspberryPi.firmwareConfig = ''
@@ -27,12 +27,14 @@
   networking.hostName = "audiosink"; # Define your hostname.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
-  # Set your time zone.
   time.timeZone = "Europe/Berlin";
 
   # Ireland as english AND correct formatting(e.g. time)
   i18n.defaultLocale = "en_IE.UTF-8";
   console.keyMap = "de";
+
+  myOptions.hostRoles.graphical = true;
+  myOptions.utilities.enable = true;
 
   # Enable sound.
   security.rtkit.enable = true;
@@ -71,7 +73,7 @@
     "sound.target"
     "bluetooth.target"
   ];
-  systemd.user.services.pipewire-pulse.wantedBy = [ "default.target" ];
+  systemd.user.services.pipewire-pulse.wantedBy = ["default.target"];
 
   users.users.inf = {
     isNormalUser = true;
@@ -79,6 +81,7 @@
       "wheel"
       "audio"
       "i2c"
+      "podman"
     ];
     linger = true;
     packages = with pkgs; [
@@ -88,30 +91,17 @@
 
   environment.systemPackages = with pkgs; [
     libraspberrypi
+    podman
+    podman-compose
 
-    tmux
     dua
     ddcutil
     git
 
-    magic-wormhole
-    mosh
+    # Move to common role
     curl
     wget
   ];
-
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-  };
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
 
   hardware.enableRedistributableFirmware = true;
   hardware.bluetooth.enable = true;
@@ -128,45 +118,52 @@
   services.avahi = {
     enable = true;
     # Lookup which get enabled by default
-    publish.enable = true;
-    publish.addresses = true;
-    publish.domain = true;
-    publish.userServices = true;
+    publish = {
+      enable = true;
+      addresses = true;
+      domain = true;
+      userServices = true;
+    };
     nssmdns4 = true;
     nssmdns6 = true;
     openFirewall = true;
   };
 
-  # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [
     # Pulse Network
     4713
+    # Home Assistant
+    8123
   ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  # system.copySystemConfiguration = true;
+  # Enable common container config files in /etc/containers
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
+    oci-containers = {
+      backend = "podman";
+      containers.homeassistant = {
+        # How do we backup this?
+        volumes = ["home-assistant:/config"];
+        environment.TZ = config.time.timeZone;
+        # Okay? What does this mean?
+        # Note: The image will not be updated on rebuilds, unless the version label changes
+        image = "ghcr.io/home-assistant/home-assistant:stable";
+        extraOptions = [
+          # Use the host network namespace for all sockets
+          "--network=host"
+          # Pass devices into the container, so Home Assistant can discover and make use of them
+          # "--device=/dev/ttyACM0:/dev/ttyACM0"
+        ];
+      };
+    };
+  };
 
-  # This option defines the first version of NixOS you have installed on this particular machine,
-  # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
-  #
-  # Most users should NEVER change this value after the initial install, for any reason,
-  # even if you've upgraded your system to a new NixOS release.
-  #
-  # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
-  # so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
-  # to actually do that.
-  #
-  # This value being lower than the current NixOS release does NOT mean your system is
-  # out of date, out of support, or vulnerable.
-  #
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  #
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "24.05";
 }

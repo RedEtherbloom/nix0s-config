@@ -46,5 +46,14 @@ in {
     ];
 
     myOptions.utilities.enable = true;
+
+    services.fwupd.enable = true;
+    services.fstrim.enable = true;
+
+    # TODO: Figure out how to merge this with home-manager
+    programs.neovim = {
+      enable = true;
+      defaultEditor = true;
+    };
   };
 }
