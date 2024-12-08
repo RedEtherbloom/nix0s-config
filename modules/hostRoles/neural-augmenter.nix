@@ -1,17 +1,35 @@
 {
   config,
   lib,
+  inputs,
   pkgs,
   ...
 }:
 with lib; let
   cfg = config.myOptions.hostRoles.neural-augmenter;
 in {
+  imports = [
+    inputs.stylix.nixosModules.stylix
+  ];
+
   options.myOptions.hostRoles.neural-augmenter.enable = mkEnableOption "workstation options";
 
   config = mkIf cfg.enable {
     myOptions.hostRoles.graphical.enable = lib.mkDefault true;
     myOptions.office.enable = true;
+
+    stylix = {
+      enable = true;
+      polarity = "light";
+      targets.grub.useImage = true;
+    };
+
+    # Open the ports for KDE-Connect and install it here as well.
+    # HM can't open ports sadly.
+    programs.kdeconnect = {
+      enable = true;
+      package = mkForce pkgs.kdePackages.kdeconnect-kde;
+    };
 
     programs.adb.enable = true;
 
@@ -22,6 +40,8 @@ in {
     };
 
     environment.systemPackages = with pkgs; [
+      # For some reason this keeps getting pulled in since stlix and then recycled by ghc
+      ghc
       gnupg
       pinentry-qt
     ];
