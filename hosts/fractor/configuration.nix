@@ -113,7 +113,6 @@
 
   myOptions.hostRoles.laptop.enable = true;
   myOptions.roles.gaming.enable = true;
-  myOptions.basePkgs.enabled = true;
   # Setup event setup and hardening etc.
   myOptions.event-setup.enable = false;
   users.users.inf = {

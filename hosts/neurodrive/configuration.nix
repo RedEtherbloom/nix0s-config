@@ -97,10 +97,6 @@ in
   # Does this have to be replaced with home-manager?
   services.desktopManager.plasma6.enable = true;
 
-  services.printing.enable = true;
-  hardware.sane.enable = true;
-  hardware.sane.drivers.scanSnap.enable = true;
-
   hardware.enableAllFirmware = true;
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
@@ -153,7 +149,6 @@ in
 
   myOptions.hostRoles.desktop.enable = true;
   myOptions.roles.gaming.enable = true;
-  myOptions.basePkgs.enabled = true;
   users.users.inf = {
     isNormalUser = true;
     description = "Infinity";

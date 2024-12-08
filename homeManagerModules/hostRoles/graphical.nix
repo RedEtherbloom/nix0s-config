@@ -2,6 +2,7 @@
   config,
   lib,
   osConfig,
+  pkgs,
   ...
 }:
 with lib; let
@@ -25,5 +26,24 @@ in {
     };
 
     myOptions.plasma-manager.enable = true;
+
+    home.packages = with pkgs; [
+      helvum
+      pavucontrol
+      wl-clipboard
+      hyfetch
+
+      # Attempts at notifications
+      kdePackages.kdialog
+      libnotify
+
+      vlc
+      mpv
+      feh
+    ];
+  };
+
+  programs.kitty = {
+    enable = true;
   };
 }
