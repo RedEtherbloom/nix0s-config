@@ -84,9 +84,6 @@
       "podman"
     ];
     linger = true;
-    packages = with pkgs; [
-      librespot
-    ];
   };
 
   environment.systemPackages = with pkgs; [
@@ -94,13 +91,7 @@
     podman
     podman-compose
 
-    dua
     ddcutil
-    git
-
-    # Move to common role
-    curl
-    wget
   ];
 
   hardware.enableRedistributableFirmware = true;
