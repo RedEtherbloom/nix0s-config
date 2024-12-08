@@ -66,7 +66,6 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    cfg.wormhole
     {
       environment.systemPackages = with pkgs;
         [
@@ -99,7 +98,7 @@ in {
         ++ lib.optionals cfg.python [
           python3
         ]
-        ++ lib.options cfg.htop [htop]
+        ++ lib.optionals cfg.htop [htop]
         ++ lib.optionals cfg.cmdFileManagers [
           ranger
           dust
@@ -118,8 +117,8 @@ in {
           unixtools.xxd
         ]
         ++ lib.optionals cfg.wormhole [
-          wormhole
-          wormhole-rs
+          magic-wormhole
+          magic-wormhole-rs
         ]
         ++ lib.optionals cfg.tmux [
           tmux

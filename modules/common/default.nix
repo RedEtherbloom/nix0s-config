@@ -41,7 +41,7 @@
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 2;
-  boot.loader.grub = {
+  boot.loader.grub = lib.mkDefault {
     enable = true;
     enableCryptodisk = true;
     efiSupport = true;

@@ -83,7 +83,8 @@ in {
       gst_all_1.gst-plugins-bad
     ];
 
-    environment.sessionVariables = {
+    # May not work due to https://github.com/nix-community/home-manager/issues/1011
+    home.sessionVariables = {
       # Smooth scrolling
       MOZ_USE_XINPUT2 = "1";
       # Native Wayland for Chromium apps

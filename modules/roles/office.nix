@@ -10,17 +10,24 @@ in {
     enable = mkOption {
       description = "Enable office";
       type = with types; bool;
-      default = cfg.scanning;
+      default = false;
+    };
+    printing = mkOption {
+        description = "Enable printing";
+        type = types.bool;
+        default = true;
     };
     scanning = mkOption {
       description = "Enable scanning";
       type = types.bool;
-      default = false;
+      default = true;
     };
   };
 
-  config = mkIf (cfg.enable && cfg.scanning) {
-    hardware.sane = {
+  config = mkIf cfg.enable {
+    services.printing.enable = cfg.printing;
+
+    hardware.sane = mkIf cfg.scanning {
       enable = true;
       drivers.scanSnap.enable = true;
     };

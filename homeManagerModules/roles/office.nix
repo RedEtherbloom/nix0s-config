@@ -1,6 +1,8 @@
 {
   config,
   lib,
+  osConfig,
+  pkgs,
   ...
 }:
 with lib; let
@@ -10,7 +12,7 @@ in {
     enable = mkOption {
       description = "Enable office";
       type = with types; bool;
-      default = false;
+      default = osConfig.myOptions.office.enable;
     };
 
     audio_editing = mkOption {
@@ -33,15 +35,10 @@ in {
       type = types.bool;
       default = true;
     };
-    printing = mkOption {
-      description = "Enable printing";
-      type = types.bool;
-      default = true;
-    };
     scanning = mkOption {
       description = "Enable scanning";
       type = types.bool;
-      default = true;
+      default = osConfig.myOptions.office.scanning;
     };
     thunderbird = mkOption {
       description = "Enable thunderbird";
@@ -61,10 +58,10 @@ in {
           hunspellDicts.en_US
           hunspellDicts.de_DE
         ]
-        ++ lib.optionals cfg.video_editing [shotcut] ++ lib.options cfg.scanning[simple-scan];
-      services.printing.enable = mkIf cfg.printing;
-
-      programs.thunderbird.enable = cfg.thunderbird;
+        ++ lib.optionals cfg.video_editing [shotcut]
+        ++ lib.optionals cfg.scanning [simple-scan]
+        # Turn into option, once we figured out it's profiles
+        ++ lib.optionals cfg.thunderbird [thunderbird];
     }
   ]);
 }
