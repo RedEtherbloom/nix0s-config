@@ -88,6 +88,10 @@ in {
             generateWireguardHost "3" "kEIYSz20OKCGyWcnXlRBSkWBt7DkjKhmb1Xu+0Kc3XY="
             "3gMbw0t8dlUGUnRmmNJlNM75tKsygjpWYD/1fQaekXg="
           );
+          audiosink = (
+            generateWireguardHost "6" "bvDwdiRWJAXr3up4k+34w8ATqcx6t98jTnmSsjBVhFE="
+            "HvQA5s03k1w3dwTwjSR3/dasUeUNGD+fTskz///2nj0="
+          );
         };
       };
     };
