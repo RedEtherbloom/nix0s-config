@@ -38,7 +38,8 @@
 
   hardware.i2c.enable = true;
 
-  boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
+  # Prio, so the raspi module can override it
+  boot.kernelPackages = (lib.mkOverride 1001 pkgs.linuxPackages_latest);
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 2;
   boot.loader.grub = lib.mkDefault {
