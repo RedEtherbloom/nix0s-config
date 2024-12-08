@@ -7,7 +7,7 @@
   imports = [
     inputs.nixos-hardware.nixosModules.raspberry-pi-3
 
-    ./modules
+    ../../modules
     ../../modules/common/ssh.nix
 
     ./hardware-configuration.nix
