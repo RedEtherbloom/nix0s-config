@@ -33,7 +33,7 @@
   i18n.defaultLocale = "en_IE.UTF-8";
   console.keyMap = "de";
 
-  myOptions.hostRoles.graphical = true;
+  myOptions.hostRoles.graphical.enable = true;
   myOptions.utilities.enable = true;
 
   # Enable sound.

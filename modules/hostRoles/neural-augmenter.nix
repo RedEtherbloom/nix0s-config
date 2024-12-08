@@ -11,6 +11,7 @@ in {
 
   config = mkIf cfg.enable {
     myOptions.hostRoles.graphical.enable = lib.mkDefault true;
+    myOptions.office.enable = true;
 
     programs.adb.enable = true;
 
