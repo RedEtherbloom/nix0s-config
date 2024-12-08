@@ -38,11 +38,18 @@ in {
       enable = true;
       settings = {
         server = {
-          PROTOCOL = "https";
+          PROTOCOL = "http";
           DOMAIN = GITEA_DOMAIN;
           HTTP_PORT = GITEA_PORT;
           CERT_FILE = (builtins.toString ../../secrets/services/gitea/gitea.crt);
           KEY_FILE = config.sops.secrets."gitea/gitea.key".path;
+        };
+        repository = {
+          DEFAULT_PRIVATE = "private";
+          DEFAULT_PUSH_CREATE_PRIVATE = true;
+
+          ENABLE_PUSH_CREATE_USER = true;
+          ENABLE_PUSH_CREATE_ORG = true;
         };
       };
       lfs.enable = true;
