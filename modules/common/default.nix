@@ -1,8 +1,12 @@
 {
   lib,
+  config,
   pkgs,
   ...
-}: {
+}:
+with lib; let
+  cfg = config.myOptions.common;
+in {
   imports = [
     ./audio.nix
     ./localisation.nix
@@ -11,70 +15,83 @@
     ./zsh.nix
   ];
 
-  nix = {
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-        "pipe-operators"
-      ];
-    };
-    gc = {
-      automatic = true;
-      dates = "daily";
-      options = "--delete-older-than 14d";
-    };
-    optimise = {
-      automatic = true;
-      dates = [
-        "15:00"
-      ];
+  options.myOptions.common = {
+    enableBoot = mkOption {
+      description = "Enable common bootloader support";
+      type = types.bool;
+      default = true;
     };
   };
-  programs.nix-ld.enable = true;
-  programs.appimage.binfmt = true;
 
-  environment.systemPackages = [pkgs.appimage-run];
+  config = mkMerge [
+    {
+      nix = {
+        settings = {
+          experimental-features = [
+            "nix-command"
+            "flakes"
+            "pipe-operators"
+          ];
+        };
+        gc = {
+          automatic = true;
+          dates = "daily";
+          options = "--delete-older-than 14d";
+        };
+        optimise = {
+          automatic = true;
+          dates = [
+            "15:00"
+          ];
+        };
+      };
+      programs.nix-ld.enable = true;
+      programs.appimage.binfmt = true;
 
-  hardware.i2c.enable = true;
+      environment.systemPackages = [pkgs.appimage-run];
 
-  # Prio, so the raspi module can override it
-  boot.kernelPackages = (lib.mkOverride 1001 pkgs.linuxPackages_latest);
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.timeout = 2;
-  boot.loader.grub = lib.mkDefault {
-    enable = true;
-    enableCryptodisk = true;
-    efiSupport = true;
-    copyKernels = true;
-    fsIdentifier = "uuid";
-    useOSProber = true;
-    device = "nodev";
+      hardware.i2c.enable = true;
 
-    memtest86.enable = true;
-    extraEntries = ''
-      menuentry "Poweroff" {
-        halt
-      }
+      sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+    }
+    (mkIf cfg.enableBoot {
+      # Prio, so the raspi module can override it
+      boot.kernelPackages = lib.mkOverride 1001 pkgs.linuxPackages_latest;
+      boot.loader.efi.canTouchEfiVariables = true;
+      boot.loader.timeout = 2;
+      boot.loader.grub = lib.mkDefault {
+        enable = true;
+        enableCryptodisk = true;
+        efiSupport = true;
+        copyKernels = true;
+        fsIdentifier = "uuid";
+        useOSProber = true;
+        device = "nodev";
 
-      menuentry "Reboot" {
-        reboot
-      }
+        memtest86.enable = true;
+        extraEntries = ''
+          menuentry "Poweroff" {
+            halt
+          }
 
-      menuentry "UEFI Setup" {
-        fwsetup
-      }
-    '';
-  };
-  # Generate a second, much more verbose boot entry
-  specialisation.verbose-boot.configuration = {
-    boot.consoleLogLevel = 7;
-    boot.plymouth.enable = false;
-  };
+          menuentry "Reboot" {
+            reboot
+          }
 
-  # Required for plymouth to work in luks
-  boot.initrd.systemd.enable = true;
-  boot.plymouth.enable = lib.mkDefault true;
+          menuentry "UEFI Setup" {
+            fwsetup
+          }
+        '';
+      };
+      # Generate a second, much more verbose boot entry
+      specialisation.verbose-boot.configuration = {
+        boot.consoleLogLevel = 7;
+        boot.plymouth.enable = false;
+      };
 
-  sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+      # Required for plymouth to work in luks
+      boot.initrd.systemd.enable = true;
+      boot.plymouth.enable = lib.mkDefault true;
+    })
+  ];
 }

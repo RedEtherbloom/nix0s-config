@@ -6,7 +6,6 @@
   ...
 }: {
   imports = [
-    inputs.nixos-hardware.nixosModules.raspberry-pi-3
     inputs.raspberry-pi-nix.nixosModules.raspberry-pi
 
     ../../modules
@@ -15,6 +14,7 @@
     ./hardware-configuration.nix
   ];
 
+  nixpkgs.system = "aarch64-linux";
   nix.settings = {
     substituters = [
       "https://nix-community.cachix.org/"
@@ -25,13 +25,14 @@
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
-  boot.loader.generic-extlinux-compatible.enable = true;
+  raspberry-pi-nix.uboot.enable = true;
+  myOptions.common.enableBoot = false;
 
   # Warning: Early Boot UART will be garbled due to the default 400MHz CPU freq
   boot.kernelParams = [
     "console=ttyS1,115200n8"
   ];
-  
+
   raspberry-pi-nix.board = "bcm2711";
   hardware.raspberry-pi.config = {
     all = {
@@ -72,8 +73,8 @@
     };
   };
 
-  networking.hostName = "audiosink"; # Define your hostname.
-  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
+  networking.hostName = "audiosink"; 
+  networking.networkmanager.enable = true; 
 
   myOptions.hostRoles.graphical.enable = true;
   myOptions.utilities.enable = true;
