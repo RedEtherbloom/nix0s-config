@@ -20,7 +20,7 @@ in {
 
     stylix = {
       enable = true;
-      polarity = "light";
+      polarity = "dark";
       targets.grub.useImage = true;
     };
 
