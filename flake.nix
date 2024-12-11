@@ -59,35 +59,36 @@
       url = "git+https://github.com/nix-community/raspberry-pi-nix?tag=v0.4.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs =
-    {
-      self,
-      flake-utils,
-      nixpkgs,
-      nix-comfyui,
-      nix-vscode-extensions,
-      ...
-    }@inputs:
-    let
-      overlay = import ./pkgs;
-      specialArgs = {
-        inherit inputs self;
-      };
-    in
+  outputs = {
+    self,
+    flake-utils,
+    nixpkgs,
+    nix-comfyui,
+    nix-vscode-extensions,
+    ...
+  } @ inputs: let
+    overlay = import ./pkgs;
+    specialArgs = {
+      inherit inputs self;
+    };
+  in
     # flake-utils has mostly been copied from feas config
     flake-utils.lib.eachDefaultSystem (
-      system:
-      let
+      system: let
         # Still ugly tbh. E.g. allowunfree and other setting don't get applied. Maybe I should turn nixpkgs into it's own imported nix file
         pkgs = import nixpkgs {
           inherit system;
           overlays = self.overlay.defaults;
         };
         formatter = pkgs.nixfmt-rfc-style;
-      in
-      {
+      in {
         devShells.default = pkgs.mkShell {
           packages = [
             formatter
@@ -103,13 +104,13 @@
       }
     )
     // {
-      overlay.defaults = [ overlay nix-vscode-extensions.overlays.default nix-comfyui.overlays.default ];
+      overlay.defaults = [overlay nix-vscode-extensions.overlays.default nix-comfyui.overlays.default];
       # TODO: Redo with flake-parts or flake-utils once we have the spoons again
       nixosConfigurations =
         nixpkgs.lib.attrsets.genAttrs
-          (nixpkgs.lib.attrsets.mapAttrsToList (name: _: name) (builtins.readDir ./hosts))
-          (
-            name:
+        (nixpkgs.lib.attrsets.mapAttrsToList (name: _: name) (builtins.readDir ./hosts))
+        (
+          name:
             nixpkgs.lib.nixosSystem {
               inherit specialArgs;
 
@@ -122,6 +123,6 @@
                 }
               ];
             }
-          );
+        );
     };
 }
