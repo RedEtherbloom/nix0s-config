@@ -4,12 +4,10 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   restic_certificate = config.sops.secrets."restic_server/private_certificate".path;
   restic_public_key = config.sops.secrets."restic_server/public_certificate".path;
-in
-{
+in {
   imports =
     [
       ../../modules
@@ -44,13 +42,13 @@ in
   };
 
   # Quarry: Cross-compilation support for audiosink
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  boot.binfmt.emulatedSystems = ["aarch64-linux"];
 
   # Cache for krita...
   programs.ccache.enable = true;
-  nix.settings.extra-sandbox-paths = [ config.programs.ccache.cacheDir ];
+  nix.settings.extra-sandbox-paths = [config.programs.ccache.cacheDir];
   #ä Although this may not work, as using krita directly here leads to a werid home-manager crash about stdenv. Maybe the CCache wrappers still needs to be added for this host?
-  programs.ccache.packageNames = [ "krita-unwrapped" ];
+  programs.ccache.packageNames = ["krita-unwrapped"];
 
   # Filesystems
   boot.initrd.luks.devices."nixos-root" = {
@@ -157,8 +155,8 @@ in
       "adbusers"
       "scanner"
       "lp"
-      "docker"
       "i2c"
+      "podman"
     ];
   };
   stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/kaiju_girl_extended.png";
@@ -168,6 +166,9 @@ in
     cudaPackages.cudatoolkit
     cudaPackages.cudnn
     nvtopPackages.full
+    dive # look into docker image layers
+    podman-tui # status of containers in the terminal
+    docker-compose # start group of containers for dev
   ];
 
   environment.sessionVariables = {
@@ -217,7 +218,7 @@ in
   };
 
   # Includes Wayland
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = ["nvidia"];
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = true;
@@ -230,14 +231,14 @@ in
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of 
-    # supported GPUs is at: 
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
+    # Support is limited to the Turing and later architectures. Full list of
+    # supported GPUs is at:
+    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
     # Only available from driver 515.43.04+
     # Currently alpha-quality/buggy, so false is currently the recommended setting.
     #
     # May have improved now
-    # 
+    #
     # Incompability with vaapi-driver
     # See: https://github.com/elFarto/nvidia-vaapi-driver/issues/312
     # TODO: Reevaluate if open works now
@@ -280,6 +281,19 @@ in
   };
 
   myOptions.services.gitea.enable = true;
+
+  # Required for GPU passthrough
+  hardware.nvidia-container-toolkit.enable = true;
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
+  };
 
   system.stateVersion = "24.05";
 }
