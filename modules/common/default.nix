@@ -12,6 +12,7 @@ in {
     ./localisation.nix
     ./restic.nix
     ./security.nix
+    ./shared_secrets.nix
     ./zsh.nix
   ];
 

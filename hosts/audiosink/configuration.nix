@@ -7,11 +7,13 @@
 }: {
   imports = [
     inputs.raspberry-pi-nix.nixosModules.raspberry-pi
+    inputs.disko.nixosModules.disko
 
+    ./disko.nix
+    ./hardware-configuration.nix
+    
     ../../modules
     ../../modules/common/ssh.nix
-
-    ./hardware-configuration.nix
   ];
 
   nixpkgs.system = "aarch64-linux";

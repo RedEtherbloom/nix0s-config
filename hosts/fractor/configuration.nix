@@ -4,8 +4,7 @@
   lib,
   pkgs,
   ...
-}:
-{
+}: {
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x230
 
@@ -20,6 +19,9 @@
   ];
 
   nixpkgs.system = "x86_64-linux";
+  boot.binfmt.emulatedSystems = [
+    "aarch64-linux"
+  ];
   # X230 has 2 Cores, a 4 logical cores
   nix.settings = {
     max-jobs = 3;
@@ -68,7 +70,7 @@
   services.desktopManager.plasma6.enable = true;
 
   services.xserver.enable = false;
-  services.xserver.videoDrivers = [ "intel" ];
+  services.xserver.videoDrivers = ["intel"];
 
   services.printing.enable = true;
   services.printing.drivers = with pkgs; [
@@ -76,7 +78,7 @@
     foomatic-db
     foomatic-db-nonfree
 
-    (callPackage ../../modules/drivers/printers/kyocera-classic-universal-kpdl/default.nix { })
+    (callPackage ../../modules/drivers/printers/kyocera-classic-universal-kpdl/default.nix {})
   ];
   hardware.sane.enable = true;
   hardware.sane.drivers.scanSnap.enable = true;
@@ -101,12 +103,12 @@
 
   environment.etc = {
     "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
-      		bluez_monitor.properties = {
-      			["bluez5.enable-sbc-xq"] = true,
-      			["bluez5.enable-msbc"] = true,
-      			["bluez5.enable-hw-volume"] = true,
-                      }
-      	'';
+      bluez_monitor.properties = {
+      	["bluez5.enable-sbc-xq"] = true,
+      	["bluez5.enable-msbc"] = true,
+      	["bluez5.enable-hw-volume"] = true,
+                    }
+    '';
     # Trying to disable headset mode, some of these aren't as attrocious as I originally thought though
     #["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
   };
