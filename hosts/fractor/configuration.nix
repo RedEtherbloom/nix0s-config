@@ -43,7 +43,7 @@
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
 
   networking.firewall.allowedTCPPorts = [
-    #TODO: Pulseaudio Network Sharing. Probably only needed for publush
+    #TODO: Pulseaudio Network Sharing. Probably only needed for publish
     4713
   ];
 
@@ -152,6 +152,9 @@
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "i965";
   };
+
+  # TODO: Move to common/default.nix after Pi is working
+  nix.settings.trusted-users = ["root" "@wheel" "inf"];
 
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
