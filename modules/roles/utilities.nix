@@ -63,6 +63,11 @@ in {
       type = types.bool;
       default = true;
     };
+    pdfUtils = mkOption {
+      description = "Enable pdf utilities";
+      type = types.bool;
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -79,15 +84,12 @@ in {
           psmisc
           zip
           unzip
-          unar
+          # unar
           p7zip
           ripgrep
-          # pdfs
-          ripgrep-all
           fd
           jq
           fzf
-          poppler_utils
           lshw
           fuse3
         ]
@@ -126,6 +128,11 @@ in {
         ++ lib.optionals cfg.ssh_utils [
           sshfs
           mosh
+        ]
+        ++ lib.optionals cfg.pdfUtils [
+          poppler_utils
+          # pdfs
+          ripgrep-all
         ];
     }
   ]);

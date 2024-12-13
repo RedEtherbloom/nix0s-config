@@ -43,6 +43,7 @@ in {
             jebbs.plantuml
             hediet.vscode-drawio
             pkgs.vscode-marketplace.wenfangdu.snippet-generator
+            christian-kohler.path-intellisense
           ]
           ++ lib.optionals cfg.vimMode [
             vscodevim.vim

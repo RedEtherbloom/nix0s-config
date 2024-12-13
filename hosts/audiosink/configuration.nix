@@ -11,19 +11,16 @@
 
     ./disko.nix
     ./hardware-configuration.nix
-    
+
+    ./raspberry_pi_binary_cache.nix
+
     ../../modules
     ../../modules/common/ssh.nix
   ];
 
   nixpkgs.system = "aarch64-linux";
-  nix.settings = {
-    substituters = [
-      "https://nix-community.cachix.org/"
-    ];
-
-    trusted-public-keys = ["nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="];
-  };
+  nixpkgs.hostPlatform.system = "aarch64-linux";
+  nixpkgs.buildPlatform.system = "x86_64-linux";
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
@@ -34,6 +31,19 @@
   boot.kernelParams = [
     "console=ttyS1,115200n8"
   ];
+  # Override, due to https://github.com/nix-community/raspberry-pi-nix/issues/95
+  # May or may not boot normally, if it doesn't I just have to compile the entire kernel
+  # boot.kernelPackages = lib.mkForce pkgs.linuxKernel.packages.linux_rpi3;
+
+  # Cross-compile shenangians
+  # programs.neovim.package = lib.mkForce (pkgs.neovim.override {withRuby = false;});
+  programs.neovim.enable = lib.mkForce false;
+  programs.vim.enable = true;
+  programs.vim.defaultEditor = true;
+  myOptions.utilities.cmdFileManagers = false;
+  myOptions.utilities.pdfUtils = false;
+  networking.networkmanager.plugins = lib.mkForce [];
+  services.fwupd.enable = lib.mkForce false;
 
   raspberry-pi-nix.board = "bcm2711";
   hardware.raspberry-pi.config = {
@@ -75,10 +85,10 @@
     };
   };
 
-  networking.hostName = "audiosink"; 
-  networking.networkmanager.enable = true; 
+  networking.hostName = "audiosink";
+  networking.networkmanager.enable = true;
 
-  myOptions.hostRoles.graphical.enable = true;
+  myOptions.hostRoles.base.enable = true;
   myOptions.utilities.enable = true;
 
   # Enable sound.

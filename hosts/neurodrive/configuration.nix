@@ -10,6 +10,8 @@
 in {
   imports =
     [
+      # !EXCEPTION TO GET AUDIOSINK KICK-STARTED! #
+      ../audiosink/raspberry_pi_binary_cache.nix
       ../../modules
       ../../modules/cachix.nix
       ../../modules/common/ssh.nix
@@ -40,6 +42,10 @@ in {
     # Max make some builds non deterministic
     cores = 10;
   };
+
+  # Eve: Override, until the Raspberry Pi is installed
+  # !TEMPORARY!
+  nix.gc.automatic = lib.mkForce false;
 
   # Quarry: Cross-compilation support for audiosink
   boot.binfmt.emulatedSystems = ["aarch64-linux"];
