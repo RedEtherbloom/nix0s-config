@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 with lib; let
@@ -10,5 +11,9 @@ in {
 
   config = mkIf cfg.enable {
     myOptions.hostRoles.base.enable = mkDefault true;
+
+    programs.appimage.binfmt = true;
+
+    environment.systemPackages = [pkgs.appimage-run];
   };
 }

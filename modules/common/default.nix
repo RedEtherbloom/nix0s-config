@@ -47,42 +47,38 @@ in {
         };
       };
       programs.nix-ld.enable = true;
-      programs.appimage.binfmt = true;
-
-      environment.systemPackages = [pkgs.appimage-run];
-
       hardware.i2c.enable = true;
-
       sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
     }
     (mkIf cfg.enableBoot {
-      # Prio, so the raspi module can override it
       boot.kernelPackages = lib.mkOverride 1001 pkgs.linuxPackages_latest;
-      boot.loader.efi.canTouchEfiVariables = true;
-      boot.loader.timeout = 2;
-      boot.loader.grub = lib.mkDefault {
-        enable = true;
-        enableCryptodisk = true;
-        efiSupport = true;
-        copyKernels = true;
-        fsIdentifier = "uuid";
-        useOSProber = true;
-        device = "nodev";
+      boot.loader = {
+        efi.canTouchEfiVariables = true;
+        timeout = 2;
+        grub = lib.mkDefault {
+          enable = true;
+          enableCryptodisk = true;
+          efiSupport = true;
+          copyKernels = true;
+          fsIdentifier = "uuid";
+          useOSProber = true;
+          device = "nodev";
 
-        memtest86.enable = true;
-        extraEntries = ''
-          menuentry "Poweroff" {
-            halt
-          }
+          memtest86.enable = true;
+          extraEntries = ''
+            menuentry "Poweroff" {
+              halt
+            }
 
-          menuentry "Reboot" {
-            reboot
-          }
+            menuentry "Reboot" {
+              reboot
+            }
 
-          menuentry "UEFI Setup" {
-            fwsetup
-          }
-        '';
+            menuentry "UEFI Setup" {
+              fwsetup
+            }
+          '';
+        };
       };
       # Generate a second, much more verbose boot entry
       specialisation.verbose-boot.configuration = {
