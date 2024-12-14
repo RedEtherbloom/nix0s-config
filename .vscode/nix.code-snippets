@@ -1,5 +1,5 @@
 {
-	"cfg_module": {
+    "cfg_module": {
         "scope": "nix",
         "prefix": "cfg_module",
         "body": [
@@ -35,5 +35,42 @@
             "};"
         ],
         "description": "Insert a standard nix cfg option"
+    },
+    "firefoxSearchEngine": {
+        "scope": "nix",
+        "prefix": "firefoxSearchEngine",
+        "body": [
+            "\"$1\" = {",
+            "\tdefinedAliases = [\"$2\"];",
+            "\ticon = \"$3\";",
+            "\turls = [",
+            "\t\t{",
+            "\t\t\ttemplate = \"$4\";",
+            "\t\t\tparams = [",
+            "\t\t\t{",
+            "\t\t\t\tname = \"${5:query}\";",
+            "\t\t\t\tvalue = \"{searchTerms}\";",
+            "\t\t\t}",
+            // Hacky, hopefully there are better ways for:
+            // Insert other template and
+            // configurable amount of other templates
+            "\t\t\t${0:firefoxSearchPara}",
+            "\t\t];",
+            "\t\t}",
+            "\t];",
+            "};"
+        ],
+        "description": "A search engine set in programs.firefox.profiles.<name>.search.engines"
+    },
+    "firefoxSearchParam": {
+        "scope": "nix",
+        "prefix": "firefoxSearchParam",
+        "body": [
+            "{",
+            "\tname = \"$1\";",
+            "\tvalue = \"$2\";",
+            "}",
+        ],
+        "description": "A search param for a search engine set in programs.firefox.profiles.<name>.search.engines.<otherName>.urls.[]"
     },
 }
