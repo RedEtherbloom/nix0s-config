@@ -51,7 +51,7 @@ in {
       }));
     };
 
-    programs.firefox.enable = true;
+    myOptions.firefox.enable = true;
     programs.nushell.enable = true;
 
     home.packages = with pkgs; [
