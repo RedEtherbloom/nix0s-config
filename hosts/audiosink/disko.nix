@@ -13,7 +13,7 @@
               content = {
                 type = "filesystem";
                 format = "vfat";
-                mountpoint = "/boot";
+                mountpoint = "/boot/firmware";
                 mountOptions = ["umask=0077"];
               };
             };
@@ -31,7 +31,7 @@
                 };
                 content = {
                   type = "lvm_pv";
-                  vg = "pool";
+                  vg = "pool_raspberry";
                 };
               };
             };
@@ -40,7 +40,7 @@
       };
     };
     lvm_vg = {
-      pool = {
+      pool_raspberry = {
         type = "lvm_vg";
         lvs = {
           root = {
