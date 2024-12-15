@@ -73,6 +73,11 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    sergv-nixos-config = {
+      url = "github:sergv/nixos-config?rev=9c6306c86af6130f76d277e382c346360ec124dd";
+      flake = false;
+    };
   };
 
   outputs = {

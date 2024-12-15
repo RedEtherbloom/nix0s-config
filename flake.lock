@@ -486,6 +486,7 @@
         "our-secrets": "our-secrets",
         "plasma-manager": "plasma-manager",
         "raspberry-pi-nix": "raspberry-pi-nix",
+        "sergv-nixos-config": "sergv-nixos-config",
         "sops-nix": "sops-nix",
         "stylix": "stylix"
       }
@@ -589,6 +590,23 @@
         "owner": "raspberrypi",
         "ref": "v1.5.2",
         "repo": "rpicam-apps",
+        "type": "github"
+      }
+    },
+    "sergv-nixos-config": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1728222531,
+        "narHash": "sha256-FazhyLRMmg7A62SYgF/+h3AXnl0CNxElVfCp21cfsYY=",
+        "owner": "sergv",
+        "repo": "nixos-config",
+        "rev": "9c6306c86af6130f76d277e382c346360ec124dd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sergv",
+        "repo": "nixos-config",
+        "rev": "9c6306c86af6130f76d277e382c346360ec124dd",
         "type": "github"
       }
     },
