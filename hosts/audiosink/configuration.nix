@@ -93,9 +93,9 @@
   myOptions.utilities.enable = true;
 
   # Enable sound.
-  security.rtkit.enable = true;
+  security.rtkit.enable = false;
   services.pipewire = {
-    enable = true;
+    enable = false;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
@@ -144,10 +144,10 @@
 
   environment.systemPackages = with pkgs; [
     libraspberrypi
-    podman
-    podman-compose
+    # podman
+    # podman-compose
 
-    ddcutil
+    # ddcutil
   ];
 
   hardware.enableRedistributableFirmware = true;
@@ -185,9 +185,9 @@
 
   # Enable common container config files in /etc/containers
   virtualisation = {
-    containers.enable = true;
+    containers.enable = false;
     podman = {
-      enable = true;
+      enable = false;
       # Create a `docker` alias for podman, to use it as a drop-in replacement
       dockerCompat = true;
       # Required for containers under podman-compose to be able to talk to each other.
@@ -212,5 +212,5 @@
     };
   };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "24.11";
 }
