@@ -7,9 +7,10 @@
 }: {
   imports = [
     inputs.raspberry-pi-nix.nixosModules.raspberry-pi
-    inputs.disko.nixosModules.disko
+    inputs.raspberry-pi-nix.nixosModules.sd-image
+    #inputs.disko.nixosModules.disko
 
-    ./disko.nix
+    #./disko.nix
     ./hardware-configuration.nix
 
     ./raspberry_pi_binary_cache.nix
