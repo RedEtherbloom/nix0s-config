@@ -46,7 +46,7 @@
   networking.networkmanager.plugins = lib.mkForce [];
   services.fwupd.enable = lib.mkForce false;
 
-  raspberry-pi-nix.board = "bcm2711";
+  raspberry-pi-nix.board = "bcm2710";
   hardware.raspberry-pi.config = {
     all = {
       options = {
