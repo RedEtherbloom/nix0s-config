@@ -5,11 +5,11 @@
         type = "disk";
         device = "/dev/mmcblk0";
         content = {
-          type = "gpt";
+          type = "mbr";
           partitions = {
-            ESP = {
+            FIRMWARE = {
               size = "500M";
-              type = "EF00";
+              type = "EF";
               content = {
                 type = "filesystem";
                 format = "vfat";
@@ -44,7 +44,7 @@
         type = "lvm_vg";
         lvs = {
           root = {
-            size = "100%";
+            size = "100%FREE";
             content = {
               type = "filesystem";
               format = "ext4";

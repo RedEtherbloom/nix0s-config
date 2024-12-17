@@ -8,9 +8,9 @@
   imports = [
     inputs.raspberry-pi-nix.nixosModules.raspberry-pi
     inputs.raspberry-pi-nix.nixosModules.sd-image
-    #inputs.disko.nixosModules.disko
+    inputs.disko.nixosModules.disko
  inputs.sops-nix.nixosModules.sops
-    #./disko.nix
+    ./disko.nix
     ./hardware-configuration.nix
 
     ./raspberry_pi_binary_cache.nix
