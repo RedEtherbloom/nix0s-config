@@ -112,7 +112,7 @@
       overlay.defaults = [overlay nix-vscode-extensions.overlays.default nix-comfyui.overlays.default];
       # TODO: Redo with flake-parts or flake-utils once we have the spoons again
       nixosConfigurations =
-        nixpkgs.lib.attrsets.genAttrs
+        (nixpkgs.lib.attrsets.genAttrs
         (nixpkgs.lib.attrsets.mapAttrsToList (name: _: name) (builtins.readDir ./hosts))
         (
           name:
@@ -128,6 +128,6 @@
                 }
               ];
             }
-        );
+        )) // { audiosink = nixpkgs.lib.nixosSystem { inherit specialArgs; modules = [./hosts/audiosink/configuration.nix];};};
     };
 }

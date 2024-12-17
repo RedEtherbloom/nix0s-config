@@ -2,7 +2,7 @@
 {
   imports = [
     ./common
-    ./event-setup.nix
+    #./event-setup.nix
     ./hostRoles
     ./services
     ./wireguard
