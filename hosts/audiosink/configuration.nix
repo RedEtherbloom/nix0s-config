@@ -58,7 +58,7 @@ environment.defaultPackages = [pkgs.perl];
   # networking.networkmanager.plugins = lib.mkForce [];
   services.fwupd.enable = lib.mkForce false;
 
-  raspberry-pi-nix.board = "bcm2710";
+  raspberry-pi-nix.board = "bcm2711";
   hardware.raspberry-pi.config = {
     all = {
       options = {
