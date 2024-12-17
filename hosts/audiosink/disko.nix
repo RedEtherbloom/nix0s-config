@@ -5,23 +5,32 @@
         type = "disk";
         device = "/dev/mmcblk0";
         content = {
-          type = "mbr";
-          partitions = {
-            FIRMWARE = {
-              size = "500M";
-              type = "EF";
+          type = "table";
+          format = "msdos";
+          partitions = [
+            {
+              name = "firmware";
+              #type = "EF";
+              part-type = "primary";
+              # Probably not needed
+              start = "8M";
+              end = "512M";
               content = {
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot/firmware";
                 mountOptions = ["umask=0077"];
               };
-            };
-            luks = {
-              size = "100%";
+            }
+            {
+              name = "luks-crypted";
+              part-type = "primary";
+	      start = "512M";
+              end = "100%FREE";
+              bootable = true;
               content = {
+                name = "luks-crypted";
                 type = "luks";
-                name = "crypted";
                 extraOpenArgs = [];
                 settings = {
                   # if you want to use the key for interactive login be sure there is no trailing newline
@@ -34,8 +43,8 @@
                   vg = "pool_raspberry";
                 };
               };
-            };
-          };
+            }
+          ];
         };
       };
     };

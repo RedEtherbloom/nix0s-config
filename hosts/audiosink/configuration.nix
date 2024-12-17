@@ -8,17 +8,20 @@
   imports = [
     inputs.raspberry-pi-nix.nixosModules.raspberry-pi
     inputs.raspberry-pi-nix.nixosModules.sd-image
-    inputs.disko.nixosModules.disko
- inputs.sops-nix.nixosModules.sops
-    ./disko.nix
+    #inputs.disko.nixosModules.disko
+    inputs.sops-nix.nixosModules.sops
+    
+    #./disko.nix
     ./hardware-configuration.nix
 
     ./raspberry_pi_binary_cache.nix
 
+    ../../modules/common/shared_secrets.nix
     # ../../modules
     ../../modules/common/ssh.nix
   ];
-
+  
+  users.users.root.initialPassword = "password123";
       nix = {
         settings = {
           experimental-features = [
