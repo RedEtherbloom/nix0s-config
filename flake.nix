@@ -124,38 +124,25 @@
       }
     )
     // {
-      nixosConfigurations = let
-        specialArgs = {
-          inherit inputs self;
-        };
-        defaultUsername = "inf";
-        # Setup common home-manager and nixpkgs options
-        mkSystem = hostName: system: username:
-          nixpkgs.lib.nixosSystem {
-            inherit specialArgs system;
+      overlay.defaults = [overlay nix-vscode-extensions.overlays.default nix-comfyui.overlays.default];
+      # TODO: Redo with flake-parts or flake-utils once we have the spoons again
+      nixosConfigurations =
+        (nixpkgs.lib.attrsets.genAttrs
+        (nixpkgs.lib.attrsets.mapAttrsToList (name: _: name) (builtins.readDir ./hosts))
+        (
+          name:
+            nixpkgs.lib.nixosSystem {
+              inherit specialArgs;
 
-            modules = [
-              inputs.home-manager.nixosModules.home-manager
-              inputs.sops-nix.nixosModules.sops
-
-              {nixpkgs = {inherit (nixpkgsConfig) overlays config;};}
-
-              ./hosts/${hostName}/configuration.nix
-
-              {
-                home-manager = {
-                  backupFileExtension = "hm_backup_move";
-                  extraSpecialArgs = specialArgs;
-                  useGlobalPkgs = true;
-                  users.${username}.imports = [./hosts/${hostName}/home.nix];
-                };
-              }
-            ];
-          };
-      in {
-        fractor = mkSystem "fractor" "x86_64-linux" defaultUsername;
-        neurodrive = mkSystem "neurodrive" "x86_64-linux" defaultUsername;
-        audiosink = mkSystem "audiosink" "aarch64-linux" defaultUsername;
-      };
+              modules = [
+                ./hosts/${name}/configuration.nix
+                {
+                  home-manager.users.inf.imports = [
+                    ./hosts/${name}/home.nix
+                  ];
+                }
+              ];
+            }
+        )) // { audiosink = nixpkgs.lib.nixosSystem { inherit specialArgs; modules = [./hosts/audiosink/configuration.nix];};};
     };
 }

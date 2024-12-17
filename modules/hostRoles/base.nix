@@ -10,7 +10,9 @@ with lib; let
   cfg = config.myOptions.hostRoles.base;
 in {
   imports = [
-    inputs.nix-index-database.nixosModules.nix-index
+    #inputs.home-manager.nixosModules.home-manager
+    #inputs.nix-index-database.nixosModules.nix-index
+    inputs.sops-nix.nixosModules.sops
   ];
 
   options.myOptions.hostRoles.base.enable = mkOption {
@@ -23,7 +25,14 @@ in {
     # Supposedly required by nixd
     nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
 
-    programs.nix-index-database.comma.enable = lib.mkDefault true;
+    #home-manager = {
+    #  backupFileExtension = "home_manager_backup_move";
+    #  extraSpecialArgs = specialArgs;
+    #  useGlobalPkgs = true;
+    #  useUserPackages = true;
+    #};
+
+    #programs.nix-index-database.comma.enable = lib.mkDefault true;
 
     security.pki.certificateFiles = [
       "${inputs.our-secrets}/secrets/root_ca/root_CA.crt"
@@ -31,8 +40,8 @@ in {
 
     myOptions.utilities.enable = true;
 
-    services.fwupd.enable = true;
-    services.fstrim.enable = true;
+    #services.fwupd.enable = true;
+    #services.fstrim.enable = true;
 
     # TODO: Figure out how to merge this with home-manager
     programs.neovim = {
