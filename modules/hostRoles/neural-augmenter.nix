@@ -45,5 +45,12 @@ in {
       gnupg
       pinentry-qt
     ];
+
+    myOptions.utilities = {
+      rescueTools = true;
+      binaryTools = true;
+      pdfUtils = true;
+      diskUtilities = true;
+    };
   };
 }
