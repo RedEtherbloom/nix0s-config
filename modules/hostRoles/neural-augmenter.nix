@@ -44,6 +44,8 @@ in {
       ghc
       gnupg
       pinentry-qt
+
+      lm_sensors
     ];
 
     myOptions.utilities = {
