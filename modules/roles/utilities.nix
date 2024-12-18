@@ -13,6 +13,16 @@ in {
       type = with types; bool;
       default = false;
     };
+    minimum = mkOption {
+      description = "Enable minimum utilities needed for our systems to be administrable(e.g. sops)";
+      type = types.bool;
+      default = true;
+    };
+    diverse = mkOption {
+      description = "Enable diverse utilities that don't fit in other categories";
+      type = types.bool;
+      default = true;
+    };
     wormhole = mkOption {
       description = "Enable wormhole";
       type = types.bool;
@@ -56,35 +66,40 @@ in {
     rescueTools = mkOption {
       description = "Enable rescueTools";
       type = types.bool;
-      default = true;
+      default = false;
     };
     binaryTools = mkOption {
       description = "Enable binaryTools";
       type = types.bool;
-      default = true;
+      default = false;
     };
     pdfUtils = mkOption {
       description = "Enable pdf utilities";
       type = types.bool;
-      default = true;
+      default = false;
+    };
+    diskUtilities = mkOption {
+      description = "Enable disk utilities(formatting, etc.)";
+      type = types.bool;
+      default = false;
     };
   };
 
   config = mkIf cfg.enable (mkMerge [
     {
       environment.systemPackages = with pkgs;
-        [
+        lib.optionals cfg.minimum [
           age
           ssh-to-age
           sops
-
+        ]
+        ++ lib.optionals cfg.diverse [
           file
-          # For losetup
           util-linux
           psmisc
           zip
           unzip
-          # unar
+          unar
           p7zip
           ripgrep
           fd
@@ -133,6 +148,12 @@ in {
           poppler_utils
           # pdfs
           ripgrep-all
+        ]
+        ++ lib.optionals cfg.diskUtilities [
+          parted
+          gparted
+          # For losetup and fdisk
+          util-linux
         ];
     }
   ]);
