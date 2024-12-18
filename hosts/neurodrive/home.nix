@@ -41,6 +41,8 @@ in {
         egl-wayland
 
         comfyuiPackages.comfyui-with-extensions
+
+        coolercontrol.coolercontrol-gui
       ];
 
       myOptions.solaar = {

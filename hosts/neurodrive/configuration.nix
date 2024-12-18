@@ -47,6 +47,8 @@ in {
   # !TEMPORARY!
   nix.gc.automatic = lib.mkForce false;
 
+  system.stateVersion = "24.05";
+
   # Quarry: Cross-compilation support for audiosink
   boot.binfmt.emulatedSystems = ["aarch64-linux"];
 
@@ -301,5 +303,10 @@ in {
     };
   };
 
-  system.stateVersion = "24.05";
+  programs.coolercontrol = {
+    enable = true;
+    nvidiaSupport = true;
+  };
+  # Sensors on motherboard
+  boot.kernelModules = ["nct6775"];
 }
