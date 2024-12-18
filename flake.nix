@@ -79,7 +79,7 @@
     nix-vscode-extensions,
     ...
   } @ inputs: let
-    overlay = import ./pkgs;
+    overlay = import ./pkgs {inherit inputs;};
     specialArgs = {
       inherit inputs self;
     };
