@@ -1,6 +1,6 @@
-final: prev: {
+{inputs, ...}: final: prev: {
   fritz-logger = prev.callPackage ./scripts/python/fritz-logger/default.nix {};
-  byar-launcher = prev.callPackage ./byar-launcher.nix {};
+  byar-launcher = prev.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
 
   # Current fix
   git-sync = prev.git-sync.overrideAttrs {
