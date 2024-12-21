@@ -6,38 +6,58 @@
   ...
 }: {
   imports = [
-    inputs.raspberry-pi-nix.nixosModules.raspberry-pi
-    inputs.raspberry-pi-nix.nixosModules.sd-image
-    #inputs.disko.nixosModules.disko
+    inputs.disko.nixosModules.disko
     inputs.sops-nix.nixosModules.sops
-    
-    #./disko.nix
+    inputs.raspberry-pi-nix.nixosModules.raspberry-pi
+
+    ./disko.nix
     ./hardware-configuration.nix
 
     ./raspberry_pi_binary_cache.nix
-
     ../../modules/common/shared_secrets.nix
-    # ../../modules
+    #../../modules
     ../../modules/common/ssh.nix
   ];
-  
-  users.users.root.initialPassword = "password123";
-      nix = {
-        settings = {
-          experimental-features = [
-            "nix-command"
-            "flakes"
-          ];
-        };
-	};
-      sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+
+  users.users = lib.mkMerge [
+    (lib.attrsets.genAttrs ["root" "inf"]
+      (name: {
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOHKCccanhW2Z05AiItTPhw+CnPFdo66Uszt6K7UuR3r RedEtherbloom@neurodrive"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOHKCccanhW2Z05AiItTPhw+CnPFdo66Uszt6K7UuR3r RedEtherbloom@fractor"
+        ];
+      }))
+
+    {root.initialPassword = "password123";}
+    {
+      inf = {
+        isNormalUser = true;
+        extraGroups = [
+          "wheel"
+          "audio"
+          "i2c"
+          "podman"
+        ];
+        linger = true;
+      };
+    }
+  ];
+  nix = {
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+    };
+  };
+  sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
   nixpkgs.system = "aarch64-linux";
-  nixpkgs.hostPlatform.system = "aarch64-linux";
-  nixpkgs.buildPlatform.system = "x86_64-linux";
+  # nixpkgs.hostPlatform.system = "aarch64-linux";
+  # nixpkgs.buildPlatform.system = "x86_64-linux";
 
   boot.enableContainers = false;
-documentation.nixos.enable = false;
-environment.defaultPackages = [pkgs.perl];
+  documentation.nixos.enable = false;
+  environment.defaultPackages = [pkgs.perl];
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
   raspberry-pi-nix.uboot.enable = true;
@@ -102,9 +122,9 @@ environment.defaultPackages = [pkgs.perl];
   };
 
   networking.hostName = "audiosink";
-    #networking.networkmanager.enable = true;
-  networking.useDHCP = true; 
- 
+  #networking.networkmanager.enable = true;
+  networking.useDHCP = true;
+
   # myOptions.hostRoles.base.enable = true;
   # myOptions.utilities.enable = lib.mkForce false;
 
@@ -147,17 +167,6 @@ environment.defaultPackages = [pkgs.perl];
   # ];
   # systemd.user.services.pipewire-pulse.wantedBy = ["default.target"];
 
-  users.users.inf = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "audio"
-      "i2c"
-      "podman"
-    ];
-    linger = true;
-  };
-
   environment.systemPackages = with pkgs; [
     #libraspberrypi
     # podman
@@ -195,41 +204,41 @@ environment.defaultPackages = [pkgs.perl];
   #   openFirewall = true;
   # };
 
- # networking.firewall.allowedTCPPorts = [
- #   # Pulse Network
- #   4713
- #   # Home Assistant
- #   8123
- # ];
+  # networking.firewall.allowedTCPPorts = [
+  #   # Pulse Network
+  #   4713
+  #   # Home Assistant
+  #   8123
+  # ];
 
   # Enable common container config files in /etc/containers
-#   virtualisation = {
- #    containers.enable = false;
- #    podman = {
- #      enable = false;
- #      # Create a `docker` alias for podman, to use it as a drop-in replacement
- #      dockerCompat = true;
- #      # Required for containers under podman-compose to be able to talk to each other.
- #      defaultNetwork.settings.dns_enabled = true;
- #   };
-    # oci-containers = {
-    #   backend = "podman";
-    #   containers.homeassistant = {
-    #     # How do we backup this?
-    #     volumes = ["home-assistant:/config"];
-    #     environment.TZ = config.time.timeZone;
-    #     # Okay? What does this mean?
-    #     # Note: The image will not be updated on rebuilds, unless the version label changes
-    #     image = "ghcr.io/home-assistant/home-assistant:stable";
-    #     extraOptions = [
-    #       # Use the host network namespace for all sockets
-    #       "--network=host"
-    #       # Pass devices into the container, so Home Assistant can discover and make use of them
-    #       # "--device=/dev/ttyACM0:/dev/ttyACM0"
-    #     ];
-    #   };
-    # };
- # };
+  #   virtualisation = {
+  #    containers.enable = false;
+  #    podman = {
+  #      enable = false;
+  #      # Create a `docker` alias for podman, to use it as a drop-in replacement
+  #      dockerCompat = true;
+  #      # Required for containers under podman-compose to be able to talk to each other.
+  #      defaultNetwork.settings.dns_enabled = true;
+  #   };
+  # oci-containers = {
+  #   backend = "podman";
+  #   containers.homeassistant = {
+  #     # How do we backup this?
+  #     volumes = ["home-assistant:/config"];
+  #     environment.TZ = config.time.timeZone;
+  #     # Okay? What does this mean?
+  #     # Note: The image will not be updated on rebuilds, unless the version label changes
+  #     image = "ghcr.io/home-assistant/home-assistant:stable";
+  #     extraOptions = [
+  #       # Use the host network namespace for all sockets
+  #       "--network=host"
+  #       # Pass devices into the container, so Home Assistant can discover and make use of them
+  #       # "--device=/dev/ttyACM0:/dev/ttyACM0"
+  #     ];
+  #   };
+  # };
+  # };
 
   system.stateVersion = "24.11";
 }
