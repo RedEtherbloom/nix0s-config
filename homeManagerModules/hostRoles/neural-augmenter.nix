@@ -81,6 +81,8 @@ in {
       ffmpeg-full
       gst_all_1.gst-plugins-good
       gst_all_1.gst-plugins-bad
+
+      imagemagick
     ];
 
     # May not work due to https://github.com/nix-community/home-manager/issues/1011
