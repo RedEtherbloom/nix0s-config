@@ -10,9 +10,10 @@
           partitions = [
             {
               name = "firmware";
-              #type = "EF";
+              # Replicating the Raspberry pi installer
+              #type = "0B";
+              fs-type = "fat32";
               part-type = "primary";
-              # Probably not needed
               start = "8M";
               end = "512M";
               content = {
@@ -23,9 +24,25 @@
               };
             }
             {
+              name = "boot";
+	      # Do I need this?
+              fs-type = "ext4";
+	      # Do I need this?
+              part-type = "primary";
+	      # 2Gb size
+              start = "512M";
+              end = "2560M";
+              bootable = true;
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/boot";
+              };
+            }
+            {
               name = "luks-crypted";
               part-type = "primary";
-	      start = "512M";
+              start = "2560M";
               end = "100%FREE";
               bootable = true;
               content = {
