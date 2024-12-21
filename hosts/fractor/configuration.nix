@@ -132,7 +132,7 @@
       aircrack-ng
     ];
   };
-  stylix.image = ../../dotfiles/wallpaper/kaiju_girl_extended.png;
+  stylix.image = ../../dotfiles/wallpaper/kurzgesagt-4k-wallpaper-galaxies.png;
 
   services.avahi = {
     enable = true;

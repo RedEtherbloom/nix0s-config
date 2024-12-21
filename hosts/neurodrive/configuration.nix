@@ -47,8 +47,6 @@ in {
   # !TEMPORARY!
   nix.gc.automatic = lib.mkForce false;
 
-  system.stateVersion = "24.05";
-
   # Quarry: Cross-compilation support for audiosink
   boot.binfmt.emulatedSystems = ["aarch64-linux"];
 
@@ -167,7 +165,7 @@ in {
       "podman"
     ];
   };
-  stylix.image = ../../dotfiles/wallpaper/kaiju_girl_extended.png;
+  stylix.image = ../../dotfiles/wallpaper/kurzgesagt-4k-wallpaper-galaxies.png;
 
   environment.systemPackages = with pkgs; [
     cachix
@@ -211,8 +209,7 @@ in {
   services.avahi = {
     enable = true;
     nssmdns4 = true;
-    # Recommended against in docs
-    # nssmdns6 = true;
+    nssmdns6 = true;
     openFirewall = true;
   };
 
@@ -304,10 +301,5 @@ in {
     };
   };
 
-  programs.coolercontrol = {
-    enable = true;
-    nvidiaSupport = true;
-  };
-  # Sensors on motherboard
-  boot.kernelModules = ["nct6775"];
+  system.stateVersion = "24.05";
 }
