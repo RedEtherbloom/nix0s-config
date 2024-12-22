@@ -88,6 +88,8 @@ in {
     #TODO: Pulseaudio Network Sharing. Probably only needed for publush
     4713
     (lib.strings.toInt config.services.restic.server.listenAddress)
+    # Home Assistant
+    8123
   ];
 
   networking.ownWireguard = {
@@ -298,6 +300,23 @@ in {
       dockerCompat = true;
       # Required for containers under podman-compose to be able to talk to each other.
       defaultNetwork.settings.dns_enabled = true;
+    };
+    oci-containers = {
+      backend = "podman";
+      containers.homeassistant = {
+        # How do we backup this?
+        volumes = ["home-assistant:/config"];
+        environment.TZ = config.time.timeZone;
+        # Okay? What does this mean?
+        # Note: The image will not be updated on rebuilds, unless the version label changes
+        image = "ghcr.io/home-assistant/home-assistant:stable";
+        extraOptions = [
+          # Use the host network namespace for all sockets
+          "--network=host"
+          # Pass Zigbee controller into container
+          "--device=/dev/ttyUSB0:/dev/ttyUSB0"
+        ];
+      };
     };
   };
 
