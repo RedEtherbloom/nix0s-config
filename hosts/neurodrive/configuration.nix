@@ -90,6 +90,8 @@ in {
     (lib.strings.toInt config.services.restic.server.listenAddress)
     # Home Assistant
     8123
+    # Mosquitto
+    1883
   ];
 
   networking.ownWireguard = {
@@ -318,6 +320,46 @@ in {
         ];
       };
     };
+  };
+
+  sops.secrets."mosquitto/users/root" = {
+    uid = config.ids.uids.mosquitto;
+    gid = config.ids.gids.mosquitto;
+    format = "yaml";
+    sopsFile = ../../secrets/neurodrive/mosquitto.yaml;
+  };
+  
+  sops.secrets."mosquitto/users/client" = {
+    uid = config.ids.uids.mosquitto;
+    gid = config.ids.gids.mosquitto;
+    format = "yaml";
+    sopsFile = ../../secrets/neurodrive/mosquitto.yaml;
+  };
+
+  services.mosquitto = {
+    enable = true;
+    logType = ["all"];
+    listeners = [
+      {
+        port = 1883;
+        # By default everyone may read everything
+        acl = ["pattern read #"];
+        users = {
+          root = {
+            acl = ["readwrite #"];
+            passwordFile = config.sops.secrets."mosquitto/users/root".path;
+          };
+          client = {
+            # R/W to everything for now until I figure out the proper settings
+            acl = ["readwrite #"];
+            passwordFile = config.sops.secrets."mosquitto/users/client".path;
+          };
+        };
+        settings = {
+          allow_anonymous = false;
+        };
+      }
+    ];
   };
 
   system.stateVersion = "24.05";
