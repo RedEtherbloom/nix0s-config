@@ -44,6 +44,18 @@ in {
 
     programs.kitty = {
       enable = true;
+      settings = {
+        background_blur = 2;
+        dynamic_background_opacity = true;
+        background_tint = 0.2;
+
+        visual_bell_color = "#0c0933";
+        enable_audio_bell = "no";
+        visual_bell_duration = 0.25;
+      };
     };
+
+    # Set terminal opacity using stlyix instead
+    stylix.opacity.terminal = 0.8;
   };
 }
