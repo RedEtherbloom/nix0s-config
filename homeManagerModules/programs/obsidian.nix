@@ -38,9 +38,7 @@ in {
           command = let
             command = pkgs.writeShellScript "obsidianPullShortcut.sh" ''
               cd ~/Documents/Obsidian/default
-              git stash
-              git pull --rebase
-              git stash pop
+              gprav
             '';
           in "${command}";
           keys = ["meta+o"];
