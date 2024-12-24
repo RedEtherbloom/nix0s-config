@@ -41,7 +41,7 @@ in {
           PROTOCOL = "http";
           DOMAIN = GITEA_DOMAIN;
           HTTP_PORT = GITEA_PORT;
-          CERT_FILE = (builtins.toString ../../secrets/services/gitea/gitea.crt);
+          CERT_FILE = "../../secrets/services/gitea/gitea.crt";
           KEY_FILE = config.sops.secrets."gitea/gitea.key".path;
         };
         repository = {
