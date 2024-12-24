@@ -26,8 +26,6 @@ in {
     programs.firefox.profiles."personal" = {
       id = 0;
       isDefault = true;
-      # TODO: Video overrrides + overrides for NVIDIA
-      # Maybe some tweaking for fractor
       extraConfig = lib.strings.concatLines [
         (builtins.readFile ../../dotfiles/firefox/betterfox.js)
         (builtins.readFile ../../dotfiles/firefox/media_decoding.js)
