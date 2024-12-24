@@ -43,6 +43,9 @@ in {
         comfyuiPackages.comfyui-with-extensions
 
         coolercontrol.coolercontrol-gui
+
+        gsmartcontrol
+        kdePackages.plasma-disks
       ];
 
       myOptions.solaar = {

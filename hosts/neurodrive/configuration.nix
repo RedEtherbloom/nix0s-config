@@ -58,18 +58,18 @@ in {
 
   # Filesystems
   boot.initrd.luks.devices = {
-"nixos-root" = {
-    device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
-    bypassWorkqueues = true;
-    # Weakens security
-    allowDiscards = true;
-  };
-  "nixos-swap" = {
-    device = "/dev/disk/by-uuid/69bd8d21-1c47-4aff-8533-31bf2610c181";
-    bypassWorkqueues = true;
-    # Weakens security
-    allowDiscards = true;
-};
+    "nixos-root" = {
+      device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
+      bypassWorkqueues = true;
+      # Weakens security
+      allowDiscards = true;
+    };
+    "nixos-swap" = {
+      device = "/dev/disk/by-uuid/69bd8d21-1c47-4aff-8533-31bf2610c181";
+      bypassWorkqueues = true;
+      # Weakens security
+      allowDiscards = true;
+    };
   };
   fileSystems."/mnt/restic_data" = {
     device = "/dev/disk/by-uuid/2645230e-f8d1-4b00-ad11-c9ec192448cf";
@@ -181,6 +181,7 @@ in {
     dive # look into docker image layers
     podman-tui # status of containers in the terminal
     docker-compose # start group of containers for dev
+    smartmontools
   ];
 
   environment.sessionVariables = {
@@ -279,8 +280,8 @@ in {
 
   services.smartd = {
     enable = true;
+    autodetect = true;
     notifications = {
-      # Do we need this? https://search.nixos.org/options?channel=unstable&show=services.smartd.notifications.systembus-notify.enable
       systembus-notify.enable = true;
     };
     # Short daily self-test, long weekly exteded test
@@ -330,7 +331,7 @@ in {
     format = "yaml";
     sopsFile = ../../secrets/neurodrive/mosquitto.yaml;
   };
-  
+
   sops.secrets."mosquitto/users/client" = {
     uid = config.ids.uids.mosquitto;
     gid = config.ids.gids.mosquitto;
