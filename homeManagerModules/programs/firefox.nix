@@ -28,7 +28,10 @@ in {
       isDefault = true;
       # TODO: Video overrrides + overrides for NVIDIA
       # Maybe some tweaking for fractor
-      extraConfig = builtins.readFile ../../dotfiles/firefox/betterfox.js;
+      extraConfig = lib.strings.concatLines [
+        (builtins.readFile ../../dotfiles/firefox/betterfox.js)
+        (builtins.readFile ../../dotfiles/firefox/media_decoding.js)
+      ];
       search = {
         enable = true;
 
