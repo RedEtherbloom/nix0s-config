@@ -1,7 +1,11 @@
-{ config, inputs, pkgs, ... }:
 {
+  config,
+  inputs,
+  pkgs,
+  ...
+}: {
   sops.secrets.fritz_box_password = {
-    sopsFile = ../"${inputs.our-secrets}/secrets/services/fritz-logger.yaml";
+    sopsFile = "${inputs.our-secrets}/secrets/services/fritz-logger.yaml";
   };
 
   systemd.user.services.fritz-logger = {

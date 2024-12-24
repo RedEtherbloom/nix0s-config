@@ -13,9 +13,9 @@ in {
       default = false;
     };
     printing = mkOption {
-        description = "Enable printing";
-        type = types.bool;
-        default = true;
+      description = "Enable printing";
+      type = types.bool;
+      default = true;
     };
     scanning = mkOption {
       description = "Enable scanning";

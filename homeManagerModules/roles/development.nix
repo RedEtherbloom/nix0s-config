@@ -91,47 +91,49 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    {home.packages = with pkgs;
-      lib.optionals cfg.rust [
-        rustup
-        clang
-        clang-tools
-      ]
-      ++ lib.optionals cfg.openscad [
-        openscad-unstable
-      ]
-      # TODO: Merge with DevShell
-      ++ lib.optionals cfg.nix [
-        nixfmt-rfc-style
-        alejandra
-        nh
-        nixd
-        nil
-        direnv
-        nix-prefetch-scripts
-        nix-tree
-      ]
-      ++ lib.optionals cfg.electronics [
-        kicad
-      ]
-      ++ lib.optionals cfg.three-d-printing [
-        prusa-slicer
-      ]
-      ++ lib.optionals cfg.reverse-engineering [
-        ghidra
-      ]
-      ++ lib.optionals cfg.network-analysis [
-        nmap
-        wireshark
-      ]
-      ++ lib.optionals cfg.python [
-        python3Packages.flake8
-      ]
-      ++ lib.optionals cfg.git [
-        git
-        git-lfs
-        git-filter-repo
-      ];}
+    {
+      home.packages = with pkgs;
+        lib.optionals cfg.rust [
+          rustup
+          clang
+          clang-tools
+        ]
+        ++ lib.optionals cfg.openscad [
+          openscad-unstable
+        ]
+        # TODO: Merge with DevShell
+        ++ lib.optionals cfg.nix [
+          nixfmt-rfc-style
+          alejandra
+          nh
+          nixd
+          nil
+          direnv
+          nix-prefetch-scripts
+          nix-tree
+        ]
+        ++ lib.optionals cfg.electronics [
+          kicad
+        ]
+        ++ lib.optionals cfg.three-d-printing [
+          prusa-slicer
+        ]
+        ++ lib.optionals cfg.reverse-engineering [
+          ghidra
+        ]
+        ++ lib.optionals cfg.network-analysis [
+          nmap
+          wireshark
+        ]
+        ++ lib.optionals cfg.python [
+          python3Packages.flake8
+        ]
+        ++ lib.optionals cfg.git [
+          git
+          git-lfs
+          git-filter-repo
+        ];
+    }
     (mkIf cfg.git {
       programs.git = {
         enable = true;

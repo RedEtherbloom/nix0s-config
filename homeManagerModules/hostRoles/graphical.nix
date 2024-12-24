@@ -48,7 +48,7 @@ in {
         hwdec = "auto-safe";
         vo = "gpu";
         profile = "gpu-hq";
-        gpu-context="wayland";
+        gpu-context = "wayland";
       };
     };
 

@@ -1,10 +1,8 @@
 # TODO: Move to home-managr once it supports sops-nix templates
-{ config, inputs, ... }:
-let
-  functions = import ./functions.nix { inherit config; };
+{config, inputs, ...}: let
+  functions = import ./functions.nix {inherit config;};
   taskwarrior_secrets = "${inputs.our-secrets}/secrets/services/taskwarrior.yaml";
-in
-{
+in {
   # TODO: How do I group these?
   sops.secrets.encryption_secret = {
     sopsFile = taskwarrior_secrets;
@@ -19,7 +17,7 @@ in
     owner = "inf";
     content = ''
       sync.encryption_secret = ${config.sops.placeholder.encryption_secret}
-      sync.server.client_id = ${config.sops.placeholder.client_id} 
+      sync.server.client_id = ${config.sops.placeholder.client_id}
       sync.server.url = http://${functions.data-server-ip}:${toString config.myOptions.services.taskchampion.taskchampionPort}
     '';
   };

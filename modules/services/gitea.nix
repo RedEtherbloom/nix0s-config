@@ -60,7 +60,7 @@ in {
       };
     };
 
-    networking.firewall.interfaces."wg0".allowedTCPPorts = [ GITEA_PORT ];
-    networking.firewall.interfaces."wg0".allowedUDPPorts = [ GITEA_PORT ];
+    networking.firewall.interfaces."wg0".allowedTCPPorts = [GITEA_PORT];
+    networking.firewall.interfaces."wg0".allowedUDPPorts = [GITEA_PORT];
   };
 }

@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-{
-
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     bash
     hdparm
@@ -11,7 +9,7 @@
 
   hardware.sensor.hddtemp = {
     enable = true;
-    drives = [ "/dev/disk/by-path/*" ];
+    drives = ["/dev/disk/by-path/*"];
   };
 
   # Spin HDDs down when inactive
