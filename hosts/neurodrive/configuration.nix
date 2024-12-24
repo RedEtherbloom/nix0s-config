@@ -364,6 +364,9 @@ in {
       }
     ];
   };
-
+  programs.coolercontrol = {
+    enable = true;
+    nvidiaSupport = true;
+  };
   system.stateVersion = "24.05";
 }
