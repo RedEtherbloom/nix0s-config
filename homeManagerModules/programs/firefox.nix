@@ -26,8 +26,13 @@ in {
     programs.firefox.profiles."personal" = {
       id = 0;
       isDefault = true;
+      # TODO: Video overrrides + overrides for NVIDIA
+      # Maybe some tweaking for fractor
+      extraConfig = builtins.readFile ../../dotfiles/firefox/betterfox.js;
       search = {
         enable = true;
+
+        # TODO: Add Icon settings
         engines = {
           "NixPkgs(Unstable)" = {
             definedAliases = ["@nix" "@nixpkgs"];
@@ -127,11 +132,11 @@ in {
               {
                 template = "https://discourse.nixos.org/search";
                 params = [
-                {
-                  name = "q";
-                  value = "{searchTerms}";
-                }
-              ];
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
               }
             ];
           };
@@ -198,11 +203,11 @@ in {
               {
                 template = "https://www.dict.cc/";
                 params = [
-                {
-                  name = "s";
-                  value = "{searchTerms}";
-                }
-              ];
+                  {
+                    name = "s";
+                    value = "{searchTerms}";
+                  }
+                ];
               }
             ];
           };
@@ -213,11 +218,11 @@ in {
               {
                 template = "https://www.youtube.com/results";
                 params = [
-                {
-                  name = "search_query";
-                  value = "{searchTerms}";
-                }
-              ];
+                  {
+                    name = "search_query";
+                    value = "{searchTerms}";
+                  }
+                ];
               }
             ];
           };
@@ -228,11 +233,11 @@ in {
               {
                 template = "https://duckduckgo.com/";
                 params = [
-                {
-                  name = "q";
-                  value = "{searchTerms}";
-                }
-              ];
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
               }
             ];
           };
@@ -243,11 +248,11 @@ in {
               {
                 template = "https://www.reddit.com/search/";
                 params = [
-                {
-                  name = "q";
-                  value = "{searchTerms}";
-                }
-              ];
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
               }
             ];
           };
