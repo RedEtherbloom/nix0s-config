@@ -4,7 +4,6 @@
   fetchzip,
   locality ? "English",
 }:
-
 stdenv.mkDerivation rec {
   pname = "kyocera-classic-universal-kpdl";
   version = "3.3";
@@ -23,7 +22,7 @@ stdenv.mkDerivation rec {
     description = "PPD file for generic classic Kyocera drivers(KPDL)";
     homepage = "https://www.kyoceradocumentsolutions.com";
     license = licenses.unfree;
-    maintainers = with maintainers; [ RedEtherbloom ];
+    maintainers = with maintainers; [RedEtherbloom];
     platforms = platforms.linux;
   };
 }

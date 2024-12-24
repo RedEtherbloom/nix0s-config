@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+{config, ...}: {
   # TODO: Reread secrets managment with yaml
   sops.secrets."resticPassword" = {
     format = "binary";
@@ -27,7 +26,7 @@
       "--keep-monthly 10"
       "--keep-yearly 50"
     ];
-    paths = [ "/" ];
+    paths = ["/"];
     passwordFile = config.sops.secrets."resticPassword".path;
     inhibitsSleep = true;
     extraBackupArgs = [

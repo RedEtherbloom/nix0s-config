@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   sops.secrets.fritz_box_password = {
     sopsFile = ../../../secrets/services/fritz-logger.yaml;
   };

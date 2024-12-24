@@ -4,11 +4,9 @@
   pkgs,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.myOptions.event-setup;
-in
-{
+in {
   options.myOptions.event-setup = {
     enable = mkEnableOption "System options for chaos events";
     # TODO: Implement

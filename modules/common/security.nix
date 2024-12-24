@@ -1,9 +1,11 @@
-{ config, lib, ... }:
-with lib;
-let
-  cfg = config.security.ownAdditional;
-in
 {
+  config,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.security.ownAdditional;
+in {
   options.security.ownAdditional = {
     enabled = mkOption {
       type = types.bool;
@@ -26,7 +28,7 @@ in
       security.sudo = {
         enable = true;
         extraConfig = ''
-          @includedir ${builtins.dirOf config.sops.secrets."sudoers/optional".path} 
+          @includedir ${builtins.dirOf config.sops.secrets."sudoers/optional".path}
         '';
       };
 
