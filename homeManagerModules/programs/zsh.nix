@@ -3,11 +3,9 @@
   lib,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.myOptions.zsh;
-in
-{
+in {
   options.myOptions.zsh = {
     enable = mkOption {
       description = "Enable ZSH and Oh-My-Zsh";
@@ -20,35 +18,17 @@ in
     programs.zsh = {
       enable = true;
       enableCompletion = true;
-      enableVteIntegration = true;
       autosuggestion = {
-        highlight = "fg=#blue,bg=green,bold,underline";
         enable = true;
-        strategy = [
-          "completion"
-          "match_prev_cmd"
-          "history"
-        ];
       };
       syntaxHighlighting = {
         enable = true;
-        highlighters = [
-          "main"
-          "brackets"
-          "cursor"
-        ];
-        styles = {
-          # My pancakes :3c
-          cursor = "fg=purple,bg=green,bold,underline";
-        };
       };
-
       oh-my-zsh = {
         enable = true;
         theme = "random";
         plugins = [
           "git"
-          "thefuck"
         ];
       };
 
@@ -59,12 +39,23 @@ in
         check-nix-config = "sudo nix-instantiate '<nixpkgs/nixos>' -A system";
         zix-shell = "nix-shell --command 'zsh'";
         ztheme = "(){ export ZSH_THEME=\"$@\" && source $ZSH/oh-my-zsh.sh }";
-	captive_portal_ip = "ip route get 1.1.1.1 | rg 'via ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+) dev' -or '$1'";
-	copy_captive_portal_ip = "captive_portal_ip | wl-copy";
+        captive_portal_ip = "ip route get 1.1.1.1 | rg 'via ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+) dev' -or '$1'";
+        copy_captive_portal_ip = "captive_portal_ip | wl-copy";
+
+        gs = "git stash && git pull --rebase && git stash pop";
       };
+
+      initExtra = ''
+        function fvim() {
+          fzf --query "$*" --multi --bind "enter:become(nvim {+})";
+        }
+      '';
     };
 
+    programs.fzf = {
+      enable = true;
+      enableZshIntegration = true;
+    };
     programs.zoxide.enable = true;
-    programs.thefuck.enable = true;
   };
 }
