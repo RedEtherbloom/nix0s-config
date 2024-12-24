@@ -18,11 +18,35 @@ in {
       type = with types; bool;
       default = false;
     };
+    pullShortcut = mkOption {
+      description = "Shortcut to pull and rebase remote changes";
+      type = with types; bool;
+      default = true;
+    };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      obsidian
-    ];
-  };
+  config = mkIf cfg.enable (mkMerge [
+    {
+      home.packages = with pkgs; [
+        obsidian
+      ];
+    }
+    (mkIf cfg.pullShortcut {
+      home.packages = [];
+      programs.plasma.hotkeys.commands = {
+        "obsidianPullShortcut" = {
+          command = let
+            command = pkgs.writeShellScript "obsidianPullShortcut.sh" ''
+              cd ~/Documents/Obsidian/default
+              git stash
+              git pull --rebase
+              git stash pop
+            '';
+          in "${command}";
+          keys = ["meta+o"];
+          comment = "Pull and rebase Obsidian vault";
+        };
+      };
+    })
+  ]);
 }
