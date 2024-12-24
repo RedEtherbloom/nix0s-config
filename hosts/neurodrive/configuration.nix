@@ -94,6 +94,8 @@ in {
     8123
     # Mosquitto
     1883
+    # Paperless
+    config.services.paperless.port
   ];
 
   networking.ownWireguard = {
@@ -364,9 +366,39 @@ in {
       }
     ];
   };
+
+  boot.kernelModules = ["coretemp" "nct6775"];
   programs.coolercontrol = {
     enable = true;
     nvidiaSupport = true;
   };
+
+  # Copied from Bitwarden
+  # TODO: Cross-sync bitwarden and secret store
+  sops.secrets."paperless/admin_password" = {
+    owner = "paperless";
+    format = "yaml";
+    sopsFile = ../../secrets/services/paperless.yaml;
+  };
+
+  services.paperless = {
+    enable = true;
+    consumptionDirIsPublic = true;
+    address = "0.0.0.0";
+    port = 8150;
+    passwordFile = config.sops.secrets."paperless/admin_password".path;
+    settings = {
+      PAPERLESS_CONSUMER_IGNORE_PATTERN = [
+        ".DS_STORE/*"
+        "desktop.ini"
+      ];
+      PAPERLESS_OCR_LANGUAGE = "deu+eng";
+      PAPERLESS_OCR_USER_ARGS = {
+        optimize = 1;
+        pdfa_image_compression = "lossless";
+      };
+    };
+  };
+
   system.stateVersion = "24.05";
 }
