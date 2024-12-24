@@ -38,9 +38,19 @@ in {
       libnotify
 
       vlc
-      mpv
       feh
     ];
+
+    programs.mpv = {
+      enable = true;
+      config = {
+        # Video acceleration
+        hwdec = "auto-safe";
+        vo = "gpu";
+        profile = "gpu-hq";
+        gpu-context="wayland";
+      };
+    };
 
     programs.kitty = {
       enable = true;
