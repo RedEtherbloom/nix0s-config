@@ -88,6 +88,11 @@ in {
       default = true;
       description = "Install the Github Copilot extension";
     };
+    direnv = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Install direnv";
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -152,6 +157,10 @@ in {
         enable = true;
         package = with pkgs; jdk23;
       };
+    })
+    (mkIf cfg.direnv {
+      # TODO: Cassea: Maybe use nix-direnv, the gcroot feature may be good or bad, depending on disk cache
+      programs.direnv.enable = true;
     })
   ]);
 }
