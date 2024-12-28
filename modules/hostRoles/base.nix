@@ -22,22 +22,8 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs = {
-      overlays = self.overlay.defaults;
-      config = {
-        allowUnfree = true;
-      };
-    };
-
     # Supposedly required by nixd
     nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
-
-    home-manager = {
-      backupFileExtension = "home_manager_backup_move";
-      extraSpecialArgs = specialArgs;
-      useGlobalPkgs = true;
-      useUserPackages = true;
-    };
 
     programs.nix-index-database.comma.enable = lib.mkDefault true;
 

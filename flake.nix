@@ -79,55 +79,70 @@
     nix-vscode-extensions,
     ...
   } @ inputs: let
-    overlay = import ./pkgs {inherit inputs;};
-    specialArgs = {
-      inherit inputs self;
+nixpkgsConfig = {
+    overlays = [
+        (import ./pkgs {inherit inputs;})
+        nix-vscode-extensions.overlays.default
+        nix-comfyui.overlays.default
+      ];
+      config.allowUnfree = true;
     };
   in
-    # flake-utils has mostly been copied from feas config
-    flake-utils.lib.eachDefaultSystem (
+        flake-utils.lib.eachDefaultSystem (
       system: let
-        # Still ugly tbh. E.g. allowunfree and other setting don't get applied. Maybe I should turn nixpkgs into it's own imported nix file
-        pkgs = import nixpkgs {
+                pkgs = import nixpkgs {
+inherit (nixpkgsConfig) overlays config;
           inherit system;
-          overlays = self.overlay.defaults;
-        };
-        formatter = pkgs.nixfmt-rfc-style;
+                  };
+        formatter = pkgs.alejandra;
       in {
+inherit formatter;
         devShells.default = pkgs.mkShell {
-          packages = [
-            formatter
-            pkgs.nil
-            pkgs.nixd
-            pkgs.nix-output-monitor
-          ];
+          packages =
+            [            formatter]
+            ++ (with             pkgs; [
+nixd
+            nix-output-monitor
+          nh
+            ]);
         };
 
-        inherit formatter;
-
-        packages = pkgs;
+        legacyPackages = pkgs;
       }
     )
     // {
-      overlay.defaults = [overlay nix-vscode-extensions.overlays.default nix-comfyui.overlays.default];
-      # TODO: Redo with flake-parts or flake-utils once we have the spoons again
-      nixosConfigurations =
-        nixpkgs.lib.attrsets.genAttrs
-        (nixpkgs.lib.attrsets.mapAttrsToList (name: _: name) (builtins.readDir ./hosts))
-        (
-          name:
+            nixosConfigurations = let
+        specialArgs = {
+          inherit inputs self;
+        };
+        defaultUsername = "inf";
+        # Setup common home-manager and nixpkgs options
+        mkSystem = hostName: system: username:
             nixpkgs.lib.nixosSystem {
-              inherit specialArgs;
+pkgs = import nixpkgs {
+              inherit (nixpkgsConfig) overlays config;
+              inherit system;
+            };
+              inherit specialArgs system;
 
               modules = [
-                ./hosts/${name}/configuration.nix
+                ./hosts/${hostName}/configuration.nix
                 {
-                  home-manager.users.inf.imports = [
-                    ./hosts/${name}/home.nix
+                  home-manager = {
+                  backupFileExtension = "hm_backup_move";
+                  extraSpecialArgs = specialArgs;
+                  useGlobalPkgs = true;
+                  users.${username}.imports = [
+                    ./hosts/${hostName}/home.nix
                   ];
+};
                 }
               ];
-            }
-        );
+            };
+      in {
+        fractor = mkSystem "fractor" "x86_64-linux" defaultUsername;
+        neurodrive = mkSystem "neurodrive" "x86_64-linux" defaultUsername;
+        audiosink = mkSystem "audiosink" "aarch64-linux" defaultUsername;
+      };
     };
 }
