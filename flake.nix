@@ -69,6 +69,10 @@
       url = "github:sergv/nixos-config?rev=9c6306c86af6130f76d277e382c346360ec124dd";
       flake = false;
     };
+
+    rimsort-pr = {
+      url = "github:NixOS/nixpkgs?ref=pull/304943/head";
+    };
   };
 
   outputs = {
@@ -79,8 +83,8 @@
     nix-vscode-extensions,
     ...
   } @ inputs: let
-nixpkgsConfig = {
-    overlays = [
+    nixpkgsConfig = {
+      overlays = [
         (import ./pkgs {inherit inputs;})
         nix-vscode-extensions.overlays.default
         nix-comfyui.overlays.default
@@ -88,22 +92,22 @@ nixpkgsConfig = {
       config.allowUnfree = true;
     };
   in
-        flake-utils.lib.eachDefaultSystem (
+    flake-utils.lib.eachDefaultSystem (
       system: let
-                pkgs = import nixpkgs {
-inherit (nixpkgsConfig) overlays config;
+        pkgs = import nixpkgs {
+          inherit (nixpkgsConfig) overlays config;
           inherit system;
-                  };
+        };
         formatter = pkgs.alejandra;
       in {
-inherit formatter;
+        inherit formatter;
         devShells.default = pkgs.mkShell {
           packages =
-            [            formatter]
-            ++ (with             pkgs; [
-nixd
-            nix-output-monitor
-          nh
+            [formatter]
+            ++ (with pkgs; [
+              nixd
+              nix-output-monitor
+              nh
             ]);
         };
 
@@ -111,34 +115,34 @@ nixd
       }
     )
     // {
-            nixosConfigurations = let
+      nixosConfigurations = let
         specialArgs = {
           inherit inputs self;
         };
         defaultUsername = "inf";
         # Setup common home-manager and nixpkgs options
         mkSystem = hostName: system: username:
-            nixpkgs.lib.nixosSystem {
-pkgs = import nixpkgs {
+          nixpkgs.lib.nixosSystem {
+            pkgs = import nixpkgs {
               inherit (nixpkgsConfig) overlays config;
               inherit system;
             };
-              inherit specialArgs system;
+            inherit specialArgs system;
 
-              modules = [
-                ./hosts/${hostName}/configuration.nix
-                {
-                  home-manager = {
+            modules = [
+              ./hosts/${hostName}/configuration.nix
+              {
+                home-manager = {
                   backupFileExtension = "hm_backup_move";
                   extraSpecialArgs = specialArgs;
                   useGlobalPkgs = true;
                   users.${username}.imports = [
                     ./hosts/${hostName}/home.nix
                   ];
-};
-                }
-              ];
-            };
+                };
+              }
+            ];
+          };
       in {
         fractor = mkSystem "fractor" "x86_64-linux" defaultUsername;
         neurodrive = mkSystem "neurodrive" "x86_64-linux" defaultUsername;
