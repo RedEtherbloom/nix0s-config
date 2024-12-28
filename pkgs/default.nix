@@ -11,4 +11,6 @@
       hash = "sha256-t1NVgp+ELmTMK0N1fFFJCoKQd8mSYSMAIDG9+kNs3Ok=";
     };
   };
+
+  inherit (inputs.rimsort-pr.legacyPackages.${prev.system}) rimsort;
 }

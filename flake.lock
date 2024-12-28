@@ -472,6 +472,22 @@
         "url": "https://github.com/nix-community/raspberry-pi-nix?tag=v0.4.1"
       }
     },
+    "rimsort-pr": {
+      "locked": {
+        "lastModified": 1714266221,
+        "narHash": "sha256-Lvz/gqATTm2+i4ZeFeVLzkr3xDT4vsxBMrdhuoXy8jY=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "6e5179b8bee273721b39c2fe1d648655355451a9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "pull/304943/head",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "disko": "disko",
@@ -486,6 +502,7 @@
         "our-secrets": "our-secrets",
         "plasma-manager": "plasma-manager",
         "raspberry-pi-nix": "raspberry-pi-nix",
+        "rimsort-pr": "rimsort-pr",
         "sergv-nixos-config": "sergv-nixos-config",
         "sops-nix": "sops-nix",
         "stylix": "stylix"
