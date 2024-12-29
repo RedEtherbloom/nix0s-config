@@ -1,4 +1,10 @@
-{inputs, ...}: final: prev: {
+{inputs, ...}: final: prev: 
+let 
+  rimsort-pr = import inputs.rimsort-pr {
+    config.allowUnfree = true;
+    inherit (prev) system;
+  };
+in{
   fritz-logger = prev.callPackage ./scripts/python/fritz-logger/default.nix {};
   byar-launcher = prev.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
 
@@ -12,5 +18,5 @@
     };
   };
 
-  inherit (inputs.rimsort-pr.legacyPackages.${prev.system}) rimsort;
+  inherit (rimsort-pr) rimsort;
 }

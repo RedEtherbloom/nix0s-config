@@ -19,7 +19,7 @@ in {
       mindustry-wayland
       gcs
       byar-launcher
-      # rimsort
+      rimsort
 
       dxvk_2
     ];
