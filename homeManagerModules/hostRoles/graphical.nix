@@ -78,5 +78,10 @@ in {
       newSession = true;
     };
     programs.fzf.tmux.enableShellIntegration = true;
+
+    home.sessionVariables = {
+      # Native Wayland for Chromium apps
+      NIXOS_OZONE_WL = "1";
+    };
   };
 }
