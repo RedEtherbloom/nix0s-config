@@ -10,9 +10,7 @@ with lib; let
   cfg = config.myOptions.hostRoles.base;
 in {
   imports = [
-    inputs.home-manager.nixosModules.home-manager
     inputs.nix-index-database.nixosModules.nix-index
-    inputs.sops-nix.nixosModules.sops
   ];
 
   options.myOptions.hostRoles.base.enable = mkOption {
