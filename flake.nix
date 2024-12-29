@@ -132,22 +132,22 @@
         # Setup common home-manager and nixpkgs options
         mkSystem = hostName: system: username:
           nixpkgs.lib.nixosSystem {
-            pkgs = import nixpkgs {
-              inherit (nixpkgsConfig) overlays config;
-              inherit system;
-            };
             inherit specialArgs system;
 
             modules = [
+              inputs.home-manager.nixosModules.home-manager
+              inputs.sops-nix.nixosModules.sops
+
+              {nixpkgs = {inherit (nixpkgsConfig) overlays config;};}
+
               ./hosts/${hostName}/configuration.nix
+
               {
                 home-manager = {
                   backupFileExtension = "hm_backup_move";
                   extraSpecialArgs = specialArgs;
                   useGlobalPkgs = true;
-                  users.${username}.imports = [
-                    ./hosts/${hostName}/home.nix
-                  ];
+                  users.${username}.imports = [./hosts/${hostName}/home.nix];
                 };
               }
             ];
