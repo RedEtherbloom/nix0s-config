@@ -21,7 +21,7 @@ in {
         withOpenASAR = true;
         withVencord = true;
       })
-      element-desktop-wayland
+      element-desktop
       telegram-desktop
       threema-desktop
       signal-desktop
