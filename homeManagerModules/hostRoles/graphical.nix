@@ -67,5 +67,16 @@ in {
 
     # Set terminal opacity using stlyix instead
     stylix.opacity.terminal = 0.8;
+
+    programs.tmux = {
+      enable = true;
+      clock24 = true;
+      historyLimit = 10000;
+      # Hope this doesn't blow up
+      keyMode = "vi";
+      mouse = true;
+      newSession = true;
+    };
+    programs.fzf.tmux.enableShellIntegration = true;
   };
 }
