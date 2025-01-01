@@ -40,7 +40,7 @@ in {
     };
 
     environment.systemPackages = with pkgs; [
-      # For some reason this keeps getting pulled in since stlix and then recycled by ghc
+      # For some reason this keeps getting pulled in since stylix and then recycled by ghc
       ghc
       gnupg
       pinentry-qt
@@ -55,6 +55,6 @@ in {
       diskUtilities = true;
     };
 
-    services.i2p.enable = true;
+    myOptions.roles.i2p.enable = true;
   };
 }
