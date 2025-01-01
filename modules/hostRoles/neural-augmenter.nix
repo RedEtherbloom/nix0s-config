@@ -54,5 +54,7 @@ in {
       pdfUtils = true;
       diskUtilities = true;
     };
+
+    services.i2p.enable = true;
   };
 }

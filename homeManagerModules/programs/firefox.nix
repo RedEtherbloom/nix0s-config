@@ -143,8 +143,7 @@ in {
           };
           "Home-Manager Option(Unstable)" = {
             definedAliases = ["@hm" "@hmo" "@hmoptions"];
-            # Let's test if it auto-pulls
-            # icon = "https://home-manager-options.extranix.com/images/favicon.png";
+            icon = "https://home-manager-options.extranix.com/images/favicon.png";
             urls = [
               {
                 template = "https://home-manager-options.extranix.com/";
@@ -179,11 +178,27 @@ in {
               }
             ];
           };
+          "Go Pkgs" = {
+            definedAliases = ["@go"];
+            iconUpdateURL = "https://pkg.go.dev/static/shared/icon/favicon.ico";
+            updateInterval = 24 * 60 * 60 * 1000; # every day
+            urls = [
+              {
+                template = "https://pkg.go.dev/search";
+                params = [
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+          };
 
           "PerplexityAI" = {
             definedAliases = ["@p" "@per" "@perplexity"];
-            # Those this work without?
-            # icon = "";
+            iconUpdateURL = "https://www.perplexity.ai/favicon.ico";
+            updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
               {
                 template = "https://www.perplexity.ai/search";
@@ -198,8 +213,9 @@ in {
           };
           # Gemini does not have a simple search URL
           "Dict.cc English" = {
-            definedAliases = ["@dc @dict"];
-            # icon = "";
+            definedAliases = ["@dc" "@dict"];
+            iconUpdateURL = "https://www4.dict.cc/img/favicons/favicon4.png";
+            updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
               {
                 template = "https://www.dict.cc/";
@@ -214,7 +230,8 @@ in {
           };
           "YouTube" = {
             definedAliases = ["@youtube" "@yt"];
-            # icon = "";
+            iconUpdateURL = "https://www.youtube.com/s/desktop/c01ea7e3/img/logos/favicon.ico";
+            updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
               {
                 template = "https://www.youtube.com/results";
@@ -229,7 +246,8 @@ in {
           };
           "DuckDuckGo" = {
             definedAliases = ["@dg" "@duckduckgo"];
-            # icon = "";
+            iconUpdateURL = "https://duckduckgo.com/favicon.ico";
+            updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
               {
                 template = "https://duckduckgo.com/";
@@ -244,7 +262,8 @@ in {
           };
           "Reddit" = {
             definedAliases = ["@red" "@reddit"];
-            # icon = "";
+            iconUpdateURL = "https://www.redditstatic.com/shreddit/assets/favicon/64x64.png";
+            updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
               {
                 template = "https://www.reddit.com/search/";
@@ -272,6 +291,20 @@ in {
         # Force it onto firefox and overwrite
         force = true;
       };
+    };
+    programs.firefox.profiles."i2p" = {
+      id = 1;
+      settings = {
+        "media.peerConnection.ice.proxy_only" = true;
+	# manual mode
+        "network.proxy.type" = 1;
+        "network.proxy.socks_version" = 5;
+        "network.proxy.http" = "127.0.0.1";
+        "network.proxy.http_port" = 4444;
+        "network.proxy.ssl" = "127.0.0.1";
+        "network.proxy.ssl_port" = 4444;
+      };
+      #TODO: Try out i2p for private browsing extension
     };
   };
 }
