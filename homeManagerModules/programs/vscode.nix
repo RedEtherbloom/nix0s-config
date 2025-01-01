@@ -80,41 +80,49 @@ in {
             github.copilot
             github.copilot-chat
           ]
+          ++ lib.optionals cfg_development.go [
+            golang.go
+          ]
       );
-      userSettings = {
-        nix = {
-          enableLanguageServer = true;
-          serverPath = "nixd";
-          serverSettings = {
-            nixd = {
-              formatting.command = ["alejandra"];
+      userSettings =
+        {
+          nix = {
+            enableLanguageServer = true;
+            serverPath = "nixd";
+            serverSettings = {
+              nixd = {
+                formatting.command = ["alejandra"];
 
-              options = let
-                nixos = "(builtins.getFlake \"${self}\").nixosConfigurations.${osConfig.networking.hostName}.options";
-              in {
-                nixos.expr = nixos;
-                # TODO: Rewrite flake.nix with homeManagerConfigurations in mind(read docs for that) as our own options are missing
-                home-manager.expr = nixos + ".home-manager.users.type.getSubOptions []";
+                options = let
+                  nixos = "(builtins.getFlake \"${self}\").nixosConfigurations.${osConfig.networking.hostName}.options";
+                in {
+                  nixos.expr = nixos;
+                  # TODO: Rewrite flake.nix with homeManagerConfigurations in mind(read docs for that) as our own options are missing
+                  home-manager.expr = nixos + ".home-manager.users.type.getSubOptions []";
+                };
               };
             };
           };
+          git = {
+            autofetch = true;
+            confirmSync = false;
+          };
+          gitlens.views.branches.branches.layout = "list";
+          redhat.telemetry.enabled = false;
+          "extensions.experimental.affinity" = attrsets.optionalAttrs cfg.vimMode {
+            "vscodevim.vim" = 1;
+          };
+          vim.handleKeys = {
+            # Clara: Reenable filepicker(although we really need a good one for Vim in general)
+            "<C-p>" = false;
+            # Valerie: Reenable new file
+            "<C-n>" = false;
+          };
+        }
+        // lib.optionalAttrs cfg_development.go {
+          # Quarry: Supposedly better, according to vs-code docs
+          gopls.ui.semanticTokens = cfg_development.go;
         };
-        git = {
-          autofetch = true;
-          confirmSync = false;
-        };
-        gitlens.views.branches.branches.layout = "list";
-        redhat.telemetry.enabled = false;
-        "extensions.experimental.affinity" = attrsets.optionalAttrs cfg.vimMode {
-          "vscodevim.vim" = 1;
-        };
-        vim.handleKeys = {
-          # Clara: Reenable filepicker(although we really need a good one for Vim in general)
-          "<C-p>" = false;
-          # Valerie: Reenable new file
-          "<C-n>" = false;
-        };
-      };
     };
 
     stylix.targets.vscode.enable = false;
