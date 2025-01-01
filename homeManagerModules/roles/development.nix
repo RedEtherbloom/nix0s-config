@@ -93,6 +93,11 @@ in {
       default = true;
       description = "Install direnv";
     };
+    go = mkOption {
+        description = "Enable go";
+        type = types.bool;
+        default = true;
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -161,6 +166,9 @@ in {
     (mkIf cfg.direnv {
       # TODO: Cassea: Maybe use nix-direnv, the gcroot feature may be good or bad, depending on disk cache
       programs.direnv.enable = true;
+    })
+    (mkIf cfg.go {
+      programs.go.enable = true;
     })
   ]);
 }
