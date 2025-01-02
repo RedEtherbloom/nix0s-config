@@ -140,6 +140,7 @@ in {
         ]
         ++ lib.optionals cfg.git [
           git
+	  lazygit
           git-lfs
           git-filter-repo
         ];
