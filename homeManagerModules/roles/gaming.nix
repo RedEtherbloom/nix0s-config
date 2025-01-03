@@ -20,6 +20,7 @@ in {
       gcs
       byar-launcher
       rimsort
+      starsector
 
       dxvk_2
     ];
