@@ -27,10 +27,14 @@ in {
             libvorbis
             stdenv.cc.cc.lib
             xorg.libXcursor
+            xorg.libxkbfile
             xorg.libXi
             xorg.libXinerama
             xorg.libXrandr
             xorg.libXxf86vm
+
+            #RimSort
+            nss
           ];
       };
     };
