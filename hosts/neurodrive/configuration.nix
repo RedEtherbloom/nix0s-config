@@ -35,6 +35,21 @@ in {
     cudaSupport = true;
     cudnnSupport = true;
   };
+  # Eve: Host-specific package overrides
+  nixpkgs.overlays = [
+    (final: prev: {
+      # Eve: Account for bug: https://fractalsoftworks.com/forum/index.php?topic=30633.0
+      starsector = prev.starsector.overrideAttrs (oldAttrs: {
+        buildInputs = oldAttrs.buildInputs ++ [pkgs.makeWrapper];
+
+        postInstall =
+          (oldAttrs.postInstall or "")
+          + ''
+            wrapProgram "$out/bin/starsector" --set __GL_THREADED_OPTIMIZATIONS 0
+          '';
+      });
+    })
+  ];
 
   nix.settings = {
     # Logical cores: 12
