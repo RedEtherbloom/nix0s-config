@@ -98,6 +98,11 @@ in {
         type = types.bool;
         default = true;
     };
+    mcu = mkOption {
+        description = "Enable MCU tools";
+        type = types.bool;
+        default = true;
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -143,7 +148,11 @@ in {
 	  lazygit
           git-lfs
           git-filter-repo
-        ];
+        ] ++ lib.optionals cfg.mcu [
+          esphome
+	  esptool
+	  platformio
+	];
     }
     (mkIf cfg.git {
       programs.git = {
