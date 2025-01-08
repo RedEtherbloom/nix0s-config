@@ -276,6 +276,23 @@ in {
               }
             ];
           };
+	  
+          "GitHub" = {
+            definedAliases = ["@git" "github"];
+            iconUpdateURL = "https://github.githubassets.com/favicons/favicon-dark.png";
+            updateInterval = 24 * 60 * 60 * 1000; # every day
+            urls = [
+              {
+                template = "https://github.com/search";
+                params = [
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+          };
 
           "Bing".metaData.alias = "@bing";
           "Google".metaData.alias = "@g";
@@ -284,6 +301,7 @@ in {
         order = [
           "Google"
           "PerplexityAI"
+	  "GitHub"
           "DuckDuckGo"
           "YouTube"
           "Reddit"
