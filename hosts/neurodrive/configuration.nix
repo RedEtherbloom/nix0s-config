@@ -328,7 +328,6 @@ in {
     oci-containers = {
       backend = "podman";
       containers.homeassistant = {
-        # How do we backup this?
         volumes = ["home-assistant:/config"];
         environment.TZ = config.time.timeZone;
         # Okay? What does this mean?
@@ -338,7 +337,7 @@ in {
           # Use the host network namespace for all sockets
           "--network=host"
           # Pass Zigbee controller into container
-          "--device=/dev/ttyUSB0:/dev/ttyUSB0"
+          "--device=/dev/bus/usb/003/002:/dev/ttyUSB0"
         ];
       };
       containers.libretranslate = {
