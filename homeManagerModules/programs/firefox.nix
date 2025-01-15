@@ -6,6 +6,10 @@
 }:
 with lib; let
   cfg = config.myOptions.firefox;
+  commonConfig = {
+    # middle-click behavior
+    "general.autoScroll" = true;
+  };
 in {
   options.myOptions.firefox = {
     enable = mkOption {
@@ -30,6 +34,7 @@ in {
         (builtins.readFile ../../dotfiles/firefox/betterfox.js)
         (builtins.readFile ../../dotfiles/firefox/media_decoding.js)
       ];
+      settings = {} // commonConfig;
       search = {
         enable = true;
 
@@ -278,7 +283,7 @@ in {
           };
 	  
           "GitHub" = {
-            definedAliases = ["@git" "github"];
+            definedAliases = ["@git" "@github"];
             iconUpdateURL = "https://github.githubassets.com/favicons/favicon-dark.png";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -287,6 +292,23 @@ in {
                 params = [
                   {
                     name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+          };
+
+          "Amazon" = {
+            definedAliases = ["@ama" "@amazon" "amazon:"];
+            iconUpdateURL = "https://www.amazon.de/favicon.ico";
+            updateInterval = 24 * 60 * 60 * 1000; # every day
+            urls = [
+              {
+                template = "https://www.amazon.de/s";
+                params = [
+                  {
+                    name = "k";
                     value = "{searchTerms}";
                   }
                 ];
@@ -321,7 +343,7 @@ in {
         "network.proxy.http_port" = 4444;
         "network.proxy.ssl" = "127.0.0.1";
         "network.proxy.ssl_port" = 4444;
-      };
+      } // commonConfig;
       #TODO: Try out i2p for private browsing extension
     };
   };
