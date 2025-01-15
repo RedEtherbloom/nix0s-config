@@ -62,7 +62,7 @@ in {
 
   # Eve: Override, until the Raspberry Pi is installed
   # !TEMPORARY!
-  nix.gc.automatic = lib.mkForce false;
+  # nix.gc.automatic = lib.mkForce false;
 
   # Quarry: Cross-compilation support for audiosink
   boot.binfmt.emulatedSystems = ["aarch64-linux"];
