@@ -85,7 +85,7 @@
   } @ inputs: let
     nixpkgsConfig = {
       overlays = [
-        (import ./pkgs {inherit inputs;})
+        (import ./pkgs {inherit inputs; inherit (nixpkgs) lib;})
         nix-vscode-extensions.overlays.default
         nix-comfyui.overlays.default
       ];
