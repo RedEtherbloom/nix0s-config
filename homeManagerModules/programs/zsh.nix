@@ -42,7 +42,7 @@ in {
         captive_portal_ip = "ip route get 1.1.1.1 | rg 'via ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+) dev' -or '$1'";
         copy_captive_portal_ip = "captive_portal_ip | wl-copy";
 
-        gs = "git stash && git pull --rebase && git stash pop";
+        lz = "lazygit";
       };
 
       initExtra = ''
