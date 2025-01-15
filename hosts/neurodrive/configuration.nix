@@ -201,7 +201,6 @@ in {
     podman-tui # status of containers in the terminal
     docker-compose # start group of containers for dev
     smartmontools
-    libretranslate
   ];
 
   environment.sessionVariables = {
@@ -341,6 +340,12 @@ in {
           # Pass Zigbee controller into container
           "--device=/dev/ttyUSB0:/dev/ttyUSB0"
         ];
+      };
+      containers.libretranslate = {
+        volumes = ["libretranslate_models:/home/libretranslate/.local:rw"];
+        environment.TZ = config.time.timeZone;
+        image = "docker.io/libretranslate/libretranslate:latest";
+        ports = ["127.0.0.1:8151:5000"];
       };
     };
   };
