@@ -6,6 +6,7 @@
 }:
 with lib; let
   cfg = config.myOptions.obsidian;
+  vars = import ../variables.nix {inherit config osConfig pkgs;};
 in {
   options.myOptions.obsidian = {
     enable = mkOption {
@@ -34,15 +35,12 @@ in {
     (mkIf cfg.pullShortcut {
       home.packages = [];
       programs.plasma.hotkeys.commands = {
-        "obsidianPullShortcut" = {
+        "obsidian-pull-shortcut" = {
           command = let
-            command = pkgs.writeShellScript "obsidianPullShortcut.sh" ''
-              cd ~/Documents/Obsidian/default
-              gprav
-            '';
+            command = vars.lazygitCommandWindow "obsidian-default" "~/Documents/Obsidian/default";
           in "${command}";
           keys = ["meta+o"];
-          comment = "Pull and rebase Obsidian vault";
+          comment = "Pull and rebase Obsidian vault, drop into lazygit on failure";
         };
       };
     })
