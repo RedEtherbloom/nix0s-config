@@ -81,10 +81,10 @@ in {
         };
       };
       # Generate a second, much more verbose boot entry
-      specialisation.verbose-boot.configuration = {
-        boot.consoleLogLevel = 7;
-        boot.plymouth.enable = false;
-      };
+      # specialisation.verbose-boot.configuration = {
+      #   boot.consoleLogLevel = 7;
+      #   boot.plymouth.enable = false;
+      # };
 
       # Required for plymouth to work in luks
       boot.initrd.systemd.enable = true;
