@@ -201,6 +201,7 @@ in {
     podman-tui # status of containers in the terminal
     docker-compose # start group of containers for dev
     smartmontools
+    libretranslate
   ];
 
   environment.sessionVariables = {
