@@ -1,7 +1,9 @@
 {...}: {
-  hardware.pulseaudio.enable = false;
-  # Just for the Port. Need to check if I have to do this
-  hardware.pulseaudio.zeroconf.discovery.enable = true;
+  services.pulseaudio = {
+    enable = false;
+    # Just for the Port. Need to check if I have to do this
+    zeroconf.discovery.enable = true;
+  };
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
