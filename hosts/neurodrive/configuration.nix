@@ -48,6 +48,8 @@ in {
             wrapProgram "$out/bin/starsector" --set __GL_THREADED_OPTIMIZATIONS 0
           '';
       });
+      # GIMP blocker, we're following the ticket that will update when it's closed
+      suitesparse = prev.suitesparse.override {enableCuda = false;};
     })
   ];
 
