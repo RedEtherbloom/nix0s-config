@@ -32,17 +32,18 @@ in {
         obsidian
       ];
     }
-    (mkIf cfg.pullShortcut {
-      home.packages = [];
-      programs.plasma.hotkeys.commands = {
-        "obsidian-pull-shortcut" = {
-          command = let
-            command = vars.lazygitCommandWindow "obsidian-default" "~/Documents/Obsidian/default";
-          in "${command}";
-          keys = ["meta+o"];
-          comment = "Pull and rebase Obsidian vault, drop into lazygit on failure";
+    (mkIf cfg.pullShortcut
+      (let
+        obsidian-pull-shortcut = vars.lazygitCommandWindow "obsidian-default" "~/Documents/Obsidian/default";
+      in {
+        home.packages = [obsidian-pull-shortcut];
+        programs.plasma.hotkeys.commands = {
+          "obsidian-pull-shortcut" = {
+            command = obsidian-pull-shortcut;
+            keys = ["meta+o"];
+            comment = "Pull and rebase Obsidian vault, drop into lazygit on failure";
+          };
         };
-      };
-    })
+      }))
   ]);
 }
