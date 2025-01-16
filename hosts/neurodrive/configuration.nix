@@ -337,7 +337,7 @@ in {
           # Use the host network namespace for all sockets
           "--network=host"
           # Pass Zigbee controller into container
-          "--device=/dev/bus/usb/003/002:/dev/ttyUSB0"
+          "--device=/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_028095bd6fd9ee118975b54c37b89984-if00-port0:/dev/ttyUSB0"
         ];
       };
       containers.libretranslate = {
