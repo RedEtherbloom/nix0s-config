@@ -9,6 +9,7 @@ with lib; let
   commonConfig = {
     # middle-click behavior
     "general.autoScroll" = true;
+    "browser.toolbars.bookmarks.visibility" = "newtab";
   };
 in {
   options.myOptions.firefox = {
