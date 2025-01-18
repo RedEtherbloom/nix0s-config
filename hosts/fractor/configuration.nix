@@ -127,6 +127,7 @@
       "scanner"
       "lp"
       "i2c"
+      "dialout"
     ];
     packages = with pkgs; [
       aircrack-ng

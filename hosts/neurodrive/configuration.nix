@@ -188,6 +188,7 @@ in {
       "lp"
       "i2c"
       "podman"
+      "dialout"
     ];
   };
   stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/kaiju_girl_extended.png";
