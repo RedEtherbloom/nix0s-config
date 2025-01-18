@@ -11,6 +11,11 @@ with lib; let
     "general.autoScroll" = true;
     "browser.toolbars.bookmarks.visibility" = "newtab";
   };
+  # Map each alias to a version with @ prepended and : appended
+  defineAliasVariants = baseAlias: (lists.concatMap (x: [
+    ("@" + x)
+    (x + ":")
+  ]) baseAlias);
 in {
   options.myOptions.firefox = {
     enable = mkOption {
@@ -42,7 +47,7 @@ in {
         # TODO: Add Icon settings
         engines = {
           "NixPkgs(Unstable)" = {
-            definedAliases = ["@nix" "@nixpkgs"];
+            definedAliases = (defineAliasVariants ["nix" "nixpkgs"]);
             icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
             urls = [
               {
@@ -66,7 +71,7 @@ in {
             ];
           };
           "NixOS Options(Unstable)" = {
-            definedAliases = ["@no" "@nopt" "@nixopt" "@nix-options"];
+            definedAliases = (defineAliasVariants ["no" "nopt" "nixopt" "nix-options"]);
             icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
             urls = [
               {
@@ -85,7 +90,7 @@ in {
             ];
           };
           "NixOS Wiki" = {
-            definedAliases = ["@nw" "@nixwiki"];
+            definedAliases = (defineAliasVariants ["nw" "nixwiki"]);
             icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
             urls = [
               {
@@ -100,7 +105,7 @@ in {
             ];
           };
           "NixOS Issues" = {
-            definedAliases = ["@ni" "@nixi" "@nix-issues"];
+            definedAliases = (defineAliasVariants ["ni" "nixi" "nix-issues"]);
             # icon = "";
             urls = [
               {
@@ -109,7 +114,7 @@ in {
             ];
           };
           "NixOS PRs" = {
-            definedAliases = ["@np" "@nixp" "@nix-pr"];
+            definedAliases = (defineAliasVariants ["np" "nixp" "nix-pr"]);
             # icon = "";
             urls = [
               {
@@ -118,7 +123,7 @@ in {
             ];
           };
           "NixOS PR build status" = {
-            definedAliases = ["@npr" "@nix-pr-status"];
+            definedAliases = (defineAliasVariants ["npr" "nix-pr-status"]);
             # icon = "";
             urls = [
               {
@@ -133,7 +138,7 @@ in {
             ];
           };
           "NixOS Discourse search" = {
-            definedAliases = ["@disc" "@discourse"];
+            definedAliases = (defineAliasVariants ["disc" "discourse"]);
             # icon = "";
             urls = [
               {
@@ -148,7 +153,7 @@ in {
             ];
           };
           "Home-Manager Option(Unstable)" = {
-            definedAliases = ["@hm" "@hmo" "@hmoptions"];
+            definedAliases = (defineAliasVariants ["hm" "hmo" "hmoptions"]);
             icon = "https://home-manager-options.extranix.com/images/favicon.png";
             urls = [
               {
@@ -167,7 +172,7 @@ in {
             ];
           };
           "Home-Manager Issues" = {
-            definedAliases = ["@hmi" "@home-i" "@home-manager-issues"];
+            definedAliases = (defineAliasVariants ["hmi" "home-i" "home-manager-issues"]);
             # icon = "";
             urls = [
               {
@@ -176,7 +181,7 @@ in {
             ];
           };
           "Home-Manager PRs" = {
-            definedAliases = ["@hmp" "@home-pr" "@home-manager-pr"];
+            definedAliases = (defineAliasVariants ["hmp" "home-pr" "home-manager-pr"]);
             # icon = "";
             urls = [
               {
@@ -185,7 +190,7 @@ in {
             ];
           };
           "Go Pkgs" = {
-            definedAliases = ["@go"];
+            definedAliases = (defineAliasVariants ["go"]);
             iconUpdateURL = "https://pkg.go.dev/static/shared/icon/favicon.ico";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -202,7 +207,7 @@ in {
           };
 
           "PerplexityAI" = {
-            definedAliases = ["@p" "@per" "@perplexity"];
+            definedAliases = (defineAliasVariants ["p" "per" "perplexity"]);
             iconUpdateURL = "https://www.perplexity.ai/favicon.ico";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -219,7 +224,7 @@ in {
           };
           # Gemini does not have a simple search URL
           "Dict.cc English" = {
-            definedAliases = ["@dc" "@dict"];
+            definedAliases = (defineAliasVariants ["dc" "dict"]);
             iconUpdateURL = "https://www4.dict.cc/img/favicons/favicon4.png";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -235,7 +240,7 @@ in {
             ];
           };
           "YouTube" = {
-            definedAliases = ["@youtube" "@yt"];
+            definedAliases = (defineAliasVariants ["youtube" "yt"]);
             iconUpdateURL = "https://www.youtube.com/s/desktop/c01ea7e3/img/logos/favicon.ico";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -251,7 +256,7 @@ in {
             ];
           };
           "DuckDuckGo" = {
-            definedAliases = ["@dg" "@duckduckgo"];
+            definedAliases = (defineAliasVariants ["dg" "duckduckgo"]);
             iconUpdateURL = "https://duckduckgo.com/favicon.ico";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -267,7 +272,7 @@ in {
             ];
           };
           "Reddit" = {
-            definedAliases = ["@red" "@reddit"];
+            definedAliases = (defineAliasVariants ["red" "reddit"]);
             iconUpdateURL = "https://www.redditstatic.com/shreddit/assets/favicon/64x64.png";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -282,9 +287,9 @@ in {
               }
             ];
           };
-	  
+
           "GitHub" = {
-            definedAliases = ["@git" "@github"];
+            definedAliases = (defineAliasVariants ["git" "github"]);
             iconUpdateURL = "https://github.githubassets.com/favicons/favicon-dark.png";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -301,7 +306,7 @@ in {
           };
 
           "Amazon" = {
-            definedAliases = ["@ama" "@amazon" "amazon:"];
+            definedAliases = (defineAliasVariants ["ama" "amazon"]);
             iconUpdateURL = "https://www.amazon.de/favicon.ico";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -324,7 +329,7 @@ in {
         order = [
           "Google"
           "PerplexityAI"
-	  "GitHub"
+          "GitHub"
           "DuckDuckGo"
           "YouTube"
           "Reddit"
@@ -335,16 +340,18 @@ in {
     };
     programs.firefox.profiles."i2p" = {
       id = 1;
-      settings = {
-        "media.peerConnection.ice.proxy_only" = true;
-	# manual mode
-        "network.proxy.type" = 1;
-        "network.proxy.socks_version" = 5;
-        "network.proxy.http" = "127.0.0.1";
-        "network.proxy.http_port" = 4444;
-        "network.proxy.ssl" = "127.0.0.1";
-        "network.proxy.ssl_port" = 4444;
-      } // commonConfig;
+      settings =
+        {
+          "media.peerConnection.ice.proxy_only" = true;
+          # manual mode
+          "network.proxy.type" = 1;
+          "network.proxy.socks_version" = 5;
+          "network.proxy.http" = "127.0.0.1";
+          "network.proxy.http_port" = 4444;
+          "network.proxy.ssl" = "127.0.0.1";
+          "network.proxy.ssl_port" = 4444;
+        }
+        // commonConfig;
       #TODO: Try out i2p for private browsing extension
     };
   };
