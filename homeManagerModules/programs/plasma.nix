@@ -29,7 +29,7 @@ in {
     programs.plasma = {
       enable = true;
       # We're only coding shortcuts for screens 0-3
-      shortcuts =
+      shortcuts = (lib.attrsets.recursiveUpdate
         {
           "KDE Keyboard Layout Switcher"."Switch to Last-Used Keyboard Layout" = "Meta+Alt+L";
           "KDE Keyboard Layout Switcher"."Switch to Next Keyboard Layout" = "Meta+Alt+K";
@@ -94,35 +94,48 @@ in {
           "kwin"."Switch to Desktop 4" = "Meta+4";
           "kwin"."Switch to Desktop 5" = "Meta+5";
           "kwin"."Switch to Desktop 6" = "Meta+6";
+          "kwin"."Switch to Desktop 7" = "";
+          "kwin"."Switch to Desktop 8" = "";
+          "kwin"."Switch to Desktop 9" = "";
+          "kwin"."Switch to Desktop 10" = "";
           # TODO: Come up with good shortcut for that
           "kwin"."Switch to Next Desktop" = "none";
           "kwin"."Switch to Next Screen" = "none";
           "kwin"."Switch to Previous Desktop" = "none";
           "kwin"."Switch to Previous Screen" = "none";
-          "kwin"."Switch to Screen 0" = "none,,Switch to Screen 0";
-          "kwin"."Switch to Screen 1" = "none,,Switch to Screen 1";
-          "kwin"."Switch to Screen 2" = "none,,Switch to Screen 2";
-          "kwin"."Switch to Screen 3" = "none,,Switch to Screen 3";
+          "kwin"."Switch to Screen 0" = "Meta+Ctrl+1";
+          "kwin"."Switch to Screen 1" = "Meta+Ctrl+2";
+          "kwin"."Switch to Screen 2" = "Meta+Ctrl+3";
+          "kwin"."Switch to Screen 3" = "Meta+Ctrl+4";
           "kwin"."Switch to Screen Above" = "none,,Switch to Screen Above";
           "kwin"."Switch to Screen Below" = "none,,Switch to Screen Below";
           "kwin"."Switch to Screen to the Left" = "none,,Switch to Screen to the Left";
           "kwin"."Switch to Screen to the Right" = "none,,Switch to Screen to the Right";
 
-          "kwin"."Window to Desktop 1" = "Meta+Shift+1,,Window to Desktop 1";
-          "kwin"."Window to Desktop 2" = "Meta+Shift+2,,Window to Desktop 2";
-          "kwin"."Window to Desktop 3" = "Meta+Shift+3,,Window to Desktop 3";
-          "kwin"."Window to Desktop 4" = "Meta+Shift+4,,Window to Desktop 4";
-          "kwin"."Window to Desktop 5" = "Meta+Shift+5,,Window to Desktop 5";
-          "kwin"."Window to Desktop 6" = "Meta+Shift+6,,Window to Desktop 6";
+	  # Shift+1
+          "kwin"."Window to Desktop 1" = "Meta+!";
+	  # Shift+2
+          "kwin"."Window to Desktop 2" = "Meta+\"";
+	  # Shift+3
+          "kwin"."Window to Desktop 3" = "Meta+§";
+	  # Shift+4
+          "kwin"."Window to Desktop 4" = "Meta+$";
+	  # Shift+5
+          "kwin"."Window to Desktop 5" = "Meta+%";
+	  # Shift+6
+          "kwin"."Window to Desktop 6" = "Meta+&";
+          "kwin"."Window to Desktop 7" = "";
+          "kwin"."Window to Desktop 8" = "";
+          "kwin"."Window to Desktop 9" = "";
           # Disabled for better thinking
-          # "kwin"."Window to Next Desktop" = "none,,Window to Next Desktop";
-          # "kwin"."Window to Previous Desktop" = "none,,Window to Previous Desktop";
-          # "kwin"."Window to Previous Screen" = "Meta+Shift+Left";
-          # "kwin"."Window to Next Screen" = "Meta+Shift+Right";
-          "kwin"."Window to Screen 0" = "Meta+Ctrl+1,,Move Window to Screen 0";
-          "kwin"."Window to Screen 1" = "Meta+Ctrl+2,,Move Window to Screen 1";
-          "kwin"."Window to Screen 2" = "Meta+Ctrl+3,,Move Window to Screen 2";
-          "kwin"."Window to Screen 3" = "Meta+Ctrl+4,,Move Window to Screen 3";
+          "kwin"."Window to Next Desktop" = "";
+          "kwin"."Window to Previous Desktop" = "";
+          "kwin"."Window to Previous Screen" = "";
+          "kwin"."Window to Next Screen" = "";
+          "kwin"."Window to Screen 0" = "Meta+Ctrl+!";
+          "kwin"."Window to Screen 1" = "Meta+Ctrl+\"";
+          "kwin"."Window to Screen 2" = "Meta+Ctrl+§";
+          "kwin"."Window to Screen 3" = "Meta+Ctrl+$";
           "kwin"."Window One Screen Down" = "Meta+Shift+Down,,Move Window One Screen Down";
           "kwin"."Window One Screen Up" = "Meta+Shift+Up,,Move Window One Screen Up";
           "kwin"."Window One Screen to the Left" = "Meta+Shift+Left,,Move Window One Screen to the Left";
@@ -161,16 +174,16 @@ in {
           "org_kde_powerdevil"."powerProfile" = ["Battery" "Meta+B,Battery" "Meta+B,Switch Power Profile"];
 
           "plasmashell"."activate application launcher" = ["Meta,Meta" "Alt+F1,Activate Application Launcher"];
-          # "plasmashell"."activate task manager entry 1" = "none,Meta+1,Activate Task Manager Entry 1";
-          # "plasmashell"."activate task manager entry 2" = "none,Meta+2,Activate Task Manager Entry 2";
-          # "plasmashell"."activate task manager entry 3" = "none,Meta+3,Activate Task Manager Entry 3";
-          # "plasmashell"."activate task manager entry 4" = "none,Meta+4,Activate Task Manager Entry 4";
-          # "plasmashell"."activate task manager entry 5" = "none,Meta+5,Activate Task Manager Entry 5";
-          # "plasmashell"."activate task manager entry 6" = "none,Meta+6,Activate Task Manager Entry 6";
-          # "plasmashell"."activate task manager entry 7" = "none,Meta+7,Activate Task Manager Entry 7";
-          # "plasmashell"."activate task manager entry 8" = "none,Meta+8,Activate Task Manager Entry 8";
-          # "plasmashell"."activate task manager entry 9" = "none,Meta+9,Activate Task Manager Entry 9";
-          # "plasmashell"."activate task manager entry 10" = "none,Meta+0,Activate Task Manager Entry 10";
+          "plasmashell"."activate task manager entry 1" = [];
+          "plasmashell"."activate task manager entry 2" = [];
+          "plasmashell"."activate task manager entry 3" = [];
+          "plasmashell"."activate task manager entry 4" = [];
+          "plasmashell"."activate task manager entry 5" = [];
+          "plasmashell"."activate task manager entry 6" = [];
+          "plasmashell"."activate task manager entry 7" = [];
+          "plasmashell"."activate task manager entry 8" = [];
+          "plasmashell"."activate task manager entry 9" = [];
+          "plasmashell"."activate task manager entry 10" = [];
 
           # So useful
           "mediacontrol"."mediavolumedown" = "none,,Media volume down";
@@ -252,34 +265,34 @@ in {
 
           # TODO: Taskwarrior-Tui shortcut
         }
-        // (lib.optionalAttrs cfg.krohnkite {
+        (lib.optionalAttrs cfg.krohnkite {
           "kwin"."KrohnkiteBTreeLayout" = [];
           "kwin"."KrohnkiteColumnsLayout" = [];
           "kwin"."KrohnkiteDecrease" = [];
-          "kwin"."KrohnkiteFloatAll" = "Meta+Shift+F,none,Krohnkite: Toggle Float All";
-          "kwin"."KrohnkiteFloatingLayout" = "Meta+F,none,Krohnkite: Toggle Float";
-          "kwin"."KrohnkiteFocusDown" = "Meta+J,none,Krohnkite: Focus Down";
-          "kwin"."KrohnkiteFocusLeft" = "Meta+H,none,Krohnkite: Focus Left";
+          "kwin"."KrohnkiteFloatAll" = "Meta+Shift+F";
+          "kwin"."KrohnkiteFloatingLayout" = "Meta+F";
+          "kwin"."KrohnkiteFocusDown" = "Meta+J";
+          "kwin"."KrohnkiteFocusLeft" = "Meta+H";
           "kwin"."KrohnkiteFocusNext" = [];
-          "kwin"."KrohnkiteFocusPrev" = "Meta+\\,,none,Krohnkite: Focus Previous";
-          "kwin"."KrohnkiteFocusRight" = "Meta+L,none,Krohnkite: Focus Right";
-          "kwin"."KrohnkiteFocusUp" = "Meta+K,none,Krohnkite: Focus Up";
-          "kwin"."KrohnkiteGrowHeight" = "Meta+Ctrl+J,none,Krohnkite: Grow Height";
-          "kwin"."KrohnkitegrowWidth" = "Meta+Ctrl+L,none,Krohnkite: Grow Width";
-          "kwin"."KrohnkiteIncrease" = "Meta+I,none,Krohnkite: Increase";
-          "kwin"."KrohnkiteMonocleLayout" = "Meta+M,none,Krohnkite: Monocle Layout";
-          "kwin"."KrohnkiteNextLayout" = "Meta+:,none,Krohnkite: Next Layout";
-          "kwin"."KrohnkitePreviousLayout" = "Meta+;,none,Krohnkite: Previous Layout";
+          "kwin"."KrohnkiteFocusPrev" = [];
+          "kwin"."KrohnkiteFocusRight" = "Meta+L";
+          "kwin"."KrohnkiteFocusUp" = "Meta+K";
+          "kwin"."KrohnkiteGrowHeight" = "Meta+Ctrl+J";
+          "kwin"."KrohnkitegrowWidth" = "Meta+Ctrl+L";
+          "kwin"."KrohnkiteIncrease" = "Meta+I";
+          "kwin"."KrohnkiteMonocleLayout" = "Meta+M";
+          "kwin"."KrohnkiteNextLayout" = "Meta+:";
+          "kwin"."KrohnkitePreviousLayout" = "Meta+;";
           "kwin"."KrohnkiteQuarterLayout" = [];
           "kwin"."KrohnkiteRotate" = [];
           "kwin"."KrohnkiteRotatePart" = [];
-          "kwin"."KrohnkiteSetMaster" = "Meta+Return,none,Krohnkite: Set master";
-          "kwin"."KrohnkiteShiftDown" = "Meta+Shift+J,none,Krohnkite: Move Down/Next";
-          "kwin"."KrohnkiteShiftLeft" = "Meta+Shift+H,none,Krohnkite: Move Left";
-          "kwin"."KrohnkiteShiftRight" = "Meta+Shift+L,none,Krohnkite: Move Right";
-          "kwin"."KrohnkiteShiftUp" = "Meta+Shift+K,none,Krohnkite: Move Up/Prev";
-          "kwin"."KrohnkiteShrinkHeight" = "Meta+Ctrl+K,none,Krohnkite: Shrink Height";
-          "kwin"."KrohnkiteShrinkWidth" = "Meta+Ctrl+H,none,Krohnkite: Shrink Width";
+          "kwin"."KrohnkiteSetMaster" = "Meta+Return";
+          "kwin"."KrohnkiteShiftDown" = "Meta+Shift+J";
+          "kwin"."KrohnkiteShiftLeft" = "Meta+Shift+H";
+          "kwin"."KrohnkiteShiftRight" = "Meta+Shift+L";
+          "kwin"."KrohnkiteShiftUp" = "Meta+Shift+K";
+          "kwin"."KrohnkiteShrinkHeight" = "Meta+Ctrl+K";
+          "kwin"."KrohnkiteShrinkWidth" = "Meta+Ctrl+H";
           "kwin"."KrohnkiteSpiralLayout" = [];
           "kwin"."KrohnkiteSpreadLayout" = [];
           "kwin"."KrohnkiteStackedLayout" = [];
@@ -287,7 +300,7 @@ in {
           "kwin"."KrohnkiteTileLayout" = [];
           "kwin"."KrohnkiteToggleFloat" = [];
           "kwin"."KrohnkiteTreeColumnLayout" = [];
-        });
+        }));
       configFile = {
         "baloofilerc"."General"."dbVersion" = 2;
         "baloofilerc"."General"."exclude filters" = "*~,*.part,*.o,*.la,*.lo,*.loT,*.moc,moc_*.cpp,qrc_*.cpp,ui_*.h,cmake_install.cmake,CMakeCache.txt,CTestTestfile.cmake,libtool,config.status,confdefs.h,autom4te,conftest,confstat,Makefile.am,*.gcode,.ninja_deps,.ninja_log,build.ninja,*.csproj,*.m4,*.rej,*.gmo,*.pc,*.omf,*.aux,*.tmp,*.po,*.vm*,*.nvram,*.rcore,*.swp,*.swap,lzo,litmain.sh,*.orig,.histfile.*,.xsession-errors*,*.map,*.so,*.a,*.db,*.qrc,*.ini,*.init,*.img,*.vdi,*.vbox*,vbox.log,*.qcow2,*.vmdk,*.vhd,*.vhdx,*.sql,*.sql.gz,*.ytdl,*.tfstate*,*.class,*.pyc,*.pyo,*.elc,*.qmlc,*.jsc,*.fastq,*.fq,*.gb,*.fasta,*.fna,*.gbff,*.faa,po,CVS,.svn,.git,_darcs,.bzr,.hg,CMakeFiles,CMakeTmp,CMakeTmpQmake,.moc,.obj,.pch,.uic,.npm,.yarn,.yarn-cache,__pycache__,node_modules,node_packages,nbproject,.terraform,.venv,venv,core-dumps,lost+found";
