@@ -191,7 +191,7 @@ in {
       "dialout"
     ];
   };
-  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/kaiju_girl_extended.png";
+  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
 
   environment.systemPackages = with pkgs; [
     cachix
