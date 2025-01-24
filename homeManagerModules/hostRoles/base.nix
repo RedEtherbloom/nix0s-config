@@ -26,7 +26,7 @@ in {
     xdg.userDirs.createDirectories = true;
     programs.home-manager.enable = true;
 
-    programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
+    # programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
 
     home.packages = [
       (pkgs.writeShellApplication {
