@@ -13,7 +13,7 @@
   lazygitCommandWindow = name: location: let
     command = pkgs.writeShellScriptBin "commandWindow-lazygit-${name}.sh" ''
       set -e
-      kitty zsh -c "cd ${location} && git pull && exit || lazygit"
+      kitty zsh -c "cd ${location} && git pull && notify-send \"Sync worked without problem\" --expire-time=2000 || lazygit"
     '';
   in "${command}";
 in {
