@@ -38,7 +38,7 @@
     };
 
     our-secrets = {
-      url = "github:RedEtherbloom/nix0s-secrets";
+      url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
       inputs = {
         nixpkgs.follows = "nixpkgs";
 	home-manager.follows = "home-manager";
