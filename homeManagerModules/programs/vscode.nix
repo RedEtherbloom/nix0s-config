@@ -129,6 +129,6 @@ in {
         };
     };
 
-    stylix.targets.vscode.enable = false;
+    stylix.targets.vscode.enable = true;
   };
 }
