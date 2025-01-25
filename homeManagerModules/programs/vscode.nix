@@ -112,6 +112,8 @@ in {
           "extensions.experimental.affinity" = attrsets.optionalAttrs cfg.vimMode {
             "vscodevim.vim" = 1;
           };
+          # Fix swapcapsesc not being recognized in vscode
+          keyboard.dispatch = "keyCode";
           # Spellchecker is way to verbose. Unknown words will not get flagged this way
           cSpell.reportUnknownWords = true;
           vim.handleKeys = {
