@@ -41,9 +41,9 @@
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-	home-manager.follows = "home-manager";
-	sops-nix.follows = "sops-nix";
-      };  
+        home-manager.follows = "home-manager";
+        sops-nix.follows = "sops-nix";
+      };
     };
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
@@ -92,7 +92,10 @@
   } @ inputs: let
     nixpkgsConfig = {
       overlays = [
-        (import ./pkgs {inherit inputs; inherit (nixpkgs) lib;})
+        (import ./pkgs {
+          inherit inputs;
+          inherit (nixpkgs) lib;
+        })
         nix-vscode-extensions.overlays.default
         nix-comfyui.overlays.default
       ];
