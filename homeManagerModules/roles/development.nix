@@ -94,14 +94,14 @@ in {
       description = "Install direnv";
     };
     go = mkOption {
-        description = "Enable go";
-        type = types.bool;
-        default = true;
+      description = "Enable go";
+      type = types.bool;
+      default = true;
     };
     mcu = mkOption {
-        description = "Enable MCU tools";
-        type = types.bool;
-        default = true;
+      description = "Enable MCU tools";
+      type = types.bool;
+      default = true;
     };
   };
 
@@ -145,14 +145,15 @@ in {
         ]
         ++ lib.optionals cfg.git [
           git
-	  lazygit
+          lazygit
           git-lfs
           git-filter-repo
-        ] ++ lib.optionals cfg.mcu [
+        ]
+        ++ lib.optionals cfg.mcu [
           esphome
-	  esptool
-	  platformio
-	];
+          esptool
+          platformio
+        ];
     }
     (mkIf cfg.git {
       programs.git = {

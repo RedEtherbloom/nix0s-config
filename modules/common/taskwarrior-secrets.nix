@@ -1,5 +1,9 @@
 # TODO: Move to home-managr once it supports sops-nix templates
-{config, inputs, ...}: let
+{
+  config,
+  inputs,
+  ...
+}: let
   functions = import ./functions.nix {inherit config;};
   taskwarrior_secrets = "${inputs.our-secrets}/secrets/services/taskwarrior.yaml";
 in {

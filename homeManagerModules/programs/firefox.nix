@@ -13,9 +13,10 @@ with lib; let
   };
   # Map each alias to a version with @ prepended and : appended
   defineAliasVariants = baseAlias: (lists.concatMap (x: [
-    ("@" + x)
-    (x + ":")
-  ]) baseAlias);
+      ("@" + x)
+      (x + ":")
+    ])
+    baseAlias);
 in {
   options.myOptions.firefox = {
     enable = mkOption {
@@ -47,7 +48,7 @@ in {
         # TODO: Add Icon settings
         engines = {
           "NixPkgs(Unstable)" = {
-            definedAliases = (defineAliasVariants ["nix" "nixpkgs"]);
+            definedAliases = defineAliasVariants ["nix" "nixpkgs"];
             icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
             urls = [
               {
@@ -71,7 +72,7 @@ in {
             ];
           };
           "NixOS Options(Unstable)" = {
-            definedAliases = (defineAliasVariants ["no" "nopt" "nixopt" "nix-options"]);
+            definedAliases = defineAliasVariants ["no" "nopt" "nixopt" "nix-options"];
             icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
             urls = [
               {
@@ -90,7 +91,7 @@ in {
             ];
           };
           "NixOS Wiki" = {
-            definedAliases = (defineAliasVariants ["nw" "nixwiki"]);
+            definedAliases = defineAliasVariants ["nw" "nixwiki"];
             icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
             urls = [
               {
@@ -105,7 +106,7 @@ in {
             ];
           };
           "NixOS Issues" = {
-            definedAliases = (defineAliasVariants ["ni" "nixi" "nix-issues"]);
+            definedAliases = defineAliasVariants ["ni" "nixi" "nix-issues"];
             # icon = "";
             urls = [
               {
@@ -114,7 +115,7 @@ in {
             ];
           };
           "NixOS PRs" = {
-            definedAliases = (defineAliasVariants ["np" "nixp" "nix-pr"]);
+            definedAliases = defineAliasVariants ["np" "nixp" "nix-pr"];
             # icon = "";
             urls = [
               {
@@ -123,7 +124,7 @@ in {
             ];
           };
           "NixOS PR build status" = {
-            definedAliases = (defineAliasVariants ["npr" "nix-pr-status"]);
+            definedAliases = defineAliasVariants ["npr" "nix-pr-status"];
             # icon = "";
             urls = [
               {
@@ -138,7 +139,7 @@ in {
             ];
           };
           "NixOS Discourse search" = {
-            definedAliases = (defineAliasVariants ["disc" "discourse"]);
+            definedAliases = defineAliasVariants ["disc" "discourse"];
             # icon = "";
             urls = [
               {
@@ -153,7 +154,7 @@ in {
             ];
           };
           "Home-Manager Option(Unstable)" = {
-            definedAliases = (defineAliasVariants ["hm" "hmo" "hmoptions"]);
+            definedAliases = defineAliasVariants ["hm" "hmo" "hmoptions"];
             icon = "https://home-manager-options.extranix.com/images/favicon.png";
             urls = [
               {
@@ -172,7 +173,7 @@ in {
             ];
           };
           "Home-Manager Issues" = {
-            definedAliases = (defineAliasVariants ["hmi" "home-i" "home-manager-issues"]);
+            definedAliases = defineAliasVariants ["hmi" "home-i" "home-manager-issues"];
             # icon = "";
             urls = [
               {
@@ -181,7 +182,7 @@ in {
             ];
           };
           "Home-Manager PRs" = {
-            definedAliases = (defineAliasVariants ["hmp" "home-pr" "home-manager-pr"]);
+            definedAliases = defineAliasVariants ["hmp" "home-pr" "home-manager-pr"];
             # icon = "";
             urls = [
               {
@@ -190,7 +191,7 @@ in {
             ];
           };
           "Go Pkgs" = {
-            definedAliases = (defineAliasVariants ["go"]);
+            definedAliases = defineAliasVariants ["go"];
             iconUpdateURL = "https://pkg.go.dev/static/shared/icon/favicon.ico";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -207,7 +208,7 @@ in {
           };
 
           "PerplexityAI" = {
-            definedAliases = (defineAliasVariants ["p" "per" "perplexity"]);
+            definedAliases = defineAliasVariants ["p" "per" "perplexity"];
             iconUpdateURL = "https://www.perplexity.ai/favicon.ico";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -224,7 +225,7 @@ in {
           };
           # Gemini does not have a simple search URL
           "Dict.cc English" = {
-            definedAliases = (defineAliasVariants ["dc" "dict"]);
+            definedAliases = defineAliasVariants ["dc" "dict"];
             iconUpdateURL = "https://www4.dict.cc/img/favicons/favicon4.png";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -240,7 +241,7 @@ in {
             ];
           };
           "YouTube" = {
-            definedAliases = (defineAliasVariants ["youtube" "yt"]);
+            definedAliases = defineAliasVariants ["youtube" "yt"];
             iconUpdateURL = "https://www.youtube.com/s/desktop/c01ea7e3/img/logos/favicon.ico";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -256,7 +257,7 @@ in {
             ];
           };
           "DuckDuckGo" = {
-            definedAliases = (defineAliasVariants ["dg" "duckduckgo"]);
+            definedAliases = defineAliasVariants ["dg" "duckduckgo"];
             iconUpdateURL = "https://duckduckgo.com/favicon.ico";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -272,7 +273,7 @@ in {
             ];
           };
           "Reddit" = {
-            definedAliases = (defineAliasVariants ["red" "reddit"]);
+            definedAliases = defineAliasVariants ["red" "reddit"];
             iconUpdateURL = "https://www.redditstatic.com/shreddit/assets/favicon/64x64.png";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -289,7 +290,7 @@ in {
           };
 
           "GitHub" = {
-            definedAliases = (defineAliasVariants ["git" "github"]);
+            definedAliases = defineAliasVariants ["git" "github"];
             iconUpdateURL = "https://github.githubassets.com/favicons/favicon-dark.png";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [
@@ -306,7 +307,7 @@ in {
           };
 
           "Amazon" = {
-            definedAliases = (defineAliasVariants ["ama" "amazon"]);
+            definedAliases = defineAliasVariants ["ama" "amazon"];
             iconUpdateURL = "https://www.amazon.de/favicon.ico";
             updateInterval = 24 * 60 * 60 * 1000; # every day
             urls = [

@@ -1,4 +1,8 @@
-{ config, inputs, ... }: {
+{
+  config,
+  inputs,
+  ...
+}: {
   # TODO: Reread secrets managment with yaml
   sops.secrets."resticPassword" = {
     format = "binary";

@@ -25,7 +25,7 @@ in {
       sops.secrets."sudoers/optional" = {
         format = "binary";
         sopsFile = "${inputs.our-secrets}/secrets/common/sudoers";
-      };  
+      };
       security.sudo = {
         enable = true;
         extraConfig = ''
