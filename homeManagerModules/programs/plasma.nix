@@ -29,7 +29,8 @@ in {
     programs.plasma = {
       enable = true;
       # We're only coding shortcuts for screens 0-3
-      shortcuts = (lib.attrsets.recursiveUpdate
+      shortcuts =
+        lib.attrsets.recursiveUpdate
         {
           "KDE Keyboard Layout Switcher"."Switch to Last-Used Keyboard Layout" = "Meta+Alt+L";
           "KDE Keyboard Layout Switcher"."Switch to Next Keyboard Layout" = "Meta+Alt+K";
@@ -60,7 +61,7 @@ in {
           "kwin"."ExposeClass" = "Ctrl+F7";
           "kwin"."ExposeClassCurrentDesktop" = "Ctrl+F8,none,Toggle Present Windows (Window class on current desktop)";
           "kwin"."Grid View" = "Meta+G";
-          "kwin"."Kill Window" = "Meta+Ctrl+Esc";
+          "kwin"."Kill Window" = "Meta+Ctrl+Esc,Alt+F4";
           "kwin"."MinimizeAll" = "Meta+Shift+PgDown,none,MinimizeAll";
           # TODO: Revisit when using tablet
           "kwin"."Move Tablet to Next Output" = [];
@@ -112,17 +113,17 @@ in {
           "kwin"."Switch to Screen to the Left" = "none,,Switch to Screen to the Left";
           "kwin"."Switch to Screen to the Right" = "none,,Switch to Screen to the Right";
 
-	  # Shift+1
+          # Shift+1
           "kwin"."Window to Desktop 1" = "Meta+!";
-	  # Shift+2
+          # Shift+2
           "kwin"."Window to Desktop 2" = "Meta+\"";
-	  # Shift+3
+          # Shift+3
           "kwin"."Window to Desktop 3" = "Meta+§";
-	  # Shift+4
+          # Shift+4
           "kwin"."Window to Desktop 4" = "Meta+$";
-	  # Shift+5
+          # Shift+5
           "kwin"."Window to Desktop 5" = "Meta+%";
-	  # Shift+6
+          # Shift+6
           "kwin"."Window to Desktop 6" = "Meta+&";
           "kwin"."Window to Desktop 7" = "";
           "kwin"."Window to Desktop 8" = "";
@@ -250,7 +251,6 @@ in {
           # TODO: Is this opacity?
           "kwin"."Window Shade" = "none,,Shade Window";
 
-          "services/chromium-browser.desktop"."_launch" = "Meta+C";
           "services/firefox.desktop"."new-window" = "Meta+E";
           "services/kitty.desktop"."_launch" = "Ctrl+Alt+T";
           "services/obsidian.desktop"."_launch" = "Meta+Shift+O";
@@ -261,7 +261,7 @@ in {
           # TODO: This is missing most of the Spectacle specific shortcuts. They for some reason did not get recorded with the plasma-manager config dump.
           # "services/org.kde.spectacle.desktop"."RecordWindow" = [];
           "services/org.kde.spectacle.desktop"."_launch" = ["Print"];
-          "services/systemsettings.desktop"."_launch" = ["Meta+Shift+C" "Tools"];
+          "services/systemsettings.desktop"."_launch" = ["Meta+C" "Tools"];
 
           # TODO: Taskwarrior-Tui shortcut
         }
@@ -300,7 +300,7 @@ in {
           "kwin"."KrohnkiteTileLayout" = [];
           "kwin"."KrohnkiteToggleFloat" = [];
           "kwin"."KrohnkiteTreeColumnLayout" = [];
-        }));
+        });
       configFile = {
         "baloofilerc"."General"."dbVersion" = 2;
         "baloofilerc"."General"."exclude filters" = "*~,*.part,*.o,*.la,*.lo,*.loT,*.moc,moc_*.cpp,qrc_*.cpp,ui_*.h,cmake_install.cmake,CMakeCache.txt,CTestTestfile.cmake,libtool,config.status,confdefs.h,autom4te,conftest,confstat,Makefile.am,*.gcode,.ninja_deps,.ninja_log,build.ninja,*.csproj,*.m4,*.rej,*.gmo,*.pc,*.omf,*.aux,*.tmp,*.po,*.vm*,*.nvram,*.rcore,*.swp,*.swap,lzo,litmain.sh,*.orig,.histfile.*,.xsession-errors*,*.map,*.so,*.a,*.db,*.qrc,*.ini,*.init,*.img,*.vdi,*.vbox*,vbox.log,*.qcow2,*.vmdk,*.vhd,*.vhdx,*.sql,*.sql.gz,*.ytdl,*.tfstate*,*.class,*.pyc,*.pyo,*.elc,*.qmlc,*.jsc,*.fastq,*.fq,*.gb,*.fasta,*.fna,*.gbff,*.faa,po,CVS,.svn,.git,_darcs,.bzr,.hg,CMakeFiles,CMakeTmp,CMakeTmpQmake,.moc,.obj,.pch,.uic,.npm,.yarn,.yarn-cache,__pycache__,node_modules,node_packages,nbproject,.terraform,.venv,venv,core-dumps,lost+found";
@@ -452,6 +452,13 @@ in {
         # Stacking mode
         "kwinrc"."TabBox"."SwitchingMode" = 1;
         "kwinrc"."TabBox"."MultiScreenMode" = 0;
+      };
+      hotkeys.commands = {
+        "systemsettings-shortcuts" = {
+          command = "kcm_shell6 kcm_keys";
+          keys = ["Meta+Shift+C"];
+          comment = "Open the System Settings on the shortcut dialog";
+        };
       };
     };
 
