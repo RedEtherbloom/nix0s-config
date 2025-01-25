@@ -275,7 +275,7 @@ in {
     # Incompability with vaapi-driver
     # See: https://github.com/elFarto/nvidia-vaapi-driver/issues/312
     # TODO: Reevaluate if open works now
-    open = false;
+    open = true;
   };
 
   sops.secrets."restic_server/private_certificate" = {
