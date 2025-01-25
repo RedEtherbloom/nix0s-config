@@ -112,6 +112,8 @@ in {
           "extensions.experimental.affinity" = attrsets.optionalAttrs cfg.vimMode {
             "vscodevim.vim" = 1;
           };
+          # Spellchecker is way to verbose. Unknown words will not get flagged this way
+          cSpell.reportUnknownWords = true;
           vim.handleKeys = {
             # Clara: Reenable filepicker(although we really need a good one for Vim in general)
             "<C-p>" = false;
