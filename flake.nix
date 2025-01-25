@@ -125,14 +125,15 @@
     )
     // {
       nixosConfigurations = let
-        specialArgs = {
-          inherit inputs self;
-        };
         defaultUsername = "inf";
         # Setup common home-manager and nixpkgs options
-        mkSystem = hostName: system: username:
+        mkSystem = hostName: system: username: let
+          specialArgs = {
+            inherit inputs self system;
+          };
+        in
           nixpkgs.lib.nixosSystem {
-            inherit specialArgs system;
+            inherit specialArgs;
 
             modules = [
               inputs.home-manager.nixosModules.home-manager
