@@ -54,10 +54,8 @@
     };
 
     nix-comfyui = {
-      # default
       # url = "github:dyscorv/nix-comfyui";
-      # pinned pr
-      url = "github:haras-unicorn/nix-comfyui?rev=d62188b88aa951468bd9890be79e0b0ac5aab77c";
+      url = "github:RedEtherbloom/nix-comfyui?ref=both-fixes-merged";
       inputs = {
         flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
