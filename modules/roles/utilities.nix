@@ -121,6 +121,8 @@ in {
           dust
           dua
           ncdu
+          # Rust based
+          yazi
         ]
         ++ lib.optionals cfg.networkUtils [
           dig
