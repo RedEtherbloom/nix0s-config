@@ -275,7 +275,7 @@ in {
     # Incompability with vaapi-driver
     # See: https://github.com/elFarto/nvidia-vaapi-driver/issues/312
     # TODO: Reevaluate if open works now
-    open = false;
+    open = true;
   };
 
   sops.secrets."restic_server/private_certificate" = {
@@ -398,14 +398,15 @@ in {
 
   # Copied from Bitwarden
   # TODO: Cross-sync bitwarden and secret store
-  sops.secrets."paperless/admin_password" = {
-    owner = "paperless";
-    format = "yaml";
-    sopsFile = "${inputs.our-secrets}/secrets/services/paperless.yaml";
-  };
+  # sops.secrets."paperless/admin_password" = {
+  #   owner = "paperless";
+  #   format = "yaml";
+  #   sopsFile = "${inputs.our-secrets}/secrets/services/paperless.yaml";
+  # };
 
   services.paperless = {
-    enable = true;
+    # For some reason broken today
+    enable = false;
     consumptionDirIsPublic = true;
     address = "0.0.0.0";
     port = 8150;
