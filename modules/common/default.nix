@@ -87,7 +87,7 @@ in {
       # };
 
       # Required for plymouth to work in luks
-      boot.initrd.systemd.enable = true;
+      # boot.initrd.systemd.enable = true;
       boot.plymouth.enable = lib.mkDefault true;
     })
   ];
