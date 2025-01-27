@@ -396,16 +396,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1737829618,
-        "narHash": "sha256-h8V4QXhSkYdYab3UOpT4fqHgOUHODvNX49mS1Ha3unk=",
-        "owner": "RedEtherbloom",
+        "lastModified": 1737885589,
+        "narHash": "sha256-Zf0hSrtzaM1DEz8//+Xs51k/wdSajticVrATqDrfQjg=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5300c9221b5d0cfbeed5cda0c9c4871c00263084",
+        "rev": "852ff1d9e153d8875a83602e03fdef8a63f0ecf8",
         "type": "github"
       },
       "original": {
-        "owner": "RedEtherbloom",
-        "ref": "nvidia",
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }

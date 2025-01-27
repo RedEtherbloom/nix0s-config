@@ -2,7 +2,7 @@
   description = "Flake for our infrastructure";
 
   inputs = {
-    nixpkgs.url = "github:RedEtherbloom/nixpkgs/nvidia";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
