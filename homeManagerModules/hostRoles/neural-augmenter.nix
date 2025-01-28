@@ -20,6 +20,7 @@ in {
     myOptions.hostRoles.graphical.enable = mkDefault true;
     myOptions.socials.enable = true;
     myOptions.roles.development.enable = true;
+    myOptions.roles.nvf.enable = true;
     myOptions.vscode.enable = true;
     myOptions.obsidian.enable = true;
     myOptions.taskwarrior = {

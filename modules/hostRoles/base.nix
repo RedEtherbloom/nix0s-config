@@ -2,8 +2,6 @@
   config,
   lib,
   inputs,
-  self,
-  specialArgs,
   ...
 }:
 with lib; let
@@ -36,8 +34,8 @@ in {
 
     # TODO: Figure out how to merge this with home-manager
     programs.neovim = {
-      enable = true;
-      defaultEditor = true;
+      enable = lib.mkDefault true;
+      defaultEditor = lib.mkDefault true;
     };
   };
 }

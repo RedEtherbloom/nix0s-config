@@ -80,6 +80,14 @@
     rimsort-pr = {
       url = "github:NixOS/nixpkgs?ref=pull/304943/head";
     };
+
+    nvf = {
+      url = "github:NotAShelf/nvf";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs = {
