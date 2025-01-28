@@ -54,8 +54,9 @@ in {
       };
 
       initExtra = ''
+        # FVim ignores Nix result/ symlink
         function fvim() {
-          fzf --query "$*" --multi --bind "enter:become(nvim {+})";
+          fd --type f --strip-cwd-prefix --exclude="result"/ | fzf --query "$*" --multi --bind "enter:become(nvim {+})";
         }
       '';
     };
