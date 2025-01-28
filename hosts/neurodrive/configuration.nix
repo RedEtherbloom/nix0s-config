@@ -72,7 +72,7 @@ in {
   # Cache for krita...
   programs.ccache.enable = true;
   nix.settings.extra-sandbox-paths = [config.programs.ccache.cacheDir];
-  #ä Although this may not work, as using krita directly here leads to a werid home-manager crash about stdenv. Maybe the CCache wrappers still needs to be added for this host?
+  # Although this may not work, as using krita directly here leads to a werid home-manager crash about stdenv. Maybe the CCache wrappers still needs to be added for this host?
   programs.ccache.packageNames = ["krita-unwrapped"];
 
   # Filesystems
@@ -277,6 +277,7 @@ in {
     # Incompability with vaapi-driver
     # See: https://github.com/elFarto/nvidia-vaapi-driver/issues/312
     # TODO: Reevaluate if open works now
+    # 28.01.25: Plasma is having a weird bug where everything but the cursor vanishes. Maaybe this is the cause?
     open = true;
   };
 
