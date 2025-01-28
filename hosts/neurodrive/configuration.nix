@@ -30,7 +30,9 @@ in {
       common-gpu-nvidia-nonprime
     ]);
 
-  nixpkgs.system = "x86_64-linux";
+
+  # Workaround due to weird graphics issues until https://github.com/NixOS/nixpkgs/issues/375730 is fixed
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_12;
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;
