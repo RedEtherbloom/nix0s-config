@@ -86,9 +86,10 @@ in {
       #   boot.plymouth.enable = false;
       # };
 
+      # Plymouth keeps crashing
       # Required for plymouth to work in luks
       # boot.initrd.systemd.enable = true;
-      boot.plymouth.enable = lib.mkDefault true;
+      # boot.plymouth.enable = lib.mkDefault true;
     })
   ];
 }
