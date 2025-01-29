@@ -455,7 +455,7 @@ in {
       };
       hotkeys.commands = {
         "systemsettings-shortcuts" = {
-          command = "kcm_shell6 kcm_keys";
+          command = "kcmshell6 kcm_keys";
           keys = ["Meta+Shift+C"];
           comment = "Open the System Settings on the shortcut dialog";
         };
