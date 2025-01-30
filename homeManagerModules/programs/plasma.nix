@@ -61,7 +61,7 @@ in {
           "kwin"."ExposeClass" = "Ctrl+F7";
           "kwin"."ExposeClassCurrentDesktop" = "Ctrl+F8,none,Toggle Present Windows (Window class on current desktop)";
           "kwin"."Grid View" = "Meta+G";
-          "kwin"."Kill Window" = "Meta+Ctrl+Esc,Alt+F4";
+          "kwin"."Kill Window" = "Meta+Ctrl+Esc, Kill Window";
           "kwin"."MinimizeAll" = "Meta+Shift+PgDown,none,MinimizeAll";
           # TODO: Revisit when using tablet
           "kwin"."Move Tablet to Next Output" = [];
@@ -196,7 +196,7 @@ in {
           "mediacontrol"."previousmedia" = "Media Previous";
           "mediacontrol"."stopmedia" = "Media Stop";
 
-          "kwin"."Window Close" = ["Alt+F4" "Meta+Shift+Q,Alt+F4,Close Window"];
+          "kwin"."Window Close" = ["Meta+X, Alt+F4" "Meta+Shift+Q,Alt+F4,Close Window"];
           "kwin"."Window Fullscreen" = "Ctrl+F11,,Make Window Fullscreen";
 
           # Clipboard
