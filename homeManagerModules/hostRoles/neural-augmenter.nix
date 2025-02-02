@@ -91,5 +91,11 @@ in {
       # Smooth scrolling
       MOZ_USE_XINPUT2 = "1";
     };
+
+    programs.rofi = {
+      enable = true;
+      terminal = "${config.programs.kitty.package}";
+      package = pkgs.rofi-wayland;
+    };
   };
 }
