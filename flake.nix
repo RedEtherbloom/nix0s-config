@@ -82,7 +82,7 @@
     };
 
     nvf = {
-      url = "github:NotAShelf/nvf";
+      url = "github:RedEtherbloom/nvf/js-format-fix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";

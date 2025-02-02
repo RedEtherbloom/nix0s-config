@@ -53,16 +53,6 @@ in {
           bash.enable = true;
           lua.enable = true;
         };
-
-        lsp.null-ls.sources.ts-format = lib.mkForce ''
-          table.insert(
-            ls_sources,
-            null_ls.builtins.formatting.prettier.with({
-              command = "${config.programs.nvf.settings.vim.languages.ts.format.package}/bin/prettier",
-              filetypes = { "typescript" , "javascript" },
-            })
-          )
-        '';
       };
     };
   };

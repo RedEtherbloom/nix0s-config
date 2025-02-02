@@ -695,15 +695,16 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1738275588,
-        "narHash": "sha256-u51BeYedYfIIArHDAq5YvpDzhTH201b7Da1DOoSTZcA=",
-        "owner": "NotAShelf",
+        "lastModified": 1738500039,
+        "narHash": "sha256-/btrLwD7UFgNWPxdewMdYYiI2GJxYipGnLuX7pRVAjc=",
+        "owner": "RedEtherbloom",
         "repo": "nvf",
-        "rev": "e5f6aa23ea63dcbf6c918157cf5b9c818286e958",
+        "rev": "5d2ff5b2fc8b9ece405b9b11f1a29a96e4306c3e",
         "type": "github"
       },
       "original": {
-        "owner": "NotAShelf",
+        "owner": "RedEtherbloom",
+        "ref": "js-format-fix",
         "repo": "nvf",
         "type": "github"
       }
