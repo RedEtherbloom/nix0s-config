@@ -62,6 +62,7 @@ in {
         visual_bell_color = "#0c0933";
         enable_audio_bell = "no";
         visual_bell_duration = 0.25;
+        cursor_trail = 3;
       };
     };
 
