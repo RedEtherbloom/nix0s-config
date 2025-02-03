@@ -176,7 +176,10 @@ in {
     })
     (mkIf cfg.direnv {
       # TODO: Cassea: Maybe use nix-direnv, the gcroot feature may be good or bad, depending on disk cache
-      programs.direnv.enable = true;
+      programs.direnv = {
+        enable = true;
+        nix-direnv.enable = true;
+      };
     })
     (mkIf cfg.go {
       programs.go.enable = true;
