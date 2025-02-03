@@ -84,6 +84,8 @@ in {
       gst_all_1.gst-plugins-bad
 
       imagemagick
+
+      tailscale
     ];
 
     # May not work due to https://github.com/nix-community/home-manager/issues/1011

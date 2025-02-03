@@ -56,5 +56,7 @@ in {
     };
 
     myOptions.roles.i2p.enable = true;
+
+    services.tailscale.enable = true;
   };
 }
