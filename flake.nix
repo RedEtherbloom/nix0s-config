@@ -82,7 +82,7 @@
     };
 
     nvf = {
-      url = "github:RedEtherbloom/nvf/js-format-fix";
+      url = "github:RedEtherbloom/nvf/feature-language-tex";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";

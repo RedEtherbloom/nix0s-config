@@ -695,16 +695,16 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1738500039,
-        "narHash": "sha256-/btrLwD7UFgNWPxdewMdYYiI2GJxYipGnLuX7pRVAjc=",
+        "lastModified": 1738623680,
+        "narHash": "sha256-/lcYZw3NIyrkpknyG7/6BfLqFzo8spHT94kXS8IwAEI=",
         "owner": "RedEtherbloom",
         "repo": "nvf",
-        "rev": "5d2ff5b2fc8b9ece405b9b11f1a29a96e4306c3e",
+        "rev": "9ec4a552d59c2eb6ab4e64ec7df3fd0cf70c16f6",
         "type": "github"
       },
       "original": {
         "owner": "RedEtherbloom",
-        "ref": "js-format-fix",
+        "ref": "feature-language-tex",
         "repo": "nvf",
         "type": "github"
       }
@@ -2346,16 +2346,17 @@
     "plugin-new-file-template-nvim": {
       "flake": false,
       "locked": {
-        "lastModified": 1721518222,
-        "narHash": "sha256-g0IjJrHRXw7U9goVLzVYUyHBSsDZGHMpi3YZPhg64zA=",
-        "owner": "otavioschwanck",
+        "lastModified": 1737325947,
+        "narHash": "sha256-7ooy0MtSFFGNyHSazLcPJzbOZ63mBh+6GE7JZea40Xg=",
+        "owner": "isaacST08",
         "repo": "new-file-template.nvim",
-        "rev": "6ac66669dbf2dc5cdee184a4fe76d22465ca67e8",
+        "rev": "dc3a58b1f490c86075c96670b9eb81370c2f2ca1",
         "type": "github"
       },
       "original": {
-        "owner": "otavioschwanck",
+        "owner": "isaacST08",
         "repo": "new-file-template.nvim",
+        "rev": "dc3a58b1f490c86075c96670b9eb81370c2f2ca1",
         "type": "github"
       }
     },
