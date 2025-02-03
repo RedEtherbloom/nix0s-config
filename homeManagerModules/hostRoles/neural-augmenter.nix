@@ -86,6 +86,9 @@ in {
       imagemagick
 
       tailscale
+
+      # Certificate creation
+      xca
     ];
 
     # May not work due to https://github.com/nix-community/home-manager/issues/1011

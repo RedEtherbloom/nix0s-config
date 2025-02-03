@@ -38,7 +38,9 @@
       "--exclude-file ${config.sops.secrets.resticExcludeFile.path}"
     ];
     extraOptions = [
-      "local.layout='autodetect' --cacert ${config.sops.secrets."restic_server/public_certificate".path}"
+      "local.layout='autodetect'"
+      # TODO: Redundant with central CA?
+      # --cacert ${config.sops.secrets."restic_server/public_certificate".path}"
     ];
     environmentFile = config.sops.secrets."resticRestOptions".path;
     createWrapper = true;

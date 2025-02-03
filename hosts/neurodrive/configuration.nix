@@ -5,8 +5,8 @@
   pkgs,
   ...
 }: let
-  restic_certificate = config.sops.secrets."restic_server/private_certificate".path;
-  restic_public_key = config.sops.secrets."restic_server/public_certificate".path;
+  restic_private_key = config.sops.secrets."restic_server/restic.key".path;
+  restic_public_certificate = "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.crt";
 in {
   imports =
     [
@@ -281,10 +281,10 @@ in {
     open = true;
   };
 
-  sops.secrets."restic_server/private_certificate" = {
+  sops.secrets."restic_server/restic.key" = {
     owner = "restic";
     format = "binary";
-    sopsFile = "${inputs.our-secrets}/secrets/neurodrive/restic_server/certificate.priv";
+    sopsFile = "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.key";
   };
 
   services.restic.server = {
@@ -295,9 +295,9 @@ in {
     extraFlags = [
       "--tls"
       "--tls-key"
-      restic_certificate
+      restic_private_key
       "--tls-cert"
-      restic_public_key
+      restic_public_certificate
     ];
   };
 

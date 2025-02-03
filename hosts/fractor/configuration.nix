@@ -8,8 +8,6 @@
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x230
 
-    ./restic.nix
-
     ../../modules
     ../../modules/common/ssh.nix
     # TODO: Remove once hm sops-nix supports secrets
