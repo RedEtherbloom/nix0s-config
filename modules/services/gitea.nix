@@ -39,7 +39,7 @@ in {
       enable = true;
       settings = {
         server = {
-          PROTOCOL = "http";
+          PROTOCOL = "https";
           DOMAIN = GITEA_DOMAIN;
           HTTP_PORT = GITEA_PORT;
           CERT_FILE = builtins.toString "${inputs.our-secrets}/secrets/services/gitea/gitea.crt)";
