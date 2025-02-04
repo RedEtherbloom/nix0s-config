@@ -52,6 +52,7 @@ in {
           python.enable = true;
           bash.enable = true;
           lua.enable = true;
+          tex.enable = true;
         };
       };
     };
