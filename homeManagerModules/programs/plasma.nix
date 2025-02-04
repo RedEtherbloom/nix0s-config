@@ -61,7 +61,7 @@ in {
           "kwin"."ExposeClass" = "Ctrl+F7";
           "kwin"."ExposeClassCurrentDesktop" = "Ctrl+F8,none,Toggle Present Windows (Window class on current desktop)";
           "kwin"."Grid View" = "Meta+G";
-          "kwin"."Kill Window" = "Meta+Ctrl+Esc, Kill Window";
+          "kwin"."Kill Window" = ["Meta+Ctrl+Esc" "Meta+Shift+X,Meta+Ctrl+Esc,Kill Window"];
           "kwin"."MinimizeAll" = "Meta+Shift+PgDown,none,MinimizeAll";
           # TODO: Revisit when using tablet
           "kwin"."Move Tablet to Next Output" = [];
@@ -196,7 +196,7 @@ in {
           "mediacontrol"."previousmedia" = "Media Previous";
           "mediacontrol"."stopmedia" = "Media Stop";
 
-          "kwin"."Window Close" = ["Meta+X, Alt+F4" "Meta+Shift+Q,Alt+F4,Close Window"];
+          "kwin"."Window Close" = ["Alt+F4" "Meta+Shift+Q" "Meta+X,Alt+F4,Close Window"];
           "kwin"."Window Fullscreen" = "Ctrl+F11,,Make Window Fullscreen";
 
           # Clipboard
@@ -452,6 +452,8 @@ in {
         # Stacking mode
         "kwinrc"."TabBox"."SwitchingMode" = 1;
         "kwinrc"."TabBox"."MultiScreenMode" = 0;
+        # Do not restore from previous session
+        "ksmserverrc"."General"."loginMode" = "emptySession";
       };
       hotkeys.commands = {
         "systemsettings-shortcuts" = {
