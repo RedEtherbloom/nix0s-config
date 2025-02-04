@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  pkgs,
   ...
 }:
 with lib; let
@@ -52,7 +53,27 @@ in {
           python.enable = true;
           bash.enable = true;
           lua.enable = true;
-          tex.enable = true;
+          tex = {
+            enable = true;
+            # TODO: Unsure how to set this up
+            build.enable = true;
+            lsp.texlab = {
+              forwardSearch.enable = true;
+              enable = true;
+              chktex = {
+                enable = true;
+                onEdit = true;
+                onOpenAndSave = true;
+              };
+            };
+            # Package gets automatically setup from enabled viewer
+            pdfViewer = {
+              okular = {
+                enable = true;
+                package = pkgs.kdePackages.okular;
+              };
+            };
+          };
         };
       };
     };
