@@ -13,6 +13,7 @@
     # TODO: Remove once hm sops-nix supports secrets
     ../../modules/common/taskwarrior-secrets.nix
 
+    ./restic.nix
     ./hardware-configuration.nix
   ];
 
