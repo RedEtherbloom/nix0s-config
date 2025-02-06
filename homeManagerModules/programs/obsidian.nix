@@ -39,7 +39,8 @@ in {
         home.packages = [obsidian-pull-shortcut];
         programs.plasma.hotkeys.commands = {
           "obsidian-pull-shortcut" = {
-            command = obsidian-pull-shortcut;
+            # .name to avoid the path breaking after rebuilt until logout
+            command = obsidian-pull-shortcut.name;
             keys = ["meta+o"];
             comment = "Pull and rebase Obsidian vault, drop into lazygit on failure";
           };

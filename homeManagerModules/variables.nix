@@ -10,12 +10,11 @@
     then "localhost"
     else wireguardHost.mainIP;
   own-hm-data-directory = "${config.xdg.dataHome}/data-for-home-manager";
-  lazygitCommandWindow = name: location: let
-    command = pkgs.writeShellScriptBin "commandWindow-lazygit-${name}.sh" ''
+  lazygitCommandWindow = name: location:
+    pkgs.writeShellScriptBin "commandWindow-lazygit-${name}.sh" ''
       set -e
-      kitty zsh -c "cd ${location} && git pull && notify-send \"Sync worked without problem\" --expire-time=2000 || lazygit"
+      kitty zsh -c "cd ${location} && git pull && notify-send \"Sync worked without problem for location $(basename ${location})\" --expire-time=2000 || lazygit"
     '';
-  in "${command}";
 in {
   xdg.dataFile."${builtins.baseNameOf own-hm-data-directory}/.keep".text = "";
 
