@@ -22,6 +22,8 @@ in {
       enable = true;
       polarity = "dark";
       targets.grub.useImage = true;
+      # Workaround for bug https://github.com/danth/stylix/issues/835
+      targets.qt.platform = "kde";
     };
 
     # Open the ports for KDE-Connect and install it here as well.
