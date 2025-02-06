@@ -30,7 +30,6 @@ in {
       common-gpu-nvidia-nonprime
     ]);
 
-
   # Workaround due to weird graphics issues until https://github.com/NixOS/nixpkgs/issues/375730 is fixed
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_12;
   nixpkgs.config = {
@@ -401,15 +400,15 @@ in {
 
   # Copied from Bitwarden
   # TODO: Cross-sync bitwarden and secret store
-  # sops.secrets."paperless/admin_password" = {
-  #   owner = "paperless";
-  #   format = "yaml";
-  #   sopsFile = "${inputs.our-secrets}/secrets/services/paperless.yaml";
-  # };
+  sops.secrets."paperless/admin_password" = {
+    owner = "paperless";
+    format = "yaml";
+    sopsFile = "${inputs.our-secrets}/secrets/services/paperless.yaml";
+  };
 
   services.paperless = {
     # For some reason broken today
-    enable = false;
+    enable = true;
     consumptionDirIsPublic = true;
     address = "0.0.0.0";
     port = 8150;
