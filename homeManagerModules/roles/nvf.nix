@@ -7,6 +7,7 @@
 }:
 with lib; let
   cfg = config.myOptions.roles.nvf;
+  inherit (inputs.nvf.lib.nvim.binds) mkKeymap;
 in {
   options.myOptions.roles.nvf.enable = mkOption {
     description = "Enable the nvf NeoVim configuration suite for home-manager";
@@ -33,6 +34,7 @@ in {
         telescope.enable = true;
         autocomplete.nvim-cmp.enable = true;
 
+        keymaps = [(mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {desc = "Open Telescopes built in keymap";})];
         languages = {
           enableFormat = true;
           enableLSP = true;
