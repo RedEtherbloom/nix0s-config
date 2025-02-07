@@ -132,7 +132,7 @@
       aircrack-ng
     ];
   };
-  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/kaiju_girl.jpg";
+  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
 
   services.avahi = {
     enable = true;
