@@ -24,6 +24,11 @@ in {
     programs.nvf = {
       enable = true;
       settings.vim = {
+        options = {
+          shiftwidth = 2;
+          tabstop = 2;
+          expandtab = true;
+        };
         viAlias = true;
         vimAlias = true;
         # Redundant?
