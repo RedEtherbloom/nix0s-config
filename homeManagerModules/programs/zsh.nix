@@ -51,6 +51,8 @@ in {
         copy_captive_portal_ip = "captive_portal_ip | wl-copy";
 
         lz = "lazygit";
+
+        sync_obsidian_smartphone = "kitten ssh user@10.69.0.5 -p 8022 -t '/data/data/com.termux/files/home/scripts/obsidian-sync.sh && exit || $SHELL'";
       };
 
       initExtra = ''
