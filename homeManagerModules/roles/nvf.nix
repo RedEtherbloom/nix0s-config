@@ -33,6 +33,7 @@ in {
         vimAlias = true;
         # Redundant?
         lsp.enable = true;
+        binds.cheatsheet.nvim-cheatsheet.enable = true;
 
         # Copied from Vimjoyer
         statusline.lualine.enable = true;
