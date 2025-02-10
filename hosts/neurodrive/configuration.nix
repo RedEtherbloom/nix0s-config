@@ -419,7 +419,9 @@ in {
         ".DS_STORE/*"
         "desktop.ini"
       ];
-      PAPERLESS_OCR_LANGUAGE = "deu+eng";
+      PAPERLESS_OCR_LANGUAGE = "eng+deu";
+      # Sadly incompatible with deskew
+      PAPERLESS_OCR_MODE = "redo";
       PAPERLESS_OCR_USER_ARGS = {
         optimize = 1;
         pdfa_image_compression = "lossless";
