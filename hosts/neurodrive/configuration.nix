@@ -35,6 +35,7 @@ in {
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;
+    cudaArches = ["sm_75"];
   };
   # Eve: Host-specific package overrides
   nixpkgs.overlays = [
@@ -196,9 +197,9 @@ in {
 
   environment.systemPackages = with pkgs; [
     cachix
-    cudaPackages.cudatoolkit
-    cudaPackages.cudnn
-    nvtopPackages.full
+                # cudaPackages.cudatoolkit
+                # cudaPackages.cudnn
+                # nvtopPackages.full
     dive # look into docker image layers
     podman-tui # status of containers in the terminal
     docker-compose # start group of containers for dev
