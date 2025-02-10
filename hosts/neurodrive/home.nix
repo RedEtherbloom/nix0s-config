@@ -47,6 +47,7 @@ in {
         gsmartcontrol
         kdePackages.plasma-disks
         lmstudio
+        sillytavern
       ];
 
       myOptions.solaar = {

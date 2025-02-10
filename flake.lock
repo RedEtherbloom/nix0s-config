@@ -3580,6 +3580,7 @@
         "raspberry-pi-nix": "raspberry-pi-nix",
         "rimsort-pr": "rimsort-pr",
         "sergv-nixos-config": "sergv-nixos-config",
+        "sillytavern": "sillytavern",
         "sops-nix": "sops-nix",
         "stylix": "stylix"
       }
@@ -3739,6 +3740,23 @@
         "owner": "sergv",
         "repo": "nixos-config",
         "rev": "9c6306c86af6130f76d277e382c346360ec124dd",
+        "type": "github"
+      }
+    },
+    "sillytavern": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1735906273,
+        "narHash": "sha256-BsnXIyfPF1D334tPtuK79259xnnZ5ElN87Rw7kR4wnU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "fd1047463d0c13595799f7554b80930a7ce1593c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "pull/370468/head",
+        "repo": "nixpkgs",
         "type": "github"
       }
     },

@@ -7,9 +7,14 @@
     config.allowUnfree = true;
     inherit (prev) system;
   };
+
+  sillytavern = import inputs.sillytavern {
+    config.allowUnfree = true;
+    inherit (prev) system;
+  };
 in {
-  fritz-logger = prev.callPackage ./scripts/python/fritz-logger/default.nix {};
-  byar-launcher = prev.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
+  fritz-logger = final.callPackage ./scripts/python/fritz-logger/default.nix {};
+  byar-launcher = final.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
 
   # Current fix
   git-sync = prev.git-sync.overrideAttrs {
@@ -32,4 +37,5 @@ in {
       };
     };
   inherit (rimsort-pr) rimsort;
+  inherit (sillytavern) sillytavern;
 }
