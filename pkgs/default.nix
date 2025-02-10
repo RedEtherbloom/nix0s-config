@@ -12,6 +12,9 @@
     config.allowUnfree = true;
     inherit (prev) system;
   };
+  koboldcpp_with_psutil = prev.koboldcpp.overrideAttrs (pythonFinal: pythonPrev: {
+    pythonInputs = pythonPrev.pythonInputs ++ (builtins.attrValues {inherit (prev.python3Packages) psutil;});
+  });
 in {
   fritz-logger = final.callPackage ./scripts/python/fritz-logger/default.nix {};
   byar-launcher = final.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
@@ -36,6 +39,9 @@ in {
         argostranslate = pythonPrev.argostranslate.override {ctranslate2-cpp = patchedCtranslate;};
       };
     };
+
+  koboldcpp = koboldcpp_with_psutil.override {inherit (prev.config) cudaArches;};
+
   inherit (rimsort-pr) rimsort;
   inherit (sillytavern) sillytavern;
 }
