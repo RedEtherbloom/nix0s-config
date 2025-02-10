@@ -88,12 +88,20 @@
         flake-utils.follows = "flake-utils";
       };
     };
+
+    lix = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
-    flake-utils,
     nixpkgs,
+    home-manager,
+    sops-nix,
+    lix,
+    flake-utils,
     nix-comfyui,
     nix-vscode-extensions,
     ...
@@ -145,8 +153,9 @@
             inherit specialArgs;
 
             modules = [
-              inputs.home-manager.nixosModules.home-manager
-              inputs.sops-nix.nixosModules.sops
+              home-manager.nixosModules.home-manager
+              sops-nix.nixosModules.sops
+              lix.nixosModules.default
 
               {nixpkgs = {inherit (nixpkgsConfig) overlays config;};}
 

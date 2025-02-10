@@ -30,7 +30,8 @@ in {
           experimental-features = [
             "nix-command"
             "flakes"
-            "pipe-operators"
+            # Not yet supported by Lix?
+            #"pipe-operators"
           ];
         };
         gc = {
