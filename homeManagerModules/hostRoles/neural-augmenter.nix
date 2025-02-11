@@ -30,7 +30,7 @@ in {
     };
     myOptions.taskwarrior-tui = {
       enable = true;
-      package = with pkgs; (taskwarrior-tui.overrideAttrs (oldAttrs: rec {
+      package = with pkgs; (taskwarrior-tui.overrideAttrs (finalAttrs: oldAttrs: rec {
         version = oldAttrs.version + "-fix";
 
         src = (
@@ -42,13 +42,10 @@ in {
           }
         );
 
-        cargoDeps = oldAttrs.cargoDeps.overrideAttrs (
-          lib.const {
-            name = "taskwarrior-tui-vendor.tar.gz";
-            inherit src;
-            outputHash = "sha256-jtVUXWVrBq6xS4y9HKz+JtXHc6LvIk0cC7xmiPB1+ro=";
-          }
-        );
+        cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+          inherit src;
+          hash = "sha256-7q85YszWmetjWry9nvc2irQeLFCWHwOAkEUHtc9CK/c=";
+        };
       }));
     };
 
