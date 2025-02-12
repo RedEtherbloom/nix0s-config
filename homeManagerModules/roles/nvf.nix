@@ -40,7 +40,7 @@ in {
         telescope = {
           enable = true;
           setupOpts.defaults = {
-            path_display = ["smart"];
+            path_display = ["shorten"];
             # Copied and modified from https://www.reddit.com/r/neovim/comments/0f7nkbe/comment/lle1nbc/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=sha
             # TODO: I want something less buggy than telescope that has built in multi-open
             # TODO: Extract function and set for both normal and insert mode
