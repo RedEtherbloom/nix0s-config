@@ -35,7 +35,7 @@ in {
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;
-    cudaArches = ["sm_75"];
+    cudaCapabilities = ["7.5"];
   };
   # Eve: Host-specific package overrides
   nixpkgs.overlays = [
