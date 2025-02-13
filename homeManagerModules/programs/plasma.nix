@@ -196,7 +196,7 @@ in {
           "mediacontrol"."previousmedia" = "Media Previous";
           "mediacontrol"."stopmedia" = "Media Stop";
 
-          "kwin"."Window Close" = ["Alt+F4" "Meta+Shift+Q" "Meta+X,Alt+F4,Close Window"];
+          "kwin"."Window Close" = ["Meta+X,Alt+F4" "Meta+Shift+Q" "Alt+F4,Close Window"];
           "kwin"."Window Fullscreen" = "Ctrl+F11,,Make Window Fullscreen";
 
           # Clipboard
@@ -284,8 +284,8 @@ in {
           "kwin"."KrohnkiteNextLayout" = "Meta+:";
           "kwin"."KrohnkitePreviousLayout" = "Meta+;";
           "kwin"."KrohnkiteQuarterLayout" = [];
-          "kwin"."KrohnkiteRotate" = [];
-          "kwin"."KrohnkiteRotatePart" = [];
+          "kwin"."KrohnkiteRotate" = "Meta+#";
+          "kwin"."KrohnkiteRotatePart" = "Meta+'";
           "kwin"."KrohnkiteSetMaster" = "Meta+Return";
           "kwin"."KrohnkiteShiftDown" = "Meta+Shift+J";
           "kwin"."KrohnkiteShiftLeft" = "Meta+Shift+H";
