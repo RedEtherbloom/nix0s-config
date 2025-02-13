@@ -33,7 +33,10 @@ in {
         vimAlias = true;
         # Redundant?
         lsp.enable = true;
-        binds.cheatsheet.enable = true;
+        binds = {
+          cheatsheet.enable = true;
+          whichKey.enable = true;
+        };
 
         # Copied from Vimjoyer
         statusline.lualine.enable = true;
@@ -111,6 +114,24 @@ in {
                 package = pkgs.kdePackages.okular;
               };
             };
+          };
+        };
+        # Color picker
+        utility = {
+          ccc.enable = true;
+          motion = {
+            leap.enable = true;
+            precognition.enable = true;
+          };
+        };
+        lazy.plugins = {
+          vim-be-good = {
+            package = pkgs.vimPlugins.vim-be-good;
+            # Not needed?
+            # setupModule = "???";
+            setupOpts = {};
+
+            cmd = ["VimBeGood"];
           };
         };
       };
