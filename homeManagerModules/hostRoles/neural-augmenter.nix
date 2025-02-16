@@ -56,7 +56,7 @@ in {
       (chromium.override {enableWideVine = true;})
       tor-browser
       bitwarden
-      bitwarden-cli
+      # bitwarden-cli
 
       comfyuiPackages.krita-with-extensions
       yt-dlp
