@@ -174,7 +174,7 @@ in {
           "org_kde_powerdevil"."Turn Off Screen" = [];
           "org_kde_powerdevil"."powerProfile" = ["Battery" "Meta+B,Battery" "Meta+B,Switch Power Profile"];
 
-          "plasmashell"."activate application launcher" = ["Meta,Meta" "Alt+F1,Activate Application Launcher"];
+          "plasmashell"."activate application launcher" = ["Meta" "Alt+F1,Activate Application Launcher"];
           "plasmashell"."activate task manager entry 1" = [];
           "plasmashell"."activate task manager entry 2" = [];
           "plasmashell"."activate task manager entry 3" = [];
@@ -196,7 +196,8 @@ in {
           "mediacontrol"."previousmedia" = "Media Previous";
           "mediacontrol"."stopmedia" = "Media Stop";
 
-          "kwin"."Window Close" = ["Meta+X,Alt+F4" "Meta+Shift+Q" "Alt+F4,Close Window"];
+          # TODO: Lookup format after stylix issue got resolved
+          "kwin"."Window Close" = ["Meta+X" "Meta+Shift+Q" "Alt+F4,Close Window"];
           "kwin"."Window Fullscreen" = "Ctrl+F11,,Make Window Fullscreen";
 
           # Clipboard
