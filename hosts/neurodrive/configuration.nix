@@ -193,7 +193,7 @@ in {
       "dialout"
     ];
   };
-  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
+  stylix.image = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/ScarletTree/contents/images_dark/5120x2880.png";
 
   environment.systemPackages = with pkgs; [
     cachix
