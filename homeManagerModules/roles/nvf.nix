@@ -108,11 +108,13 @@ in {
           ts.enable = true;
           nu.enable = true;
           # TODO: Needs nightly check and formatting set up etc. Also check out the options
-          rust.enable = true;
+          rust = {
+            enable = true;
+            crates.enable = true;
+          };
           go.enable = true;
           python.enable = true;
           bash.enable = true;
-          lua.enable = true;
           tex = {
             enable = true;
             # TODO: Unsure how to set this up
@@ -134,6 +136,11 @@ in {
               };
             };
           };
+          lua = {
+            enable = true;
+            lsp.lazydev.enable = true;
+          };
+          markdown.enable = true;
         };
         # Color picker
         utility = {
