@@ -53,6 +53,10 @@ in {
         lz = "lazygit";
 
         sync_obsidian_smartphone = "kitten ssh user@10.69.0.5 -p 8022 -t '/data/data/com.termux/files/home/scripts/obsidian-sync.sh && exit || $SHELL'";
+
+        awaken = "";
+        my = "";
+        masters = "xdg-open 'https://www.youtube.com/watch?v=ZDEbsZpweDo&pp=ygUSYXdha2VuIG15IG1hc3RlcnMg' && sleep 7 && git submodule update --init --recursive --verbose && git submodule status";
       };
 
       initExtra = ''
