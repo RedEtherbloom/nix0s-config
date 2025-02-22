@@ -86,7 +86,7 @@
     };
 
     nvf = {
-      url = "github:RedEtherbloom/nvf/feature-language-tex";
+      url = "github:isaacST08/nvf/feature-language-tex";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
