@@ -160,6 +160,38 @@ in {
             cmd = ["VimBeGood"];
           };
         };
+        extraPlugins = {
+          telescope-frecency-nvim = {
+            package = pkgs.vimPlugins.telescope-frecency-nvim;
+            after = "telescope";
+            setup = ''require('telescope').load_extension "frecency"'';
+          };
+          harpoon = {
+            package = pkgs.vimPlugins.harpoon2;
+            setup = "require('harpoon').setup {}";
+          };
+          pomo-nvim = {
+            package = pkgs.vimPlugins.pomo-nvim;
+            setup = "require('pomo').setup {}";
+          };
+        };
+        autopairs.nvim-autopairs.enable = true;
+        notes.obsidian = {
+          enable = true;
+          setupOpts = {
+            workspaces = [
+              {
+                name = "default";
+                path = "~/Documents/Obsidian/default/";
+              }
+            ];
+            daily_notes = {
+              date_format = "YYYY/MM/DD-ddd[+W]W";
+              folder = "~/Documents/Obsidian/default/01-Tracking/Daily/";
+              # Note: May need template specified
+            };
+          };
+        };
       };
     };
   };
