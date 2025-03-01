@@ -102,5 +102,20 @@ in {
 
     # Set terminal opacity using stlyix instead
     stylix.opacity.terminal = 0.8;
+
+    # Attempting to use fix from: https://github.com/danth/stylix/issues/835#issuecomment-2688284429
+    qt = {
+      enable = true;
+      platformTheme.package = with pkgs.kdePackages; [
+        plasma-integration
+        # I don't remember why I put this is here, maybe it fixes the theme of the system setttings
+        systemsettings
+      ];
+      style = {
+        package = pkgs.kdePackages.breeze;
+        name = lib.mkForce "Breeze";
+      };
+    };
+    systemd.user.sessionVariables = {QT_QPA_PLATFORMTHEME = "kde";};
   };
 }
