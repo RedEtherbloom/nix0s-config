@@ -23,6 +23,7 @@ in {
       starsector
 
       dxvk_2
+      lutris
     ];
   };
 }
