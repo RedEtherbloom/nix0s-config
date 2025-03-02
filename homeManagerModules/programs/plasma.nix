@@ -377,7 +377,8 @@ in {
         "kwinrc"."Windows"."ElectricBorderDelay" = 250;
         "kwinrc"."Windows"."ElectricBorders" = 1;
         "kwinrc"."Windows"."FocusPolicy" = "FocusFollowsMouse";
-        "kwinrc"."Windows"."NextFocusPrefersMouse" = true;
+        # Disable Mouse precedence mode. Hopefully should make application launcher more usable
+        "kwinrc"."Windows"."NextFocusPrefersMouse" = false;
         "kwinrc"."Xwayland"."Scale" = 1;
         "kxkbrc"."Layout"."DisplayNames" = ",,";
         "kxkbrc"."Layout"."LayoutList" = "de,de,de";
