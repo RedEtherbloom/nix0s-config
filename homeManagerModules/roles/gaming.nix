@@ -24,6 +24,7 @@ in {
 
       dxvk_2
       lutris
+      wineWowPackages.stable
     ];
   };
 }
