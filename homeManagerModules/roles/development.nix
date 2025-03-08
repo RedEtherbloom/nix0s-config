@@ -153,6 +153,9 @@ in {
           esphome
           esptool
           platformio
+          arduino-ide
+          arduino-cli
+          arduinoOTA
         ];
     }
     (mkIf cfg.git {

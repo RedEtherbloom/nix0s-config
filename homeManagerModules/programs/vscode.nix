@@ -83,6 +83,11 @@ in {
           ++ lib.optionals cfg_development.go [
             golang.go
           ]
+          ++ lib.optionals cfg_development.mcu [
+            platformio.platformio-vscode-ide
+            # Dependency of platformio
+            ms-vscode.cpptools
+          ]
       );
       userSettings = lib.mkMerge [
         {
