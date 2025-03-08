@@ -15,8 +15,17 @@ in {
   options.myOptions.hostRoles.neural-augmenter.enable = mkEnableOption "workstation options";
 
   config = mkIf cfg.enable {
-    myOptions.hostRoles.graphical.enable = lib.mkDefault true;
-    myOptions.office.enable = true;
+    myOptions = {
+      hostRoles.graphical.enable = lib.mkDefault true;
+      office.enable = true;
+      utilities = {
+        rescueTools = true;
+        binaryTools = true;
+        pdfUtils = true;
+        diskUtilities = true;
+      };
+      roles.i2p.enable = true;
+    };
 
     stylix = {
       enable = true;
@@ -26,19 +35,29 @@ in {
       targets.qt.platform = "kde";
     };
 
-    # Open the ports for KDE-Connect and install it here as well.
-    # HM can't open ports sadly.
-    programs.kdeconnect = {
-      enable = true;
-      package = mkForce pkgs.kdePackages.kdeconnect-kde;
+    programs = {
+      # Open the ports for KDE-Connect and install it here as well.
+      # HM can't open ports sadly.
+      kdeconnect = {
+        enable = true;
+        package = mkForce pkgs.kdePackages.kdeconnect-kde;
+      };
+
+      adb.enable = true;
+
+      # TODO: Maybe turn this into a home-manager option
+      gnupg.agent = {
+        enable = true;
+        pinentryPackage = pkgs.pinentry-qt;
+      };
     };
 
-    programs.adb.enable = true;
+    services = {
+      tailscale.enable = true;
 
-    # TODO: Maybe turn this into a home-manager option
-    programs.gnupg.agent = {
-      enable = true;
-      pinentryPackage = pkgs.pinentry-qt;
+      udev.packages = with pkgs; [
+        platformio-core
+      ];
     };
 
     environment.systemPackages = with pkgs; [
@@ -49,16 +68,5 @@ in {
 
       lm_sensors
     ];
-
-    myOptions.utilities = {
-      rescueTools = true;
-      binaryTools = true;
-      pdfUtils = true;
-      diskUtilities = true;
-    };
-
-    myOptions.roles.i2p.enable = true;
-
-    services.tailscale.enable = true;
   };
 }
