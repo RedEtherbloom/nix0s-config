@@ -29,66 +29,72 @@ in {
       enableUpdateCheck = false;
       mutableExtensionsDir = false;
       enableExtensionUpdateCheck = false;
-      extensions = (
-        with pkgs.vscode-extensions;
-          [
-            mhutchie.git-graph
-            donjayamanne.githistory
-            eamodio.gitlens
-            ms-vscode-remote.remote-ssh
-            mkhl.direnv
-            streetsidesoftware.code-spell-checker
-            redhat.vscode-yaml
-            bierner.markdown-mermaid
-            jebbs.plantuml
-            hediet.vscode-drawio
-            pkgs.vscode-marketplace.wenfangdu.snippet-generator
-            christian-kohler.path-intellisense
-          ]
-          ++ lib.optionals cfg.vimMode [
-            vscodevim.vim
-          ]
-          ++ lib.optionals cfg_development.vscode-accessibility [
-            oderwat.indent-rainbow
-          ]
-          ++ lib.optionals cfg_development.nix [
-            jnoortheen.nix-ide
-            arrterian.nix-env-selector
-          ]
-          ++ lib.optionals cfg_development.python [
-            ms-python.python
-            ms-python.flake8
-          ]
-          ++ lib.optionals cfg_development.docker [
-            ms-azuretools.vscode-docker
-          ]
-          ++ lib.optionals cfg_development.rust [
-            vadimcn.vscode-lldb
-            rust-lang.rust-analyzer
-            tamasfe.even-better-toml
-          ]
-          ++ lib.optionals cfg_development.java [
-            vscjava.vscode-java-pack
-          ]
-          ++ lib.optionals cfg_development.openscad [
-            antyos.openscad
-          ]
-          ++ lib.optionals cfg_development.github [
-            github.vscode-github-actions
-          ]
-          ++ lib.optionals cfg_development.copilot [
-            github.copilot
-            github.copilot-chat
-          ]
-          ++ lib.optionals cfg_development.go [
-            golang.go
-          ]
-          ++ lib.optionals cfg_development.mcu [
-            platformio.platformio-vscode-ide
-            # Dependency of platformio
-            ms-vscode.cpptools
-          ]
-      );
+      extensions = with pkgs.vscode-extensions;
+        [
+          mhutchie.git-graph
+          donjayamanne.githistory
+          eamodio.gitlens
+          ms-vscode-remote.remote-ssh
+          mkhl.direnv
+          streetsidesoftware.code-spell-checker
+          redhat.vscode-yaml
+          bierner.markdown-mermaid
+          jebbs.plantuml
+          hediet.vscode-drawio
+          pkgs.vscode-marketplace.wenfangdu.snippet-generator
+          christian-kohler.path-intellisense
+        ]
+        ++ lib.optionals cfg.vimMode [
+          vscodevim.vim
+        ]
+        ++ lib.optionals cfg_development.vscode-accessibility [
+          oderwat.indent-rainbow
+        ]
+        ++ lib.optionals cfg_development.nix [
+          jnoortheen.nix-ide
+          arrterian.nix-env-selector
+        ]
+        ++ lib.optionals cfg_development.python [
+          # I only want the single element
+          (builtins.head (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+            {
+              name = "python";
+              publisher = "ms-python";
+              version = "2025.2.0";
+              hash = "sha256-f573A/7s8jVfH1f3ZYZSTftrfBs6iyMWewhorX4Z0Nc=";
+            }
+          ]))
+          ms-python.flake8
+        ]
+        ++ lib.optionals cfg_development.docker [
+          ms-azuretools.vscode-docker
+        ]
+        ++ lib.optionals cfg_development.rust [
+          vadimcn.vscode-lldb
+          rust-lang.rust-analyzer
+          tamasfe.even-better-toml
+        ]
+        ++ lib.optionals cfg_development.java [
+          vscjava.vscode-java-pack
+        ]
+        ++ lib.optionals cfg_development.openscad [
+          antyos.openscad
+        ]
+        ++ lib.optionals cfg_development.github [
+          github.vscode-github-actions
+        ]
+        ++ lib.optionals cfg_development.copilot [
+          github.copilot
+          github.copilot-chat
+        ]
+        ++ lib.optionals cfg_development.go [
+          golang.go
+        ]
+        ++ lib.optionals cfg_development.mcu [
+          platformio.platformio-vscode-ide
+          # Dependency of platformio
+          ms-vscode.cpptools
+        ];
       userSettings = lib.mkMerge [
         {
           nix = {
