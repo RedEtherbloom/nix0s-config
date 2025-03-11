@@ -45,6 +45,7 @@ in {
             "15:00"
           ];
         };
+        settings.trusted-users = ["root" "@wheel" "inf"];
       };
       programs.nix-ld.enable = true;
       hardware.i2c.enable = true;
