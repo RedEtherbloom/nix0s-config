@@ -30,8 +30,9 @@ in {
       common-gpu-nvidia-nonprime
     ]);
 
+  system.stateVersion = "24.05";
   # Workaround due to weird graphics issues until https://github.com/NixOS/nixpkgs/issues/375730 is fixed
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_12;
+  # boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_12;
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;
@@ -39,7 +40,7 @@ in {
   };
   # Eve: Host-specific package overrides
   nixpkgs.overlays = [
-    (final: prev: {
+    (_: prev: {
       # Eve: Account for bug: https://fractalsoftworks.com/forum/index.php?topic=30633.0
       starsector = prev.starsector.overrideAttrs (oldAttrs: {
         buildInputs = oldAttrs.buildInputs ++ [pkgs.makeWrapper];
@@ -197,9 +198,9 @@ in {
 
   environment.systemPackages = with pkgs; [
     cachix
-                # cudaPackages.cudatoolkit
-                # cudaPackages.cudnn
-                # nvtopPackages.full
+    # cudaPackages.cudatoolkit
+    # cudaPackages.cudnn
+    # nvtopPackages.full
     dive # look into docker image layers
     podman-tui # status of containers in the terminal
     docker-compose # start group of containers for dev
@@ -431,9 +432,24 @@ in {
 
   services.esphome.enable = true;
 
-  system.stateVersion = "24.05";
   programs.alvr = {
     enable = true;
     openFirewall = true;
+  };
+
+  services.ollama = {
+    enable = true;
+    acceleration = "cuda";
+    host = "0.0.0.0";
+    # Privacy at home?
+    openFirewall = true;
+  };
+  services.nextjs-ollama-llm-ui = {
+    enable = true;
+    # May need to set CORS in ollama variables for VPN to work
+    hostname = "${config.networking.ownWireguard.hosts.neurodrive.mainIP}";
+    # Reasonably close to ollama
+    port = 11440;
+    # May have to set ollamURL to a VPN url
   };
 }
