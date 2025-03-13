@@ -98,6 +98,7 @@ in {
               types = ["statix" "deadnix"];
             };
             lsp = {
+              # TODO: Copy a nixd config
               server = "nil";
               # Broken at the moment
               # server = "nixd";
@@ -113,10 +114,19 @@ in {
           };
           ts.enable = true;
           nu.enable = true;
-          # TODO: Needs nightly check and formatting set up etc. Also check out the options
+          # TODO: Needs nightly check and formatting set up etc
           rust = {
             enable = true;
+            dap.enable = true;
             crates.enable = true;
+            lsp.opts = ''
+              ['rust-analyzer'] = {
+                  checkOnSave = true,
+                  procMacro = {
+                    enable = true,
+                  },
+                },
+            '';
           };
           go.enable = true;
           python.enable = true;
