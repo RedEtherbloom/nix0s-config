@@ -28,6 +28,8 @@ in {
           shiftwidth = 2;
           tabstop = 2;
           expandtab = true;
+          # Replace with one character
+          conceallevel = 1;
         };
         # TODO: Move this to options, if possible
         luaConfigRC.options = entryBetween ["optionscript"] ["basic"] ''
@@ -201,13 +203,27 @@ in {
               {
                 name = "default";
                 path = "~/Documents/Obsidian/default/";
+                overrides = {
+                  notes_dir = "00-Notes";
+                };
               }
             ];
             daily_notes = {
+              # Defined in the obsidian scripts folder
               date_format = "YYYY/MM/DD-ddd[+W]W";
-              folder = "~/Documents/Obsidian/default/01-Tracking/Daily/";
-              # Note: May need template specified
+              folder = "01-Tracking/Daily/";
+              template = "02-Templates/Day.md";
             };
+            templates.folder = "02-Templates";
+            new_notes_location = "current_dir";
+            # TODO: Add follow_link_function. Otherwise images etc. get ignored. Maybe they can be rendered inline some way?
+            # Force Obsidian to focus on :ObisidianOpen
+            open_app_foreground = true;
+            # TODO: May need to specify telescope etc. in picker
+            sort_by = "modified";
+            sort_reversed = true;
+            # TODO: may want to up search_max_lines from 1000 default iirc
+            attachments.img_folder = "XX-Files";
           };
         };
         keymaps = [(mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {desc = "Open Telescopes built in keymap";})];
