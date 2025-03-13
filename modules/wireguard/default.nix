@@ -11,7 +11,7 @@ with lib; let
   mainPrefix = "10.69.0.";
   unlockPrefix = "10.68.0.";
 
-  wireguardPeer = {...}: {
+  wireguardPeer = _: {
     options = {
       IP = mkOption {
         description = "IPv4 of the wireguard client";
@@ -24,7 +24,7 @@ with lib; let
       };
     };
   };
-  wireguardHost = {...}: {
+  wireguardHost = _: {
     options = {
       # For easier access
       mainIP = mkOption {
@@ -49,7 +49,7 @@ with lib; let
   generateWireguardPeer = prefix: lastIPDigit: publicKey: let
     peer = {
       IP = generateWithSuffix prefix lastIPDigit "32";
-      publicKey = publicKey;
+      inherit publicKey;
     };
   in
     peer;
@@ -77,22 +77,18 @@ in {
         type = with types; attrsOf (submodule wireguardHost);
         # TODO: Check if it still crashes if I move this back into the config block
         default = {
-          wireguardController = (
+          wireguardController =
             generateWireguardHost "1" "d6yoEQMbMy4M4h45sj28RrgKxYZXRxDHAJ5ASRKZMmQ="
-            "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8="
-          );
-          fractor = (
+            "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8=";
+          fractor =
             generateWireguardHost "2" "NVntZ0W1QVee6AwXHgp8oxBqxBDbZPeZiDQ4Af2RY3k="
-            "N+EOs047k67li395wKrt94mDMSK64SG6xfCXKgrzmAk="
-          );
-          neurodrive = (
+            "N+EOs047k67li395wKrt94mDMSK64SG6xfCXKgrzmAk=";
+          neurodrive =
             generateWireguardHost "3" "kEIYSz20OKCGyWcnXlRBSkWBt7DkjKhmb1Xu+0Kc3XY="
-            "3gMbw0t8dlUGUnRmmNJlNM75tKsygjpWYD/1fQaekXg="
-          );
-          audiosink = (
+            "3gMbw0t8dlUGUnRmmNJlNM75tKsygjpWYD/1fQaekXg=";
+          audiosink =
             generateWireguardHost "6" "bvDwdiRWJAXr3up4k+34w8ATqcx6t98jTnmSsjBVhFE="
-            "HvQA5s03k1w3dwTwjSR3/dasUeUNGD+fTskz///2nj0="
-          );
+            "HvQA5s03k1w3dwTwjSR3/dasUeUNGD+fTskz///2nj0=";
         };
       };
     };
@@ -111,58 +107,64 @@ in {
         sopsFile = "${inputs.our-secrets}/secrets/${config.networking.hostName}/wireguard/wg1.priv";
       };
 
-      networking.wireguard.interfaces = {
-        wg0 = {
-          ips = [cfg.currentHost.main.IP];
-          listenPort = 51820;
-          privateKeyFile = config.sops.secrets."wireguard/wg0_private".path;
-          peers = [
-            {
-              publicKey = cfg.hosts.wireguardController.main.publicKey;
-              allowedIPs = [
-                (generateWithSuffix mainPrefix "0" "24")
-              ];
-              endpoint = "51.15.91.213:51820";
-              persistentKeepalive = 25;
-            }
-          ];
+      networking = {
+        wireguard.interfaces = {
+          wg0 = {
+            ips = [cfg.currentHost.main.IP];
+            listenPort = 51820;
+            privateKeyFile = config.sops.secrets."wireguard/wg0_private".path;
+            peers = [
+              {
+                inherit (cfg.hosts.wireguardController.main) publicKey;
+                allowedIPs = [
+                  (generateWithSuffix mainPrefix "0" "24")
+                ];
+                endpoint = "51.15.91.213:51820";
+                persistentKeepalive = 25;
+              }
+            ];
+          };
+          wg1 = {
+            ips = [cfg.currentHost.unlock.IP];
+            listenPort = 51821;
+            privateKeyFile = config.sops.secrets."wireguard/wg1_private".path;
+            peers = [
+              {
+                inherit (cfg.hosts.wireguardController.unlock) publicKey;
+                allowedIPs = [
+                  (generateWithSuffix unlockPrefix "0" "24")
+                ];
+                endpoint = "51.15.91.213:51821";
+                persistentKeepalive = 25;
+              }
+            ];
+          };
         };
-        wg1 = {
-          ips = [cfg.currentHost.unlock.IP];
-          listenPort = 51821;
-          privateKeyFile = config.sops.secrets."wireguard/wg1_private".path;
-          peers = [
-            {
-              publicKey = cfg.hosts.wireguardController.unlock.publicKey;
-              allowedIPs = [
-                (generateWithSuffix unlockPrefix "0" "24")
-              ];
-              endpoint = "51.15.91.213:51821";
-              persistentKeepalive = 25;
-            }
-          ];
+
+        firewall = {
+          allowedUDPPorts =
+            lib.attrsets.mapAttrsToList (
+              _: value: value.listenPort
+            )
+            config.networking.wireguard.interfaces;
+
+          # Ports for e.g. comfyui
+          interfaces."wg0" = {
+            allowedTCPPortRanges = [
+              {
+                from = 8000;
+                to = 8999;
+              }
+            ];
+            allowedUDPPortRanges = [
+              {
+                from = 8000;
+                to = 8999;
+              }
+            ];
+          };
         };
       };
-
-      networking.firewall.allowedUDPPorts =
-        lib.attrsets.mapAttrsToList (
-          name: value: value.listenPort
-        )
-        config.networking.wireguard.interfaces;
-
-      # Ports for e.g. comfyui
-      networking.firewall.interfaces."wg0".allowedTCPPortRanges = [
-        {
-          from = 8000;
-          to = 8999;
-        }
-      ];
-      networking.firewall.interfaces."wg0".allowedUDPPortRanges = [
-        {
-          from = 8000;
-          to = 8999;
-        }
-      ];
     })
   ];
 }
