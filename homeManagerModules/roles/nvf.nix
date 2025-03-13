@@ -28,6 +28,7 @@ in {
           shiftwidth = 2;
           tabstop = 2;
           expandtab = true;
+          nomode = true;
         };
         viAlias = true;
         vimAlias = true;
@@ -38,8 +39,18 @@ in {
           whichKey.enable = true;
         };
 
-        # Copied from Vimjoyer
+        # TODO: Look over other mini utilities(https://notashelf.github.io/nvf/options.html#opt-vim.mini.align.enable)
+        mini.surround.enable = true;
+
+        terminal.toggleterm = {
+          enable = true;
+          lazygit.enable = true;
+        };
+
         statusline.lualine.enable = true;
+        # Why was this disabled?
+        tabline.nvimBufferline.enable = true;
+        syntaxHighlighting = true;
         telescope = {
           enable = true;
           setupOpts.defaults = {
