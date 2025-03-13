@@ -34,9 +34,8 @@ in {
         # TODO: Move this to options, if possible
         luaConfigRC.options = entryBetween ["optionscript"] ["basic"] ''
           vim.o.showmode = false
+          vim.o.swapfile = true
         '';
-        # I want swap files
-        preventJunkFiles = false;
         viAlias = true;
         vimAlias = true;
         searchCase = "smart";
