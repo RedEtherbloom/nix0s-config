@@ -38,5 +38,14 @@ in {
           ];
       };
     };
+
+    # SteamVR
+    networking.firewall.allowedUDPPorts = [
+      9944
+      27062
+    ];
+    networking.firewall.allowedTCPPorts = [
+      27062
+    ];
   };
 }

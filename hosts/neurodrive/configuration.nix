@@ -432,4 +432,8 @@ in {
   services.esphome.enable = true;
 
   system.stateVersion = "24.05";
+  programs.alvr = {
+    enable = true;
+    openFirewall = true;
+  };
 }

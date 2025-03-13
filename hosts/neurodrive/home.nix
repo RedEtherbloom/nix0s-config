@@ -48,6 +48,9 @@ in {
         kdePackages.plasma-disks
         lmstudio
         sillytavern
+
+        sidequest
+        immersed
       ];
 
       myOptions.solaar = {
