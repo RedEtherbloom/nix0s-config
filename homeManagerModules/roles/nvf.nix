@@ -8,11 +8,11 @@
 with lib; let
   cfg = config.myOptions.roles.nvf;
   inherit (inputs.nvf.lib.nvim.binds) mkKeymap;
+  inherit (inputs.nvf.lib.nvim.dag) entryBetween;
 in {
   options.myOptions.roles.nvf.enable = mkOption {
     description = "Enable the nvf NeoVim configuration suite for home-manager";
     type = with types; bool;
-    # TODO: Copy config state from NixOS option once we create it
     default = false;
   };
 
@@ -28,16 +28,15 @@ in {
           shiftwidth = 2;
           tabstop = 2;
           expandtab = true;
-          nomode = true;
         };
+        # TODO: Move this to options, if possible
+        luaConfigRC.options = entryBetween ["optionscript"] ["basic"] ''
+          vim.o.showmode = false
+        '';
+        # I want swap files
+        preventJunkFiles = false;
         viAlias = true;
         vimAlias = true;
-        # Redundant?
-        lsp.enable = true;
-        binds = {
-          cheatsheet.enable = true;
-          whichKey.enable = true;
-        };
 
         # TODO: Look over other mini utilities(https://notashelf.github.io/nvf/options.html#opt-vim.mini.align.enable)
         mini.surround.enable = true;
@@ -50,11 +49,10 @@ in {
         statusline.lualine.enable = true;
         # Why was this disabled?
         tabline.nvimBufferline.enable = true;
-        syntaxHighlighting = true;
         telescope = {
           enable = true;
           setupOpts.defaults = {
-            # TODO: Choose different problem
+            # TODO: Choose different strategy
             path_display = ["truncate"];
             # Copied and modified from https://www.reddit.com/r/neovim/comments/0f7nkbe/comment/lle1nbc/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=sha
             # TODO: I want something less buggy than telescope that has built in multi-open
@@ -85,22 +83,19 @@ in {
         };
         autocomplete.nvim-cmp.enable = true;
 
-        keymaps = [(mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {desc = "Open Telescopes built in keymap";})];
+        lsp.enable = true;
+        syntaxHighlighting = true;
         languages = {
           enableFormat = true;
           enableLSP = true;
           enableTreesitter = true;
-          # May end up quite large
           enableDAP = true;
 
           nix = {
             enable = true;
             extraDiagnostics = {
               enable = true;
-              types = [
-                "statix"
-                "deadnix"
-              ];
+              types = ["statix" "deadnix"];
             };
             lsp = {
               server = "nil";
@@ -128,7 +123,7 @@ in {
           bash.enable = true;
           tex = {
             enable = true;
-            # TODO: Unsure how to set this up
+            # TODO: Unsure how to trigger this
             build.enable = true;
             lsp.texlab = {
               forwardSearch.enable = true;
@@ -140,11 +135,9 @@ in {
               };
             };
             # Package gets automatically setup from enabled viewer
-            pdfViewer = {
-              okular = {
-                enable = true;
-                package = pkgs.kdePackages.okular;
-              };
+            pdfViewer.okular = {
+              enable = true;
+              package = pkgs.kdePackages.okular;
             };
           };
           lua = {
@@ -153,8 +146,8 @@ in {
           };
           markdown.enable = true;
         };
-        # Color picker
         utility = {
+          # Color picker
           ccc.enable = true;
           motion = {
             leap.enable = true;
@@ -164,10 +157,6 @@ in {
         lazy.plugins = {
           vim-be-good = {
             package = pkgs.vimPlugins.vim-be-good;
-            # Not needed?
-            # setupModule = "???";
-            setupOpts = {};
-
             cmd = ["VimBeGood"];
           };
         };
@@ -202,6 +191,11 @@ in {
               # Note: May need template specified
             };
           };
+        };
+        keymaps = [(mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {desc = "Open Telescopes built in keymap";})];
+        binds = {
+          cheatsheet.enable = true;
+          whichKey.enable = true;
         };
       };
     };
