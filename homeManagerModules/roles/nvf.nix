@@ -37,17 +37,25 @@ in {
         preventJunkFiles = false;
         viAlias = true;
         vimAlias = true;
+        searchCase = "smart";
 
         # TODO: Look over other mini utilities(https://notashelf.github.io/nvf/options.html#opt-vim.mini.align.enable)
-        mini.surround.enable = true;
+        mini = {
+          surround.enable = true;
+          # Disable too many lsp diagnostics
+          notify.enable = true;
+        };
 
         terminal.toggleterm = {
           enable = true;
           lazygit.enable = true;
         };
+        session.nvim-session-manager.enable = true;
+        snippets.luasnip.enable = true;
+        # TODO: Look what noice does
 
         statusline.lualine.enable = true;
-        # Why was this disabled?
+        # TODO: Are the buf outlines supposed to look so weird?
         tabline.nvimBufferline.enable = true;
         telescope = {
           enable = true;
