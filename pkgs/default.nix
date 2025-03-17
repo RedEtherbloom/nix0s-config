@@ -49,6 +49,30 @@ in {
       hash = "sha256-ocwNVdozZeF0hYDhYMshSbRHKfBFawIcO7UbTwk10xc=";
     };
   });
+
+  oscavmgr = prev.oscavmgr.overrideAttrs (finalAttrs: _: rec {
+    pname = "oscavmgr";
+    version = "0.4.4";
+
+    src = prev.fetchFromGitHub {
+      owner = "galister";
+      repo = "oscavmgr";
+      tag = "v${version}";
+      fetchSubmodules = true;
+      hash = "sha256-Tx4FuKKorQLkuhBUbQXtfsm8sFdLgQCgXiGQsfX+MQg=";
+    };
+
+    patches = [
+      ./oscavmgr-alvr.patch
+    ];
+
+    cargoDeps = prev.rustPlatform.fetchCargoVendor {
+      name = "${pname}-vendor.tar.gz";
+      inherit (finalAttrs) src patches;
+
+      hash = "sha256-waF0T3feKgFlFnO1ZMxAEe93Ek4yEpvSgBQHFt2BePc=";
+    };
+  });
   inherit (rimsort-pr) rimsort;
   inherit (sillytavern) sillytavern;
 }
