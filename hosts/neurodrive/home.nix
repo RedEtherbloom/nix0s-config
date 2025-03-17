@@ -51,6 +51,13 @@ in {
 
         sidequest
         immersed
+
+        # VRChat tools
+        oscavmgr
+        vrcadvert
+        vrcx
+        vrc-get
+        alcom
       ];
 
       myOptions.solaar = {
