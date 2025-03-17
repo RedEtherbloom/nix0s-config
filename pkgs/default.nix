@@ -31,6 +31,24 @@ in {
     pythonInputs = pythonPrev.pythonInputs ++ (builtins.attrValues {inherit (prev.python3Packages) psutil;});
   });
 
+  alvr = prev.alvr.overrideAttrs (finalAttrs: prevAttrs: rec {
+    pname = "alvr";
+    version = "20.12.0";
+
+    src = prev.fetchFromGitHub {
+      owner = "alvr-org";
+      repo = "ALVR";
+      tag = "v${version}";
+      fetchSubmodules = true;
+      hash = "sha256-4tilgZCUY5PehR0SQDOBahLaPVH4n5cgE7Ghw+SCgQk=";
+    };
+
+    cargoDeps = prev.rustPlatform.fetchCargoVendor {
+      name = "${pname}-vendor.tar.gz";
+      inherit (finalAttrs) src;
+      hash = "sha256-ocwNVdozZeF0hYDhYMshSbRHKfBFawIcO7UbTwk10xc=";
+    };
+  });
   inherit (rimsort-pr) rimsort;
   inherit (sillytavern) sillytavern;
 }
