@@ -259,6 +259,7 @@ in {
     modesetting.enable = true;
     powerManagement.enable = true;
     nvidiaSettings = true;
+    # Good or bad?
     package = config.boot.kernelPackages.nvidiaPackages.beta;
 
     # Fine-grained power management. Turns off GPU when not in use.
@@ -279,7 +280,7 @@ in {
     # See: https://github.com/elFarto/nvidia-vaapi-driver/issues/312
     # TODO: Reevaluate if open works now
     # 28.01.25: Plasma is having a weird bug where everything but the cursor vanishes. Maaybe this is the cause?
-    open = true;
+    open = false;
   };
 
   sops.secrets."restic_server/restic.key" = {
