@@ -55,15 +55,7 @@ in {
             arrterian.nix-env-selector
           ]
           ++ lib.optionals cfg_development.python [
-            # I only want the single element
-            (builtins.head (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-              {
-                name = "python";
-                publisher = "ms-python";
-                version = "2025.2.0";
-                hash = "sha256-f573A/7s8jVfH1f3ZYZSTftrfBs6iyMWewhorX4Z0Nc=";
-              }
-            ]))
+            ms-python.python
             ms-python.flake8
           ]
           ++ lib.optionals cfg_development.docker [
