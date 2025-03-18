@@ -151,6 +151,7 @@ in {
             lsp.lazydev.enable = true;
           };
           markdown.enable = true;
+          java.enable = true;
         };
         utility = {
           # Color picker
