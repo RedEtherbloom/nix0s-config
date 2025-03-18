@@ -44,7 +44,7 @@ in {
           "kmix"."mic_mute" = ["Microphone Mute" "Meta+Volume Mute,Microphone Mute" "Meta+Volume Mute,Mute Microphone"];
           "kmix"."mute" = "Volume Mute";
           "ksmserver"."Halt Without Confirmation" = "none,,Shut Down Without Confirmation";
-          "ksmserver"."Lock Session" = ["Meta+Del" "Screensaver,Meta+L" "Screensaver,Lock Session"];
+          "ksmserver"."Lock Session" = ["Meta+Del" "Screensaver" "Screensaver,Lock Session"];
           "ksmserver"."Log Out" = "Ctrl+Alt+Del";
           "ksmserver"."Log Out Without Confirmation" = "none,,Log Out Without Confirmation";
           "ksmserver"."LogOut" = "none,,Log Out";
