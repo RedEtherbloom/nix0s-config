@@ -121,7 +121,6 @@ in {
           nixfmt-rfc-style
           alejandra
           nh
-          nixd
           nil
           direnv
           nix-prefetch-scripts

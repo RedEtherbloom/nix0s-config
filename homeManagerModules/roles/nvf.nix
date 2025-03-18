@@ -106,20 +106,7 @@ in {
               enable = true;
               types = ["statix" "deadnix"];
             };
-            lsp = {
-              # TODO: Copy a nixd config
-              server = "nil";
-              # Broken at the moment
-              # server = "nixd";
-              options = {
-                #nixos = {
-                #  expr = ''(builtins.getFlake "${self}").nixosConfigurations.${osConfig.networking.hostName}.options'';
-                #};
-                # home_manager = {
-                #   expr = ''(builtins.getFlake "${self}").nixosConfigurations.${osConfig.networking.hostName}.options.home-manager.users.type.getSubOptions []'';
-                # };
-              };
-            };
+            lsp.server = "nil";
           };
           ts.enable = true;
           nu.enable = true;

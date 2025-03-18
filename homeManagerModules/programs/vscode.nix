@@ -99,20 +99,7 @@ in {
           {
             nix = {
               enableLanguageServer = true;
-              serverPath = "nixd";
-              serverSettings = {
-                nixd = {
-                  formatting.command = [self.formatter];
-
-                  options = let
-                    nixos = "(builtins.getFlake \"${self}\").nixosConfigurations.${osConfig.networking.hostName}.options";
-                  in {
-                    nixos.expr = nixos;
-                    # TODO: Rewrite flake.nix with homeManagerConfigurations in mind(read docs for that) as our own options are missing
-                    home-manager.expr = nixos + ".home-manager.users.type.getSubOptions []";
-                  };
-                };
-              };
+              serverPath = "nil";
             };
             git = {
               autofetch = true;

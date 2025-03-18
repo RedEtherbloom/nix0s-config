@@ -134,7 +134,7 @@
           packages =
             [formatter]
             ++ (with pkgs; [
-              nixd
+              nil
               nix-output-monitor
               nh
             ]);
