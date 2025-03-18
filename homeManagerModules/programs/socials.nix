@@ -21,6 +21,7 @@ in {
         withOpenASAR = true;
         withVencord = true;
       })
+      vesktop
       element-desktop
       telegram-desktop
       threema-desktop
