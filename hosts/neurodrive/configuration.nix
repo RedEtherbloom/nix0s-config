@@ -259,8 +259,8 @@ in {
     modesetting.enable = true;
     powerManagement.enable = true;
     nvidiaSettings = true;
-    # Good or bad?
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    # Maybe nvenc gets fixed this way
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
