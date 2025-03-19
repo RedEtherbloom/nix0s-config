@@ -91,8 +91,10 @@ in {
           };
         };
         autocomplete.nvim-cmp.enable = true;
-
-        lsp.enable = true;
+        lsp = {
+          enable = true;
+          trouble.enable = true;
+        };
         syntaxHighlighting = true;
         languages = {
           enableFormat = true;
