@@ -441,7 +441,7 @@ in {
         "kwinrc"."Script-krohnkite"."enableStackedLayout" = true;
         # TODO: Floating windows should be above others. Check.
         "kwinrc"."Script-krohnkite"."floatedWindowsLayer" = 2;
-        "kwinrc"."Script-krohnkite"."monocleMaximize" = false;
+        "kwinrc"."Script-krohnkite"."monocleMaximize" = true;
         "kwinrc"."Script-krohnkite"."screenGapBottom" = 3;
         "kwinrc"."Script-krohnkite"."screenGapLeft" = 6;
         "kwinrc"."Script-krohnkite"."screenGapRight" = 6;
