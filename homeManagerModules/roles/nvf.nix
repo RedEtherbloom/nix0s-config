@@ -31,6 +31,16 @@ in {
           # Replace with one character
           conceallevel = 1;
         };
+        keymaps = [
+          {
+            mode = ["i"];
+            key = "jj";
+            action = "<Esc>";
+            desc = "Exit insert mode";
+            silent = true;
+          }
+          (mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {desc = "Open Telescopes built in keymap";})
+        ];
         # TODO: Move this to options, if possible
         luaConfigRC.options = entryBetween ["optionscript"] ["basic"] ''
           vim.o.showmode = false
@@ -39,6 +49,10 @@ in {
         viAlias = true;
         vimAlias = true;
         searchCase = "smart";
+        binds = {
+          cheatsheet.enable = true;
+          whichKey.enable = true;
+        };
 
         # TODO: Look over other mini utilities(https://notashelf.github.io/nvf/options.html#opt-vim.mini.align.enable)
         mini = {
@@ -199,6 +213,7 @@ in {
             ];
             daily_notes = {
               # Defined in the obsidian scripts folder
+              # TODO: Lookup how to actually trigger fromat
               date_format = "YYYY/MM/DD-ddd[+W]W";
               folder = "01-Tracking/Daily/";
               template = "02-Templates/Day.md";
@@ -215,11 +230,9 @@ in {
             attachments.img_folder = "XX-Files";
           };
         };
-        keymaps = [(mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {desc = "Open Telescopes built in keymap";})];
-        binds = {
-          cheatsheet.enable = true;
-          whichKey.enable = true;
-        };
+        # TODO: Setup local or with Mistral
+        # TODO: Enable after texlab has been merged
+        # assistant.codecompanion-nvim.enable = true;
       };
     };
   };
