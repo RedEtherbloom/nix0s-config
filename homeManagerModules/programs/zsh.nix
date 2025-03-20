@@ -16,61 +16,63 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.zsh = {
-      enable = true;
-      enableCompletion = true;
-      autosuggestion = {
+    programs = {
+      zsh = {
         enable = true;
-      };
-      syntaxHighlighting = {
-        enable = true;
-      };
-      oh-my-zsh = {
-        enable = true;
-        theme = "random";
+        enableCompletion = true;
+        autosuggestion = {
+          enable = true;
+        };
+        syntaxHighlighting = {
+          enable = true;
+        };
+        oh-my-zsh = {
+          enable = true;
+          theme = "random";
+          plugins = [
+            "git"
+          ];
+        };
         plugins = [
-          "git"
+          {
+            name = "vi-mode";
+            src = pkgs.zsh-vi-mode;
+            file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
+          }
         ];
+
+        shellAliases = {
+          ll = "ls -l";
+          tt = "taskwarrior-tui";
+          # TODO: This probably needs a flake rewrite
+          check-nix-config = "sudo nix-instantiate '<nixpkgs/nixos>' -A system";
+          zix-shell = "nix-shell --command 'zsh'";
+          ztheme = "(){ export ZSH_THEME=\"$@\" && source $ZSH/oh-my-zsh.sh }";
+          captive_portal_ip = "ip route get 1.1.1.1 | rg 'via ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+) dev' -or '$1'";
+          copy_captive_portal_ip = "captive_portal_ip | wl-copy";
+
+          lz = "lazygit";
+
+          # Giant shitpost
+          awaken = "";
+          my = "";
+          masters = "xdg-open 'https://www.youtube.com/watch?v=ZDEbsZpweDo&pp=ygUSYXdha2VuIG15IG1hc3RlcnMg' && sleep 7 && git submodule update --init --recursive --verbose && git submodule status";
+        };
+
+        initExtra = ''
+          # FVim ignores Nix result/ symlink
+          function fvim() {
+            fd --type f --strip-cwd-prefix --exclude="result"/ | fzf --query "$*" --multi --bind "enter:become(nvim {+})";
+          }
+        '';
       };
-      plugins = [
-        {
-          name = "vi-mode";
-          src = pkgs.zsh-vi-mode;
-          file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
-        }
-      ];
 
-      shellAliases = {
-        ll = "ls -l";
-        tt = "taskwarrior-tui";
-        # TODO: This probably needs a flake rewrite
-        check-nix-config = "sudo nix-instantiate '<nixpkgs/nixos>' -A system";
-        zix-shell = "nix-shell --command 'zsh'";
-        ztheme = "(){ export ZSH_THEME=\"$@\" && source $ZSH/oh-my-zsh.sh }";
-        captive_portal_ip = "ip route get 1.1.1.1 | rg 'via ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+) dev' -or '$1'";
-        copy_captive_portal_ip = "captive_portal_ip | wl-copy";
-
-        lz = "lazygit";
-
-        sync_obsidian_smartphone = "kitten ssh user@10.69.0.5 -p 8022 -t '/data/data/com.termux/files/home/scripts/obsidian-sync.sh && exit || $SHELL'";
-
-        awaken = "";
-        my = "";
-        masters = "xdg-open 'https://www.youtube.com/watch?v=ZDEbsZpweDo&pp=ygUSYXdha2VuIG15IG1hc3RlcnMg' && sleep 7 && git submodule update --init --recursive --verbose && git submodule status";
+      fzf = {
+        enable = true;
+        enableZshIntegration = true;
       };
 
-      initExtra = ''
-        # FVim ignores Nix result/ symlink
-        function fvim() {
-          fd --type f --strip-cwd-prefix --exclude="result"/ | fzf --query "$*" --multi --bind "enter:become(nvim {+})";
-        }
-      '';
+      zoxide.enable = true;
     };
-
-    programs.fzf = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-    programs.zoxide.enable = true;
   };
 }
