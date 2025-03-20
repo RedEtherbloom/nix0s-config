@@ -11,10 +11,18 @@
     else wireguardHost.mainIP;
   own-hm-data-directory = "${config.xdg.dataHome}/data-for-home-manager";
   lazygitCommandWindow = name: location:
-    pkgs.writeShellScriptBin "commandWindow-lazygit-${name}.sh" ''
-      set -e
-      kitty zsh -c "cd ${location} && git pull && notify-send \"Sync worked without problem for location $(basename ${location})\" --expire-time=2000 || lazygit"
-    '';
+    pkgs.writeShellApplication {
+      name = "commandWindow-lazygit-${name}.sh";
+      runtimeInputs = [
+        config.programs.kitty.package
+        pkgs.libnotify
+      ];
+      text = ''
+        set -e
+
+        kitty zsh -c "cd ${location} && git pull && notify-send \"Sync worked without problem for location $(basename ${location})\" --expire-time=2000 || lazygit"
+      '';
+    };
 in {
   xdg.dataFile."${builtins.baseNameOf own-hm-data-directory}/.keep".text = "";
 

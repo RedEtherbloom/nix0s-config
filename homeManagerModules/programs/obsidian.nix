@@ -34,13 +34,34 @@ in {
     }
     (mkIf cfg.pullShortcut
       (let
-        obsidian-pull-shortcut = vars.lazygitCommandWindow "obsidian-default" "~/Documents/Obsidian/default";
+        lazygitSyncVaultDefault = vars.lazygitCommandWindow "lazygitSyncVaultDefault" "~/Documents/Obsidian/default";
+        syncObsidianPhone = pkgs.writeShellApplication {
+          name = "syncObsidianPhone";
+          runtimeInputs = [pkgs.libnotify];
+          excludeShellChecks = [
+            # Bash variables in single-quotes.
+            "SC2016"
+          ];
+          text = ''
+            set -e
+
+            # Pull first for immediate sync
+            ${lazygitSyncVaultDefault.name}
+            # Sync with phone. Has $ variables in single quotes allowed.
+            kitten ssh user@10.69.0.5 -p 8022 -t '/data/data/com.termux/files/home/scripts/obsidian-sync.sh && cd /data/data/com.termux/files/home/storage/shared/Documents/Obsidian/default && exit || lazygit' || notify-send "Could not reach phone for Obsidian sync" --expire-time=2000
+            # Try to merge any changes
+            ${lazygitSyncVaultDefault.name}
+          '';
+        };
       in {
-        home.packages = [obsidian-pull-shortcut];
+        home.packages = [
+          lazygitSyncVaultDefault
+          syncObsidianPhone
+        ];
         programs.plasma.hotkeys.commands = {
           "obsidian-pull-shortcut" = {
-            # .name to avoid the path breaking after rebuilt until logout
-            command = obsidian-pull-shortcut.name;
+            # .name to avoid the path breaking after rebuild until logout
+            command = syncObsidianPhone.name;
             keys = ["meta+o"];
             comment = "Pull and rebase Obsidian vault, drop into lazygit on failure";
           };
