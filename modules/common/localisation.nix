@@ -1,7 +1,7 @@
-{...}: {
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+{
+  time.timeZone = "Europe/Berlin";
 
+  i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "de_DE.UTF-8";
     LC_IDENTIFICATION = "de_DE.UTF-8";
@@ -11,15 +11,13 @@
     LC_NUMERIC = "de_DE.UTF-8";
     LC_PAPER = "de_DE.UTF-8";
     LC_TELEPHONE = "de_DE.UTF-8";
-    LC_TIME = "de_DE.UTF-8";
+    # Abbreviated weekdays at 3 letters
+    LC_TIME = "en_IE.UTF-8";
   };
 
   services.xserver.xkb = {
     layout = "de";
   };
-
   # Affects LUKS unlock
   console.keyMap = "de";
-
-  time.timeZone = "Europe/Berlin";
 }
