@@ -8,7 +8,6 @@
 with lib; let
   cfg = config.myOptions.roles.nvf;
   inherit (inputs.nvf.lib.nvim.binds) mkKeymap;
-  inherit (inputs.nvf.lib.nvim.dag) entryBetween;
 in {
   options.myOptions.roles.nvf.enable = mkOption {
     description = "Enable the nvf NeoVim configuration suite for home-manager";
@@ -30,6 +29,10 @@ in {
           expandtab = true;
           # Replace with one character
           conceallevel = 1;
+          # Potential good compromise
+          foldlevelstart = 4;
+          showmode = false;
+          swapfile = true;
         };
         keymaps = [
           {
@@ -42,10 +45,6 @@ in {
           (mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {desc = "Open Telescopes built in keymap";})
         ];
         # TODO: Move this to options, if possible
-        luaConfigRC.options = entryBetween ["optionscript"] ["basic"] ''
-          vim.o.showmode = false
-          vim.o.swapfile = true
-        '';
         viAlias = true;
         vimAlias = true;
         searchCase = "smart";
@@ -205,21 +204,19 @@ in {
             workspaces = [
               {
                 name = "default";
-                path = "~/Documents/Obsidian/default/";
+                path = "${config.home.homeDirectory}/Documents/Obsidian/default";
                 overrides = {
                   notes_dir = "00-Notes";
                 };
               }
             ];
             daily_notes = {
-              # Defined in the obsidian scripts folder
-              # TODO: Lookup how to actually trigger fromat
-              date_format = "YYYY/MM/DD-ddd[+W]W";
-              folder = "01-Tracking/Daily/";
+              date_format = "%Y/%m/%d-%a+W%V";
+              folder = "01-Tracking/Daily";
               template = "02-Templates/Day.md";
             };
             templates.folder = "02-Templates";
-            new_notes_location = "current_dir";
+            new_notes_location = "note_subdir";
             # TODO: Add follow_link_function. Otherwise images etc. get ignored. Maybe they can be rendered inline some way?
             # Force Obsidian to focus on :ObisidianOpen
             open_app_foreground = true;
