@@ -23,14 +23,14 @@
   ];
   # X230 has 2 Cores, a 4 logical cores
   nix.settings = {
-    max-jobs = 3;
-    cores = 3;
+    max-jobs = 6;
+    cores = 6;
   };
 
-  boot.loader.grub.gfxmodeEfi = "1366x768";
-  boot.resumeDevice = "/dev/disk/by-uuid/8b4a84dd-2d8e-4236-b3bf-c5b961edc815";
-  boot.initrd.luks.devices."crypt-nixos" = {
-    device = "/dev/disk/by-uuid/6e00cfe8-f82f-4ca1-ad93-32bea67951c6";
+  # boot.loader.grub.gfxmodeEfi = "1366x768";
+  boot.resumeDevice = "/dev/disk/by-uuid/6960c42d-4b92-474d-aeae-e550d670be12";
+  boot.initrd.luks.devices."luks" = {
+    device = "/dev/disk/by-uuid/7da6adea-a5ff-4044-bd33-38decf43fd60";
     bypassWorkqueues = true;
     # Potential security implications
     allowDiscards = true;
@@ -52,15 +52,15 @@
   };
 
   # Should hopefully not mess with KDE
-  services.power-profiles-daemon.enable = false;
+  services.power-profiles-daemon.enable = true;
   # Power managment, whoop whoop!
   # Valerie: Think this causes sleep issues :/
-  services.tlp.enable = true;
+  # services.tlp.enable = true;
   # Maybe this fixes it?
-  services.tlp.settings = {
-    WIFI_PWR_ON_BAT = "off";
-    USB_EXCLUDE_BTUSB = 1;
-  };
+  # services.tlp.settings = {
+  #   WIFI_PWR_ON_BAT = "off";
+  #   USB_EXCLUDE_BTUSB = 1;
+  # };
 
   services.displayManager.sddm.wayland.enable = true;
   # This separate configuration is necessary?
@@ -77,7 +77,7 @@
     foomatic-db
     foomatic-db-nonfree
 
-    (callPackage ../../modules/drivers/printers/kyocera-classic-universal-kpdl/default.nix {})
+    # (callPackage ../../modules/drivers/printers/kyocera-classic-universal-kpdl/default.nix {})
   ];
   hardware.sane.enable = true;
   hardware.sane.drivers.scanSnap.enable = true;
@@ -145,13 +145,13 @@
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      #intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      intel-media-driver # LIBVA_DRIVER_NAME=iHD
       intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       libvdpau-va-gl
     ];
   };
   environment.sessionVariables = {
-    LIBVA_DRIVER_NAME = "i965";
+    LIBVA_DRIVER_NAME = "iHD";
   };
 
   # Before changing this value read the documentation for this option
