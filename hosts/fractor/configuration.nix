@@ -69,7 +69,8 @@
   services.desktopManager.plasma6.enable = true;
 
   services.xserver.enable = false;
-  services.xserver.videoDrivers = ["intel"];
+  # May break due to age on the X230
+  services.xserver.videoDrivers = ["modesetting"];
 
   services.printing.enable = true;
   services.printing.drivers = with pkgs; [
@@ -146,7 +147,7 @@
     enable = true;
     extraPackages = with pkgs; [
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      # intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       libvdpau-va-gl
     ];
   };
