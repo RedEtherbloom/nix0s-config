@@ -35,6 +35,18 @@ in {
 
             #RimSort
             nss
+
+            vulkan-tools
+            vulkan-headers
+            vulkan-loader
+            ffmpeg
+            x264
+            libglvnd
+            libva
+            libvdpau
+            openvr
+            soxr
+            xvidcore
           ];
       };
     };
