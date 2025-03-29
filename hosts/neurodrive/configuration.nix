@@ -140,10 +140,6 @@ in {
     };
   };
 
-  services.pipewire.wireplumber.extraConfig = {
-    "disable-hfp-autoswitch" = {
-      "wireplumber.settings" = {
-        "bluetooth.autoswitch-to-headset-profile" = false;
       };
     };
     "monitor.bluez.properties" = {
@@ -152,30 +148,11 @@ in {
     "bose-qc35-2-ldac-hq" = {
       "monitor.bluez.rules" = [
         {
-          matches = [
-            {
-              # Match any bluetooth device with ids equal to that of a Bose QC 35 ||
-              "device.name" = "~bluez_card.*";
-              "device.product.id" = "0x4020";
-              "device.vendor.id" = "bluetooth:009e";
-            }
-          ];
-          actions = {
-            update-props = {
-              # Set quality to high quality instead of the default of auto
-              "bluez5.a2dp.ldac.quality" = "hq";
             };
           };
         }
       ];
     };
-
-    #"log-level-debug" = {
-    #  "context.properties" = {
-    #      # Output Debug log messages as opposed to only the default level (Notice)
-    #      "log.level" = "D";
-    #    };
-    #};
   };
 
   myOptions.hostRoles.desktop.enable = true;
