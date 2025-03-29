@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  kclock = pkgs.kdePackages.kclock;
+  inherit (pkgs.kdePackages) kclock;
 in {
   config = mkIf config.services.desktopManager.plasma6.enable {
     services.dbus.packages = [kclock];

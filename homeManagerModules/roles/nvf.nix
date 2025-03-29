@@ -218,7 +218,7 @@ in {
             templates.folder = "02-Templates";
             new_notes_location = "note_subdir";
             # TODO: Add follow_link_function. Otherwise images etc. get ignored. Maybe they can be rendered inline some way?
-            # Force Obsidian to focus on :ObisidianOpen
+            # Force Obsidian to focus on :ObsidianOpen
             open_app_foreground = true;
             # TODO: May need to specify telescope etc. in picker
             sort_by = "modified";
