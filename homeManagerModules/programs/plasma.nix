@@ -189,11 +189,11 @@ in {
           # So useful
           "mediacontrol"."mediavolumedown" = "none,,Media volume down";
           "mediacontrol"."mediavolumeup" = "none,,Media volume up";
-          "mediacontrol"."nextmedia" = "Media Next";
+          "mediacontrol"."nextmedia" = ["Ctrl+Volume Mute" "Media Next,Media Next,Media playback next"];
           "mediacontrol"."pausemedia" = "Media Pause";
           "mediacontrol"."playmedia" = "none,,Play media playback";
-          "mediacontrol"."playpausemedia" = ["Meta+Space" "Media Play,Media Play,Play/Pause media playback"];
-          "mediacontrol"."previousmedia" = "Media Previous";
+          "mediacontrol"."playpausemedia" = ["Media Play" "Meta+Space" "Ctrl+Volume Down,Media Play,Play/Pause media playback"];
+          "mediacontrol"."previousmedia" = ["Ctrl+Volume Up" "Media Previous,Media Previous,Media playback previous"];
           "mediacontrol"."stopmedia" = "Media Stop";
 
           # TODO: Lookup format after stylix issue got resolved
@@ -270,6 +270,7 @@ in {
           "kwin"."KrohnkiteBTreeLayout" = [];
           "kwin"."KrohnkiteColumnsLayout" = [];
           "kwin"."KrohnkiteDecrease" = [];
+          # Can also tile all
           "kwin"."KrohnkiteFloatAll" = "Meta+Shift+F";
           "kwin"."KrohnkiteFloatingLayout" = "Meta+F";
           "kwin"."KrohnkiteFocusDown" = "Meta+J";
@@ -435,18 +436,21 @@ in {
         "kwinrc"."Plugins"."minimizeallEnabled" = true;
         "kwinrc"."Plugins"."shakecursorEnabled" = true;
         "kwinrc"."Plugins"."thumbnailasideEnabled" = true;
+        "kwinrc"."Script-krohnkite"."debug" = true;
+        "kwinrc"."Script-krohnkite"."debugActiveWin" = true;
         "kwinrc"."Script-krohnkite"."enableBTreeLayout" = true;
         "kwinrc"."Script-krohnkite"."enableFloatingLayout" = true;
         "kwinrc"."Script-krohnkite"."enableQuarterLayout" = true;
         "kwinrc"."Script-krohnkite"."enableStackedLayout" = true;
-        # TODO: Floating windows should be above others. Check.
         "kwinrc"."Script-krohnkite"."floatedWindowsLayer" = 2;
         "kwinrc"."Script-krohnkite"."monocleMaximize" = true;
+        "kwinrc"."Script-krohnkite"."newWindowPosition" = 2;
         "kwinrc"."Script-krohnkite"."screenGapBottom" = 3;
         "kwinrc"."Script-krohnkite"."screenGapLeft" = 6;
         "kwinrc"."Script-krohnkite"."screenGapRight" = 6;
         "kwinrc"."Script-krohnkite"."screenGapTop" = 3;
         "kwinrc"."Script-krohnkite"."tileLayoutGap" = 2;
+        "kwinrc"."Script-krohnkite"."tiledWindowsLayer" = 1;
         "kwinrc"."TabBox"."LayoutName" = "compact";
         # Minimized after normal
         "kwinrc"."TabBox"."OrderMinimizedMode" = 1;
