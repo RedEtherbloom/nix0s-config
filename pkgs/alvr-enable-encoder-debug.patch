@@ -1,0 +1,16 @@
+diff --git a/alvr/server_openvr/cpp/platform/linux/CEncoder.cpp b/alvr/server_openvr/cpp/platform/linux/CEncoder.cpp
+index 8ed7ffc2..4d0b1b56 100644
+--- a/alvr/server_openvr/cpp/platform/linux/CEncoder.cpp
++++ b/alvr/server_openvr/cpp/platform/linux/CEncoder.cpp
+@@ -80,6 +80,11 @@ int accept_timeout(pollfd socket, std::atomic_bool& exiting) {
+     return -1;
+ }
+ 
++#define _DEBUG 1
++#define DEBUG 1
++#ifndef DEBUG
++    amogus
++#endif
+ void av_logfn(void*, int level, const char* data, va_list va) {
+     if (level >
+ #ifdef DEBUG

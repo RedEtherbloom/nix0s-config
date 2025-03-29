@@ -1,5 +1,4 @@
 {
-  lib,
   inputs,
   ...
 }: final: prev: let
@@ -22,16 +21,16 @@ in {
     patchedCtranslate = prev.ctranslate2.override {stdenv = prev.cudaPackages.backendStdenv;};
   in
     prev.python3.override {
-      packageOverrides = pythonFinal: pythonPrev: {
+      packageOverrides = _: pythonPrev: {
         argostranslate = pythonPrev.argostranslate.override {ctranslate2-cpp = patchedCtranslate;};
       };
     };
 
-  koboldcpp = prev.koboldcpp.overrideAttrs (pythonFinal: pythonPrev: {
+  koboldcpp = prev.koboldcpp.overrideAttrs (_: pythonPrev: {
     pythonInputs = pythonPrev.pythonInputs ++ (builtins.attrValues {inherit (prev.python3Packages) psutil;});
   });
 
-  alvr = prev.alvr.overrideAttrs (finalAttrs: prevAttrs: rec {
+  alvr = prev.alvr.overrideAttrs (finalAttrs: _: rec {
     pname = "alvr";
     version = "20.12.0";
 
@@ -49,6 +48,7 @@ in {
       hash = "sha256-ocwNVdozZeF0hYDhYMshSbRHKfBFawIcO7UbTwk10xc=";
     };
   });
+  alvr_debug = final.callPackage ./alvr.nix {};
 
   oscavmgr = prev.oscavmgr.overrideAttrs (finalAttrs: _: rec {
     pname = "oscavmgr";
