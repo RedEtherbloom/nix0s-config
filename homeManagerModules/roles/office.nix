@@ -50,7 +50,11 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       home.packages = with pkgs;
-        lib.optionals cfg.audio_editing [audacity]
+        lib.optionals cfg.audio_editing [
+          audacity
+          reaper
+          ocenaudio
+        ]
         ++ lib.optionals cfg.image_editing [gimp]
         ++ lib.optionals cfg.text_editing [
           libreoffice-qt
