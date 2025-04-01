@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-    inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x230
+    inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
 
     ../../modules
     ../../modules/common/ssh.nix
