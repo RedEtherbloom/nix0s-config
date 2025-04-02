@@ -339,7 +339,7 @@ in {
       "dialout"
     ];
   };
-  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/trans_puppy_girl.jpg";
+  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
 
   environment.systemPackages = with pkgs; [
     cachix
