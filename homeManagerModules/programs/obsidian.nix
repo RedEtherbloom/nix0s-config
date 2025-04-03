@@ -48,7 +48,7 @@ in {
             # Pull first for immediate sync
             ${lazygitSyncVaultDefault.name}
             # Sync with phone. Has $ variables in single quotes allowed.
-            kitten ssh user@10.69.0.5 -p 8022 -t '/data/data/com.termux/files/home/scripts/obsidian-sync.sh && cd /data/data/com.termux/files/home/storage/shared/Documents/Obsidian/default && exit || lazygit' 2&>1 | tee /tmp/kitty_ssh_log || notify-send "Could not reach phone for Obsidian sync" --expire-time=8000
+            ssh user@10.69.0.5 -p 8022 -t '/data/data/com.termux/files/home/scripts/obsidian-sync.sh && cd /data/data/com.termux/files/home/storage/shared/Documents/Obsidian/default && exit || lazygit' 2>&1 | tee /tmp/kitty_ssh_log || notify-send "Could not reach phone for Obsidian sync" --expire-time=8000
             # Try to merge any changes
             ${lazygitSyncVaultDefault.name}
           '';
