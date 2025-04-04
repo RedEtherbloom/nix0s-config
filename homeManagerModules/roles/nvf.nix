@@ -43,8 +43,30 @@ in {
             silent = true;
           }
           (mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {desc = "Open Telescopes built in keymap";})
+          (mkKeymap "n" "<leader>oty" "<cmd>ObsidianYesterday<CR>" {desc = "Open yesterday's Obsidian note";})
+          (mkKeymap "n" "<leader>otn" "<cmd>ObsidianToday<CR>" {desc = "Open today's Obsidian note";})
+          (mkKeymap "n" "<leader>ott" "<cmd>ObsidianTomorrow<CR>" {desc = "Open tomorrow's Obsidian note";})
+          (mkKeymap "n" "<leader>otp" "<cmd>ObsidianDailies<CR>" {desc = "Open a picker with the dailies of this week.";})
+          (mkKeymap "n" "<leader>oto" "<cmd>ObsidianOpen<CR>" {desc = "Open current note in Obsidian window.";})
+          (mkKeymap "n" "<leader>oq" "<cmd>ObsidianQuickSwitch<CR>" {desc = "Open Obsidian's Quick Switcher";})
+          (mkKeymap "n" "<leader>oc" "<cmd>ObsidianToggleCheckbox<CR>" {desc = "Toggle the current textbox.";})
+          (mkKeymap "n" "<leader>of" "<cmd>ObsidianFollowLink<CR>" {desc = "Follow the link under the Obsidian cursor.";})
+          (mkKeymap "n" "<leader>onn" "<cmd>ObsidianNew<CR>" {desc = "Create new Obsidian note.";})
+          (mkKeymap "n" "<leader>ont" "<cmd>ObsidianNewFromTemplate<CR>" {desc = "Create new Obsidian note from template.";})
+          (mkKeymap "n" "<leader>one" "<cmd>ObsidianExtractNote<CR>" {desc = "Extract marked text into new note.";})
+          (mkKeymap "n" "<leader>onr" "<cmd>ObsidianRename<CR>" {desc = "Rename current note.";})
+          (mkKeymap "n" "<leader>oll" "<cmd>ObsidianLink<CR>" {desc = "Insert link to existing Obsidian note.";})
+          (mkKeymap "n" "<leader>oln" "<cmd>ObsidianLinkNew<CR>" {desc = "Insert link to new Obsidian note.";})
+          (mkKeymap "n" "<leader>oss" "<cmd>ObsidianSearch<CR>" {desc = "Search through Obsidian vault.";})
+          (mkKeymap "n" "<leader>ost" "<cmd>ObsidianTags<CR>" {desc = "Search through Obsidian tags.";})
+          (mkKeymap "n" "<leader>osc" "<cmd>ObsidianTOC<CR>" {desc = "Jump to Obsidian table of contents.";})
+          (mkKeymap "n" "<leader>osl" "<cmd>ObsidianLinks<CR>" {desc = "Open all links in current note in picker.";})
+          (mkKeymap "n" "<leader>osb" "<cmd>ObsidianBacklinks<CR>" {desc = "Open all backlinks in current note in picker.";})
+          (mkKeymap "n" "<leader>osr" "<cmd>ObsidianCheck<CR>" {desc = "Check integrity of Vault.";})
+          (mkKeymap "n" "<leader>osv" "<cmd>ObsidianDebug<CR>" {desc = "Turn on additional Obsidian logging.";})
+          (mkKeymap "n" "<leader>oww" "<cmd>ObsidianWorkspace<CR>" {desc = "Switch Obsidian workspace.";})
+          (mkKeymap "n" "<leader>opi" "<cmd>ObsidianPasteImg<CR>" {desc = "Paste image from clipboard into note.";})
         ];
-        # TODO: Move this to options, if possible
         viAlias = true;
         vimAlias = true;
         searchCase = "smart";
