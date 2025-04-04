@@ -287,6 +287,7 @@ in {
   virtualisation = {
     containers.enable = true;
     podman = {
+      dockerSocket.enable = true;
       enable = true;
       # Create a `docker` alias for podman, to use it as a drop-in replacement
       dockerCompat = true;
