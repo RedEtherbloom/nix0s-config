@@ -7,428 +7,439 @@
 }: let
   restic_private_key = config.sops.secrets."restic_server/restic.key".path;
   restic_public_certificate = "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.crt";
-in {
-  imports =
-    [
-      # !EXCEPTION TO GET AUDIOSINK KICK-STARTED! #
-      ../audiosink/raspberry_pi_binary_cache.nix
-      ../../modules
-      ../../modules/cachix.nix
-      ../../modules/common/ssh.nix
-      ../../modules/hdd.nix
-      # TODO: Remove once hm sops-nix supports secrets
-      ../../modules/common/taskwarrior-secrets.nix
+in
+  {
+    imports =
+      [
+        # !EXCEPTION TO GET AUDIOSINK KICK-STARTED! #
+        ../audiosink/raspberry_pi_binary_cache.nix
+        ../../modules
+        ../../modules/cachix.nix
+        ../../modules/common/ssh.nix
+        ../../modules/hdd.nix
+        # TODO: Remove once hm sops-nix supports secrets
+        ../../modules/common/taskwarrior-secrets.nix
 
-      ./hardware-configuration.nix
-    ]
-    ++ (with inputs.nixos-hardware.nixosModules; [
-      common-pc
-      common-pc-ssd
-      common-hidpi
-      # Xeon CPU
-      common-cpu-intel-cpu-only
-      common-gpu-nvidia-nonprime
-    ]);
+        ./hardware-configuration.nix
+      ]
+      ++ (with inputs.nixos-hardware.nixosModules; [
+        common-pc
+        common-pc-ssd
+        common-hidpi
+        # Xeon CPU
+        common-cpu-intel-cpu-only
+        common-gpu-nvidia-nonprime
+      ]);
 
-  system.stateVersion = "24.05";
+    system.stateVersion = "24.05";
 
-  nix.settings = {
-    # Logical cores: 12
-    max-jobs = 10;
-    # Max make some builds non deterministic
-    cores = 10;
-    extra-sandbox-paths = [config.programs.ccache.cacheDir];
-  };
-  nixpkgs.config = {
-    cudaSupport = true;
-    cudnnSupport = true;
-    cudaCapabilities = ["7.5"];
-  };
-  # Eve: Host-specific package overrides
-  nixpkgs.overlays = [
-    (_: prev: {
-      # Eve: Account for bug: https://fractalsoftworks.com/forum/index.php?topic=30633.0
-      starsector = prev.starsector.overrideAttrs (oldAttrs: {
-        buildInputs = oldAttrs.buildInputs ++ [pkgs.makeWrapper];
-        postInstall =
-          (oldAttrs.postInstall or "")
-          + ''
-            wrapProgram "$out/bin/starsector" --set __GL_THREADED_OPTIMIZATIONS 0
-          '';
-      });
-    })
-  ];
-
-  boot = {
-    # Quarry: Cross-compilation support for audiosink
-    binfmt.emulatedSystems = ["aarch64-linux"];
-    kernelModules =
-      ["coretemp" "nct6775"]
-      ++
-      # Attempt to fix ALVR/NvEnc problems
-      ["nvidia" "i915" "nvidia_modeset" "nvidia_drm"];
-    initrd.luks.devices = {
-      "nixos-root" = {
-        device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
-        bypassWorkqueues = true;
-        # Weakens security
-        allowDiscards = true;
-      };
-      "nixos-swap" = {
-        device = "/dev/disk/by-uuid/69bd8d21-1c47-4aff-8533-31bf2610c181";
-        bypassWorkqueues = true;
-        # Weakens security
-        allowDiscards = true;
-      };
+    nix.settings = {
+      # Logical cores: 12
+      max-jobs = 10;
+      # Max make some builds non deterministic
+      cores = 10;
+      extra-sandbox-paths = [config.programs.ccache.cacheDir];
     };
-  };
-  fileSystems = {
-    "/mnt/restic_data" = {
-      device = "/dev/disk/by-uuid/2645230e-f8d1-4b00-ad11-c9ec192448cf";
-      fsType = "ext4";
-      options = [
-        "nofail"
-      ];
+    nixpkgs.config = {
+      cudaSupport = true;
+      cudnnSupport = true;
+      cudaCapabilities = ["7.5"];
     };
-    "/mnt/windows_data" = {
-      device = "/dev/disk/by-uuid/587488F374FD109E";
-      fsType = "ntfs3";
-      options = [
-        "nofail"
-      ];
-    };
-  };
-
-  # Issues with builds randomly failing
-  systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
-  # Networking
-  networking = {
-    hostName = "neurodrive";
-    networkmanager.enable = true;
-    interfaces."enp0s25".wakeOnLan.enable = true;
-
-    firewall.allowedTCPPorts = [
-      #TODO: Pulseaudio Network Sharing. Probably only needed for publish
-      4713
-      (lib.strings.toInt config.services.restic.server.listenAddress)
-      # Home Assistant
-      8123
-      # Mosquitto
-      1883
-      # Paperless
-      config.services.paperless.port
+    # Eve: Host-specific package overrides
+    nixpkgs.overlays = [
+      (_: prev: {
+        # Eve: Account for bug: https://fractalsoftworks.com/forum/index.php?topic=30633.0
+        starsector = prev.starsector.overrideAttrs (oldAttrs: {
+          buildInputs = oldAttrs.buildInputs ++ [pkgs.makeWrapper];
+          postInstall =
+            (oldAttrs.postInstall or "")
+            + ''
+              wrapProgram "$out/bin/starsector" --set __GL_THREADED_OPTIMIZATIONS 0
+            '';
+        });
+      })
     ];
-    ownWireguard = {
-      enabled = true;
-      currentHost = config.networking.ownWireguard.hosts.neurodrive;
-    };
-  };
 
-  services = {
-    displayManager.sddm = {
-      enable = true;
-      wayland.enable = true;
-    };
-    desktopManager.plasma6.enable = true;
-    # Includes Wayland
-    xserver.videoDrivers = ["nvidia"];
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      nssmdns6 = true;
-      openFirewall = true;
-    };
-    paperless = {
-      # For some reason broken today
-      enable = true;
-      consumptionDirIsPublic = true;
-      address = "0.0.0.0";
-      port = 8150;
-      passwordFile = config.sops.secrets."paperless/admin_password".path;
-      settings = {
-        PAPERLESS_CONSUMER_IGNORE_PATTERN = [
-          ".DS_STORE/*"
-          "desktop.ini"
-        ];
-        PAPERLESS_OCR_LANGUAGE = "eng+deu";
-        # Sadly incompatible with deskew
-        PAPERLESS_OCR_MODE = "redo";
-        PAPERLESS_OCR_USER_ARGS = {
-          optimize = 1;
-          pdfa_image_compression = "lossless";
+    boot = {
+      # Quarry: Cross-compilation support for audiosink
+      binfmt.emulatedSystems = ["aarch64-linux"];
+      kernelModules =
+        ["coretemp" "nct6775"]
+        ++
+        # Attempt to fix ALVR/NvEnc problems
+        ["nvidia" "i915" "nvidia_modeset" "nvidia_drm"];
+      initrd.luks.devices = {
+        "nixos-root" = {
+          device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
+          bypassWorkqueues = true;
+          # Weakens security
+          allowDiscards = true;
+        };
+        "nixos-swap" = {
+          device = "/dev/disk/by-uuid/69bd8d21-1c47-4aff-8533-31bf2610c181";
+          bypassWorkqueues = true;
+          # Weakens security
+          allowDiscards = true;
         };
       };
     };
-    esphome.enable = true;
-    ollama = {
-      enable = true;
-      acceleration = "cuda";
-      host = "0.0.0.0";
-      # Privacy at home?
-      openFirewall = true;
-    };
-    nextjs-ollama-llm-ui = {
-      enable = true;
-      # May need to set CORS in ollama variables for VPN to work
-      hostname = "${config.networking.ownWireguard.hosts.neurodrive.mainIP}";
-      # Reasonably close to ollama
-      port = 11440;
-      # May have to set ollamURL to a VPN url
-    };
-    mosquitto = {
-      enable = true;
-      logType = ["all"];
-      listeners = [
-        {
-          port = 1883;
-          # By default everyone may read everything
-          acl = ["pattern read #"];
-          users = {
-            root = {
-              acl = ["readwrite #"];
-              passwordFile = config.sops.secrets."mosquitto/users/root".path;
-            };
-            client = {
-              # R/W to everything for now until I figure out the proper settings
-              acl = ["readwrite #"];
-              passwordFile = config.sops.secrets."mosquitto/users/client".path;
-            };
-          };
-          settings = {
-            allow_anonymous = false;
-          };
-        }
-      ];
-    };
-    restic.server = {
-      enable = true;
-      privateRepos = true;
-      dataDir = "/mnt/restic_data/restic";
-      listenAddress = "8193";
-      extraFlags = [
-        "--tls"
-        "--tls-key"
-        restic_private_key
-        "--tls-cert"
-        restic_public_certificate
-      ];
-    };
-    smartd = {
-      enable = true;
-      autodetect = true;
-      notifications = {
-        systembus-notify.enable = true;
-      };
-      # Short daily self-test, long weekly exteded test
-      # https://search.nixos.org/options?channel=unstable&show=services.smartd.defaults.monitored
-      defaults.monitored = "-a -o on -s (S/../.././02|L/../../7/04)";
-    };
-  };
-
-  hardware = {
-    enableAllFirmware = true;
-    bluetooth = {
-      enable = true;
-      powerOnBoot = true;
-      settings = {
-        General = {
-          Experimental = true;
-          # Problems with Bose
-          ControllerMode = "bredr";
-        };
-      };
-    };
-    # Manage logitech options via solaar
-    logitech.wireless.enable = true;
-
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-      extraPackages = with pkgs; [
-        nvidia-vaapi-driver
-        vaapiVdpau
-        libvdpau-va-gl
-      ];
-      extraPackages32 = with pkgs; [
-        vaapiVdpau
-      ];
-    };
-    nvidia = {
-      modesetting.enable = true;
-      powerManagement.enable = true;
-      nvidiaSettings = true;
-      # Maybe nvenc gets fixed this way
-      package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-
-      # Fine-grained power management. Turns off GPU when not in use.
-      # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-      powerManagement.finegrained = false;
-
-      # Use the NVidia open source kernel module (not to be confused with the
-      # independent third-party "nouveau" open source driver).
-      # Support is limited to the Turing and later architectures. Full list of
-      # supported GPUs is at:
-      # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
-      # Only available from driver 515.43.04+
-      # Currently alpha-quality/buggy, so false is currently the recommended setting.
-      #
-      # May have improved now
-      #
-      # Incompability with vaapi-driver
-      # See: https://github.com/elFarto/nvidia-vaapi-driver/issues/312
-      # TODO: Reevaluate if open works now
-      # 28.01.25: Plasma is having a weird bug where everything but the cursor vanishes. Maaybe this is the cause?
-      # 24.03.25: Update: Nope, stylix issue
-      open = false;
-    };
-    # Required for GPU passthrough
-    nvidia-container-toolkit.enable = true;
-  };
-  virtualisation = {
-    containers.enable = true;
-    podman = {
-      dockerSocket.enable = true;
-      enable = true;
-      # Create a `docker` alias for podman, to use it as a drop-in replacement
-      dockerCompat = true;
-      # Required for containers under podman-compose to be able to talk to each other.
-      defaultNetwork.settings.dns_enabled = true;
-    };
-    oci-containers = {
-      backend = "podman";
-      containers.homeassistant = {
-        volumes = ["home-assistant:/config"];
-        environment.TZ = config.time.timeZone;
-        # Okay? What does this mean?
-        # Note: The image will not be updated on rebuilds, unless the version label changes
-        image = "ghcr.io/home-assistant/home-assistant:stable";
-        extraOptions = [
-          # Use the host network namespace for all sockets
-          "--network=host"
-          # Pass Zigbee controller into container
-          "--device=/dev/serial/by-id/usb-$(cat ${config.sops.secrets."zigbee_byid_address".path})-if00-port0:/dev/ttyUSB0"
+    fileSystems = {
+      "/mnt/restic_data" = {
+        device = "/dev/disk/by-uuid/2645230e-f8d1-4b00-ad11-c9ec192448cf";
+        fsType = "ext4";
+        options = [
+          "nofail"
         ];
       };
-      containers.libretranslate = {
-        volumes = ["libretranslate_models:/home/libretranslate/.local:rw"];
-        environment.TZ = config.time.timeZone;
-        image = "docker.io/libretranslate/libretranslate:latest";
-        ports = ["127.0.0.1:8151:5000"];
+      "/mnt/windows_data" = {
+        device = "/dev/disk/by-uuid/587488F374FD109E";
+        fsType = "ntfs3";
+        options = [
+          "nofail"
+        ];
       };
     };
-  };
 
-  myOptions = {
-    hostRoles.desktop.enable = true;
-    roles.gaming.enable = true;
+    # Issues with builds randomly failing
+    systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
+    # Networking
+    networking = {
+      hostName = "neurodrive";
+      networkmanager.enable = true;
+      interfaces."enp0s25".wakeOnLan.enable = true;
+
+      firewall.allowedTCPPorts = [
+        #TODO: Pulseaudio Network Sharing. Probably only needed for publish
+        4713
+        (lib.strings.toInt config.services.restic.server.listenAddress)
+        # Home Assistant
+        8123
+        # Mosquitto
+        1883
+        # Paperless
+        config.services.paperless.port
+      ];
+      ownWireguard = {
+        enabled = true;
+        currentHost = config.networking.ownWireguard.hosts.neurodrive;
+      };
+    };
+
     services = {
-      taskchampion.enable = true;
-      gitea.enable = true;
+      displayManager.sddm = {
+        enable = true;
+        wayland.enable = true;
+      };
+      desktopManager.plasma6.enable = true;
+      # Includes Wayland
+      xserver.videoDrivers = ["nvidia"];
+      avahi = {
+        enable = true;
+        nssmdns4 = true;
+        nssmdns6 = true;
+        openFirewall = true;
+      };
+      paperless = {
+        # For some reason broken today
+        enable = true;
+        consumptionDirIsPublic = true;
+        address = "0.0.0.0";
+        port = 8150;
+        passwordFile = config.sops.secrets."paperless/admin_password".path;
+        settings = {
+          PAPERLESS_CONSUMER_IGNORE_PATTERN = [
+            ".DS_STORE/*"
+            "desktop.ini"
+          ];
+          PAPERLESS_OCR_LANGUAGE = "eng+deu";
+          # Sadly incompatible with deskew
+          PAPERLESS_OCR_MODE = "redo";
+          PAPERLESS_OCR_USER_ARGS = {
+            optimize = 1;
+            pdfa_image_compression = "lossless";
+          };
+        };
+      };
+      esphome.enable = true;
+      ollama = {
+        enable = true;
+        acceleration = "cuda";
+        host = "0.0.0.0";
+        # Privacy at home?
+        openFirewall = true;
+      };
+      nextjs-ollama-llm-ui = {
+        enable = true;
+        # May need to set CORS in ollama variables for VPN to work
+        hostname = "${config.networking.ownWireguard.hosts.neurodrive.mainIP}";
+        # Reasonably close to ollama
+        port = 11440;
+        # May have to set ollamURL to a VPN url
+      };
+      mosquitto = {
+        enable = true;
+        logType = ["all"];
+        listeners = [
+          {
+            port = 1883;
+            # By default everyone may read everything
+            acl = ["pattern read #"];
+            users = {
+              root = {
+                acl = ["readwrite #"];
+                passwordFile = config.sops.secrets."mosquitto/users/root".path;
+              };
+              client = {
+                # R/W to everything for now until I figure out the proper settings
+                acl = ["readwrite #"];
+                passwordFile = config.sops.secrets."mosquitto/users/client".path;
+              };
+            };
+            settings = {
+              allow_anonymous = false;
+            };
+          }
+        ];
+      };
+      restic.server = {
+        enable = true;
+        privateRepos = true;
+        dataDir = "/mnt/restic_data/restic";
+        listenAddress = "8193";
+        extraFlags = [
+          "--tls"
+          "--tls-key"
+          restic_private_key
+          "--tls-cert"
+          restic_public_certificate
+        ];
+      };
+      smartd = {
+        enable = true;
+        autodetect = true;
+        notifications = {
+          systembus-notify.enable = true;
+        };
+        # Short daily self-test, long weekly exteded test
+        # https://search.nixos.org/options?channel=unstable&show=services.smartd.defaults.monitored
+        defaults.monitored = "-a -o on -s (S/../.././02|L/../../7/04)";
+      };
     };
-  };
-  users.users.inf = {
-    isNormalUser = true;
-    description = "Infinity";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "adbusers"
-      "scanner"
-      "lp"
-      "i2c"
-      "podman"
-      "dialout"
+
+    hardware = {
+      enableAllFirmware = true;
+      bluetooth = {
+        enable = true;
+        powerOnBoot = true;
+        settings = {
+          General = {
+            Experimental = true;
+            # Problems with Bose
+            ControllerMode = "bredr";
+          };
+        };
+      };
+      # Manage logitech options via solaar
+      logitech.wireless.enable = true;
+
+      graphics = {
+        enable = true;
+        enable32Bit = true;
+        extraPackages = with pkgs; [
+          nvidia-vaapi-driver
+          vaapiVdpau
+          libvdpau-va-gl
+        ];
+        extraPackages32 = with pkgs; [
+          vaapiVdpau
+        ];
+      };
+      nvidia = {
+        modesetting.enable = true;
+        powerManagement.enable = true;
+        nvidiaSettings = true;
+        # Maybe nvenc gets fixed this way
+        package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+
+        # Fine-grained power management. Turns off GPU when not in use.
+        # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+        powerManagement.finegrained = false;
+
+        # Use the NVidia open source kernel module (not to be confused with the
+        # independent third-party "nouveau" open source driver).
+        # Support is limited to the Turing and later architectures. Full list of
+        # supported GPUs is at:
+        # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
+        # Only available from driver 515.43.04+
+        # Currently alpha-quality/buggy, so false is currently the recommended setting.
+        #
+        # May have improved now
+        #
+        # Incompability with vaapi-driver
+        # See: https://github.com/elFarto/nvidia-vaapi-driver/issues/312
+        # TODO: Reevaluate if open works now
+        # 28.01.25: Plasma is having a weird bug where everything but the cursor vanishes. Maaybe this is the cause?
+        # 24.03.25: Update: Nope, stylix issue
+        open = false;
+      };
+      # Required for GPU passthrough
+      nvidia-container-toolkit.enable = true;
+    };
+    virtualisation = {
+      containers.enable = true;
+      podman = {
+        dockerSocket.enable = true;
+        enable = true;
+        # Create a `docker` alias for podman, to use it as a drop-in replacement
+        dockerCompat = true;
+        # Required for containers under podman-compose to be able to talk to each other.
+        defaultNetwork.settings.dns_enabled = true;
+      };
+      oci-containers = {
+        backend = "podman";
+        containers.homeassistant = {
+          volumes = ["home-assistant:/config"];
+          environment.TZ = config.time.timeZone;
+          image = "ghcr.io/home-assistant/home-assistant:stable";
+          extraOptions = [
+            # Use the host network namespace for all sockets
+            "--network=host"
+          ];
+        };
+        containers.libretranslate = {
+          volumes = ["libretranslate_models:/home/libretranslate/.local:rw"];
+          environment.TZ = config.time.timeZone;
+          image = "docker.io/libretranslate/libretranslate:latest";
+          ports = ["127.0.0.1:8151:5000"];
+        };
+      };
+    };
+
+    myOptions = {
+      hostRoles.desktop.enable = true;
+      roles.gaming.enable = true;
+      services = {
+        taskchampion.enable = true;
+        gitea.enable = true;
+      };
+    };
+    users.users.inf = {
+      isNormalUser = true;
+      description = "Infinity";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "adbusers"
+        "scanner"
+        "lp"
+        "i2c"
+        "podman"
+        "dialout"
+      ];
+    };
+    stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
+
+    environment.systemPackages = with pkgs; [
+      cachix
+      cudaPackages.cudatoolkit
+      cudaPackages.cudnn
+      nvtopPackages.full
+      dive # look into docker image layers
+      podman-tui # status of containers in the terminal
+      docker-compose # start group of containers for dev
+      smartmontools
     ];
-  };
-  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
 
-  environment.systemPackages = with pkgs; [
-    cachix
-    cudaPackages.cudatoolkit
-    cudaPackages.cudnn
-    nvtopPackages.full
-    dive # look into docker image layers
-    podman-tui # status of containers in the terminal
-    docker-compose # start group of containers for dev
-    smartmontools
-  ];
+    programs = {
+      ccache = {
+        enable = true;
+        packageNames = ["krita-unwrapped"];
+      };
 
-  programs = {
-    ccache = {
-      enable = true;
-      packageNames = ["krita-unwrapped"];
+      coolercontrol = {
+        enable = true;
+        nvidiaSupport = true;
+      };
+      alvr = {
+        enable = true;
+        openFirewall = true;
+      };
     };
 
-    coolercontrol = {
-      enable = true;
-      nvidiaSupport = true;
+    # TODO: Disabled due to hunch  of alvr breakage. Doesn't seem to be the case, but firefox stayed unaffected.
+    # environment.sessionVariables = {
+    #   #LIBVA_DRIVER_NAME = "nvidia";
+    #   #MOZ_DISABLE_RDD_SANDBOX = "1";
+
+    #   # Necessary to correctly enable va-api (video codec hardware
+    #   # acceleration). If this isn't set, the libvdpau backend will be
+    #   # picked, and that one doesn't work with most things, including
+    #   # Firefox.
+    #   LIBVA_DRIVER_NAME = "nvidia";
+    #   # Required to run the correct GBM backend for nvidia GPUs on wayland
+    #   GBM_BACKEND = "nvidia-drm";
+    #   # Apparently, without this nouveau may attempt to be used instead
+    #   # (despite it being blacklisted)
+    #   __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    #   # Hardware cursors are currently broken on nvidia
+    #   WLR_NO_HARDWARE_CURSORS = "1";
+
+    #   # Required to use va-api it in Firefox. See
+    #   # https://github.com/elFarto/nvidia-vaapi-driver/issues/96
+    #   MOZ_DISABLE_RDD_SANDBOX = "1";
+    #   # It appears that the normal rendering mode is broken on recent
+    #   # nvidia drivers:
+    #   # https://github.com/elFarto/nvidia-vaapi-driver/issues/213#issuecomment-1585584038
+    #   # TODO: I think this may be the culprit that broke it...
+    #   NVD_BACKEND = "direct";
+    #   # Required for firefox 98+, see:
+    #   # https://github.com/elFarto/nvidia-vaapi-driver#firefox
+    #   EGL_PLATFORM = "wayland";
+    # };
+
+    sops.secrets."restic_server/restic.key" = {
+      owner = "restic";
+      format = "binary";
+      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.key";
     };
-    alvr = {
-      enable = true;
-      openFirewall = true;
+
+    sops.secrets."mosquitto/users/root" = {
+      uid = config.ids.uids.mosquitto;
+      gid = config.ids.gids.mosquitto;
+      format = "yaml";
+      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
     };
-  };
 
-  # TODO: Disabled due to hunch  of alvr breakage. Doesn't seem to be the case, but firefox stayed unaffected.
-  # environment.sessionVariables = {
-  #   #LIBVA_DRIVER_NAME = "nvidia";
-  #   #MOZ_DISABLE_RDD_SANDBOX = "1";
+    sops.secrets."mosquitto/users/client" = {
+      uid = config.ids.uids.mosquitto;
+      gid = config.ids.gids.mosquitto;
+      format = "yaml";
+      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
+    };
 
-  #   # Necessary to correctly enable va-api (video codec hardware
-  #   # acceleration). If this isn't set, the libvdpau backend will be
-  #   # picked, and that one doesn't work with most things, including
-  #   # Firefox.
-  #   LIBVA_DRIVER_NAME = "nvidia";
-  #   # Required to run the correct GBM backend for nvidia GPUs on wayland
-  #   GBM_BACKEND = "nvidia-drm";
-  #   # Apparently, without this nouveau may attempt to be used instead
-  #   # (despite it being blacklisted)
-  #   __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-  #   # Hardware cursors are currently broken on nvidia
-  #   WLR_NO_HARDWARE_CURSORS = "1";
+    # Copied from Bitwarden
+    # TODO: Cross-sync bitwarden and secret store
+    sops.secrets."paperless/admin_password" = {
+      owner = "paperless";
+      format = "yaml";
+      sopsFile = "${inputs.our-secrets}/secrets/services/paperless.yaml";
+    };
 
-  #   # Required to use va-api it in Firefox. See
-  #   # https://github.com/elFarto/nvidia-vaapi-driver/issues/96
-  #   MOZ_DISABLE_RDD_SANDBOX = "1";
-  #   # It appears that the normal rendering mode is broken on recent
-  #   # nvidia drivers:
-  #   # https://github.com/elFarto/nvidia-vaapi-driver/issues/213#issuecomment-1585584038
-  #   # TODO: I think this may be the culprit that broke it...
-  #   NVD_BACKEND = "direct";
-  #   # Required for firefox 98+, see:
-  #   # https://github.com/elFarto/nvidia-vaapi-driver#firefox
-  #   EGL_PLATFORM = "wayland";
-  # };
-
-  sops.secrets."restic_server/restic.key" = {
-    owner = "restic";
-    format = "binary";
-    sopsFile = "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.key";
-  };
-
-  sops.secrets."mosquitto/users/root" = {
-    uid = config.ids.uids.mosquitto;
-    gid = config.ids.gids.mosquitto;
-    format = "yaml";
-    sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
-  };
-
-  sops.secrets."mosquitto/users/client" = {
-    uid = config.ids.uids.mosquitto;
-    gid = config.ids.gids.mosquitto;
-    format = "yaml";
-    sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
-  };
-
-  # Copied from Bitwarden
-  # TODO: Cross-sync bitwarden and secret store
-  sops.secrets."paperless/admin_password" = {
-    owner = "paperless";
-    format = "yaml";
-    sopsFile = "${inputs.our-secrets}/secrets/services/paperless.yaml";
-  };
-
-  sops.secrets."zigbee_byid_address" = {
-    sopsFile = "${inputs.our-secrets}/secrets/common/hardware_uuid.yaml";
-  };
-}
+    sops.secrets."zigbee_byid_address" = {
+      sopsFile = "${inputs.our-secrets}/secrets/common/hardware_uuid.yaml";
+    };
+  }
+  .overrideAttrs (_: prevAttrs: let
+    split = args: sep: lib.splitString sep args;
+    shim = srcList: toInsert: (lib.lists.init srcList) ++ (lib.lists.toList toInsert) ++ [(lib.lists.last srcList)];
+    insertPriorToLast = srcList: sep: toInsert: lib.strings.concatStringsSep sep (shim (split srcList sep) toInsert);
+  in {
+    systemd.services."podman-homeassistant" =
+      prevAttrs.systemd.services."podman-homeassistant"
+      // {
+        # Pass Zigbee controller into container
+        # This shimming has to be done as the device and extraOptions arguments get shellEscaped, preventing the cat call
+        script = insertPriorToLast prevAttrs.systemd.service."podman-homeassistant".script " \\\n " "--device=/dev/serial/by-id/usb-$(cat ${config.sops.secrets."zigbee_byid_address".path})-if00-port0:/dev/ttyUSB0";
+        after = prevAttrs.systemd.service."podman-homeassistant".after ++ ["sops-nix.service"];
+      };
+  })
