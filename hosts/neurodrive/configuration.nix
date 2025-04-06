@@ -223,6 +223,9 @@ in {
       # https://search.nixos.org/options?channel=unstable&show=services.smartd.defaults.monitored
       defaults.monitored = "-a -o on -s (S/../.././02|L/../../7/04)";
     };
+    udev.extraRules = ''
+      SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="zigbee-ap"
+    '';
   };
 
   hardware = {
@@ -299,14 +302,11 @@ in {
       containers.homeassistant = {
         volumes = ["home-assistant:/config"];
         environment.TZ = config.time.timeZone;
-        # Okay? What does this mean?
-        # Note: The image will not be updated on rebuilds, unless the version label changes
         image = "ghcr.io/home-assistant/home-assistant:stable";
+        # Use the host network namespace for all sockets
         extraOptions = [
-          # Use the host network namespace for all sockets
           "--network=host"
-          # Pass Zigbee controller into container
-          "--device=/dev/serial/by-id/usb-$(cat ${config.sops.secrets."zigbee_byid_address".path})-if00-port0:/dev/ttyUSB0"
+          "--device=/dev/zigbee-ap:/dev/ttyUSB0"
         ];
       };
       containers.libretranslate = {
@@ -316,6 +316,9 @@ in {
         ports = ["127.0.0.1:8151:5000"];
       };
     };
+  };
+  systemd.services."podman-homeassistant" = {
+    after = ["systemd-udevd.service"];
   };
 
   myOptions = {
@@ -426,9 +429,5 @@ in {
     owner = "paperless";
     format = "yaml";
     sopsFile = "${inputs.our-secrets}/secrets/services/paperless.yaml";
-  };
-
-  sops.secrets."zigbee_byid_address" = {
-    sopsFile = "${inputs.our-secrets}/secrets/common/hardware_uuid.yaml";
   };
 }
