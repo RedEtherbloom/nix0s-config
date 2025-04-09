@@ -91,40 +91,35 @@ in {
         # TODO: Look what noice does
 
         statusline.lualine.enable = true;
-        # TODO: Are the buf outlines supposed to look so weird?
         tabline.nvimBufferline.enable = true;
         telescope = {
           enable = true;
           setupOpts.defaults = {
-            # TODO: Choose different strategy
             path_display = ["truncate"];
-            # Copied and modified from https://www.reddit.com/r/neovim/comments/0f7nkbe/comment/lle1nbc/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=sha
-            # TODO: I want something less buggy than telescope that has built in multi-open
-            # TODO: Extract function and set for both normal and insert mode
-            mappings = lib.generators.mkLuaInline ''
-              {
-                 ["i"] = {
-                   ["<CR>"] = function(bufnr)
-                     local actions = require("telescope.actions")
-                     local actions_state = require("telescope.actions.state")
-                     local single_selection = actions_state.get_selected_entry()
-                     local multi_selection = actions_state.get_current_picker(bufnr):get_multi_selection()
-                     if not vim.tbl_isempty(multi_selection) then
-                       actions.close(bufnr)
-                       for _, file in pairs(multi_selection) do
-                         if file.path ~= nil then
-                           vim.cmd(string.format("tabedit %s", file.path))
-                         end
-                       end
-                       vim.cmd(string.format("edit %s", single_selection.path))
-                     else
-                       actions.select_default(bufnr)
-                     end
-                   end
-                 }
-              }'';
+            mappings = let
+              multi_select = lib.generators.mkLuaInline ''
+                function(prompt_bufnr)
+                  local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
+                  local multi = picker:get_multi_selection()
+                  if not vim.tbl_isempty(multi) then
+                    require('telescope.actions').close(prompt_bufnr)
+                    for _, j in pairs(multi) do
+                      if j.path ~= nil then
+                        vim.cmd(string.format('%s %s', 'edit', j.path))
+                      end
+                    end
+                  else
+                    require('telescope.actions').select_default(prompt_bufnr)
+                  end
+                end
+              '';
+            in {
+              i."<CR>" = multi_select;
+              n."<CR>" = multi_select;
+            };
           };
         };
+
         autocomplete.nvim-cmp.enable = true;
         lsp = {
           enable = true;
