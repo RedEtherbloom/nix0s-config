@@ -236,7 +236,7 @@ in {
             daily_notes = {
               date_format = "%Y/%m/%d-%a+W%V";
               folder = "01-Tracking/Daily";
-              template = "02-Templates/Day.md";
+              template = "Day.md";
             };
             templates.folder = "02-Templates";
             new_notes_location = "note_subdir";
@@ -248,6 +248,17 @@ in {
             sort_reversed = true;
             # TODO: may want to up search_max_lines from 1000 default iirc
             attachments.img_folder = "XX-Files";
+            ui = {
+              checkboxes = lib.generators.mkLuaInline ''
+                {
+                  [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
+                  ["x"] = { char = "", hl_group = "ObsidianDone" },
+                  ["!"] = { char = "", hl_group = "ObsidianImportant" },
+                  ["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
+                  [">"] = { char = "", hl_group = "ObsidianRightArrow" },
+                }
+              '';
+            };
           };
         };
         # TODO: Setup local or with Mistral
