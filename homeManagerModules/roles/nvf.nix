@@ -78,7 +78,7 @@ in {
         # TODO: Look over other mini utilities(https://notashelf.github.io/nvf/options.html#opt-vim.mini.align.enable)
         mini = {
           surround.enable = true;
-          # Disable too many lsp diagnostics
+          # TODO: Disable too many lsp diagnostics
           notify.enable = true;
         };
 
@@ -191,6 +191,12 @@ in {
           motion = {
             leap.enable = true;
             precognition.enable = true;
+          };
+          images.image-nvim = {
+            enable = true;
+            setupOpts = {
+              backend = "kitty";
+            };
           };
         };
         lazy.plugins = {
