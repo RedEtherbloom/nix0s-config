@@ -28,18 +28,16 @@ in {
         };
         oh-my-zsh = {
           enable = true;
-          theme = "random";
+          theme = "flazz";
           plugins = [
             "git"
+            "vi-mode"
           ];
         };
-        plugins = [
-          {
-            name = "vi-mode";
-            src = pkgs.zsh-vi-mode;
-            file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
-          }
-        ];
+
+        sessionVariables = {
+          ZVM_LINE_INIT_MODE = "ZVM_MODE_INSERT";
+        };
 
         shellAliases = {
           ll = "ls -l";
