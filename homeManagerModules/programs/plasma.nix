@@ -108,10 +108,10 @@ in {
           "kwin"."Switch to Screen 1" = "Meta+Ctrl+2";
           "kwin"."Switch to Screen 2" = "Meta+Ctrl+3";
           "kwin"."Switch to Screen 3" = "Meta+Ctrl+4";
-          "kwin"."Switch to Screen Above" = "none,,Switch to Screen Above";
-          "kwin"."Switch to Screen Below" = "none,,Switch to Screen Below";
-          "kwin"."Switch to Screen to the Left" = "none,,Switch to Screen to the Left";
-          "kwin"."Switch to Screen to the Right" = "none,,Switch to Screen to the Right";
+          "kwin"."Switch to Screen Above" = "Meta+Up";
+          "kwin"."Switch to Screen Below" = "Meta+Down";
+          "kwin"."Switch to Screen to the Left" = "Meta+Left";
+          "kwin"."Switch to Screen to the Right" = "Meta+Right";
 
           # Shift+1
           "kwin"."Window to Desktop 1" = "Meta+!";
@@ -269,7 +269,7 @@ in {
         (lib.optionalAttrs cfg.krohnkite {
           "kwin"."KrohnkiteBTreeLayout" = [];
           "kwin"."KrohnkiteColumnsLayout" = [];
-          "kwin"."KrohnkiteDecrease" = [];
+          "kwin"."KrohnkiteDecrease" = "Meta+Shift+I";
           # Can also tile all
           "kwin"."KrohnkiteFloatAll" = "Meta+Shift+F";
           "kwin"."KrohnkiteFloatingLayout" = "Meta+F";
