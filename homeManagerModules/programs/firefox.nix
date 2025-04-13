@@ -28,7 +28,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.enable rec {
     programs.firefox = {
       enable = true;
       languagePacks = [
@@ -194,7 +194,7 @@ in {
               };
               "Go Pkgs" = {
                 definedAliases = defineAliasVariants ["go"];
-                iconUpdateURL = "https://pkg.go.dev/static/shared/icon/favicon.ico";
+                icon = "https://pkg.go.dev/static/shared/icon/favicon.ico";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
                 urls = [
                   {
@@ -211,7 +211,7 @@ in {
 
               "PerplexityAI" = {
                 definedAliases = defineAliasVariants ["p" "per" "perplexity"];
-                iconUpdateURL = "https://www.perplexity.ai/favicon.ico";
+                icon = "https://www.perplexity.ai/favicon.ico";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
                 urls = [
                   {
@@ -228,7 +228,7 @@ in {
               # Gemini does not have a simple search URL
               "Dict.cc English" = {
                 definedAliases = defineAliasVariants ["dc" "dict"];
-                iconUpdateURL = "https://www4.dict.cc/img/favicons/favicon4.png";
+                icon = "https://www4.dict.cc/img/favicons/favicon4.png";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
                 urls = [
                   {
@@ -244,7 +244,7 @@ in {
               };
               "YouTube" = {
                 definedAliases = defineAliasVariants ["youtube" "yt"];
-                iconUpdateURL = "https://www.youtube.com/s/desktop/c01ea7e3/img/logos/favicon.ico";
+                icon = "https://www.youtube.com/s/desktop/c01ea7e3/img/logos/favicon.ico";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
                 urls = [
                   {
@@ -260,7 +260,7 @@ in {
               };
               "DuckDuckGo" = {
                 definedAliases = defineAliasVariants ["dg" "duckduckgo"];
-                iconUpdateURL = "https://duckduckgo.com/favicon.ico";
+                icon = "https://duckduckgo.com/favicon.ico";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
                 urls = [
                   {
@@ -276,7 +276,7 @@ in {
               };
               "Reddit" = {
                 definedAliases = defineAliasVariants ["red" "reddit"];
-                iconUpdateURL = "https://www.redditstatic.com/shreddit/assets/favicon/64x64.png";
+                icon = "https://www.redditstatic.com/shreddit/assets/favicon/64x64.png";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
                 urls = [
                   {
@@ -293,7 +293,7 @@ in {
 
               "GitHub" = {
                 definedAliases = defineAliasVariants ["git" "github"];
-                iconUpdateURL = "https://github.githubassets.com/favicons/favicon-dark.png";
+                icon = "https://github.githubassets.com/favicons/favicon-dark.png";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
                 urls = [
                   {
@@ -310,7 +310,7 @@ in {
 
               "Amazon" = {
                 definedAliases = defineAliasVariants ["ama" "amazon"];
-                iconUpdateURL = "https://www.amazon.de/favicon.ico";
+                icon = "https://www.amazon.de/favicon.ico";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
                 urls = [
                   {
@@ -330,12 +330,12 @@ in {
             };
             default = "Google";
             order = [
-              "Google"
-              "PerplexityAI"
-              "GitHub"
-              "DuckDuckGo"
-              "YouTube"
-              "Reddit"
+              "google"
+              "perplexityai"
+              "github"
+              "duckduckgo"
+              "youtube"
+              "reddit"
             ];
             # Force it onto firefox and overwrite
             force = true;
@@ -359,5 +359,6 @@ in {
         };
       };
     };
+    stylix.targets.firefox.profileNames = lib.attrsets.mapAttrsToList (name: _: "${name}") programs.firefox.profiles; 
   };
 }
