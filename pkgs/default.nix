@@ -30,49 +30,49 @@ in {
     pythonInputs = pythonPrev.pythonInputs ++ (builtins.attrValues {inherit (prev.python3Packages) psutil;});
   });
 
-  alvr = prev.alvr.overrideAttrs (finalAttrs: _: rec {
-    pname = "alvr";
-    version = "20.12.0";
+  # alvr = prev.alvr.overrideAttrs (finalAttrs: _: rec {
+  #   pname = "alvr";
+  #   version = "20.12.0";
 
-    src = prev.fetchFromGitHub {
-      owner = "alvr-org";
-      repo = "ALVR";
-      tag = "v${version}";
-      fetchSubmodules = true;
-      hash = "sha256-4tilgZCUY5PehR0SQDOBahLaPVH4n5cgE7Ghw+SCgQk=";
-    };
+  #   src = prev.fetchFromGitHub {
+  #     owner = "alvr-org";
+  #     repo = "ALVR";
+  #     tag = "v${version}";
+  #     fetchSubmodules = true;
+  #     hash = "sha256-4tilgZCUY5PehR0SQDOBahLaPVH4n5cgE7Ghw+SCgQk=";
+  #   };
 
-    cargoDeps = prev.rustPlatform.fetchCargoVendor {
-      name = "${pname}-vendor.tar.gz";
-      inherit (finalAttrs) src;
-      hash = "sha256-ocwNVdozZeF0hYDhYMshSbRHKfBFawIcO7UbTwk10xc=";
-    };
-  });
-  alvr_debug = final.callPackage ./alvr.nix {};
+  #   cargoDeps = prev.rustPlatform.fetchCargoVendor {
+  #     name = "${pname}-vendor.tar.gz";
+  #     inherit (finalAttrs) src;
+  #     hash = "sha256-ocwNVdozZeF0hYDhYMshSbRHKfBFawIcO7UbTwk10xc=";
+  #   };
+  # });
+  # alvr_debug = final.callPackage ./alvr.nix {};
 
-  oscavmgr = prev.oscavmgr.overrideAttrs (finalAttrs: _: rec {
-    pname = "oscavmgr";
-    version = "0.4.4";
+  # oscavmgr = prev.oscavmgr.overrideAttrs (finalAttrs: _: rec {
+  #   pname = "oscavmgr";
+  #   version = "0.4.4";
 
-    src = prev.fetchFromGitHub {
-      owner = "galister";
-      repo = "oscavmgr";
-      tag = "v${version}";
-      fetchSubmodules = true;
-      hash = "sha256-Tx4FuKKorQLkuhBUbQXtfsm8sFdLgQCgXiGQsfX+MQg=";
-    };
+  #   src = prev.fetchFromGitHub {
+  #     owner = "galister";
+  #     repo = "oscavmgr";
+  #     tag = "v${version}";
+  #     fetchSubmodules = true;
+  #     hash = "sha256-Tx4FuKKorQLkuhBUbQXtfsm8sFdLgQCgXiGQsfX+MQg=";
+  #   };
 
-    patches = [
-      ./oscavmgr-alvr.patch
-    ];
+  #   patches = [
+  #     ./oscavmgr-alvr.patch
+  #   ];
 
-    cargoDeps = prev.rustPlatform.fetchCargoVendor {
-      name = "${pname}-vendor.tar.gz";
-      inherit (finalAttrs) src patches;
+  #   cargoDeps = prev.rustPlatform.fetchCargoVendor {
+  #     name = "${pname}-vendor.tar.gz";
+  #     inherit (finalAttrs) src patches;
 
-      hash = "sha256-waF0T3feKgFlFnO1ZMxAEe93Ek4yEpvSgBQHFt2BePc=";
-    };
-  });
+  #     hash = "sha256-waF0T3feKgFlFnO1ZMxAEe93Ek4yEpvSgBQHFt2BePc=";
+  #   };
+  # });
   inherit (rimsort-pr) rimsort;
   inherit (sillytavern) sillytavern;
 }
