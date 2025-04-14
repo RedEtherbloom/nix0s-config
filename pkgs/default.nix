@@ -1,7 +1,4 @@
-{
-  inputs,
-  ...
-}: final: prev: let
+{inputs, ...}: final: prev: let
   rimsort-pr = import inputs.rimsort-pr {
     config.allowUnfree = true;
     inherit (prev) system;

@@ -34,7 +34,7 @@
                   "device.product.id" = "0x081b";
                   "device.vendor.id" = "0x046d";
                 }
-             ];
+              ];
               actions = {
                 update-props = {
                   "default.clock.rate" = 16000;
