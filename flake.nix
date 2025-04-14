@@ -87,7 +87,7 @@
     };
 
     nvf = {
-      url = "github:isaacST08/nvf/feature-language-tex";
+      url = "github:NotAShelf/nvf/main";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
