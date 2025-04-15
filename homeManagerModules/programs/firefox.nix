@@ -226,7 +226,7 @@ in {
                 ];
               };
               # Gemini does not have a simple search URL
-              "Dict.cc English" = {
+              "dict.cc english" = {
                 definedAliases = defineAliasVariants ["dc" "dict"];
                 icon = "https://www4.dict.cc/img/favicons/favicon4.png";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
@@ -242,7 +242,7 @@ in {
                   }
                 ];
               };
-              "YouTube" = {
+              "youtube" = {
                 definedAliases = defineAliasVariants ["youtube" "yt"];
                 icon = "https://www.youtube.com/s/desktop/c01ea7e3/img/logos/favicon.ico";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
@@ -258,7 +258,7 @@ in {
                   }
                 ];
               };
-              "DuckDuckGo" = {
+              "duckduckgo" = {
                 definedAliases = defineAliasVariants ["dg" "duckduckgo"];
                 icon = "https://duckduckgo.com/favicon.ico";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
@@ -274,7 +274,7 @@ in {
                   }
                 ];
               };
-              "Reddit" = {
+              "reddit" = {
                 definedAliases = defineAliasVariants ["red" "reddit"];
                 icon = "https://www.redditstatic.com/shreddit/assets/favicon/64x64.png";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
@@ -291,7 +291,7 @@ in {
                 ];
               };
 
-              "GitHub" = {
+              "github" = {
                 definedAliases = defineAliasVariants ["git" "github"];
                 icon = "https://github.githubassets.com/favicons/favicon-dark.png";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
@@ -308,7 +308,7 @@ in {
                 ];
               };
 
-              "Amazon" = {
+              "amazon" = {
                 definedAliases = defineAliasVariants ["ama" "amazon"];
                 icon = "https://www.amazon.de/favicon.ico";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
@@ -325,10 +325,10 @@ in {
                 ];
               };
 
-              "Bing".metaData.alias = "@bing";
-              "Google".metaData.alias = "@g";
+              "bing".metaData.alias = "@bing";
+              "google".metaData.alias = "@g";
             };
-            default = "Google";
+            default = "google";
             order = [
               "google"
               "perplexityai"
