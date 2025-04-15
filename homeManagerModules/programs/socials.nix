@@ -17,10 +17,6 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-      (pkgs.discord.override {
-        withOpenASAR = true;
-        withVencord = true;
-      })
       vesktop
       element-desktop
       telegram-desktop
