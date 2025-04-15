@@ -25,7 +25,7 @@ in {
       element-desktop
       telegram-desktop
       threema-desktop
-      signal-desktop
+      signal-desktop-bin
 
       mumble
     ];
