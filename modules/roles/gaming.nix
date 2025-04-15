@@ -36,6 +36,7 @@ in {
             #RimSort
             nss
 
+            # Vain attempts at making ALVR Hardware encoding work
             vulkan-tools
             vulkan-headers
             vulkan-loader
@@ -48,6 +49,9 @@ in {
             soxr
             xvidcore
           ];
+
+        # Disable the GUI popping up on startup
+        extraArgs = "-silent";
       };
     };
 
