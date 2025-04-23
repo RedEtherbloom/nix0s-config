@@ -58,6 +58,9 @@ in {
         vrcx
         vrc-get
         alcom
+
+        # Trying to avoid a stylix issue preventing startup
+        kdePackages.qtstyleplugin-kvantum
       ];
 
       myOptions.solaar = {
@@ -67,7 +70,7 @@ in {
 
       # Let's try out McFly on our beefier machine
       programs.mcfly = {
-        enable = true;
+        enable = false;
         fzf.enable = true;
         keyScheme = "vim";
       };
