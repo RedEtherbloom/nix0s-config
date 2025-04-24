@@ -86,6 +86,12 @@ in {
 
       # Certificate creation
       xca
+
+      # Speedreading
+      speedread
+      hottext
+
+      distrobox
     ];
 
     # May not work due to https://github.com/nix-community/home-manager/issues/1011
