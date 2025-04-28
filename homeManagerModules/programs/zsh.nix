@@ -57,7 +57,7 @@ in {
           masters = "xdg-open 'https://www.youtube.com/watch?v=ZDEbsZpweDo&pp=ygUSYXdha2VuIG15IG1hc3RlcnMg' && sleep 7 && git submodule update --init --recursive --verbose && git submodule status";
         };
 
-        initExtra = ''
+        initContent = ''
           # FVim ignores Nix result/ symlink
           function fvim() {
             fd --type f --strip-cwd-prefix --exclude="result"/ | fzf --query "$*" --multi --bind "enter:become(nvim {+})";
