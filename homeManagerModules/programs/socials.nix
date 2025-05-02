@@ -16,6 +16,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    nixpkgs.config.permittedInsecurePackages = [
+      "olm-3.2.16"
+    ];
+
     home.packages = with pkgs; [
       vesktop
       element-desktop
