@@ -66,5 +66,10 @@ in {
 
       lm_sensors
     ];
+
+    # Required for Nheko to work
+    nixpkgs.config.permittedInsecurePackages = [
+      "olm-3.2.16"
+    ];
   };
 }
