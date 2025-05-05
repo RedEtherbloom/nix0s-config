@@ -3,7 +3,6 @@
   lib,
   inputs,
   osConfig,
-  pkgs,
   ...
 }:
 with lib; let
@@ -27,22 +26,5 @@ in {
     programs.home-manager.enable = true;
 
     programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
-
-    home.packages = [
-      (pkgs.writeShellApplication {
-        name = "update-system";
-        runtimeInputs = [pkgs.git];
-        text = ''
-          # TODO: The hard-coded path is eww
-          cd ${config.home.homeDirectory}/Projects/nix0s-config
-          git pull
-          git add dotfiles/wallpaper/*
-          nix flake update -v
-          sudo nixos-rebuild --flake . switch -v -L --show-trace
-          git restore --staged dotfiles/wallpaper/*
-          git add flake.lock
-        '';
-      })
-    ];
   };
 }

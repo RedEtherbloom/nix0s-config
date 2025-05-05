@@ -1,105 +1,141 @@
 {
   config,
   inputs,
-  lib,
   pkgs,
   ...
 }: {
   imports = [
-    inputs.raspberry-pi-nix.nixosModules.raspberry-pi
-    inputs.raspberry-pi-nix.nixosModules.sd-image
-    #inputs.disko.nixosModules.disko
+    inputs.nixos-hardware.nixosModules.raspberry-pi-3
+    inputs.sops-nix.nixosModules.sops
 
-    #./disko.nix
     ./hardware-configuration.nix
-
     ./raspberry_pi_binary_cache.nix
 
-    ../../modules
     ../../modules/common/ssh.nix
   ];
 
-  nixpkgs.system = "aarch64-linux";
-  nixpkgs.hostPlatform.system = "aarch64-linux";
-  nixpkgs.buildPlatform.system = "x86_64-linux";
+  nix = {
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = ["root" "@wheel" "inf"];
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 14d";
+    };
+    optimise = {
+      automatic = true;
+      dates = [
+        "07:00"
+      ];
+    };
+  };
+  swapDevices = [
+    {
+      size = 8192;
+      device = "/var/swapfile";
+    }
+  ];
 
-  # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
-  boot.loader.grub.enable = false;
-  raspberry-pi-nix.uboot.enable = true;
-  myOptions.common.enableBoot = false;
+  #boot.loader.grub.enable = false;
+  #raspberry-pi-nix.uboot.enable = true;
 
   # Warning: Early Boot UART will be garbled due to the default 400MHz CPU freq
-  boot.kernelParams = [
-    "console=ttyS1,115200n8"
-  ];
-  # Override, due to https://github.com/nix-community/raspberry-pi-nix/issues/95
-  # May or may not boot normally, if it doesn't I just have to compile the entire kernel
+  # boot.kernelParams = [
+  #   "console=ttyS1,115200n8"
+  # ];
   # boot.kernelPackages = lib.mkForce pkgs.linuxKernel.packages.linux_rpi3;
 
-  # Cross-compile shenangians
-  # programs.neovim.package = lib.mkForce (pkgs.neovim.override {withRuby = false;});
-  programs.neovim.enable = lib.mkForce false;
-  programs.vim.enable = true;
-  programs.vim.defaultEditor = true;
-  myOptions.utilities.cmdFileManagers = false;
-  myOptions.utilities.pdfUtils = false;
-  networking.networkmanager.plugins = lib.mkForce [];
-  services.fwupd.enable = lib.mkForce false;
+  # raspberry-pi-nix.board = "bcm2711";
+  # hardware.raspberry-pi.config = {
+  #   all = {
+  #     options = {
+  #       # The firmware will start our u-boot binary rather than a linux kernel
+  #       kernel = {
+  #         enable = true;
+  #         value = lib.mkForce "u-boot-rpi-arm64.bin";
+  #       };
+  #       arm_64bit = {
+  #         enable = true;
+  #         value = true;
+  #       };
+  #       enable_uart = {
+  #         enable = true;
+  #         value = true;
+  #       };
+  #       disable_overscan = {
+  #         enable = true;
+  #         value = true;
+  #       };
+  #     };
+  #     base-dt-params = {
+  #       krnbt = {
+  #         enable = true;
+  #         value = "on";
+  #       };
+  #       spi = {
+  #         enable = true;
+  #         value = "on";
+  #       };
+  #       audio = {
+  #         enable = true;
+  #         value = "on";
+  #       };
+  #     };
+  #   };
+  # };
 
-  raspberry-pi-nix.board = "bcm2711";
-  hardware.raspberry-pi.config = {
-    all = {
-      options = {
-        # The firmware will start our u-boot binary rather than a
-        # linux kernel.
-        kernel = {
-          enable = true;
-          value = lib.mkForce "u-boot-rpi-arm64.bin";
-        };
-        arm_64bit = {
-          enable = true;
-          value = true;
-        };
-        enable_uart = {
-          enable = true;
-          value = true;
-        };
-        disable_overscan = {
-          enable = true;
-          value = true;
-        };
-      };
-      base-dt-params = {
-        krnbt = {
-          enable = true;
-          value = "on";
-        };
-        spi = {
-          enable = true;
-          value = "on";
-        };
-        audio = {
-          enable = true;
-          value = "on";
+  networking.hostName = "audiosink";
+  networking.networkmanager = {
+    enable = true;
+    ensureProfiles = {
+      environmentFiles = [
+        config.sops.secrets."wifi.env".path
+      ];
+      profiles = {
+        "HomeWifi" = {
+          connection = {
+            id = "$WIFI_SSID";
+            type = "wifi";
+            interface-name = "wlan0";
+          };
+          wifi = {
+            mode = "infrastructure";
+            ssid = "$WIFI_SSID";
+          };
+          wifi-security = {
+            auth-alg = "open";
+            key-mgmt = "wpa-psk";
+            psk = "$WIFI_PASSWORD";
+          };
+          ipv4 = {method = "auto";};
+          ipv6 = {
+            addr-gen-mode = "default";
+            method = "auto";
+          };
+          proxy = {};
         };
       };
     };
   };
 
-  networking.hostName = "audiosink";
-  networking.networkmanager.enable = true;
+  sops.secrets."wifi.env" = {
+    sopsFile = "${inputs.our-secrets}/secrets/common/wifi.yaml";
+    # Whole file
+    key = "wifiHome";
+  };
 
-  myOptions.hostRoles.base.enable = true;
-  myOptions.utilities.enable = true;
-
-  # Enable sound.
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    jack.enable = true;
+    jack.enable = false;
     wireplumber.enable = true;
     extraConfig.pipewire-pulse = {
       "30-network-publish" = {
@@ -146,9 +182,11 @@
     libraspberrypi
     podman
     podman-compose
-
-    ddcutil
   ];
+
+  programs.tmux.enable = true;
+  programs.git.enable = true;
+  programs.htop.enable = true;
 
   hardware.enableRedistributableFirmware = true;
   hardware.bluetooth.enable = true;
@@ -179,8 +217,15 @@
   networking.firewall.allowedTCPPorts = [
     # Pulse Network
     4713
+    # Librespot(unsure if TCP or UDP)
+    5566
     # Home Assistant
     8123
+  ];
+
+  networking.firewall.allowedUDPPorts = [
+    # Librespot(unsure if TCP or UDP)
+    5566
   ];
 
   # Enable common container config files in /etc/containers
@@ -198,7 +243,7 @@
       containers.homeassistant = {
         # How do we backup this?
         volumes = ["home-assistant:/config"];
-        environment.TZ = config.time.timeZone;
+        environment.TZ = "Europe/Berlin";
         # Okay? What does this mean?
         # Note: The image will not be updated on rebuilds, unless the version label changes
         image = "ghcr.io/home-assistant/home-assistant:stable";
@@ -212,5 +257,5 @@
     };
   };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.05";
 }

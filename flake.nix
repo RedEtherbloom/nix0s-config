@@ -67,11 +67,6 @@
       };
     };
 
-    raspberry-pi-nix = {
-      url = "git+https://github.com/nix-community/raspberry-pi-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -104,7 +99,6 @@
     nixpkgs,
     home-manager,
     sops-nix,
-    lix,
     flake-utils,
     nix-comfyui,
     nix-vscode-extensions,
@@ -159,7 +153,6 @@
             modules = [
               home-manager.nixosModules.home-manager
               sops-nix.nixosModules.sops
-              lix.nixosModules.default
 
               {nixpkgs = {inherit (nixpkgsConfig) overlays config;};}
 
