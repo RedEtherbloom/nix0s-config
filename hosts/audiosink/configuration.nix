@@ -217,15 +217,8 @@
   networking.firewall.allowedTCPPorts = [
     # Pulse Network
     4713
-    # Librespot(unsure if TCP or UDP)
-    5566
     # Home Assistant
     8123
-  ];
-
-  networking.firewall.allowedUDPPorts = [
-    # Librespot(unsure if TCP or UDP)
-    5566
   ];
 
   # Enable common container config files in /etc/containers
