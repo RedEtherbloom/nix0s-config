@@ -27,6 +27,12 @@ in {
 
   config = mkIf cfg.enable {
     programs.plasma = {
+      fonts = {
+        windowTitle = {
+          family = "OpenDyslexic Nerd Font";
+          pointSize = 10;
+        };
+      };
       enable = true;
       # We're only coding shortcuts for screens 0-3
       shortcuts =

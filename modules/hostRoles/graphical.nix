@@ -14,6 +14,31 @@ in {
 
     programs.appimage.binfmt = true;
 
-    environment.systemPackages = [pkgs.appimage-run];
+    environment.systemPackages = with pkgs; [
+      appimage-run
+      nerd-fonts.open-dyslexic
+    ];
+
+    stylix.fonts = {
+      serif = {
+        package = pkgs.nerd-fonts.open-dyslexic;
+        name = "OpenDyslexic Nerd Font";
+      };
+
+      sansSerif = {
+        package = pkgs.nerd-fonts.open-dyslexic;
+        name = "OpenDyslexic Nerd Font";
+      };
+
+      monospace = {
+        package = pkgs.nerd-fonts.open-dyslexic;
+        name = "OpenDyslexicM Nerd Font Mono";
+      };
+
+      emoji = {
+        package = pkgs.noto-fonts-emoji;
+        name = "Noto Color Emoji";
+      };
+    };
   };
 }
