@@ -24,20 +24,25 @@ in {
         package = pkgs.nerd-fonts.open-dyslexic;
         name = "OpenDyslexic Nerd Font";
       };
-
       sansSerif = {
         package = pkgs.nerd-fonts.open-dyslexic;
         name = "OpenDyslexic Nerd Font";
       };
-
       monospace = {
         package = pkgs.nerd-fonts.open-dyslexic;
         name = "OpenDyslexicM Nerd Font Mono";
       };
-
       emoji = {
         package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
+      };
+
+      # OpenDyslexic is very large by default. Too large for our taste.
+      sizes = {
+        applications = 10;
+        desktop = 8;
+        popups = 8;
+        terminal = 10;
       };
     };
   };
