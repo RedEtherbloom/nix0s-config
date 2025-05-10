@@ -19,6 +19,8 @@ in {
       nerd-fonts.open-dyslexic
     ];
 
+    fonts.fontDir.enable = true;
+
     stylix.fonts = {
       serif = {
         package = pkgs.nerd-fonts.open-dyslexic;
