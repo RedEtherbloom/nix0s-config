@@ -113,5 +113,10 @@ in {
     stylix.opacity.terminal = 0.8;
 
     programs.spotify-player.enable = true;
+
+    # TODO: Setup options
+    services.syncthing = {
+      enable = true;
+    };
   };
 }
