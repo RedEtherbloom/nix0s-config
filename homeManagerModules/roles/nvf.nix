@@ -204,6 +204,13 @@ in {
             package = pkgs.vimPlugins.vim-be-good;
             cmd = ["VimBeGood"];
           };
+          "music-controls.nvim" = {
+            package = pkgs.vimPlugins.music-controls-nvim;
+            lazy = false;
+            setupOpts = {
+              default_player = "spotify_client";
+            };
+          };
         };
         extraPlugins = {
           telescope-frecency-nvim = {

@@ -70,6 +70,33 @@ in {
   #     hash = "sha256-waF0T3feKgFlFnO1ZMxAEe93Ek4yEpvSgBQHFt2BePc=";
   #   };
   # });
+
+  vimPlugins =
+    (prev.vimPlugins or [])
+    // {
+      music-controls-nvim = let
+        base = prev.vimUtils.buildVimPlugin {
+          pname = "music-controls.nvim";
+          version = "2025-01-01";
+          src = prev.fetchFromGitHub {
+            owner = "AntonVanAssche";
+            repo = "music-controls.nvim";
+            rev = "35e6a644d66e916aeaad47b3f76f3dc608a32b68";
+            hash = "sha256-cPam2gwmEHq1OPB65It9797PZ9xXVLXGMYsHfM2LJeA=";
+          };
+          meta.homepage = "https://github.com/troydm/zoomwintab.vim/";
+          meta.hydraPlatforms = [];
+        };
+      in
+        base.overrideAttrs (_: prevAttrs: {
+          buildInputs =
+            (prevAttrs.buildInputs or [])
+            ++ (with prev; [
+              playerctl
+            ]);
+        });
+    };
+
   inherit (rimsort-pr) rimsort;
   inherit (sillytavern) sillytavern;
 }

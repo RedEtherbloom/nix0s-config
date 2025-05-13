@@ -92,6 +92,9 @@ in {
       hottext
 
       distrobox
+
+      # nvf music-controls.nvim
+      playerctl
     ];
 
     # May not work due to https://github.com/nix-community/home-manager/issues/1011
