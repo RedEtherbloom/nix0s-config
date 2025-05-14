@@ -95,6 +95,8 @@ in {
 
       # nvf music-controls.nvim
       playerctl
+
+      code-cursor
     ];
 
     # May not work due to https://github.com/nix-community/home-manager/issues/1011
