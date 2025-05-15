@@ -34,7 +34,11 @@ in {
       };
 
       # in µs
-      security.pam.services.sudo.failDelay.delay = 200000;
+      security.pam.services = {
+        sudo.failDelay.delay = 500000;
+        kde.failDelay.delay = 500000;
+        sddm.failDelay.delay = 500000;
+      };
     })
 
     # Allow hibernation for regular users
