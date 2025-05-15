@@ -67,20 +67,36 @@ in {
       ++
       # Attempt to fix ALVR/NvEnc problems
       ["nvidia" "i915" "nvidia_modeset" "nvidia_drm"];
-    initrd.luks.devices = {
-      "nixos-root" = {
-        device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
-        bypassWorkqueues = true;
-        # Weakens security
-        allowDiscards = true;
-      };
-      "nixos-swap" = {
-        device = "/dev/disk/by-uuid/69bd8d21-1c47-4aff-8533-31bf2610c181";
-        bypassWorkqueues = true;
-        # Weakens security
-        allowDiscards = true;
+    initrd = {
+      availableKernelModules = [
+        # Speedup decryption
+        "aesni_intel"
+      ];
+      luks.devices = {
+        "nixos-root" = {
+          device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
+          bypassWorkqueues = true;
+          # Weakens security
+          allowDiscards = true;
+        };
+        "nixos-swap" = {
+          device = "/dev/disk/by-uuid/69bd8d21-1c47-4aff-8533-31bf2610c181";
+          bypassWorkqueues = true;
+          # Weakens security
+          allowDiscards = true;
+        };
       };
     };
+  };
+  sops.secrets.cryptstorage = {
+    sopsFile = "${inputs.our-secrets}/secrets/neurodrive/cryptstorage.key";
+    format = "binary";
+  };
+  environment.etc."crypttab" = {
+    mode = "0600";
+    text = ''
+      vg--cryptstorage-cryptstorage UUID=b61e25b7-2cc5-49b9-b406-3b9a26806a23 ${config.sops.secrets.cryptstorage.path}
+    '';
   };
   fileSystems = {
     "/mnt/restic_data" = {
@@ -93,6 +109,13 @@ in {
     "/mnt/windows_data" = {
       device = "/dev/disk/by-uuid/587488F374FD109E";
       fsType = "ntfs3";
+      options = [
+        "nofail"
+      ];
+    };
+    "/mnt/cryptstorage" = {
+      device = "/dev/mapper/vg--cryptstorage-cryptstorage";
+      fsType = "ext4";
       options = [
         "nofail"
       ];
