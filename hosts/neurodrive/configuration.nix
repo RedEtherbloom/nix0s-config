@@ -88,14 +88,14 @@ in {
       };
     };
   };
-  sops.secrets.cryptstorage = {
+  sops.secrets.cryptostorage = {
     sopsFile = "${inputs.our-secrets}/secrets/neurodrive/cryptstorage.key";
     format = "binary";
   };
   environment.etc."crypttab" = {
     mode = "0600";
     text = ''
-      vg--cryptstorage-cryptstorage UUID=b61e25b7-2cc5-49b9-b406-3b9a26806a23 ${config.sops.secrets.cryptstorage.path}
+      cryptostorage UUID=b61e25b7-2cc5-49b9-b406-3b9a26806a23 ${config.sops.secrets.cryptostorage.path}
     '';
   };
   fileSystems = {
@@ -113,8 +113,8 @@ in {
         "nofail"
       ];
     };
-    "/mnt/cryptstorage" = {
-      device = "/dev/mapper/vg--cryptstorage-cryptstorage";
+    "/mnt/cryptostorage" = {
+      device = "/dev/mapper/vg--cryptostorage-lv--cryptostorage";
       fsType = "ext4";
       options = [
         "nofail"
