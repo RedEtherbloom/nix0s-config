@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  lib,
   pkgs,
   ...
 }: let
@@ -178,12 +179,16 @@ in {
         description = "Close the port for the pipewire service during night.";
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = pkgs.writeShellApplication {
+          ExecStart = lib.getExe (pkgs.writeShellApplication {
             name = "closeNetworkSinkPort";
+            runtimeInputs = with pkgs; [
+              iptables
+              nixos-firewall-tool
+            ];
             text = ''
-              nixos-firewall-tool close tcp ${builtins.toString networkSinkPort}
+              nixos-firewall-tool reset
             '';
-          };
+          });
         };
         conflicts = ["restart-network-sink.service"];
       };
@@ -191,24 +196,44 @@ in {
         description = "Restart librespot in the morning.";
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = pkgs.writeShellApplication {
+          ExecStart = lib.getExe (pkgs.writeShellApplication {
             name = "openNetworkSinkPort";
             text = ''
               nixos-firewall-tool open tcp ${builtins.toString networkSinkPort}
             '';
-          };
+            runtimeInputs = with pkgs; [
+              iptables
+              nixos-firewall-tool
+            ];
+          });
+        };
+      };
+      network-sink-after-boot = {
+        description = "Decide after boot what state the firewall should be in..";
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = lib.getExe (pkgs.writeShellScriptBin "networkSinkPortBoot" ''
+            HOUR=$(date +%H)
+            if [ "$HOUR" -lt 22 ] && [ "$HOUR" -ge 8 ]; then
+              systemctl start retart-network-sink.service
+            else
+              systemctl start stop-network-sink.service
+            fi
+          '');
         };
       };
     };
     timers = {
       # Stop during the night to avoid accidental pairing
       stop-network-sink = {
+        # TODO: Need additional boot condition
         timerConfig = {
           Persistent = true;
           OnCalendar = "*-*-* 22:00:00";
         };
       };
       restart-network-sink = {
+        # TODO: Need additional boot condition
         timerConfig = {
           # Avoid accidental start durng the night, in case of inconvenient reboot
           Persistent = false;
