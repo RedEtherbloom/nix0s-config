@@ -3,7 +3,9 @@
   inputs,
   pkgs,
   ...
-}: {
+}: let
+  networkSinkPort = 4713;
+in {
   imports = [
     inputs.nixos-hardware.nixosModules.raspberry-pi-3
     inputs.sops-nix.nixosModules.sops
@@ -122,6 +124,7 @@
       };
     };
   };
+  services.timesyncd.enable = true;
 
   sops.secrets."wifi.env" = {
     sopsFile = "${inputs.our-secrets}/secrets/common/wifi.yaml";
@@ -153,19 +156,67 @@
     };
   };
 
-  # Shitty autostart. Needs lingering on user, may start more than one
   # Should probably be redone with home-manager(Clara: Learing curve, yayyy...)
-  systemd.user.services.pipewire-pulse.after = [
-    "network-online.target"
-    "sound.target"
-    "bluetooth.target"
-  ];
-  systemd.user.services.pipewire-pulse.wants = [
-    "network-online.target"
-    "sound.target"
-    "bluetooth.target"
-  ];
-  systemd.user.services.pipewire-pulse.wantedBy = ["default.target"];
+  systemd = {
+    user.services = {
+      pipewire-pulse = {
+        after = [
+          "network-online.target"
+          "sound.target"
+          "bluetooth.target"
+        ];
+        wants = [
+          "network-online.target"
+          "sound.target"
+          "bluetooth.target"
+        ];
+        wantedBy = ["default.target"];
+      };
+    };
+    services = {
+      stop-network-sink = {
+        description = "Close the port for the pipewire service during night.";
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = pkgs.writeShellApplication {
+            name = "closeNetworkSinkPort";
+            text = ''
+              nixos-firewall-tool close tcp ${builtins.toString networkSinkPort}
+            '';
+          };
+        };
+        conflicts = ["restart-network-sink.service"];
+      };
+      restart-network-sink = {
+        description = "Restart librespot in the morning.";
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = pkgs.writeShellApplication {
+            name = "openNetworkSinkPort";
+            text = ''
+              nixos-firewall-tool open tcp ${builtins.toString networkSinkPort}
+            '';
+          };
+        };
+      };
+    };
+    timers = {
+      # Stop during the night to avoid accidental pairing
+      stop-network-sink = {
+        timerConfig = {
+          Persistent = true;
+          OnCalendar = "*-*-* 22:00:00";
+        };
+      };
+      restart-network-sink = {
+        timerConfig = {
+          # Avoid accidental start durng the night, in case of inconvenient reboot
+          Persistent = false;
+          OnCalendar = "*-*-* 08:00:00";
+        };
+      };
+    };
+  };
 
   users.users.inf = {
     isNormalUser = true;
@@ -216,7 +267,7 @@
 
   networking.firewall.allowedTCPPorts = [
     # Pulse Network
-    4713
+    # networkSinkPort
     # Home Assistant
     8123
   ];
