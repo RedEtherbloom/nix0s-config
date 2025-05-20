@@ -80,7 +80,7 @@ in {
       newSession = true;
       # May require passthrough set to all
       extraConfig = ''
-        set -s allow-passthrough on
+        set -g allow-passthrough on
       '';
     };
     programs.fzf.tmux.enableShellIntegration = true;
