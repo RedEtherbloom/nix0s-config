@@ -326,5 +326,7 @@ in {
     };
   };
 
+  services.syncthing.enable = true;
+
   system.stateVersion = "25.05";
 }
