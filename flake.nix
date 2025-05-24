@@ -36,7 +36,6 @@
     stylix = {
       url = "github:danth/stylix";
       inputs = {
-        flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
       };

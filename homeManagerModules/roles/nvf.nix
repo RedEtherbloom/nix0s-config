@@ -128,7 +128,6 @@ in {
         syntaxHighlighting = true;
         languages = {
           enableFormat = true;
-          enableLSP = true;
           enableTreesitter = true;
           enableDAP = true;
 
