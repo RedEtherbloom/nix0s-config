@@ -291,8 +291,10 @@ in {
   };
 
   networking.firewall.allowedTCPPorts = [
-    # Pulse Network
-    # networkSinkPort
+    # MPD1
+    6600
+    # MPD2
+    6601
     # Home Assistant
     8123
   ];
