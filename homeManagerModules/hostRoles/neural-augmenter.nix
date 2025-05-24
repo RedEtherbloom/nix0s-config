@@ -99,6 +99,8 @@ in {
       code-cursor
       
       gtypist
+      
+      handbrake
     ];
 
     # May not work due to https://github.com/nix-community/home-manager/issues/1011
