@@ -34,9 +34,12 @@ in {
           experimental-features = [
             "nix-command"
             "flakes"
-            # Not yet supported by Lix?
+            # Not yet supported by Lix
             #"pipe-operators"
           ];
+          trusted-users = ["root" "@wheel" "inf"];
+          keep-outputs = true;
+          keep-derivations = true;
         };
         gc = {
           automatic = true;
@@ -49,7 +52,6 @@ in {
             "15:00"
           ];
         };
-        settings.trusted-users = ["root" "@wheel" "inf"];
       };
       programs.nix-ld.enable = true;
       hardware.i2c.enable = true;
