@@ -103,6 +103,10 @@ in {
       handbrake
       scrcpy
       dumbpipe
+
+      # mpd players to compare
+      cantata
+      plattenalbum
     ];
 
     # May not work due to https://github.com/nix-community/home-manager/issues/1011
