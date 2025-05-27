@@ -97,6 +97,21 @@ in {
         });
     };
 
+  # See: https://github.com/NixOS/nixpkgs/issues/411302
+  mlt = prev.mlt.overrideAttrs (_: _: rec {
+    version = "7.30.0";
+    src = prev.fetchFromGitHub {
+      owner = "mltframework";
+      repo = "mlt";
+      rev = "v${version}";
+      hash = "sha256-z1bW+hcVeMeibC1PUS5XNpbkNB+75YLoOWZC2zuDol4=";
+      # The submodule contains glaxnimate code, since MLT uses internally some functions defined in glaxnimate.
+      # Since glaxnimate is not available as a library upstream, we cannot remove for now this dependency on
+      # submodules until upstream exports glaxnimate as a library: https://gitlab.com/mattbas/glaxnimate/-/issues/545
+      fetchSubmodules = true;
+    };
+  });
+
   inherit (rimsort-pr) rimsort;
   inherit (sillytavern) sillytavern;
 }
