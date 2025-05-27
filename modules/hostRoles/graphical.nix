@@ -6,13 +6,25 @@
 }:
 with lib; let
   cfg = config.myOptions.hostRoles.graphical;
+  appimage-run = pkgs.appimage-run.override {
+    extraPkgs = pkgs:
+      # Potentially may need more dependencies
+      with pkgs; [
+        ffmpeg
+        imagemagick
+        fuse
+      ];
+  };
 in {
   options.myOptions.hostRoles.graphical.enable = mkEnableOption "graphical session settings";
 
   config = mkIf cfg.enable {
     myOptions.hostRoles.base.enable = mkDefault true;
 
-    programs.appimage.binfmt = true;
+    programs.appimage = {
+      binfmt = true;
+      package = appimage-run;
+    };
 
     environment.systemPackages = with pkgs; [
       appimage-run
