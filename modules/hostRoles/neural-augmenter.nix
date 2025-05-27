@@ -48,6 +48,11 @@ in {
         enable = true;
         pinentryPackage = pkgs.pinentry-qt;
       };
+      
+      ausweisapp = {
+        enable = true;
+        openFirewall = true;
+      };
     };
 
     services = {
