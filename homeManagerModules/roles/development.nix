@@ -114,7 +114,7 @@ in {
           clang-tools
         ]
         ++ lib.optionals cfg.openscad [
-          openscad-unstable
+          openscad
         ]
         # TODO: Merge with DevShell
         ++ lib.optionals cfg.nix [
