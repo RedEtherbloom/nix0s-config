@@ -90,9 +90,8 @@ in {
       NIXOS_OZONE_WL = "1";
     };
 
-    fonts.fontconfig = {
-      enable = true;
-      # TODO: Does stylix set the fontconfig options?
-    };
+    fonts.fontconfig.enable = true;
+
+    programs.btop.enable = true;
   };
 }

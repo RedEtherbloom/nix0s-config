@@ -75,6 +75,8 @@ in {
         keyScheme = "vim";
       };
 
+      programs.btop.package = pkgs.btop-cuda;
+
       myOptions.roles.development.electronics = true;
     }
     # Ivy: These sadly break with missing monitors :/
