@@ -30,6 +30,11 @@ in {
       type = types.bool;
       default = true;
     };
+    pdf_editing = mkOption {
+      description = "Install pdf editing utilities.";
+      type = types.bool;
+      default = true;
+    };
     video_editing = mkOption {
       description = "Enable video_editing";
       type = types.bool;
@@ -61,10 +66,10 @@ in {
           hunspell
           hunspellDicts.en_US
           hunspellDicts.de_DE
-        ]
+        ] ++ lib.optionals cfg.pdf_editing [pdfarranger]
         ++ lib.optionals cfg.video_editing [shotcut]
         ++ lib.optionals cfg.scanning [simple-scan]
-        # Turn into option, once we figured out it's profiles
+        # TODO: Turn into option, once we figured out it's profiles
         ++ lib.optionals cfg.thunderbird [thunderbird];
     }
   ]);
