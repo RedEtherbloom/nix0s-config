@@ -295,6 +295,8 @@ in {
     6600
     # MPD2
     6601
+    # Modidy
+    6680
     # Home Assistant
     8123
   ];

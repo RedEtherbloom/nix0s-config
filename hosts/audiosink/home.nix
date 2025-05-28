@@ -40,6 +40,16 @@
       '';
     };
     mpdris2.enable = true;
+    mopidy = {
+      enable = true;
+      settings = {
+        file = {
+          media_dirs = [
+            "$HOME/Music|Music"
+          ];
+        };
+      };
+    };
   };
 
   systemd.user = {
