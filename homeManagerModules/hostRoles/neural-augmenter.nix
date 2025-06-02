@@ -97,9 +97,9 @@ in {
       playerctl
 
       code-cursor
-      
+
       gtypist
-      
+
       handbrake
       scrcpy
       dumbpipe
@@ -107,6 +107,12 @@ in {
       # mpd players to compare
       cantata
       plattenalbum
+
+      podman
+      dive # look into docker image layers
+      podman-tui # status of containers in the terminal
+      podman-compose
+      docker-compose # start group of containers for dev
     ];
 
     # May not work due to https://github.com/nix-community/home-manager/issues/1011

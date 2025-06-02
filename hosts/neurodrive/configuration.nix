@@ -312,34 +312,23 @@ in {
     # Required for GPU passthrough
     nvidia-container-toolkit.enable = true;
   };
-  virtualisation = {
-    containers.enable = true;
-    podman = {
-      dockerSocket.enable = true;
-      enable = true;
-      # Create a `docker` alias for podman, to use it as a drop-in replacement
-      dockerCompat = true;
-      # Required for containers under podman-compose to be able to talk to each other.
-      defaultNetwork.settings.dns_enabled = true;
+  virtualisation.oci-containers = {
+    containers.homeassistant = {
+      volumes = ["home-assistant:/config"];
+      environment.TZ = config.time.timeZone;
+      image = "ghcr.io/home-assistant/home-assistant:stable";
+      # Use the host network namespace for all sockets
+      extraOptions = [
+        "--network=host"
+        # TODO: Update address in repo
+        "--device=/dev/zigbee-ap:/dev/ttyUSB0"
+      ];
     };
-    oci-containers = {
-      backend = "podman";
-      containers.homeassistant = {
-        volumes = ["home-assistant:/config"];
-        environment.TZ = config.time.timeZone;
-        image = "ghcr.io/home-assistant/home-assistant:stable";
-        # Use the host network namespace for all sockets
-        extraOptions = [
-          "--network=host"
-          "--device=/dev/zigbee-ap:/dev/ttyUSB0"
-        ];
-      };
-      containers.libretranslate = {
-        volumes = ["libretranslate_models:/home/libretranslate/.local:rw"];
-        environment.TZ = config.time.timeZone;
-        image = "docker.io/libretranslate/libretranslate:latest";
-        ports = ["127.0.0.1:8151:5000"];
-      };
+    containers.libretranslate = {
+      volumes = ["libretranslate_models:/home/libretranslate/.local:rw"];
+      environment.TZ = config.time.timeZone;
+      image = "docker.io/libretranslate/libretranslate:latest";
+      ports = ["127.0.0.1:8151:5000"];
     };
   };
   systemd.services."podman-homeassistant" = {
@@ -375,9 +364,6 @@ in {
     cudaPackages.cudatoolkit
     cudaPackages.cudnn
     nvtopPackages.full
-    dive # look into docker image layers
-    podman-tui # status of containers in the terminal
-    docker-compose # start group of containers for dev
     smartmontools
   ];
 

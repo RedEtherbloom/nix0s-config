@@ -48,7 +48,7 @@ in {
         enable = true;
         pinentryPackage = pkgs.pinentry-qt;
       };
-      
+
       ausweisapp = {
         enable = true;
         openFirewall = true;
@@ -75,6 +75,40 @@ in {
     # Required for Nheko to work
     nixpkgs.config.permittedInsecurePackages = [
       "olm-3.2.16"
+    ];
+
+    virtualisation = {
+      containers = {
+        enable = true;
+        registries.search = [
+          "docker.io"
+          "quay.io"
+        ];
+      };
+      podman = {
+        dockerSocket.enable = true;
+        enable = true;
+        # Create a `docker` alias for podman, to use it as a drop-in replacement
+        dockerCompat = true;
+        # Required for containers under podman-compose to be able to talk to each other.
+        defaultNetwork.settings.dns_enabled = true;
+      };
+      oci-containers = {
+        backend = "podman";
+      };
+    };
+
+    users.users."inf".subUidRanges = [
+      {
+        count = 65534;
+        startUid = 100001;
+      }
+    ];
+    users.users."inf".subGidRanges = [
+      {
+        count = 999;
+        startGid = 1001;
+      }
     ];
   };
 }

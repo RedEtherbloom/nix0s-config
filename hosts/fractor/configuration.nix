@@ -156,21 +156,6 @@
     LIBVA_DRIVER_NAME = "iHD";
   };
 
-  virtualisation = {
-    containers.enable = true;
-    podman = {
-      dockerSocket.enable = true;
-      enable = true;
-      # Create a `docker` alias for podman, to use it as a drop-in replacement
-      dockerCompat = true;
-      # Required for containers under podman-compose to be able to talk to each other.
-      defaultNetwork.settings.dns_enabled = true;
-    };
-    oci-containers = {
-      backend = "podman";
-    };
-  };
-
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.11"; # Did you read the comment?
