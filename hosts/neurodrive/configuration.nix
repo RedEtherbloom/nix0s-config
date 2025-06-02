@@ -67,6 +67,8 @@ in {
       ++
       # Attempt to fix ALVR/NvEnc problems
       ["nvidia" "i915" "nvidia_modeset" "nvidia_drm"];
+    # https://github.com/NixOS/nixpkgs/issues/412299
+    kernelPackages = pkgs.linuxKernel.packages.linux_6_14;
     initrd = {
       availableKernelModules = [
         # Speedup decryption
