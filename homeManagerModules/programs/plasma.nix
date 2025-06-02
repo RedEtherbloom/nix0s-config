@@ -260,7 +260,7 @@ in {
 
           "services/firefox.desktop"."new-window" = "Meta+E";
           "services/kitty.desktop"."_launch" = "Ctrl+Alt+T";
-          "services/obsidian.desktop"."_launch" = "Meta+Shift+O";
+          "services/obsidian.desktop"."_launch" = "Meta+O";
           "services/org.kde.dolphin.desktop"."_launch" = "Meta+Shift+E";
           "services/org.kde.konsole.desktop"."_launch" = [];
           "services/org.kde.krunner.desktop"."_launch" = ["Alt+F2" "Search" "Alt+Shift+Space"];
