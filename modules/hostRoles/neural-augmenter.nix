@@ -26,6 +26,7 @@ in {
       };
       roles.i2p.enable = true;
     };
+    security.ownAdditional.yubikey = true;
 
     stylix = {
       enable = true;

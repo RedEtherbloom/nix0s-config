@@ -34,6 +34,7 @@ in {
           experimental-features = [
             "nix-command"
             "flakes"
+            "repl-flake"
             # Not yet supported by Lix
             #"pipe-operators"
           ];

@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  pkgs,
   ...
 }:
 with lib; let
@@ -17,6 +18,11 @@ in {
       type = types.bool;
       default = true;
       description = "Allow normal users to hibernate as well";
+    };
+    yubikey = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Yubikey support";
     };
   };
 
@@ -58,6 +64,24 @@ in {
           }
         });
       '';
+    })
+
+    (mkIf cfg.yubikey {
+      # Yubikey
+      services.udev.packages = with pkgs; [
+        yubikey-personalization
+      ];
+      services.pcscd.enable = true;
+
+      programs.gnupg.agent = {
+        enable = true;
+        enableSSHSupport = true;
+      };
+
+      security.pam.services = {
+        login.u2fAuth = true;
+        sudo.u2fAuth = true;
+      };
     })
   ];
 }

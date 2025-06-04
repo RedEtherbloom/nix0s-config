@@ -52,68 +52,76 @@ in {
     myOptions.firefox.enable = true;
     programs.nushell.enable = true;
 
-    home.packages = with pkgs; [
-      (chromium.override {enableWideVine = true;})
-      tor-browser
-      bitwarden
-      # bitwarden-cli
+    home.packages = with pkgs;
+      [
+        (chromium.override {enableWideVine = true;})
+        tor-browser
+        bitwarden
+        # bitwarden-cli
 
-      comfyuiPackages.krita-with-extensions
-      yt-dlp
+        comfyuiPackages.krita-with-extensions
+        yt-dlp
 
-      # KDE info packages
-      clinfo
-      glxinfo
-      vulkan-tools
-      wayland-utils
-      pciutils
-      aha
-      # Monitor brightness control
-      ddcutil
-      usbutils
+        # KDE info packages
+        clinfo
+        glxinfo
+        vulkan-tools
+        wayland-utils
+        pciutils
+        aha
+        # Monitor brightness control
+        ddcutil
+        usbutils
 
-      # TODO: Move to restic module
-      restic
-      autorestic
+        # TODO: Move to restic module
+        restic
+        autorestic
 
-      ffmpeg-full
-      gst_all_1.gst-plugins-good
-      gst_all_1.gst-plugins-bad
+        ffmpeg-full
+        gst_all_1.gst-plugins-good
+        gst_all_1.gst-plugins-bad
 
-      imagemagick
+        imagemagick
 
-      tailscale
+        tailscale
 
-      # Certificate creation
-      xca
+        # Certificate creation
+        xca
 
-      # Speedreading
-      speedread
-      hottext
+        # Speedreading
+        speedread
+        hottext
 
-      distrobox
+        distrobox
 
-      # nvf music-controls.nvim
-      playerctl
+        # nvf music-controls.nvim
+        playerctl
 
-      code-cursor
+        code-cursor
 
-      gtypist
+        gtypist
 
-      handbrake
-      scrcpy
-      dumbpipe
+        handbrake
+        scrcpy
+        dumbpipe
 
-      # mpd players to compare
-      cantata
-      plattenalbum
+        # mpd players to compare
+        cantata
+        plattenalbum
 
-      podman
-      dive # look into docker image layers
-      podman-tui # status of containers in the terminal
-      podman-compose
-      docker-compose # start group of containers for dev
-    ];
+        podman
+        dive # look into docker image layers
+        podman-tui # status of containers in the terminal
+        podman-compose
+        docker-compose # start group of containers for dev
+      ]
+      ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
+        yubioath-flutter
+      ]));
+
+    services.yubikey-agent = {
+      enable = osConfig.security.ownAdditional.yubikey;
+    };
 
     # May not work due to https://github.com/nix-community/home-manager/issues/1011
     home.sessionVariables = {
