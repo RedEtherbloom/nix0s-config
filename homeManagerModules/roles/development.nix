@@ -1,7 +1,8 @@
 {
-  pkgs,
   config,
   lib,
+  osConfig,
+  pkgs,
   ...
 }:
 with lib; let
@@ -164,6 +165,16 @@ in {
           push = {
             autoSetupRemote = true;
           };
+        };
+      };
+    })
+    (mkIf osConfig.security.ownAdditional.yubikey {
+      programs.git = {
+        userEmail = "etherbloom@mailbox.org";
+        signing = {
+          format = "openpgp";
+          key = "341EB1EADB36EC0AC809FBE7BA719C19A950A2F3";
+          signByDefault = true;
         };
       };
     })

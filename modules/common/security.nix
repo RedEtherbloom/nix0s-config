@@ -67,20 +67,36 @@ in {
     })
 
     (mkIf cfg.yubikey {
-      # Yubikey
-      services.udev.packages = with pkgs; [
-        yubikey-personalization
-      ];
-      services.pcscd.enable = true;
+      services = {
+        udev.packages = [pkgs.yubikey-personalization];
+        pcscd.enable = true;
+      };
 
       programs.gnupg.agent = {
         enable = true;
         enableSSHSupport = true;
       };
 
-      security.pam.services = {
-        login.u2fAuth = true;
-        sudo.u2fAuth = true;
+      security.pam = {
+        u2f = {
+          enable = true;
+          control = "sufficient";
+          settings = {
+            origin = "pam://yubi";
+            authfile = pkgs.writeText "u2f-mappings" (lib.concatStrings [
+              "inf"
+              ":64w4vEJ2naXlaGrQhMgpfDN+mONUxzgJN5Qn9RZsLZJSwb47o0cM0hFyQEbYzY7VhpDkijCPALp2lmjU/p2GbQ==,6liBTekvJyy5JGc+rxODEcjqE9oiBtEKNqYoxSHnplU7+hWGZT1zNypdfyP0jb7GPNoMVPaKmuNNg3+0lTpr0w==,es256,+presence"
+              ":xFSjBKbX2sdnWcapMi45xQXl+d5gruJe79ajs5hs3VghJn+PXBPLlX28pxHTEBMsbMIbGh9SVjZRxv5Hv2GJJQ==,hYUMlJxeYkok8Em8uiwm30Htrv3mc3h8V3FQmySKDQsj8sZwuBFT9rm3yqppJn2Hr8CA3E8tXb9jBlSXVpsNAA==,es256,+presence"
+            ]);
+            cue = true;
+            # TODO: Do I need interactive? I don't think so
+            # interactive = false;
+          };
+        };
+        services = {
+          login.u2fAuth = true;
+          sudo.u2fAuth = true;
+        };
       };
     })
   ];

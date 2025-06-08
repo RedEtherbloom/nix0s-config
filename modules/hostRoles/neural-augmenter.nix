@@ -44,12 +44,6 @@ in {
 
       adb.enable = true;
 
-      # TODO: Maybe turn this into a home-manager option
-      gnupg.agent = {
-        enable = true;
-        pinentryPackage = pkgs.pinentry-qt;
-      };
-
       ausweisapp = {
         enable = true;
         openFirewall = true;
@@ -68,7 +62,6 @@ in {
       # For some reason this keeps getting pulled in since stylix and then recycled by ghc
       ghc
       gnupg
-      pinentry-qt
 
       lm_sensors
     ];
