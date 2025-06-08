@@ -19,6 +19,7 @@ with lib; let
       (x + ":")
     ])
     baseAlias);
+  iconRefreshInterval = 24 * 60 * 60 * 1000;
 in {
   options.myOptions.firefox = {
     enable = mkOption {
@@ -195,7 +196,7 @@ in {
               "Go Pkgs" = {
                 definedAliases = defineAliasVariants ["go"];
                 icon = "https://pkg.go.dev/static/shared/icon/favicon.ico";
-                updateInterval = 24 * 60 * 60 * 1000; # every day
+                updateInterval = iconRefreshInterval;
                 urls = [
                   {
                     template = "https://pkg.go.dev/search";
@@ -212,7 +213,7 @@ in {
               "PerplexityAI" = {
                 definedAliases = defineAliasVariants ["p" "per" "perplexity"];
                 icon = "https://www.perplexity.ai/favicon.ico";
-                updateInterval = 24 * 60 * 60 * 1000; # every day
+                updateInterval = iconRefreshInterval;
                 urls = [
                   {
                     template = "https://www.perplexity.ai/search";
@@ -229,7 +230,7 @@ in {
               "dict.cc english" = {
                 definedAliases = defineAliasVariants ["dc" "dict"];
                 icon = "https://www4.dict.cc/img/favicons/favicon4.png";
-                updateInterval = 24 * 60 * 60 * 1000; # every day
+                updateInterval = iconRefreshInterval;
                 urls = [
                   {
                     template = "https://www.dict.cc/";
@@ -245,7 +246,7 @@ in {
               "youtube" = {
                 definedAliases = defineAliasVariants ["youtube" "yt"];
                 icon = "https://www.youtube.com/s/desktop/c01ea7e3/img/logos/favicon.ico";
-                updateInterval = 24 * 60 * 60 * 1000; # every day
+                updateInterval = iconRefreshInterval;
                 urls = [
                   {
                     template = "https://www.youtube.com/results";
@@ -261,7 +262,7 @@ in {
               "duckduckgo" = {
                 definedAliases = defineAliasVariants ["dg" "duckduckgo"];
                 icon = "https://duckduckgo.com/favicon.ico";
-                updateInterval = 24 * 60 * 60 * 1000; # every day
+                updateInterval = iconRefreshInterval;
                 urls = [
                   {
                     template = "https://duckduckgo.com/";
@@ -277,7 +278,7 @@ in {
               "reddit" = {
                 definedAliases = defineAliasVariants ["red" "reddit"];
                 icon = "https://www.redditstatic.com/shreddit/assets/favicon/64x64.png";
-                updateInterval = 24 * 60 * 60 * 1000; # every day
+                updateInterval = iconRefreshInterval;
                 urls = [
                   {
                     template = "https://www.reddit.com/search/";
@@ -294,7 +295,7 @@ in {
               "github" = {
                 definedAliases = defineAliasVariants ["git" "github"];
                 icon = "https://github.githubassets.com/favicons/favicon-dark.png";
-                updateInterval = 24 * 60 * 60 * 1000; # every day
+                updateInterval = iconRefreshInterval;
                 urls = [
                   {
                     template = "https://github.com/search";
@@ -311,7 +312,7 @@ in {
               "amazon" = {
                 definedAliases = defineAliasVariants ["ama" "amazon"];
                 icon = "https://www.amazon.de/favicon.ico";
-                updateInterval = 24 * 60 * 60 * 1000; # every day
+                updateInterval = iconRefreshInterval;
                 urls = [
                   {
                     template = "https://www.amazon.de/s";
@@ -329,10 +330,26 @@ in {
               "mynixos" = {
                 definedAliases = defineAliasVariants ["mn" "mynix" "mynixos"];
                 icon = "https://mynixos.com/favicon.ico";
-                updateInterval = 24 * 60 * 60 * 1000; # every day
+                updateInterval = iconRefreshInterval;
                 urls = [
                   {
                     template = "https://mynixos.com/search";
+                    params = [
+                      {
+                        name = "q";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+              };
+              "chatgpt" = {
+                definedAliases = defineAliasVariants ["ct" "cpgt" "chatgpt"];
+                icon = "https://cdn.oaistatic.com/assets/favicon-miwirzcw.ico";
+                updateInterval = iconRefreshInterval;
+                urls = [
+                  {
+                    template = "https://chatgpt.com";
                     params = [
                       {
                         name = "q";
