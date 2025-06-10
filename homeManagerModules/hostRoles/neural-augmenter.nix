@@ -114,6 +114,9 @@ in {
         podman-tui # status of containers in the terminal
         podman-compose
         docker-compose # start group of containers for dev
+
+        # Music production
+        sonic-pi
       ]
       ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
         yubioath-flutter
