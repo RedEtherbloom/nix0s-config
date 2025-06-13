@@ -42,11 +42,16 @@
     mpdris2.enable = true;
     mopidy = {
       enable = true;
+      extensionPackages = with pkgs; [
+        mopidy-mpd
+        mopidy-mpris
+      ];
       settings = {
         file = {
           media_dirs = [
             "$HOME/Music|Music"
           ];
+          followSymlinks = true;
         };
       };
     };
