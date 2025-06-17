@@ -17,39 +17,46 @@ in {
   };
 
   config = mkIf cfg.enable {
-    myOptions.hostRoles.graphical.enable = mkDefault true;
-    myOptions.socials.enable = true;
-    myOptions.roles.development.enable = true;
-    myOptions.roles.nvf.enable = true;
-    myOptions.vscode.enable = true;
-    myOptions.obsidian.enable = true;
-    myOptions.taskwarrior = {
-      enable = true;
-      enableSync = true;
-      taskopen = true;
-    };
-    myOptions.taskwarrior-tui = {
-      enable = true;
-      package = with pkgs; (taskwarrior-tui.overrideAttrs (finalAttrs: oldAttrs: rec {
-        version = oldAttrs.version + "-fix";
+    myOptions = {
+      hostRoles.graphical.enable = mkDefault true;
+      
+      roles = {
+        development = {
+          enable = true;
+          electronics = true;
+        };
+        nvf.enable = true;
+      };
+      vscode.enable = true;
 
-        src = (
-          pkgs.fetchFromGitHub {
+      firefox.enable = true;
+      socials.enable = true;
+
+      obsidian.enable = true;
+      taskwarrior = {
+        enable = true;
+        enableSync = true;
+        taskopen = true;
+      };
+      taskwarrior-tui = {
+        enable = true;
+        # TODO: Update and/or move to overlay
+        package = with pkgs; (taskwarrior-tui.overrideAttrs (_: oldAttrs: rec {
+          version = oldAttrs.version + "-fix";
+          src = pkgs.fetchFromGitHub {
             owner = "RedEtherbloom";
             repo = "taskwarrior-tui";
             hash = "sha256-YNd4vtaWm+1fsB8ly3toq2u74Nicmhx2ey1m557q4K8=";
             rev = "ee24bfb4a36f246933e6d2502ab85d3fc6abb85b";
-          }
-        );
-
-        cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-          inherit src;
-          hash = "sha256-7q85YszWmetjWry9nvc2irQeLFCWHwOAkEUHtc9CK/c=";
-        };
-      }));
+          };
+          cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+            inherit src;
+            hash = "sha256-7q85YszWmetjWry9nvc2irQeLFCWHwOAkEUHtc9CK/c=";
+          };
+        }));
+      };
     };
 
-    myOptions.firefox.enable = true;
     programs.nushell.enable = true;
 
     home.packages = with pkgs;

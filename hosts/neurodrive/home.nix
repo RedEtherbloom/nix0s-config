@@ -76,8 +76,6 @@ in {
       };
 
       programs.btop.package = pkgs.btop-cuda;
-
-      myOptions.roles.development.electronics = true;
     }
     # Ivy: These sadly break with missing monitors :/
     (generate-kscreen-doctor "screen-benq" "kscreen-doctor output.DP-3.disable output.HDMI-A-1.disable output.DP-2.enable output.DP-2.rotation.normal output.DP-2.position.0,0" "ctrl+shift+f1")
