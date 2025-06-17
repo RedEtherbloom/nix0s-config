@@ -139,6 +139,12 @@ in {
       MOZ_USE_XINPUT2 = "1";
     };
 
+    home.extraOutputsToInstall = [
+      "doc"
+      "info"
+      "devdoc"
+    ];
+
     programs.rofi = {
       enable = true;
       terminal = "${config.programs.kitty.package}";
