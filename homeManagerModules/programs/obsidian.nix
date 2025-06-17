@@ -34,7 +34,7 @@ in {
     }
     (mkIf cfg.pullShortcut
       (let
-        lazygitSyncVaultDefault = vars.lazygitCommandWindow "lazygitSyncVaultDefault" "~/Documents/Obsidian/default";
+        lazygitSyncVaultDefault = vars.lazygitCommandWindow "SyncVaultDefault" "~/Documents/Obsidian/default";
         syncObsidianPhone = pkgs.writeShellApplication {
           name = "syncObsidianPhone";
           runtimeInputs = [pkgs.libnotify];

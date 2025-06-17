@@ -12,7 +12,7 @@
   own-hm-data-directory = "${config.xdg.dataHome}/data-for-home-manager";
   lazygitCommandWindow = name: location:
     pkgs.writeShellApplication {
-      name = "commandWindow-lazygit-${name}.sh";
+      name = "lazygit${name}.sh";
       runtimeInputs = [
         config.programs.kitty.package
         pkgs.libnotify
