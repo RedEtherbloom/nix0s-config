@@ -10,6 +10,7 @@ with lib; let
 in {
   imports = [
     inputs.stylix.nixosModules.stylix
+    #../common/shared_secrets.nix
   ];
 
   options.myOptions.hostRoles.neural-augmenter.enable = mkEnableOption "workstation options";

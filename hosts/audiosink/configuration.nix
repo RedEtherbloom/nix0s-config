@@ -15,6 +15,7 @@ in {
     ./raspberry_pi_binary_cache.nix
 
     ../../modules/common/ssh.nix
+    ../../modules/common/shared_secrets.nix
   ];
 
   nix = {

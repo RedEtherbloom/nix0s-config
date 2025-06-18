@@ -29,6 +29,23 @@ in {
         programs.home-manager.enable = true;
 
         programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
+
+        programs.btop.enable = true;
+
+        programs.tmux = {
+          enable = true;
+          clock24 = true;
+          historyLimit = 10000;
+          # Hope this doesn't blow up
+          keyMode = "vi";
+          mouse = true;
+          newSession = true;
+          # May require passthrough set to all
+          extraConfig = ''
+            set -g allow-passthrough on
+          '';
+        };
+        programs.fzf.tmux.enableShellIntegration = true;
       }
       (mkIf osConfig.security.ownAdditional.yubikey {
         # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)

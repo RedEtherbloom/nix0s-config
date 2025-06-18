@@ -248,6 +248,7 @@ in {
       # https://search.nixos.org/options?channel=unstable&show=services.smartd.defaults.monitored
       defaults.monitored = "-a -o on -s (S/../.././02|L/../../7/04)";
     };
+    # TODO: Update path
     udev.extraRules = ''
       SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="zigbee-ap"
     '';

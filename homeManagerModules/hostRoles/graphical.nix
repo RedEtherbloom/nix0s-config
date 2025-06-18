@@ -70,28 +70,11 @@ in {
       };
     };
 
-    programs.tmux = {
-      enable = true;
-      clock24 = true;
-      historyLimit = 10000;
-      # Hope this doesn't blow up
-      keyMode = "vi";
-      mouse = true;
-      newSession = true;
-      # May require passthrough set to all
-      extraConfig = ''
-        set -g allow-passthrough on
-      '';
-    };
-    programs.fzf.tmux.enableShellIntegration = true;
-
     home.sessionVariables = {
       # Native Wayland for Chromium apps
       NIXOS_OZONE_WL = "1";
     };
 
     fonts.fontconfig.enable = true;
-
-    programs.btop.enable = true;
   };
 }

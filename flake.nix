@@ -170,6 +170,7 @@
       in {
         fractor = mkSystem "fractor" "x86_64-linux" defaultUsername;
         neurodrive = mkSystem "neurodrive" "x86_64-linux" defaultUsername;
+        rama = mkSystem "rama" "x86_64-linux" defaultUsername;
         audiosink = mkSystem "audiosink" "aarch64-linux" defaultUsername;
       };
     };

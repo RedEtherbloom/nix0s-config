@@ -89,6 +89,10 @@ in {
           audiosink =
             generateWireguardHost "6" "bvDwdiRWJAXr3up4k+34w8ATqcx6t98jTnmSsjBVhFE="
             "HvQA5s03k1w3dwTwjSR3/dasUeUNGD+fTskz///2nj0=";
+          # Temp device block
+          rama =
+            generateWireguardHost "100" "8Vmy6q7ZHcWufMItFisiNQ8UtBXYRZ94X3WSCY5hrzE="
+            "PxIjbwwqmyQcQYlIx7MOhRc4DuiSN5WO6EEw8dMIbUU=";
         };
       };
     };
