@@ -84,10 +84,12 @@ in {
     openFirewall = true;
     settings = {
       media_dir = [
-        "/srv/media-directory"
+        "A,/srv/media-directory/music"
       ];
       wide_links = "yes";
       inotify = "yes";
+      log_level = "debug,ssdp";
+      notify_interval = 30;
     };
   };
 
@@ -145,6 +147,7 @@ in {
 
   security.rtkit.enable = true;
   services = {
+    mediatomb.enable = true;
     timesyncd.enable = true;
     pipewire = {
       enable = true;
