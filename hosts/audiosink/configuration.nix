@@ -193,6 +193,17 @@ in {
       openFirewall = true;
     };
     syncthing.enable = true;
+    minidlna = {
+      enable = true;
+      openFirewall = true;
+      settings = {
+        media_dir = [
+          "/srv/media-directory"
+        ];
+        wide_links = "yes";
+        inotify = "yes";
+      };
+    };
   };
 
   # Should probably be redone with home-manager(Clara: Learing curve, yayyy...)
@@ -276,6 +287,38 @@ in {
           # Avoid accidental start durng the night, in case of inconvenient reboot
           Persistent = false;
           OnCalendar = "*-*-* 08:00:00";
+        };
+      };
+    };
+    tmpfiles.settings = {
+      "10-media-directory" = {
+        "/srv/media-directory" = {
+          d = {
+            group = "media";
+            user = config.systemd.services.minidlna.serviceConfig.User;
+            mode = "0775";
+          };
+        };
+        "/srv/media-directory/music" = {
+          d = {
+            group = "media";
+            user = config.systemd.services.minidlna.serviceConfig.User;
+            mode = "0775";
+          };
+        };
+        "/srv/media-directory/videos" = {
+          d = {
+            group = "media";
+            user = config.systemd.services.minidlna.serviceConfig.User;
+            mode = "0775";
+          };
+        };
+        "/srv/media-directory/images" = {
+          d = {
+            group = "media";
+            user = config.systemd.services.minidlna.serviceConfig.User;
+            mode = "0775";
+          };
         };
       };
     };
