@@ -46,6 +46,51 @@ in {
     }
   ];
 
+  systemd.tmpfiles.settings = {
+    "10-media-directory" = {
+      "/srv/media-directory" = {
+        d = {
+          group = "media";
+          user = config.systemd.services.minidlna.serviceConfig.User;
+          mode = "0775";
+        };
+      };
+      "/srv/media-directory/music" = {
+        d = {
+          group = "media";
+          user = config.systemd.services.minidlna.serviceConfig.User;
+          mode = "0775";
+        };
+      };
+      "/srv/media-directory/videos" = {
+        d = {
+          group = "media";
+          user = config.systemd.services.minidlna.serviceConfig.User;
+          mode = "0775";
+        };
+      };
+      "/srv/media-directory/images" = {
+        d = {
+          group = "media";
+          user = config.systemd.services.minidlna.serviceConfig.User;
+          mode = "0775";
+        };
+      };
+    };
+  };
+
+  services.minidlna = {
+    enable = true;
+    openFirewall = true;
+    settings = {
+      media_dir = [
+        "/srv/media-directory"
+      ];
+      wide_links = "yes";
+      inotify = "yes";
+    };
+  };
+
   sops.secrets."wifi.env" = {
     sopsFile = "${inputs.our-secrets}/secrets/common/wifi.yaml";
     # Whole file
@@ -225,15 +270,24 @@ in {
     };
   };
 
-  users.users.inf = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "audio"
-      "i2c"
-      "podman"
-    ];
-    linger = true;
+  users = {
+    groups = {
+      media = {};
+    };
+    users = {
+      inf = {
+        isNormalUser = true;
+        extraGroups = [
+          "wheel"
+          "audio"
+          "i2c"
+          "podman"
+          "media"
+        ];
+        linger = true;
+      };
+      minidlna.extraGroups = ["media"];
+    };
   };
 
   environment.systemPackages = with pkgs; [
