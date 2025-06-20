@@ -126,6 +126,7 @@ in {
           direnv
           nix-prefetch-scripts
           nix-tree
+          nixos-rebuild-ng
         ]
         ++ lib.optionals cfg.electronics [
           kicad

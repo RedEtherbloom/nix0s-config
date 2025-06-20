@@ -11,7 +11,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
+    };
+    flake-compat.url = "github:edolstra/flake-compat";
+    systems.url = "github:nix-systems/default";
 
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
@@ -88,8 +93,18 @@
       };
     };
 
+    # TODO: Check if in nixpkgs by now
     sillytavern = {
       url = "github:NixOS/nixpkgs?ref=pull/370468/head";
+    };
+
+    nix-tree = {
+      url = "github:utdemir/nix-tree";
+      inputs = {
+        flake-compat.follows = "flake-compat";
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
   };
 
