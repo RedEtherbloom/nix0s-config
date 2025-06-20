@@ -114,7 +114,7 @@
               {
                 AllowedIPs = ["10.68.0.1/32"];
                 PublicKey = "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8=";
-                Endpoint = "51.15.91.213:51820";
+                Endpoint = "51.15.91.213:51821";
                 PersistentKeepalive = 25;
               }
             ];
