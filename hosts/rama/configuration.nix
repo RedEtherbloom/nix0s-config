@@ -89,8 +89,21 @@
         };
       };
       systemd = {
+        extraBin = {
+          ping = "${pkgs.iputils}/bin/ping"; 
+          tracepath = "${pkgs.iputils}/bin/tracepath"; 
+          ip = "${pkgs.iproute2}/bin/ip"; 
+          ss = "${pkgs.iproute2}/bin/ss"; 
+          ifstat = "${pkgs.iproute2}/bin/ifstat"; 
+          rfstat = "${pkgs.iproute2}/bin/rfstat"; 
+          lnstat = "${pkgs.iproute2}/bin/lnstat"; 
+          devlink = "${pkgs.iproute2}/bin/lnstat"; 
+        };
         enable = true;
-        services.systemd-networkd.serviceConfig.LoadCredential = ["network.wireguard.private.30-wg1-initrd:/etc/secrets/30-wg1-initrd.key"];
+        services.systemd-networkd = {
+          environment.SYSTEMD_LOG_LEVEL = "debug";
+          serviceConfig.LoadCredential = ["network.wireguard.private.30-wg1-initrd:/etc/secrets/30-wg1-initrd.key"];
+        };
         network = {
           netdevs."30-wg1-initrd" = {
             netdevConfig = {
@@ -99,7 +112,7 @@
             };
             wireguardPeers = [
               {
-                AllowedIPs = ["10.68.0.0/24"];
+                AllowedIPs = ["10.68.0.1/32"];
                 PublicKey = "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8=";
                 Endpoint = "51.15.91.213:51820";
                 PersistentKeepalive = 25;
@@ -112,7 +125,7 @@
               name = "wg1-initrd";
               addresses = [
                 {
-                  Address = "10.68.0.100/32";
+                  Address = "10.68.0.100/24";
                 }
               ];
             };
