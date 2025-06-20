@@ -90,6 +90,7 @@ in {
       oci-containers = {
         backend = "podman";
       };
+      waydroid.enable = true;
     };
 
     users.users."inf".subUidRanges = [
