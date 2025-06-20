@@ -48,9 +48,25 @@
         "mdio_devres"
         "libphy"
         "ptp"
+        "pps_core"
         "mdio"
         "dca"
         "i2c_algo_bit"
+        "led_class"
+        "fwnode_mdio"
+        "fixed_phy"
+        "of_mdio"
+
+
+        # Dependencies for Wireguard
+        "curve25519_x86_64"
+        "libchacha20poly1305"
+        "libcurve25519_generic"
+        "ip6_udp_tunnel"
+        "udp_tunnel"
+        "chacha_x86_64"
+        "poly1305_x86_64"
+        "libchacha"
 
         # Speedup decryption
         "aesni_intel"
@@ -83,7 +99,7 @@
             };
             wireguardPeers = [
               {
-                AllowedIPs = ["10.68.0.0/32"];
+                AllowedIPs = ["10.68.0.0/24"];
                 PublicKey = "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8=";
                 Endpoint = "51.15.91.213:51820";
                 PersistentKeepalive = 25;
@@ -96,7 +112,7 @@
               name = "wg1-initrd";
               addresses = [
                 {
-                  Address = "10.68.0.100/24";
+                  Address = "10.68.0.100/32";
                 }
               ];
             };
