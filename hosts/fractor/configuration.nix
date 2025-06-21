@@ -29,11 +29,16 @@
 
   # boot.loader.grub.gfxmodeEfi = "1366x768";
   boot.resumeDevice = "/dev/disk/by-uuid/6960c42d-4b92-474d-aeae-e550d670be12";
-  boot.initrd.luks.devices."luks" = {
-    device = "/dev/disk/by-uuid/7da6adea-a5ff-4044-bd33-38decf43fd60";
-    bypassWorkqueues = true;
-    # Potential security implications
-    allowDiscards = true;
+  boot.initrd = {
+    systemd.enable = true;
+    luks.devices."luks" = {
+      device = "/dev/disk/by-uuid/7da6adea-a5ff-4044-bd33-38decf43fd60";
+      # Needs to be enrolled with systemd-cryptenroll, with sudo systemd-cryptenroll --fido2-with-client-pin=true --fido2-device=auto <disk id>
+      crypttabExtraOpts = ["fido2-device=auto"];
+      bypassWorkqueues = true;
+      # Potential security implications
+      allowDiscards = true;
+    };
   };
 
   networking.hostName = "fractor";
