@@ -31,6 +31,11 @@
   boot = {
     kernelModules = ["coretemp" "nct6775"];
     initrd = {
+      services = {
+        udev.rules = ''
+          ACTION=="power_button", RUN+="${config.boot.initrd.systemd.package}/bin/systemctl poweroff"
+        '';
+      };
       luks.devices."osdisk" = {
         bypassWorkqueues = true;
         allowDiscards = true;
@@ -56,7 +61,6 @@
         "fwnode_mdio"
         "fixed_phy"
         "of_mdio"
-
 
         # Dependencies for Wireguard
         "curve25519_x86_64"
@@ -90,14 +94,14 @@
       };
       systemd = {
         extraBin = {
-          ping = "${pkgs.iputils}/bin/ping"; 
-          tracepath = "${pkgs.iputils}/bin/tracepath"; 
-          ip = "${pkgs.iproute2}/bin/ip"; 
-          ss = "${pkgs.iproute2}/bin/ss"; 
-          ifstat = "${pkgs.iproute2}/bin/ifstat"; 
-          rfstat = "${pkgs.iproute2}/bin/rfstat"; 
-          lnstat = "${pkgs.iproute2}/bin/lnstat"; 
-          devlink = "${pkgs.iproute2}/bin/lnstat"; 
+          ping = "${pkgs.iputils}/bin/ping";
+          tracepath = "${pkgs.iputils}/bin/tracepath";
+          ip = "${pkgs.iproute2}/bin/ip";
+          ss = "${pkgs.iproute2}/bin/ss";
+          ifstat = "${pkgs.iproute2}/bin/ifstat";
+          rfstat = "${pkgs.iproute2}/bin/rfstat";
+          lnstat = "${pkgs.iproute2}/bin/lnstat";
+          devlink = "${pkgs.iproute2}/bin/lnstat";
         };
         enable = true;
         services.systemd-networkd = {
@@ -112,7 +116,7 @@
             };
             wireguardPeers = [
               {
-                AllowedIPs = ["10.68.0.1/32"];
+                AllowedIPs = ["10.68.0.1/24"];
                 PublicKey = "81mzxX6r5pTzNqeofAA3L/xYmzrjOiBKQ8tuvBAWOR8=";
                 Endpoint = "51.15.91.213:51821";
                 PersistentKeepalive = 25;
@@ -120,6 +124,46 @@
             ];
           };
           networks = {
+            "20-dhcp-initrd" = {
+              matchConfig.Name = "enp5s0f*";
+              networkConfig = {
+                DHCP = "ipv4";
+                IPv6AcceptRA = true;
+              };
+              linkConfig.RequiredForOnline = "no";
+            };
+            "30-sfp-initrd" = {
+              matchConfig.Name = "enp6s0";
+              networkConfig = {
+                DHCP = "no";
+                # Should configure Ipv6 routes
+                IPv6AcceptRA = true;
+              };
+              address = [
+                "151.218.32.33/23"
+                "2a0e:c5c1:0:200::/64"
+              ];
+              routes = [
+                {Gateway = "151.218.32.1";}
+              ];
+              linkConfig.RequiredForOnline = "routable";
+            };
+            "40-lan-initrd" = {
+              matchConfig.Name = "eno*";
+              networkConfig = {
+                DHCP = "no";
+                # Should configure Ipv6 routes
+                IPv6AcceptRA = true;
+              };
+              address = [
+                "151.218.32.33/23"
+                "2a0e:c5c1:0:200::/64"
+              ];
+              routes = [
+                {Gateway = "151.218.32.1";}
+              ];
+              linkConfig.RequiredForOnline = "no";
+            };
             # DHCP should be auto-configured by systemd, because of initrd.network.enable and networking.useDHCP for ethernet adapters
             "30-wg1-initrd" = {
               name = "wg1-initrd";
@@ -177,14 +221,20 @@
 
   networking = {
     hostName = "rama";
-    # Too lazy to figure out proper systemd options
+    # Used for wireguard translation
     useNetworkd = true;
-    useDHCP = true;
+    useDHCP = false;
 
     ownWireguard = {
       enabled = true;
       # TODO: Transfer to server
       currentHost = config.networking.ownWireguard.hosts.rama;
+    };
+  };
+  systemd.network = {
+    enable = true;
+    networks = {
+      inherit (config.boot.initrd.systemd.network.networks) "20-dhcp-initrd" "30-sfp-initrd" "40-lan-initrd";
     };
   };
 
