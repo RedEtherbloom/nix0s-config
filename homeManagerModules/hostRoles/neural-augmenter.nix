@@ -136,6 +136,7 @@ in {
       ]
       ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
         yubioath-flutter
+        yubikey-manager
       ]));
 
     services.yubikey-agent = {
