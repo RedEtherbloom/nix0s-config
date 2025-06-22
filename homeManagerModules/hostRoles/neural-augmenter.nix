@@ -19,7 +19,7 @@ in {
   config = mkIf cfg.enable {
     myOptions = {
       hostRoles.graphical.enable = mkDefault true;
-      
+
       roles = {
         development = {
           enable = true;
@@ -160,5 +160,8 @@ in {
     services.syncthing = {
       enable = true;
     };
+
+    # Giving helix a shot, nvim takes too many things for now to be somewhat functional
+    programs.helix.enable = true;
   };
 }
