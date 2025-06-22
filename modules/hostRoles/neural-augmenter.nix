@@ -56,6 +56,11 @@ in {
       udev.packages = with pkgs; [
         platformio-core
       ];
+      mullvad-vpn = {
+        enable = true;
+        # GUI
+        package = pkgs.mullvad-vpn;
+      };
     };
 
     environment.systemPackages = with pkgs; [
