@@ -98,6 +98,10 @@ in {
     };
 
   nix-tree = inputs.nix-tree.packages.${prev.system}.default;
+  # Fixes https://github.com/NixOS/nixpkgs/issues/418453
+  waydroid = prev.waydroid.override {
+    python3Packages = prev.python312Packages;
+  };
 
   inherit (rimsort-pr) rimsort;
   inherit (sillytavern) sillytavern;

@@ -3,12 +3,19 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
     lix = {
-      # TODO: Look for automatic stable lix release
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
+      flake = false;
+    };
+    lix-module = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/main.tar.gz";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        lix.follows = "lix";
+      };
     };
 
     flake-utils = {
@@ -63,7 +70,6 @@
     };
 
     nix-comfyui = {
-      # url = "github:dyscorv/nix-comfyui";
       url = "github:RedEtherbloom/nix-comfyui?ref=both-fixes-merged";
       inputs = {
         flake-utils.follows = "flake-utils";

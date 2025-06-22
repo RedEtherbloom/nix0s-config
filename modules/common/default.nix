@@ -10,7 +10,7 @@ with lib; let
 in {
   imports = [
     # Defined here due to cross-compile issues for audiosink
-    inputs.lix.nixosModules.default
+    inputs.lix-module.nixosModules.default
 
     ./audio.nix
     ./localisation.nix
