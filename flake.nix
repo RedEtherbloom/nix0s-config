@@ -99,11 +99,6 @@
       };
     };
 
-    # TODO: Check if in nixpkgs by now
-    sillytavern = {
-      url = "github:NixOS/nixpkgs?ref=pull/370468/head";
-    };
-
     nix-tree = {
       url = "github:utdemir/nix-tree";
       inputs = {

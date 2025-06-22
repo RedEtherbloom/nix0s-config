@@ -132,17 +132,25 @@ in {
     networkmanager.enable = true;
     interfaces."enp0s25".wakeOnLan.enable = true;
 
-    firewall.allowedTCPPorts = [
-      #TODO: Pulseaudio Network Sharing. Probably only needed for publish
-      4713
-      (lib.strings.toInt config.services.restic.server.listenAddress)
-      # Home Assistant
-      8123
-      # Mosquitto
-      1883
-      # Paperless
-      config.services.paperless.port
-    ];
+    firewall = {
+      allowedTCPPorts = [
+        # Mosquitto
+        1883
+        #TODO: Pulseaudio Network Sharing. Probably only needed for publish
+        4713
+        (lib.strings.toInt config.services.restic.server.listenAddress)
+        # Home Assistant
+        8123
+        config.services.paperless.port
+        # SteamVR
+        27062
+      ];
+      allowedUDPPorts = [
+        # SteamVR
+        9944
+        27062
+      ];
+    };
     ownWireguard = {
       enabled = true;
       currentHost = config.networking.ownWireguard.hosts.neurodrive;
@@ -372,7 +380,6 @@ in {
       enable = true;
       packageNames = ["krita-unwrapped"];
     };
-
     coolercontrol = {
       enable = true;
       nvidiaSupport = true;
@@ -425,7 +432,6 @@ in {
     format = "yaml";
     sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
   };
-
   sops.secrets."mosquitto/users/client" = {
     uid = config.ids.uids.mosquitto;
     gid = config.ids.gids.mosquitto;

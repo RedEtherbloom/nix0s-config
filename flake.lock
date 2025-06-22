@@ -313,11 +313,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1750304462,
-        "narHash": "sha256-Mj5t4yX05/rXnRqJkpoLZTWqgStB88Mr/fegTRqyiWc=",
+        "lastModified": 1750614446,
+        "narHash": "sha256-6WH0aRFay79r775RuTqUcnoZNm6A4uHxU1sbcNIk63s=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "863842639722dd12ae9e37ca83bcb61a63b36f6c",
+        "rev": "7c35504839f915abec86a96435b881ead7eb6a2b",
         "type": "github"
       },
       "original": {
@@ -748,7 +748,6 @@
         "plasma-manager": "plasma-manager",
         "rimsort-pr": "rimsort-pr",
         "sergv-nixos-config": "sergv-nixos-config",
-        "sillytavern": "sillytavern",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "systems": "systems_4"
@@ -768,22 +767,6 @@
         "owner": "sergv",
         "repo": "nixos-config",
         "rev": "9c6306c86af6130f76d277e382c346360ec124dd",
-        "type": "github"
-      }
-    },
-    "sillytavern": {
-      "locked": {
-        "lastModified": 1749641238,
-        "narHash": "sha256-nDyRyB308b0jR+vPkoeezN0Xmj7WffT+bvR+OLgJ1jk=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "f554cb1b0d08408af51a9147e99766ebdc404e21",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "pull/370468/head",
-        "repo": "nixpkgs",
         "type": "github"
       }
     },

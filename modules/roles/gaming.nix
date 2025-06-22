@@ -3,22 +3,21 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.roles.gaming;
 in {
-  options.myOptions.roles.gaming.enable = mkEnableOption "steam and gaming";
+  options.myOptions.roles.gaming.enable = lib.mkEnableOption "steam and gaming";
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     programs.steam = {
       enable = true;
       remotePlay.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
       protontricks.enable = true;
-      # X11 -> Wayland Input translation
-      extest.enable = true;
-
       package = pkgs.steam.override {
+        # Disable the GUI popping up on startup
+        extraArgs = "-silent";
+
         extraPkgs = pkgs:
           with pkgs; [
             libgdiplus
@@ -35,33 +34,8 @@ in {
 
             #RimSort
             nss
-
-            # Vain attempts at making ALVR Hardware encoding work
-            vulkan-tools
-            vulkan-headers
-            vulkan-loader
-            ffmpeg
-            x264
-            libglvnd
-            libva
-            libvdpau
-            openvr
-            soxr
-            xvidcore
           ];
-
-        # Disable the GUI popping up on startup
-        extraArgs = "-silent";
       };
     };
-
-    # SteamVR
-    networking.firewall.allowedUDPPorts = [
-      9944
-      27062
-    ];
-    networking.firewall.allowedTCPPorts = [
-      27062
-    ];
   };
 }
