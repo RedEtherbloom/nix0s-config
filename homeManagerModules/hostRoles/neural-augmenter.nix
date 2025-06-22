@@ -124,6 +124,13 @@ in {
 
         # Music production
         sonic-pi
+        # FLStudio esque software
+        reaper
+        reaper-sws-extension
+        bitwig-studio5
+
+        yabridge
+        yabridgectl
       ]
       ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
         yubioath-flutter
