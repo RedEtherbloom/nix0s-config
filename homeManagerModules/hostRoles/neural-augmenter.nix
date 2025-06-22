@@ -64,9 +64,10 @@ in {
         (chromium.override {enableWideVine = true;})
         tor-browser
         bitwarden
-        # bitwarden-cli
+        bitwarden-cli
 
-        comfyuiPackages.krita-with-extensions
+        # Broken as of 22.06.2025
+        # comfyuiPackages.krita-with-extensions
         yt-dlp
 
         # KDE info packages
@@ -108,7 +109,8 @@ in {
 
         gtypist
 
-        handbrake
+        # Broken as of22.06.2025
+        # handbrake
         scrcpy
         dumbpipe
 
@@ -129,8 +131,8 @@ in {
         reaper-sws-extension
         bitwig-studio5
 
-        yabridge
-        yabridgectl
+        # yabridge
+        # yabridgectl
       ]
       ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
         yubioath-flutter
