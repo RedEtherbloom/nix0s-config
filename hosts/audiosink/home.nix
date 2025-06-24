@@ -17,6 +17,7 @@
   };
 
   services = {
+    # TODO: Think if we wouldn't rather use mopidy-spotify instead
     librespot = {
       enable = true;
       package = pkgs.librespot;
@@ -50,8 +51,14 @@
         file = {
           media_dirs = [
             "$HOME/Music|Music"
+            "/srv/media-directory/music|Global music"
           ];
-          followSymlinks = true;
+          follow_symlinks = true;
+        };
+        mpd = {
+          # Listen on all IPs
+          hostname = "::";
+          port = 6601; 
         };
       };
     };

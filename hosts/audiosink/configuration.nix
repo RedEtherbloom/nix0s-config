@@ -79,20 +79,6 @@ in {
     };
   };
 
-  services.minidlna = {
-    enable = true;
-    openFirewall = true;
-    settings = {
-      media_dir = [
-        "A,/srv/media-directory/music"
-      ];
-      wide_links = "yes";
-      inotify = "yes";
-      log_level = "debug,ssdp";
-      notify_interval = 30;
-    };
-  };
-
   sops.secrets."wifi.env" = {
     sopsFile = "${inputs.our-secrets}/secrets/common/wifi.yaml";
     # Whole file
@@ -133,21 +119,18 @@ in {
       };
     };
     firewall.allowedTCPPorts = [
-      # MPD1
+      # MPD
       6600
-      # MPD2
+      # Mopidy-MPD
       6601
       # Modidy HTTP
       6680
-      # TODO: Insert mediatomb port
       # Home Assistant
       8123
     ];
   };
 
-  security.rtkit.enable = true;
   services = {
-    mediatomb.enable = true;
     timesyncd.enable = true;
     pipewire = {
       enable = true;
@@ -170,6 +153,31 @@ in {
           ];
         };
       };
+    };
+    minidlna = {
+      enable = true;
+      openFirewall = true;
+      settings = {
+        media_dir = [
+          "A,/srv/media-directory/music"
+        ];
+        wide_links = "yes";
+        inotify = "yes";
+        log_level = "debug,ssdp";
+        notify_interval = 30;
+      };
+    };
+    mediatomb = {
+      enable = true;
+      openFirewall = true;
+      mediaDirectories = [
+        {
+          path = "/srv/media-directory";
+          recursive = true;
+        }
+      ];
+      serverName = "Mediatomb ${config.networking.hostName}";
+      uuid = "625cc95e-50f4-11f0-a81a-db94efbb5beb";
     };
     avahi = {
       enable = true;
@@ -290,6 +298,7 @@ in {
         linger = true;
       };
       minidlna.extraGroups = ["media"];
+      mediatomb.extraGroups = ["media"];
     };
   };
 
