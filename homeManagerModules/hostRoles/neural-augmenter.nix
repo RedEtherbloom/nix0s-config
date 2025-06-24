@@ -4,42 +4,41 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.hostRoles.neural-augmenter;
 in {
   options.myOptions.hostRoles.neural-augmenter = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "workstation hm settings";
-      type = with types; bool;
+      type = lib.types.bool;
       default = osConfig.myOptions.hostRoles.neural-augmenter.enable;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     myOptions = {
-      hostRoles.graphical.enable = mkDefault true;
+      hostRoles.graphical.enable = lib.mkDefault true;
 
       roles = {
         development = {
-          enable = true;
-          electronics = true;
+          enable = lib.mkDefault true;
+          electronics = lib.mkDefault true;
         };
-        nvf.enable = true;
+        nvf.enable = lib.mkDefault true;
       };
-      vscode.enable = true;
+      vscode.enable = lib.mkDefault true;
 
-      firefox.enable = true;
-      socials.enable = true;
+      firefox.enable = lib.mkDefault true;
+      socials.enable = lib.mkDefault true;
 
-      obsidian.enable = true;
+      obsidian.enable = lib.mkDefault true;
       taskwarrior = {
-        enable = true;
-        enableSync = true;
-        taskopen = true;
+        enable = lib.mkDefault true;
+        enableSync = lib.mkDefault true;
+        taskopen = lib.mkDefault true;
       };
       taskwarrior-tui = {
-        enable = true;
+        enable = lib.mkDefault true;
         # TODO: Update and/or move to overlay
         package = with pkgs; (taskwarrior-tui.overrideAttrs (_: oldAttrs: rec {
           version = oldAttrs.version + "-fix";
@@ -57,121 +56,111 @@ in {
       };
     };
 
-    programs.nushell.enable = true;
+    home = {
+      packages = with pkgs;
+        [
+          tor-browser
+          bitwarden
+          bitwarden-cli
 
-    home.packages = with pkgs;
-      [
-        (chromium.override {enableWideVine = true;})
-        tor-browser
-        bitwarden
-        bitwarden-cli
+          comfyuiPackages.krita-with-extensions
 
-        # Broken as of 22.06.2025
-        # comfyuiPackages.krita-with-extensions
-        yt-dlp
+          # KDE info packages
+          clinfo
+          glxinfo
+          vulkan-tools
+          wayland-utils
+          pciutils
+          aha
+          # Monitor brightness control
+          ddcutil
+          usbutils
 
-        # KDE info packages
-        clinfo
-        glxinfo
-        vulkan-tools
-        wayland-utils
-        pciutils
-        aha
-        # Monitor brightness control
-        ddcutil
-        usbutils
+          # TODO: Move to restic module
+          restic
+          autorestic
 
-        # TODO: Move to restic module
-        restic
-        autorestic
+          ffmpeg-full
+          gst_all_1.gst-plugins-good
+          gst_all_1.gst-plugins-bad
+          handbrake
+          imagemagick
+          yt-dlp
 
-        ffmpeg-full
-        gst_all_1.gst-plugins-good
-        gst_all_1.gst-plugins-bad
+          tailscale
+          # Certificate creation
+          xca
 
-        imagemagick
+          # Speedreading
+          speedread
+          hottext
 
-        tailscale
+          # nvf music-controls.nvim
+          playerctl
 
-        # Certificate creation
-        xca
+          gtypist
 
-        # Speedreading
-        speedread
-        hottext
+          scrcpy
+          dumbpipe
 
-        distrobox
+          # mpd players to compare
+          cantata
+          plattenalbum
 
-        # nvf music-controls.nvim
-        playerctl
+          podman
+          dive # look into docker image layers
+          podman-tui
+          podman-compose
+          docker-compose # start group of containers for dev
+          distrobox
 
-        code-cursor
-
-        gtypist
-
-        # Broken as of22.06.2025
-        # handbrake
-        scrcpy
-        dumbpipe
-
-        # mpd players to compare
-        cantata
-        plattenalbum
-
-        podman
-        dive # look into docker image layers
-        podman-tui # status of containers in the terminal
-        podman-compose
-        docker-compose # start group of containers for dev
-
-        # Music production
-        sonic-pi
-        # FLStudio esque software
-        reaper
-        reaper-sws-extension
-        bitwig-studio5
-
-        # yabridge
-        # yabridgectl
-      ]
-      ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
-        yubioath-flutter
-        yubikey-manager
-      ]));
-
-    services.yubikey-agent = {
-      enable = osConfig.security.ownAdditional.yubikey;
+          # Music production
+          sonic-pi
+          # FLStudio esque software
+          reaper
+          reaper-sws-extension
+          bitwig-studio5
+          yabridge
+          yabridgectl
+        ]
+        ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
+          yubioath-flutter
+          yubikey-manager
+        ]));
+      # May not work due to https://github.com/nix-community/home-manager/issues/1011
+      sessionVariables = {
+        # Smooth scrolling
+        MOZ_USE_XINPUT2 = "1";
+      };
+      extraOutputsToInstall = [
+        "doc"
+        "info"
+        "devdoc"
+      ];
     };
 
-    # May not work due to https://github.com/nix-community/home-manager/issues/1011
-    home.sessionVariables = {
-      # Smooth scrolling
-      MOZ_USE_XINPUT2 = "1";
+    services = {
+      yubikey-agent.enable = osConfig.security.ownAdditional.yubikey;
+      # TODO: Setup options
+      syncthing.enable = true;
     };
 
-    home.extraOutputsToInstall = [
-      "doc"
-      "info"
-      "devdoc"
-    ];
-
-    programs.rofi = {
-      enable = true;
-      terminal = "${config.programs.kitty.package}";
-      package = pkgs.rofi-wayland;
+    programs = {
+      chromium = {
+        enable = lib.mkDefault true;
+        package = pkgs.chromium.override {enableWideVine = true;};
+      };
+      nushell.enable = true;
+      # Currently useless due to missing KDE support
+      rofi = {
+        enable = lib.mkDefault false;
+        terminal = "${config.programs.kitty.package}";
+        package = pkgs.rofi-wayland;
+      };
+      spotify-player.enable = true;
     };
 
     # Set terminal opacity using stlyix instead
     stylix.opacity.terminal = 0.8;
-
-    programs.spotify-player.enable = true;
-
-    # TODO: Setup options
-    services.syncthing = {
-      enable = true;
-    };
-
-    # Giving helix a shot, nvim takes too many things for now to be somewhat functional
-    programs.helix.enable = true;
   };
 }

@@ -4,109 +4,119 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.roles.development;
 in {
   options.myOptions.roles.development = {
-    enable = mkOption {
-      description = "Enable development modules";
-      type = with types; bool;
+    enable = lib.mkOption {
+      type = with lib.types; bool;
       default = false;
+      description = "Enable development modules.";
     };
-    rust = mkOption {
-      type = types.bool;
+    rust = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "rust toolchain and dev tools";
+      description = "Rust toolchain and dev tools.";
     };
-    java = mkOption {
-      type = types.bool;
+    java = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "Java and vscode pack";
+      description = "Java and vscode pack.";
     };
-    python = mkOption {
-      type = types.bool;
+    python = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "Python tooling and vscode plugins";
+      description = "Python tooling and vscode plugins.";
     };
-    docker = mkOption {
-      type = types.bool;
+    docker = lib.mkOption {
+      type = lib.types.bool;
       default = false;
-      description = "Enable docker service and docker vscode plugin";
+      description = "Enable docker service and docker vscode plugin.";
     };
-    nix = mkOption {
-      type = types.bool;
+    nix = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "Enable Nix dev tools and VS-Code plugins";
+      description = "Enable Nix dev tools and VS-Code plugins.";
     };
-    openscad = mkOption {
-      type = types.bool;
+    openscad = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "OpenSCAD and VS-Code plugin";
+      description = "OpenSCAD and VS-Code plugin.";
     };
-    vscode = mkOption {
-      type = types.bool;
+    vscode = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "Enable VS-Code and plugins";
+      description = "Enable VS-Code and plugins.";
     };
-    vscode-accessibility = mkOption {
-      type = types.bool;
+    vscode-accessibility = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "Enable VS-Code accesibility plugins";
+      description = "Enable VS-Code accesibility plugins.";
     };
-    electronics = mkOption {
-      type = types.bool;
+    electronics = lib.mkOption {
+      type = lib.types.bool;
       default = false;
-      description = "Electronics toolchain";
+      description = "Electronics toolchain.";
     };
-    three-d-printing = mkOption {
-      type = types.bool;
+    three-d-printing = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "3d printing toolchain and tools";
+      description = "3d printing toolchain and tools.";
     };
-    reverse-engineering = mkOption {
-      type = types.bool;
+    reverse-engineering = lib.mkOption {
+      type = lib.types.bool;
       default = false;
-      description = "Reverse engineering toolchain";
+      description = "Reverse engineering toolchain.";
     };
-    network-analysis = mkOption {
-      type = types.bool;
+    network-analysis = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "Toolchain for network analysis";
+      description = "Toolchain for network analysis.";
     };
-    git = mkOption {
-      type = types.bool;
+    git = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "Git and accompanying defaults";
+      description = "Git and accompanying defaults.";
     };
-    github = mkOption {
-      type = types.bool;
+    github = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "Useful extensions and tools for github";
+      description = "Useful extensions and tools for github.";
     };
-    copilot = mkOption {
-      type = types.bool;
+    copilot = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "Install the Github Copilot extension";
+      description = "Install the Github Copilot extension.";
     };
-    direnv = mkOption {
-      type = types.bool;
+    direnv = lib.mkOption {
+      type = lib.types.bool;
       default = true;
-      description = "Install direnv";
+      description = "Enable direnv.";
     };
-    go = mkOption {
-      description = "Enable go";
-      type = types.bool;
+    go = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable go.";
+    };
+    mcu = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable MCU tools.";
+    };
+    cursor = lib.mkOption {
+      description = "Enable cursor IDE.";
+      type = lib.types.bool;
       default = true;
     };
-    mcu = mkOption {
-      description = "Enable MCU tools";
-      type = types.bool;
+    # I'm getting fed up with our half-baked nvim config.
+    helix = lib.mkOption {
+      description = "Enable helix IDE.";
+      type = lib.types.bool;
       default = true;
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = with pkgs;
         lib.optionals cfg.rust [
@@ -157,9 +167,12 @@ in {
           arduino-ide
           arduino-cli
           arduinoOTA
+        ]
+        ++ lib.optionals cfg.cursor [
+          code-cursor
         ];
     }
-    (mkIf cfg.git {
+    (lib.mkIf cfg.git {
       programs.git = {
         enable = true;
         extraConfig = {
@@ -169,34 +182,38 @@ in {
         };
       };
     })
-    (mkIf osConfig.security.ownAdditional.yubikey {
-      programs.git = {
-        userEmail = "etherbloom@mailbox.org";
-        signing = {
-          format = "openpgp";
-          key = "341EB1EADB36EC0AC809FBE7BA719C19A950A2F3";
-          signByDefault = true;
-        };
-      };
-    })
-    (mkIf cfg.github {
+    (lib.mkIf cfg.github {
       programs.gh.enable = true;
     })
-    (mkIf cfg.java {
+    (lib.mkIf cfg.java {
       programs.java = {
         enable = true;
         package = with pkgs; jdk23;
       };
     })
-    (mkIf cfg.direnv {
-      # TODO: Cassea: Maybe use nix-direnv, the gcroot feature may be good or bad, depending on disk cache
+    (lib.mkIf cfg.direnv {
       programs.direnv = {
         enable = true;
         nix-direnv.enable = true;
       };
     })
-    (mkIf cfg.go {
+    (lib.mkIf cfg.go {
       programs.go.enable = true;
+    })
+    (lib.mkIf osConfig.security.ownAdditional.yubikey {
+      # TODO: Maybe merge with github config
+      programs.git = {
+        userEmail = "etherbloom@mailbox.org";
+        signing = {
+          format = "openpgp";
+          # TODO: Turn into it's own global variable
+          key = "341EB1EADB36EC0AC809FBE7BA719C19A950A2F3";
+          signByDefault = true;
+        };
+      };
+    })
+    (lib.mkIf cfg.helix {
+      programs.helix.enable = true;
     })
   ]);
 }
