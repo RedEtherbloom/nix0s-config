@@ -35,12 +35,12 @@ in {
         # Does my bar approach need this?
         openal
 
-        koboldcpp
 
         # TODO: Maybe this will make KRunner less laggy
         egl-wayland
 
-        comfyuiPackages.comfyui-with-extensions
+        koboldcpp
+        # comfyuiPackages.comfyui-with-extensions
 
         coolercontrol.coolercontrol-gui
 

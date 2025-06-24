@@ -63,7 +63,7 @@ in {
           bitwarden
           bitwarden-cli
 
-          comfyuiPackages.krita-with-extensions
+          # comfyuiPackages.krita-with-extensions
 
           # KDE info packages
           clinfo
