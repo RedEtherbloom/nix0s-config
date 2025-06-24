@@ -322,31 +322,35 @@ in {
       # TODO: Reevaluate if open works now
       # 28.01.25: Plasma is having a weird bug where everything but the cursor vanishes. Maaybe this is the cause?
       # 24.03.25: Update: Nope, stylix issue
-      open = false;
+      open = true;
     };
     # Required for GPU passthrough
     nvidia-container-toolkit.enable = true;
   };
   virtualisation.oci-containers = {
-    containers.homeassistant = {
-      volumes = ["home-assistant:/config"];
-      environment.TZ = config.time.timeZone;
-      image = "ghcr.io/home-assistant/home-assistant:stable";
-      # Use the host network namespace for all sockets
-      extraOptions = [
-        "--network=host"
-        # TODO: Update address in repo
-        "--device=/dev/zigbee-ap:/dev/ttyUSB0"
-      ];
-    };
-    containers.libretranslate = {
-      volumes = ["libretranslate_models:/home/libretranslate/.local:rw"];
-      environment.TZ = config.time.timeZone;
-      image = "docker.io/libretranslate/libretranslate:latest";
-      ports = ["127.0.0.1:8151:5000"];
+    containers = {
+      homeassistant = {
+        volumes = ["home-assistant:/config"];
+        devices = [
+          "/dev/zigbee-ap:/dev/ttyUSB0"
+        ];
+        environment.TZ = config.time.timeZone;
+        image = "ghcr.io/home-assistant/home-assistant:stable";
+        # Use the host network namespace for all sockets
+        extraOptions = [
+          "--network=host"
+          "--stop-timeout=30"
+        ];
+      };
+      libretranslate = {
+        volumes = ["libretranslate_models:/home/libretranslate/.local:rw"];
+        environment.TZ = config.time.timeZone;
+        image = "docker.io/libretranslate/libretranslate:latest";
+        ports = ["127.0.0.1:8151:5000"];
+      };
     };
   };
-  systemd.services."podman-homeassistant" = {
+  systemd.services."${config.virtualisation.oci-containers.containers.homeassistant.serviceName}" = {
     after = ["systemd-udevd.service"];
   };
 
