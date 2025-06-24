@@ -3,12 +3,11 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.hostRoles.graphical;
   appimage-run = pkgs.appimage-run.override {
     extraPkgs = pkgs:
-      # Potentially may need more dependencies
+    # Potentially may need more dependencies
       with pkgs; [
         ffmpeg
         imagemagick
@@ -16,10 +15,13 @@ with lib; let
       ];
   };
 in {
-  options.myOptions.hostRoles.graphical.enable = mkEnableOption "graphical session settings";
+  options.myOptions.hostRoles.graphical.enable = lib.mkEnableOption "graphical session settings";
 
-  config = mkIf cfg.enable {
-    myOptions.hostRoles.base.enable = mkDefault true;
+  config = lib.mkIf cfg.enable {
+    myOptions = {
+      roles.ssdp.enable = lib.mkDefault true;
+      hostRoles.base.enable = lib.mkDefault true;
+    };
 
     programs.appimage = {
       binfmt = true;
@@ -32,7 +34,6 @@ in {
     ];
 
     fonts.fontDir.enable = true;
-
     stylix.fonts = {
       serif = {
         package = pkgs.nerd-fonts.open-dyslexic;
@@ -50,7 +51,6 @@ in {
         package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
       };
-
       # OpenDyslexic is very large by default. Too large for our taste.
       sizes = {
         applications = 10;

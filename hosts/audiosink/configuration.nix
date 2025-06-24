@@ -15,7 +15,11 @@ in {
     ./raspberry_pi_binary_cache.nix
 
     ../../modules/common/ssh.nix
+    ../../modules/roles/ssdp.nix
+    # TODO: Try to insert normal modules again
   ];
+
+  myOptions.roles.ssdp.enable = true;
 
   nix = {
     settings = {
@@ -32,9 +36,7 @@ in {
     };
     optimise = {
       automatic = true;
-      dates = [
-        "07:00"
-      ];
+      dates = ["07:00"];
     };
   };
   swapDevices = [
@@ -44,117 +46,97 @@ in {
     }
   ];
 
-  #boot.loader.grub.enable = false;
-  #raspberry-pi-nix.uboot.enable = true;
-
-  # Warning: Early Boot UART will be garbled due to the default 400MHz CPU freq
-  # boot.kernelParams = [
-  #   "console=ttyS1,115200n8"
-  # ];
-  # boot.kernelPackages = lib.mkForce pkgs.linuxKernel.packages.linux_rpi3;
-
-  # raspberry-pi-nix.board = "bcm2711";
-  # hardware.raspberry-pi.config = {
-  #   all = {
-  #     options = {
-  #       # The firmware will start our u-boot binary rather than a linux kernel
-  #       kernel = {
-  #         enable = true;
-  #         value = lib.mkForce "u-boot-rpi-arm64.bin";
-  #       };
-  #       arm_64bit = {
-  #         enable = true;
-  #         value = true;
-  #       };
-  #       enable_uart = {
-  #         enable = true;
-  #         value = true;
-  #       };
-  #       disable_overscan = {
-  #         enable = true;
-  #         value = true;
-  #       };
-  #     };
-  #     base-dt-params = {
-  #       krnbt = {
-  #         enable = true;
-  #         value = "on";
-  #       };
-  #       spi = {
-  #         enable = true;
-  #         value = "on";
-  #       };
-  #       audio = {
-  #         enable = true;
-  #         value = "on";
-  #       };
-  #     };
-  #   };
-  # };
-
-  networking.hostName = "audiosink";
-  networking.networkmanager = {
-    enable = true;
-    ensureProfiles = {
-      environmentFiles = [
-        config.sops.secrets."wifi.env".path
-      ];
-      profiles = {
-        "HomeWifi" = {
-          connection = {
-            id = "$WIFI_SSID";
-            type = "wifi";
-            interface-name = "wlan0";
-          };
-          wifi = {
-            mode = "infrastructure";
-            ssid = "$WIFI_SSID";
-          };
-          wifi-security = {
-            auth-alg = "open";
-            key-mgmt = "wpa-psk";
-            psk = "$WIFI_PASSWORD";
-          };
-          ipv4 = {method = "auto";};
-          ipv6 = {
-            addr-gen-mode = "default";
-            method = "auto";
-          };
-          proxy = {};
-        };
-      };
-    };
-  };
-  services.timesyncd.enable = true;
-
   sops.secrets."wifi.env" = {
     sopsFile = "${inputs.our-secrets}/secrets/common/wifi.yaml";
     # Whole file
     key = "wifiHome";
   };
-
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = false;
-    wireplumber.enable = true;
-    extraConfig.pipewire-pulse = {
-      "30-network-publish" = {
-        "pulse.cmd" = [
-          {
-            cmd = "load-module";
-            args = "module-native-protocol-tcp";
-          }
-          {
-            cmd = "load-module";
-            args = "module-zeroconf-publish";
-          }
+  networking = {
+    hostName = "audiosink";
+    networkmanager = {
+      enable = true;
+      ensureProfiles = {
+        environmentFiles = [
+          config.sops.secrets."wifi.env".path
         ];
+        profiles = {
+          "HomeWifi" = {
+            connection = {
+              id = "$WIFI_SSID";
+              type = "wifi";
+              interface-name = "wlan0";
+            };
+            wifi = {
+              mode = "infrastructure";
+              ssid = "$WIFI_SSID";
+            };
+            wifi-security = {
+              auth-alg = "open";
+              key-mgmt = "wpa-psk";
+              psk = "$WIFI_PASSWORD";
+            };
+            ipv4 = {method = "auto";};
+            ipv6 = {
+              addr-gen-mode = "default";
+              method = "auto";
+            };
+            proxy = {};
+          };
+        };
       };
     };
+    firewall.allowedTCPPorts = [
+      # MPD1
+      6600
+      # MPD2
+      6601
+      # Modidy HTTP
+      6680
+      # TODO: Insert mediatomb port
+      # Home Assistant
+      8123
+    ];
+  };
+
+  security.rtkit.enable = true;
+  services = {
+    timesyncd.enable = true;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      jack.enable = false;
+      wireplumber.enable = true;
+      extraConfig.pipewire-pulse = {
+        "30-network-publish" = {
+          "pulse.cmd" = [
+            {
+              cmd = "load-module";
+              args = "module-native-protocol-tcp";
+            }
+            {
+              cmd = "load-module";
+              args = "module-zeroconf-publish";
+            }
+          ];
+        };
+      };
+    };
+    avahi = {
+      enable = true;
+      # Lookup which get enabled by default
+      publish = {
+        enable = true;
+        addresses = true;
+        domain = true;
+        userServices = true;
+      };
+      nssmdns4 = true;
+      nssmdns6 = true;
+      openFirewall = true;
+    };
+    syncthing.enable = true;
   };
 
   # Should probably be redone with home-manager(Clara: Learing curve, yayyy...)
@@ -260,47 +242,22 @@ in {
     podman-compose
   ];
 
-  programs.tmux.enable = true;
-  programs.git.enable = true;
-  programs.htop.enable = true;
-
-  hardware.enableRedistributableFirmware = true;
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-  # Advertise as Audio sink
-  hardware.bluetooth.settings = {
-    General = {
-      Enable = "Source";
-    };
+  programs = {
+    tmux.enable = true;
+    git.enable = true;
+    htop.enable = true;
   };
 
-  hardware.i2c.enable = true;
-
-  services.avahi = {
-    enable = true;
-    # Lookup which get enabled by default
-    publish = {
+  hardware = {
+    enableRedistributableFirmware = true;
+    bluetooth = {
       enable = true;
-      addresses = true;
-      domain = true;
-      userServices = true;
+      powerOnBoot = true;
+      # Advertise as Audio sink
+      settings.General.Enable = "Source";
     };
-    nssmdns4 = true;
-    nssmdns6 = true;
-    openFirewall = true;
+    i2c.enable = true;
   };
-
-  networking.firewall.allowedTCPPorts = [
-    # MPD1
-    6600
-    # MPD2
-    6601
-    # Modidy
-    6680
-    # Home Assistant
-    8123
-  ];
-
   # Enable common container config files in /etc/containers
   virtualisation = {
     containers.enable = true;
@@ -329,8 +286,6 @@ in {
       };
     };
   };
-
-  services.syncthing.enable = true;
 
   system.stateVersion = "25.05";
 }
