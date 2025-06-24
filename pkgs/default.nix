@@ -56,4 +56,8 @@ in {
   waydroid = prev.waydroid.override {
     python3Packages = prev.python312Packages;
   };
+
+  sonic-pi = prev.sonic-pi.overrideAttrs (_: prevAttrs: {
+    buildInputs = (prevAttrs.buildInputs or []) ++ [prev.libsForQt5.qt5.qtwayland];
+  });
 }
