@@ -136,8 +136,11 @@ in {
       allowedTCPPorts = [
         # Mosquitto
         1883
+        8883
         #TODO: Pulseaudio Network Sharing. Probably only needed for publish
         4713
+        # Matter
+        config.services.matter-server.port
         (lib.strings.toInt config.services.restic.server.listenAddress)
         # Home Assistant
         8123
@@ -232,6 +235,9 @@ in {
           };
         }
       ];
+    };
+    matter-server = {
+      enable = true;
     };
     restic.server = {
       enable = true;
