@@ -19,9 +19,9 @@ in {
     };
     timeout = lib.mkOption {
       description = "Seconds to keep the port open after the request. 0 is equivalent to permanent.";
-      # Max allowed tiemeout by ipset
+      # Max allowed timeeout by ipset
       type = lib.types.ints.u32;
-      default = 5;
+      default = 3;
     };
     ipv4 = {
       enable = lib.mkOption {
@@ -78,17 +78,19 @@ in {
         pkgs.ipset
         pkgs.iptables
       ];
-      # TODO: Is a teardown script needed?
+      # TODO: Write teardown script, firewall rules are not getting correctly flushed
       extraCommands = lib.strings.concatLines [
         # TODO: Read how to do with idempotent nix. Also, what does this do?
+        # TODO: nftables is the successor to iptables and seems to have an integrated set functionality => Read.
+        # TODO: Read https://wiki.archlinux.org/title/Iptables#Allowing_multicast_traffic for general advice
         ''
           set -xe
           function apply_if_not_yet() {
             cmd=$1
+            # Removes the first two arguments
             shift
             shift
-            $cmd -C $* >/dev/null 2>&1 || \
-              $cmd -A $*
+            $cmd -C $* >/dev/null 2>&1 || $cmd -A $*
           }
         ''
         (lib.strings.optionalString cfg.ipv4.enable ''
