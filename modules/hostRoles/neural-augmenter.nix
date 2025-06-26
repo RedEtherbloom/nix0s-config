@@ -74,6 +74,7 @@ in {
     # Required for Nheko to work
     nixpkgs.config.permittedInsecurePackages = [
       "olm-3.2.16"
+      "fluffychat-linux-1.27.0"
     ];
 
     virtualisation = {

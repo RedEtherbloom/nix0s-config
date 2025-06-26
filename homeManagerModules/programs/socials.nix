@@ -20,6 +20,7 @@ in {
       vesktop
       element-desktop
       nheko
+      fluffychat
       telegram-desktop
       threema-desktop
       signal-desktop-bin
