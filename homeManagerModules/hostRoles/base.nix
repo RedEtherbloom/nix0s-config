@@ -36,8 +36,10 @@ in {
           enable = true;
 
           # https://support.yubico.com/hc/en-us/articles/4819584884124-Resolving-GPG-s-CCID-conflicts
+          # https://wiki.archlinux.org/title/YubiKey#gpg:_no_such_device
           scdaemonSettings = {
             disable-ccid = true;
+            pcsc-shared = true;
           };
 
           settings = {
