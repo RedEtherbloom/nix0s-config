@@ -135,6 +135,7 @@ in {
           nil
           direnv
           nix-prefetch-scripts
+          nix-prefetch-github
           nix-tree
           nixos-rebuild-ng
         ]
@@ -183,7 +184,10 @@ in {
       };
     })
     (lib.mkIf cfg.github {
-      programs.gh.enable = true;
+      programs = {
+        gh-dash.enable = true;
+        gh.enable = true;
+      };
     })
     (lib.mkIf cfg.java {
       programs.java = {
@@ -208,7 +212,7 @@ in {
           format = "openpgp";
           # TODO: Turn into it's own global variable
           key = "341EB1EADB36EC0AC809FBE7BA719C19A950A2F3";
-          signByDefault = true;
+          signByDefault = lib.mkDefault true;
         };
       };
     })

@@ -35,7 +35,6 @@ in {
         # Does my bar approach need this?
         openal
 
-
         # TODO: Maybe this will make KRunner less laggy
         egl-wayland
 
@@ -69,13 +68,16 @@ in {
       };
 
       # Let's try out McFly on our beefier machine
-      programs.mcfly = {
-        enable = false;
-        fzf.enable = true;
-        keyScheme = "vim";
+      programs = {
+        mcfly = {
+          enable = false;
+          fzf.enable = true;
+          keyScheme = "vim";
+        };
+        btop.package = pkgs.btop-cuda;
+        # Waiting for the Yubikey adaptor
+        git.signing.signByDefault = false;
       };
-
-      programs.btop.package = pkgs.btop-cuda;
     }
     # Ivy: These sadly break with missing monitors :/
     (generate-kscreen-doctor "screen-benq" "kscreen-doctor output.DP-3.disable output.HDMI-A-1.disable output.DP-2.enable output.DP-2.rotation.normal output.DP-2.position.0,0" "ctrl+shift+f1")
