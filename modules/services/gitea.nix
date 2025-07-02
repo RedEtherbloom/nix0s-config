@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  pkgs,
   ...
 }:
 with lib; let
@@ -51,6 +52,11 @@ in {
 
           ENABLE_PUSH_CREATE_USER = true;
           ENABLE_PUSH_CREATE_ORG = true;
+        };
+        mailer = {
+          ENABLED = false;
+          # The default option provided by nix is not a path, and therefore broken
+          SENDMAIL_PATH = "${pkgs.system-sendmail}/bin/sendmail";
         };
       };
       lfs.enable = true;
