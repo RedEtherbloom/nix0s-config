@@ -57,8 +57,20 @@ in {
     };
 
     home = {
-      packages = with pkgs;
-        [
+      packages = let
+        qbit-mull-check = pkgs.writeShellApplication {
+          name = "qbit-mull-check";
+          runtimeInputs = [
+            pkgs.curl
+            pkgs.jq
+            pkgs.qbittorrent-nox
+          ];
+          text = ''
+            curl https://am.i.mullvad.net/json -q | jq '.mullvad_exit_ip==true' -e && qbittorrent-nox || echo "Could not connect to Mulvlad"
+          '';
+        };
+      in
+        (with pkgs; [
           tor-browser
           bitwarden
           bitwarden-cli
@@ -122,7 +134,11 @@ in {
           bitwig-studio5
           yabridge
           yabridgectl
-        ]
+
+          vopono
+          qbittorrent-nox
+          qbit-mull-check
+        ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
           yubioath-flutter
           yubikey-manager
