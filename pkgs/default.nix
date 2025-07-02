@@ -75,6 +75,17 @@ in {
               playerctl
             ]);
         });
+      surround-ui-nvim = prev.vimUtils.buildVimPlugin {
+        name = "surround-ui.nvim";
+        version = "2024-07-16";
+        src = prev.fetchFromGitHub {
+          owner = "roobert";
+          repo = "surround-ui.nvim";
+          rev = "40abcba017a943d6d3dd304e523f34a43d80405b";
+          hash = "sha256-sUtu+Z20rDh9mefTwvEJVI4g7oL+FuYdY9bmGrWcrM0=";
+        };
+        meta.homepage = "https://github.com/roobert/surround-ui.nvim";
+      };
     };
 
   nix-tree = inputs.nix-tree.packages.${prev.system}.default;
