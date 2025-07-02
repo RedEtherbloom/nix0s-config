@@ -21,7 +21,8 @@
       };
     };
     # JACK devices somehow break the system
-    # jack.enable = true;
+    # Needed for sonic-pi
+    jack.enable = true;
     wireplumber = {
       enable = true;
       extraConfig = {
