@@ -43,12 +43,13 @@ in {
             silent = true;
           }
           (mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {desc = "Open Telescopes built in keymap";})
+          (mkKeymap "n" "<leader>fp" "<cmd>Telescope oldfiles<CR>" {desc = "Open list of previous files.";})
+          (mkKeymap "n" "<leader>fo" "<cmd>ObsidianQuickSwitch<CR>" {desc = "Open quick switcher for obsidian files.";})
           (mkKeymap "n" "<leader>oty" "<cmd>ObsidianYesterday<CR>" {desc = "Open yesterday's Obsidian note";})
           (mkKeymap "n" "<leader>otn" "<cmd>ObsidianToday<CR>" {desc = "Open today's Obsidian note";})
           (mkKeymap "n" "<leader>ott" "<cmd>ObsidianTomorrow<CR>" {desc = "Open tomorrow's Obsidian note";})
           (mkKeymap "n" "<leader>otp" "<cmd>ObsidianDailies<CR>" {desc = "Open a picker with the dailies of this week.";})
           (mkKeymap "n" "<leader>oto" "<cmd>ObsidianOpen<CR>" {desc = "Open current note in Obsidian window.";})
-          (mkKeymap "n" "<leader>oq" "<cmd>ObsidianQuickSwitch<CR>" {desc = "Open Obsidian's Quick Switcher";})
           (mkKeymap "n" "<leader>oc" "<cmd>ObsidianToggleCheckbox<CR>" {desc = "Toggle the current textbox.";})
           (mkKeymap "n" "<leader>of" "<cmd>ObsidianFollowLink<CR>" {desc = "Follow the link under the Obsidian cursor.";})
           (mkKeymap "n" "<leader>onn" "<cmd>ObsidianNew<CR>" {desc = "Create new Obsidian note.";})
@@ -66,6 +67,10 @@ in {
           (mkKeymap "n" "<leader>osv" "<cmd>ObsidianDebug<CR>" {desc = "Turn on additional Obsidian logging.";})
           (mkKeymap "n" "<leader>oww" "<cmd>ObsidianWorkspace<CR>" {desc = "Switch Obsidian workspace.";})
           (mkKeymap "n" "<leader>opi" "<cmd>ObsidianPasteImg<CR>" {desc = "Paste image from clipboard into note.";})
+          (mkKeymap "n" "<leader>se" "<cmd>SessionManager<CR>" {desc = "Open Session manager dialog.";})
+          (mkKeymap "n" "<leader>tj" "<cmd>TSJJoin<CR>" {desc = "Join the current block.";})
+          (mkKeymap "n" "<leader>ts" "<cmd>TSJSplit<CR>" {desc = "Split the current block.";})
+          (mkKeymap "n" "<leader>tt" "<cmd>TSJToggle<CR>" {desc = "Toggle splitting or joining the current block.";})
         ];
         viAlias = true;
         vimAlias = true;
@@ -73,14 +78,35 @@ in {
         binds = {
           cheatsheet.enable = true;
           whichKey.enable = true;
+          # Break bad habits
+          hardtime-nvim = {
+            enable = true;
+            setupOpts = {
+              max_count = 1;
+              disable_mouse = false;
+              timeout = 2000;
+              restriction_mode = "block";
+              max_insert_idle_ms = 8000;
+            };
+          };
         };
 
-        # TODO: Look over other mini utilities(https://notashelf.github.io/nvf/options.html#opt-vim.mini.align.enable)
-        mini = {
-          surround.enable = true;
-          # TODO: Disable too many lsp diagnostics
-          notify.enable = true;
+        ui = {
+          borders.enable = true;
+          colorizer.enable = true;
+          # TODO: Check visual difference
+          modes-nvim.enable = true;
+          # TODO: Lookup keybindins
+          fastaction.enable = true;
+          # Highlighting other uses
+          # TODO: How to jump to them?
+          illuminate.enable = true;
         };
+
+        # TODO: Lookup gestures
+
+        # TODO: Look over other mini utilities(https://notashelf.github.io/nvf/options.html#opt-vim.mini.align.enable)
+        mini.surround.enable = true;
 
         terminal.toggleterm = {
           enable = true;
@@ -90,7 +116,17 @@ in {
         snippets.luasnip.enable = true;
         # TODO: Look what noice does
 
+        dashboard = {
+          # Override default dashboard
+          dashboard-nvim.enable = false;
+          alpha.enable = true;
+        };
+
+        # TODO: What exactly are projects?
+        projects.project-nvim.enable = true;
+
         statusline.lualine.enable = true;
+        # TODO: This is buggy as hell
         tabline.nvimBufferline.enable = true;
         telescope = {
           enable = true;
@@ -120,12 +156,47 @@ in {
           };
         };
 
-        autocomplete.nvim-cmp.enable = true;
+        # Should be better than nvim-cmp, e.g. better search via frecency and lower latency
+        autocomplete.blink-cmp.enable = true;
         lsp = {
           enable = true;
+          # The trouble windows can bring vim into a weird broken state.
+          # TODO: Lookup good vim default in nvf repo
           trouble.enable = true;
+          # VSCode like pictograms for completion
+          lspkind.enable = true;
+          # TODO: Does this clash with precognition?
+          lightbulb.enable = true;
+          # TODO: Think about replacing trouble with e.g. lspsaga. IMPORTANT!
+          # TODO: Lookup otter-nvim. May help e.g. obsidian
+          nvim-docs-view.enable = true;
         };
         syntaxHighlighting = true;
+        debugger.nvim-dap = {
+          enable = true;
+          ui.enable = true;
+        };
+        visuals = {
+          # Smooth scrolling!!
+          cinnamon-nvim.enable = true;
+          # TODO: Check if illuminate is enough, or if we want to add cursorline
+          fidget-nvim.enable = true;
+          # TODO: Disable on reformat
+          highlight-undo.enable = true;
+          # TODO: Maybe add color for different indentiation levels
+          indent-blankline.enable = true;
+        };
+        filetree.neo-tree.enable = true;
+        # TODO: Does this enable e.g. jumping up and down in code blocks(like up from if to function)
+        treesitter.context = {
+          enable = true;
+          setupOpts = {
+            separator = "󱙧";
+            max_lines = 1;
+            # TODO: Compare to cursor
+            mode = "topline";
+          };
+        };
         languages = {
           enableFormat = true;
           enableTreesitter = true;
@@ -158,6 +229,7 @@ in {
           go.enable = true;
           python.enable = true;
           bash.enable = true;
+          # TODO:: Create patch
           #tex = {
           #  enable = true;
           #  # TODO: Unsure how to trigger this
@@ -185,18 +257,32 @@ in {
           java.enable = true;
         };
         utility = {
+          icon-picker.enable = true;
+          # TODO: Make sure to use macros instead whenever we can
+          multicursors.enable = true;
+          # TODO: Look into a plugin like yanky-nvim for better yanking
           # Color picker
           ccc.enable = true;
+          # Leetcode / programming problems for training
+          leetcode-nvim.enable = true;
           motion = {
             leap.enable = true;
+            # TODO: lookup additional options
             precognition.enable = true;
           };
-          images.image-nvim = {
-            enable = true;
-            setupOpts = {
-              backend = "kitty";
+          images = {
+            # TODO: Write rule for neovide with require('image-nvim').disable()
+            image-nvim = {
+              enable = true;
+              setupOpts = {
+                backend = "kitty";
+              };
             };
+            # Pasting image support
+            img-clip.enable = true;
           };
+          # What does this do again?
+          surround.enable = true;
         };
         lazy.plugins = {
           vim-be-good = {
@@ -210,6 +296,22 @@ in {
               default_player = "spotify_client";
             };
           };
+          # Command doesn't work properly
+          treesj = {
+            package = pkgs.vimPlugins.treesj;
+            cmd = [
+              "TSJToggle"
+              "TSJSplit"
+              "TSJJoin"
+            ];
+            setupOpts = {
+              use_default_keymaps = false;
+            };
+          };
+          ale = {
+            package = pkgs.vimPlugins.ale;
+            # TODO: Does this autoload without a configured cmd etc.?
+          };
         };
         extraPlugins = {
           telescope-frecency-nvim = {
@@ -217,59 +319,77 @@ in {
             after = "telescope";
             setup = ''require('telescope').load_extension "frecency"'';
           };
-          harpoon = {
-            package = pkgs.vimPlugins.harpoon2;
-            setup = "require('harpoon').setup {}";
-          };
+          # Debugging if harpoon maybe messes up buffers
+          # harpoon = {
+          #   package = pkgs.vimPlugins.harpoon2;
+          #   setup = "require('harpoon').setup {}";
+          # };
           pomo-nvim = {
             package = pkgs.vimPlugins.pomo-nvim;
             setup = "require('pomo').setup {}";
           };
+          # Learn nvim-surround shortcuts
+          "surround-ui.nvim" = {
+            package = pkgs.vimPlugins.surround-ui-nvim;
+            setup = ''
+              require("surround-ui").setup({
+                -- Default
+                root_key = "S",
+              })
+            '';
+          };
         };
+        # TODO: Create rule for e.g. nix pairs or moving the cursor after the brackets after insert
         autopairs.nvim-autopairs.enable = true;
-        notes.obsidian = {
-          enable = true;
-          setupOpts = {
-            workspaces = [
-              {
-                name = "default";
-                path = "${config.home.homeDirectory}/Documents/Obsidian/default";
-                overrides = {
-                  notes_dir = "00-Notes";
-                };
-              }
-            ];
-            daily_notes = {
-              date_format = "%Y/%m/%d-%a+W%V";
-              folder = "01-Tracking/Daily";
-              template = "Day.md";
-            };
-            templates.folder = "02-Templates";
-            new_notes_location = "note_subdir";
-            # TODO: Add follow_link_function. Otherwise images etc. get ignored. Maybe they can be rendered inline some way?
-            # Force Obsidian to focus on :ObsidianOpen
-            open_app_foreground = true;
-            # TODO: May need to specify telescope etc. in picker
-            sort_by = "modified";
-            sort_reversed = true;
-            # TODO: may want to up search_max_lines from 1000 default iirc
-            attachments.img_folder = "XX-Files";
-            ui = {
-              checkboxes = lib.generators.mkLuaInline ''
+        notes = {
+          todo-comments.enable = true;
+          # TODO: Give this a try
+          # Broken on 02-07-2025 due to treesitter problems
+          orgmode.enable = false;
+          obsidian = {
+            enable = true;
+            setupOpts = {
+              workspaces = [
                 {
-                  [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-                  ["x"] = { char = "", hl_group = "ObsidianDone" },
-                  ["!"] = { char = "", hl_group = "ObsidianImportant" },
-                  ["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
-                  [">"] = { char = "", hl_group = "ObsidianRightArrow" },
+                  name = "default";
+                  path = "${config.home.homeDirectory}/Documents/Obsidian/default";
+                  overrides = {
+                    notes_dir = "00-Notes";
+                  };
                 }
-              '';
+              ];
+              daily_notes = {
+                date_format = "%Y/%m/%d-%a+W%V";
+                folder = "01-Tracking/Daily";
+                template = "Day.md";
+              };
+              templates.folder = "02-Templates";
+              new_notes_location = "note_subdir";
+              # TODO: Add follow_link_function. Otherwise images etc. get ignored. Maybe they can be rendered inline some way?
+              # Force Obsidian to focus on :ObsidianOpen
+              open_app_foreground = true;
+              # TODO: May need to specify telescope etc. in picker
+              sort_by = "modified";
+              sort_reversed = true;
+              # TODO: may want to up search_max_lines from 1000 default iirc
+              attachments.img_folder = "XX-Files";
+              ui = {
+                checkboxes = lib.generators.mkLuaInline ''
+                  {
+                    [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
+                    ["x"] = { char = "", hl_group = "ObsidianDone" },
+                    ["!"] = { char = "", hl_group = "ObsidianImportant" },
+                    ["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
+                    [">"] = { char = "", hl_group = "ObsidianRightArrow" },
+                  }
+                '';
+              };
             };
           };
         };
-        # TODO: Setup local or with Mistral
-        # TODO: Enable after texlab has been merged
-        # assistant.codecompanion-nvim.enable = true;
+        # TODO: Setup local or with e.g. Mistral
+        # TODO: Maybe try avante? cursor lke ide in nvim
+        assistant.codecompanion-nvim.enable = true;
       };
     };
   };
