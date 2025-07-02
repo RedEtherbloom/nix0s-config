@@ -6,6 +6,33 @@
 in {
   logger = final.callPackage ./scripts/python/fritz-logger/default.nix {};
   # TODO: Can probably better be done with e.g.patches
+
+  thunderbird-external-editor-revived = prev.rustPlatform.buildRustPackage (finalAttrs: {
+    pname = "thunderbird-external-editor-revived";
+    version = "1.2.0";
+    src = prev.fetchFromGitHub {
+      owner = "Frederick888";
+      repo = "external-editor-revived";
+      rev = "v${finalAttrs.version}";
+      hash = "sha256-K5agRpFJ8iqvPnx3IIMTvrkObT/GB962EtdvWf7Eq4w=";
+    };
+    cargoHash = "sha256-QYSsdEBNwjpR7lppyOcsc0F8ombBY+dlFRY1GO/D8so=";
+
+    meta = {
+      description = "Native messaging host for the MailExtension Vim addon for Thunderbird.";
+      homepage = "https://github.com/Frederick888/external-editor-revived";
+      license = prev.lib.licenses.unlicense;
+      maintainers = [
+        {
+          email = "etherbloom@mailbox.org";
+          github = "RedEtherbloom";
+          githubId = "16244495";
+          name = "Etherbloom";
+        }
+      ];
+    };
+  });
+
   byar-launcher = final.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
   inherit (rimsort-pr) rimsort;
 

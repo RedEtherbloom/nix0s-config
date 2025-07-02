@@ -66,11 +66,20 @@ in {
           hunspell
           hunspellDicts.en_US
           hunspellDicts.de_DE
-        ] ++ lib.optionals cfg.pdf_editing [pdfarranger]
+        ]
+        ++ lib.optionals cfg.pdf_editing [pdfarranger]
         ++ lib.optionals cfg.video_editing [shotcut]
-        ++ lib.optionals cfg.scanning [simple-scan]
-        # TODO: Turn into option, once we figured out it's profiles
-        ++ lib.optionals cfg.thunderbird [thunderbird];
+        ++ lib.optionals cfg.scanning [simple-scan];
     }
+    (lib.mkIf cfg.thunderbird {
+      programs.thunderbird = {
+        enable = true;
+        nativeMessagingHosts = [ pkgs.thunderbird-external-editor-revived ];
+        profiles.personal = {
+          isDefault = true;
+          withExternalGnupg = true;
+        };
+      };
+    })
   ]);
 }
