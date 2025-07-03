@@ -293,7 +293,7 @@ in {
               };
 
               "github" = {
-                definedAliases = defineAliasVariants ["git" "github"];
+                definedAliases = defineAliasVariants ["gh" "git" "github"];
                 icon = "https://github.githubassets.com/favicons/favicon-dark.png";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -344,7 +344,7 @@ in {
                 ];
               };
               "chatgpt" = {
-                definedAliases = defineAliasVariants ["ct" "cpgt" "chatgpt"];
+                definedAliases = defineAliasVariants ["ct" "chat" "chatgpt"];
                 icon = "https://cdn.oaistatic.com/assets/favicon-miwirzcw.ico";
                 updateInterval = iconRefreshInterval;
                 urls = [
