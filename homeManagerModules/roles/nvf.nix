@@ -20,8 +20,14 @@ in {
   ];
 
   config = mkIf cfg.enable {
+    stylix.targets = {
+      neovim.enable = false;
+      nvf.enable = false;
+      neovide.enable = false;
+    };
     programs.nvf = {
       enable = true;
+      # TODO: Disable stylis and use normal theme for better clarity
       settings.vim = {
         options = {
           shiftwidth = 2;
@@ -82,7 +88,7 @@ in {
           hardtime-nvim = {
             enable = true;
             setupOpts = {
-              max_count = 1;
+              max_count = 2;
               disable_mouse = false;
               timeout = 2000;
               restriction_mode = "block";
@@ -91,15 +97,24 @@ in {
           };
         };
 
+        theme = {
+          enable = true;
+          name = "catppuccin";
+          style = "auto";
+          transparent = true;
+        };
+
         ui = {
           borders.enable = true;
+          breadcrumbs.enable = true;
           colorizer.enable = true;
-          # TODO: Check visual difference
-          modes-nvim.enable = true;
+          # Error: Breaks visual mode display in odd ways
+          # modes-nvim.enable = true;
           # TODO: Lookup keybindins
           fastaction.enable = true;
           # Highlighting other uses
           # TODO: How to jump to them?
+          # This perhaps breaks visual mode from time to time(the purple cursor that doesn't mark an area)
           illuminate.enable = true;
         };
 
@@ -342,7 +357,13 @@ in {
         # TODO: Create rule for e.g. nix pairs or moving the cursor after the brackets after insert
         autopairs.nvim-autopairs.enable = true;
         notes = {
-          todo-comments.enable = true;
+          todo-comments = {
+            enable = true;
+            setupOpts = {
+              # Disable displaying the marks in the signs column for visual clarity
+              signs = false;
+            };
+          };
           # TODO: Give this a try
           # Broken on 02-07-2025 due to treesitter problems
           orgmode.enable = false;
