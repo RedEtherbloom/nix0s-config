@@ -75,8 +75,6 @@ in {
           keyScheme = "vim";
         };
         btop.package = pkgs.btop-cuda;
-        # Waiting for the Yubikey adaptor
-        git.signing.signByDefault = false;
       };
     }
     # Ivy: These sadly break with missing monitors :/
