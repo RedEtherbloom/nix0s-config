@@ -177,6 +177,6 @@ in {
     };
 
     # Set terminal opacity using stlyix instead
-    stylix.opacity.terminal = 0.8;
+    stylix.opacity.terminal = 0.85;
   };
 }
