@@ -74,6 +74,7 @@ in {
         # Speedup decryption
         "aesni_intel"
       ];
+      systemd.enable = true;
       luks.devices = {
         "nixos-root" = {
           device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
