@@ -91,7 +91,7 @@ in {
           {
             nix = {
               enableLanguageServer = true;
-              serverPath = "nil";
+              serverPath = "nixd";
             };
             git = {
               autofetch = true;
