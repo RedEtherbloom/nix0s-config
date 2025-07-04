@@ -132,7 +132,7 @@ in {
           nixfmt-rfc-style
           alejandra
           nh
-          nil
+          nixd
           direnv
           nix-prefetch-scripts
           nix-prefetch-github

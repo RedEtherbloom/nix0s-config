@@ -120,21 +120,16 @@ in {
             # TODO: Maybe add color for different indentiation levels
             indent-blankline.enable = true;
           };
-          nix = {
           filetree.neo-tree.enable = true;
           # TODO: Does this enable e.g. jumping up and down in code blocks(like up from if to function)
           treesitter.context = {
             enable = true;
-            extraDiagnostics = {
-              enable = true;
-              types = ["statix" "deadnix"];
             setupOpts = {
               separator = "󱙧";
               max_lines = 1;
               # TODO: Compare to cursor
               mode = "topline";
             };
-            lsp.server = "nil";
           };
           # LSP
           debugger.nvim-dap = {
@@ -154,10 +149,14 @@ in {
             enableTreesitter = true;
             enableDAP = true;
 
+            nix = {
               enable = true;
-              setupOpts = {
-                backend = "kitty";
+              extraDiagnostics = {
+                enable = true;
+                types = ["statix" "deadnix"];
               };
+              # TODO: Checkout nixd from git
+              lsp.server = "nixd";
             };
             ts.enable = true;
             nu.enable = true;
