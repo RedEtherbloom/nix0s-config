@@ -62,7 +62,7 @@ in {
         visual_bell_color = "#0c0933";
         enable_audio_bell = "no";
         visual_bell_duration = 0.15;
-        cursor_trail = 3;
+        cursor_trail = 2;
         cursor_shape = "beam";
         cursor_shape_unfocused = "hollow";
         # TODO: Does not seem to have an effect

@@ -1,7 +1,7 @@
 {
   config,
-  lib,
   inputs,
+  lib,
   ...
 }:
 with lib; let
@@ -19,23 +19,26 @@ in {
 
   config = mkIf cfg.enable {
     # Supposedly required by nixd
+    # TODO: Do we need a path of our overlayed nixpkgs?
     nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
 
-    programs.nix-index-database.comma.enable = lib.mkDefault true;
-
+    myOptions.utilities.enable = lib.mkDefault true;
     security.pki.certificateFiles = [
       "${inputs.our-secrets}/secrets/root_ca/root_ca.crt"
     ];
 
-    myOptions.utilities.enable = true;
+    services = {
+      fwupd.enable = lib.mkDefault true;
+      fstrim.enable = lib.mkDefault true;
+    };
 
-    services.fwupd.enable = true;
-    services.fstrim.enable = true;
-
-    # TODO: Figure out how to merge this with home-manager
-    programs.neovim = {
-      enable = lib.mkDefault true;
-      defaultEditor = lib.mkDefault true;
+    programs = {
+      nix-index-database.comma.enable = lib.mkDefault true;
+      # Fallback in case of e.g. broken system
+      neovim = {
+        enable = lib.mkDefault true;
+        defaultEditor = lib.mkDefault true;
+      };
     };
   };
 }

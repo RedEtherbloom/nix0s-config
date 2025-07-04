@@ -28,14 +28,19 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
+      # TODO: Reevaluate if this fixes it
+      # TODO: Figure out how to set xdgUseOpenPortal so that it doesn't conflict with KDE's own custom(*sigh*) behavior
+      xdg.portal.config.common.default = [
+        "kde"
+      ];
+
       programs.plasma = {
-        fonts = {
-          windowTitle = {
-            family = "OpenDyslexic Nerd Font";
-            pointSize = 10;
-          };
-        };
         enable = true;
+        # TODO: Chekc if stylix automatically does this
+        fonts.windowTitle = {
+          family = "OpenDyslexic Nerd Font";
+          pointSize = 10;
+        };
         # We're only coding shortcuts for screens 0-3
         shortcuts =
           lib.attrsets.recursiveUpdate
@@ -399,7 +404,7 @@ in {
 
           "plasma-localerc"."Formats"."LANG" = "en_US.UTF-8";
           "plasmanotifyrc"."Notifications"."PopupPosition" = "TopRight";
-          "plasmanotifyrc"."Notifications"."PopupTimeout" = 7000;
+          "plasmanotifyrc"."Notifications"."PopupTimeout" = 10000;
           "plasmaparc"."General"."RaiseMaximumVolume" = true;
           "systemsettingsrc"."systemsettings_sidebar_mode"."HighlightNonDefaultSettings" = true;
 
@@ -495,6 +500,7 @@ in {
       (let
         qt-pinentry = pkgs.pinentry-qt;
       in {
+        # TODO: How to set the default e.g. ncurses as backup
         # May break curses via tmux when plugged into other device
         services.gpg-agent.pinentry.package = qt-pinentry;
         home.packages = [qt-pinentry];

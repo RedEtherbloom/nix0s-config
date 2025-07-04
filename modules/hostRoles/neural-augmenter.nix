@@ -35,15 +35,12 @@ in {
     };
 
     programs = {
-      # Open the ports for KDE-Connect and install it here as well.
-      # HM can't open ports sadly.
+      # Open the ports for KDE-Connect as home manager sadly can't do it
       kdeconnect = {
         enable = true;
         package = mkForce pkgs.kdePackages.kdeconnect-kde;
       };
-
       adb.enable = true;
-
       ausweisapp = {
         enable = true;
         openFirewall = true;
@@ -52,10 +49,7 @@ in {
 
     services = {
       tailscale.enable = true;
-
-      udev.packages = with pkgs; [
-        platformio-core
-      ];
+      udev.packages = [pkgs.platformio-core];
       mullvad-vpn = {
         enable = true;
         # GUI
@@ -63,16 +57,16 @@ in {
       };
     };
 
-    environment.systemPackages = with pkgs; [
-      # For some reason this keeps getting pulled in since stylix and then recycled by ghc
-      ghc
-      gnupg
+    environment.systemPackages = [pkgs.lm_sensors];
 
-      lm_sensors
-    ];
+    # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
+    system.extraDependencies = let
+      collectFlakeInputs = input: [input] ++ builtins.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or {}));
+    in
+      builtins.concatMap collectFlakeInputs (builtins.attrValues inputs);
 
-    # Required for Nheko to work
     nixpkgs.config.permittedInsecurePackages = [
+      # Required for Nheko to work
       "olm-3.2.16"
       "fluffychat-linux-1.27.0"
     ];
@@ -85,6 +79,7 @@ in {
           "quay.io"
         ];
       };
+      # TODO: Are UIDs for root separated by default?
       podman = {
         dockerSocket.enable = true;
         enable = true;
@@ -93,12 +88,12 @@ in {
         # Required for containers under podman-compose to be able to talk to each other.
         defaultNetwork.settings.dns_enabled = true;
       };
-      oci-containers = {
-        backend = "podman";
-      };
+      oci-containers.backend = "podman";
       waydroid.enable = true;
     };
 
+    # TODO: Replace with home-manager option
+    # This is a workaround for podman containers not starting correctly
     users.users."inf".subUidRanges = [
       {
         count = 65534;
