@@ -1,0 +1,28 @@
+diff --git a/desktoppackage/contents/lockscreen/LockScreenUi.qml b/desktoppackage/contents/lockscreen/LockScreenUi.qml
+index 6824e4e..b6a8df0 100644
+--- a/desktoppackage/contents/lockscreen/LockScreenUi.qml
++++ b/desktoppackage/contents/lockscreen/LockScreenUi.qml
+@@ -155,7 +155,7 @@ Item {
+         }
+         Timer {
+             id: fadeoutTimer
+-            interval: 10000
++            interval: 2000
+             onTriggered: {
+                 if (!lockScreenRoot.blockUI) {
+                     mainBlock.mainPasswordBox.showPassword = false;
+@@ -165,12 +165,12 @@ Item {
+         }
+         Timer {
+             id: notificationRemoveTimer
+-            interval: 3000
++            interval: 250
+             onTriggered: root.notification = ""
+         }
+         Timer {
+             id: graceLockTimer
+-            interval: 3000
++            interval: 250
+             onTriggered: {
+                 root.clearPassword();
+                 authenticator.startAuthenticating();
