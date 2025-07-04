@@ -63,10 +63,10 @@ in {
           runtimeInputs = [
             pkgs.curl
             pkgs.jq
-            pkgs.qbittorrent-nox
+            pkgs.qbittorrent
           ];
           text = ''
-            curl https://am.i.mullvad.net/json -q | jq '.mullvad_exit_ip==true' -e && qbittorrent-nox || echo "Could not connect to Mulvlad"
+            curl https://am.i.mullvad.net/json -q | jq '.mullvad_exit_ip==true' -e && qbittorrent || echo "Could not connect to Mulvlad"
           '';
         };
       in
