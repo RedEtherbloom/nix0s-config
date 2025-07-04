@@ -18,18 +18,21 @@
       };
     };
 
+    flake-compat.url = "github:edolstra/flake-compat";
+    systems.url = "github:nix-systems/default";
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
     };
-    flake-compat.url = "github:edolstra/flake-compat";
-    systems.url = "github:nix-systems/default";
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -52,15 +55,6 @@
         home-manager.follows = "home-manager";
       };
     };
-
-    our-secrets = {
-      url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-        sops-nix.follows = "sops-nix";
-      };
-    };
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
       inputs = {
@@ -68,7 +62,6 @@
         flake-utils.follows = "flake-utils";
       };
     };
-
     nix-comfyui = {
       url = "github:RedEtherbloom/nix-comfyui?ref=both-fixes-merged";
       inputs = {
@@ -76,21 +69,6 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
-
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    sergv-nixos-config = {
-      url = "github:sergv/nixos-config?rev=9c6306c86af6130f76d277e382c346360ec124dd";
-      flake = false;
-    };
-
-    rimsort-pr = {
-      url = "github:NixOS/nixpkgs?ref=pull/304943/head";
-    };
-
     nvf = {
       url = "github:NotAShelf/nvf/main";
       inputs = {
@@ -98,13 +76,25 @@
         flake-utils.follows = "flake-utils";
       };
     };
-
     nix-tree = {
       url = "github:utdemir/nix-tree";
       inputs = {
         flake-compat.follows = "flake-compat";
         flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
+      };
+    };
+    sergv-nixos-config = {
+      url = "github:sergv/nixos-config?rev=9c6306c86af6130f76d277e382c346360ec124dd";
+      flake = false;
+    };
+    rimsort-pr.url = "github:NixOS/nixpkgs?ref=pull/304943/head";
+    our-secrets = {
+      url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+        sops-nix.follows = "sops-nix";
       };
     };
   };
@@ -137,19 +127,9 @@
           inherit (nixpkgsConfig) overlays config;
           inherit system;
         };
-        formatter = pkgs.alejandra;
       in {
-        inherit formatter;
-        devShells.default = pkgs.mkShell {
-          packages =
-            [formatter]
-            ++ (with pkgs; [
-              nil
-              nix-output-monitor
-              nh
-            ]);
-        };
-
+        formatter = pkgs.alejandra;
+        # TODO: Build devShell
         legacyPackages = pkgs;
       }
     )
@@ -158,9 +138,7 @@
         defaultUsername = "inf";
         # Setup common home-manager and nixpkgs options
         mkSystem = hostName: system: username: let
-          specialArgs = {
-            inherit inputs self system;
-          };
+          specialArgs = {inherit inputs self system;};
         in
           nixpkgs.lib.nixosSystem {
             inherit specialArgs;
@@ -168,11 +146,10 @@
             modules = [
               home-manager.nixosModules.home-manager
               sops-nix.nixosModules.sops
-
+              # TODO: Figure out how to merge with pkgs in flake-utils set
               {nixpkgs = {inherit (nixpkgsConfig) overlays config;};}
 
               ./hosts/${hostName}/configuration.nix
-
               {
                 home-manager = {
                   backupFileExtension = "hm_backup_move";
