@@ -91,11 +91,17 @@ in {
   nix-tree = inputs.nix-tree.packages.${prev.system}.default;
 
   # Fixes https://github.com/NixOS/nixpkgs/issues/418453
-  waydroid = prev.waydroid.override {
-    python3Packages = prev.python312Packages;
-  };
+  waydroid = prev.waydroid.override { python3Packages = prev.python312Packages; };
 
   sonic-pi = prev.sonic-pi.overrideAttrs (_: prevAttrs: {
     buildInputs = (prevAttrs.buildInputs or []) ++ [prev.libsForQt5.qt5.qtwayland];
   });
+
+  kdePackages =
+    prev.kdePackages
+    // {
+      plasma-desktop = prev.kdePackages.plasma-desktop.overrideAttrs (_: prevAttrs: {
+        patches = (prevAttrs.patches or []) ++ [./shorten-grace-lock.patch];
+      });
+    };
 }

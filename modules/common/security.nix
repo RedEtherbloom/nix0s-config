@@ -41,9 +41,19 @@ in {
 
       # in µs
       security.pam.services = {
-        sudo.failDelay.delay = 500000;
-        kde.failDelay.delay = 500000;
-        sddm.failDelay.delay = 500000;
+        sudo.failDelay.delay = {
+          delay = 500000;
+          enable = true;
+        };
+        # KDE and SDDM's yubikey handling is yikes
+        kde.failDelay = {
+          delay = 100000;
+          enable = true;
+        };
+        sddm.failDelay.delay = {
+          delay = 100000;
+          enable = true;
+        };
       };
     })
 
@@ -96,6 +106,9 @@ in {
         services = {
           login.u2fAuth = true;
           sudo.u2fAuth = true;
+          other.u2fAuth = true;
+          sddm.u2fAuth = true;
+          sddm-greeter.u2fAuth = true;
         };
       };
     })
