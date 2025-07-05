@@ -15,83 +15,83 @@ in {
   };
 
   config = mkIf cfg.enable {
-    myOptions.hostRoles.base.enable = mkDefault true;
-
-    # Remove files for stylix
-    # TODO: Try to disable this in KDE
-    home.activation = {
-      removeStylixBlockersAction = lib.hm.dag.entryBefore ["checkFilesChanged"] ''
-        run rm -rf ~/.config/gtk-3.0 ~/.config/gtk-4.0 ~/.gtkrc-2.0
-      '';
+    myOptions = {
+      hostRoles.base.enable = mkDefault true;
+      plasma-manager.enable = true;
     };
 
-    myOptions.plasma-manager.enable = true;
+    home = {
+      # Remove files for stylix
+      # TODO: Try to disable this in KDE
+      activation = {
+        removeStylixBlockersAction = lib.hm.dag.entryBefore ["checkFilesChanged"] ''
+          run rm -rf ~/.config/gtk-3.0 ~/.config/gtk-4.0 ~/.gtkrc-2.0
+        '';
+      };
+      packages = with pkgs; [
+        helvum
+        pavucontrol
+        wl-clipboard
+        hyfetch
 
-    home.packages = with pkgs; [
-      helvum
-      pavucontrol
-      wl-clipboard
-      hyfetch
+        # Attempts at notifications
+        kdePackages.kdialog
+        libnotify
 
-      # Attempts at notifications
-      kdePackages.kdialog
-      libnotify
-
-      vlc
-      feh
-    ];
-
-    programs.mpv = {
-      enable = true;
-      config = {
-        # Video acceleration
-        hwdec = "auto-safe";
-        vo = "gpu";
-        profile = "gpu-hq";
-        gpu-context = "wayland";
+        vlc
+        feh
+      ];
+      sessionVariables = {
+        # Native Wayland for Chromium apps
+        NIXOS_OZONE_WL = "1";
       };
     };
 
-    programs.kitty = {
-      enable = true;
-      settings = {
-        background_blur = 2;
-        dynamic_background_opacity = true;
-        background_tint = 0.2;
-
-        visual_bell_color = "#0c0933";
-        enable_audio_bell = "no";
-        visual_bell_duration = 0.15;
-        cursor_trail = 2;
-        cursor_shape = "beam";
-        cursor_shape_unfocused = "hollow";
-        # TODO: Does not seem to have an effect
-        cursor = "#2ccc1b";
+    programs = {
+      mpv = {
+        enable = true;
+        config = {
+          # Video acceleration
+          hwdec = "auto-safe";
+          vo = "gpu";
+          profile = "gpu-hq";
+          gpu-context = "wayland";
+        };
       };
-    };
-
-    programs.tmux = {
-      enable = true;
-      clock24 = true;
-      historyLimit = 10000;
-      # Hope this doesn't blow up
-      keyMode = "vi";
-      mouse = true;
-      newSession = true;
-      # May require passthrough set to all
-      extraConfig = ''
-        set -g allow-passthrough on
-      '';
-    };
-    programs.fzf.tmux.enableShellIntegration = true;
-
-    home.sessionVariables = {
-      # Native Wayland for Chromium apps
-      NIXOS_OZONE_WL = "1";
+      kitty = {
+        enable = true;
+        settings = {
+          background_blur = 2;
+          dynamic_background_opacity = true;
+          background_tint = 0.1;
+          visual_bell_color = "#0c0933";
+          enable_audio_bell = "no";
+          visual_bell_duration = 0.15;
+          cursor_trail = 2;
+          # cursor_shape = "beam";
+          cursor_shape_unfocused = "hollow";
+          # TODO: Does not seem to have an effect
+          cursor = "#2ccc1b";
+          confirm_os_window_close = 0;
+        };
+      };
+      tmux = {
+        enable = true;
+        clock24 = true;
+        historyLimit = 10000;
+        # Hope this doesn't blow up
+        keyMode = "vi";
+        mouse = true;
+        newSession = true;
+        # May require passthrough set to all
+        extraConfig = ''
+          set -g allow-passthrough on
+        '';
+      };
+      fzf.tmux.enableShellIntegration = true;
+      btop.enable = true;
     };
 
     fonts.fontconfig.enable = true;
-
-    programs.btop.enable = true;
   };
 }
