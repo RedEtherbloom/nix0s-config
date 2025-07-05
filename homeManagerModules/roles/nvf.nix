@@ -32,6 +32,11 @@ in {
         defaultEditor = true;
         enableManpages = true;
         settings.vim = {
+          debugMode = {
+            enable = true;
+            # Afaik by default under "$HOME/.cache/nvim"
+            logFile = "${config.xdg.stateHome}/nvim/nvim_log_from_nvf.log";
+          };
           options = {
             shiftwidth = 2;
             tabstop = 2;
@@ -77,6 +82,9 @@ in {
           terminal.toggleterm = {
             enable = true;
             lazygit.enable = true;
+            setupOpts = {
+              direction = "float";
+            };
           };
           session.nvim-session-manager.enable = true;
           snippets.luasnip.enable = true;
@@ -203,6 +211,7 @@ in {
             };
             markdown.enable = true;
             java.enable = true;
+            typst.enable = true;
           };
           utility = {
             icon-picker.enable = true;
@@ -244,8 +253,8 @@ in {
                 default_player = "spotify_client";
               };
             };
-            # Command doesn't work properly
-            treesj = {
+            # TODO: Command doesn't load for some reason
+            "treesj" = {
               package = pkgs.vimPlugins.treesj;
               cmd = [
                 "TSJToggle"
@@ -294,7 +303,15 @@ in {
               enable = true;
               setupOpts = {
                 # Disable displaying the marks in the signs column for visual clarity
-                signs = false;
+                keywords = {
+                  TODO = {
+                    icon = " ";
+                    color = "info";
+                    signs = false;
+                    # TODO: Does this properly include the # symbol?
+                    alt = ["# TODO:"];
+                  };
+                };
               };
             };
             # TODO: Give this a try
