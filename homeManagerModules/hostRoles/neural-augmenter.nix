@@ -174,6 +174,11 @@ in {
         package = pkgs.rofi-wayland;
       };
       spotify-player.enable = true;
+      bat.enable = true;
+      # TODO: Try out then reevaluate
+      broot.enable = true;
+      # TODO: Does this improve completion speed?
+      carapace.enable = true;
     };
 
     # Set terminal opacity using stlyix instead
