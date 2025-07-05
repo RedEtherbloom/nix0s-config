@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 with lib; let
@@ -31,12 +30,19 @@ in {
           theme = "flazz";
           plugins = [
             "git"
+            # TODO: Replace with zsh-vi-mode
             "vi-mode"
           ];
         };
 
         sessionVariables = {
           ZVM_LINE_INIT_MODE = "ZVM_MODE_INSERT";
+          ZVM_VI_INSERT_ESCAPE_BINDKEY = "jj";
+          VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
+          # Normal mode Vi-Mode
+          MODE_INDICATOR = "%F{white}+NORMAL%f";
+          # Insert mode Vi-Mode
+          INSERT_MODE_INDICATOR = "%F{yellow}+INSERT%f";
         };
 
         shellAliases = {

@@ -86,6 +86,9 @@ in {
             setupOpts = {
               direction = "float";
             };
+            mappings = {
+              open = "<c-i>";
+            };
           };
           session.nvim-session-manager.enable = true;
           snippets.luasnip.enable = true;
@@ -313,6 +316,7 @@ in {
             vim-startuptime = {
               package = pkgs.vimPlugins.vim-startuptime;
             };
+            # TODO: Think of adding CamelCaseMotion plugin
           };
           # TODO: Create rule for e.g. nix pairs or moving the cursor after the brackets after insert
           autopairs.nvim-autopairs.enable = true;
@@ -326,7 +330,7 @@ in {
                     icon = " ";
                     color = "info";
                     signs = false;
-                    # TODO: Does this properly include the # symbol?
+                    # TODO: Does this properly include the # symbol? Doesn't seem like it
                     alt = ["# TODO:"];
                   };
                 };
