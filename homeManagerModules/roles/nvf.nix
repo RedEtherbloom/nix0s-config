@@ -31,7 +31,7 @@ in {
         enable = true;
         defaultEditor = true;
         enableManpages = true;
-        settings.vim = {
+        settings.vim = rec {
           debugMode = {
             enable = true;
             # Afaik by default under "$HOME/.cache/nvim"
@@ -65,7 +65,7 @@ in {
             colorizer.enable = true;
             # Error: Breaks visual mode display in odd ways
             # modes-nvim.enable = true;
-            # TODO: Lookup keybindins
+            # TODO: Lookup keybindings
             fastaction.enable = true;
             # Highlighting other uses
             # TODO: How to jump to them?
@@ -87,7 +87,7 @@ in {
               direction = "float";
             };
             mappings = {
-              open = "<c-i>";
+              open = "<c-ö>";
             };
           };
           session.nvim-session-manager.enable = true;
@@ -247,8 +247,9 @@ in {
             };
             images = {
               # TODO: Write rule for neovide with require('image-nvim').disable()
+              # TODO: Currently throws a weird error with line('w0') being nil or something on startup
               image-nvim = {
-                enable = true;
+                enable = false;
                 setupOpts = {
                   backend = "kitty";
                 };
@@ -404,6 +405,14 @@ in {
               desc = "Exit insert mode";
               silent = true;
             }
+            {
+              mode = ["t"];
+              key = terminal.toggleterm.mappings.open;
+              # Default toggleterm action set by nvf
+              action = "<Cmd>execute v:count . \"ToggleTerm\"<CR>";
+              # This prevents my terminal keybinding from getting eaten by zsh-vi-mode
+              noremap = true;
+            }
             (mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {desc = "Open Telescopes built in keymap";})
             (mkKeymap "n" "<leader>fp" "<cmd>Telescope oldfiles<CR>" {desc = "Open list of previous files.";})
             (mkKeymap "n" "<leader>fo" "<cmd>ObsidianQuickSwitch<CR>" {desc = "Open quick switcher for obsidian files.";})
@@ -438,6 +447,11 @@ in {
             enable = true;
             setupOpts.defaults = {
               path_display = ["truncate"];
+              # TODO: Maybe try closest instead
+              selection_strategy = "follow";
+              selection_caret = "󱙧";
+              layout_strategy = "flex";
+              color_devicons = true;
               mappings = let
                 multi_select = lib.generators.mkLuaInline ''
                   function(prompt_bufnr)
@@ -455,16 +469,32 @@ in {
                     end
                   end
                 '';
-              in {
-                i."<CR>" = multi_select;
-                n."<CR>" = multi_select;
-              };
-
-              # TODO: Setup local or with e.g. Mistral
-              # TODO: Maybe try avante? cursor lke ide in nvim
-              assistant.codecompanion-nvim.enable = true;
+              in
+                lib.attrsets.recursiveUpdate {
+                  i."<CR>" = multi_select;
+                  n."<CR>" = multi_select;
+                } {
+                  i = {
+                    "jj" = lib.generators.mkLuaInline ''
+                      function(prompt_bufnr)
+                        actions.set_command_line(prompt_bufnr)
+                      end
+                    '';
+                  };
+                  n = {
+                    "jj" = lib.generators.mkLuaInline ''
+                      function(prompt_bufnr)
+                        actions.close(prompt_bufnr)
+                      end
+                    '';
+                  };
+                };
             };
           };
+
+          # TODO: Setup local or with e.g. Mistral
+          # TODO: Maybe try avante? cursor lke ide in nvim
+          assistant.codecompanion-nvim.enable = true;
         };
       };
     };
