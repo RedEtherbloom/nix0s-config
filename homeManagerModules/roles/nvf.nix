@@ -55,7 +55,7 @@ in {
           theme = {
             enable = true;
             name = "catppuccin";
-            style = "auto";
+            style = "macchiato";
             transparent = true;
           };
 
@@ -71,7 +71,8 @@ in {
             # TODO: How to jump to them?
             # This perhaps breaks visual mode from time to time(the purple cursor that doesn't mark an area)
             illuminate.enable = true;
-            noice.enable = true;
+            # Is this the superfluos windows?
+            noice.enable = false;
           };
 
           # TODO: Lookup gestures
@@ -101,7 +102,7 @@ in {
 
           statusline.lualine.enable = true;
           # TODO: This is buggy as hell
-          tabline.nvimBufferline.enable = true;
+          tabline.nvimBufferline.enable = false;
           # Should be better than nvim-cmp, e.g. better search via frecency and lower latency
           autocomplete.blink-cmp.enable = true;
           lsp = {
@@ -128,7 +129,21 @@ in {
             # TODO: Maybe add color for different indentiation levels
             indent-blankline.enable = true;
           };
-          filetree.neo-tree.enable = true;
+          filetree.neo-tree = {
+            enable = true;
+            setupOpts = {
+              enable_cursor_hijack = true;
+              git_status_async = true;
+              buffers = {
+                follow_current_file = {
+                  enabled = true;
+                  # Auto-close expanded dirs when no longer needed
+                  leave_dirs_open = false;
+                };
+              };
+              close_if_last_window = true;
+            };
+          };
           # TODO: Does this enable e.g. jumping up and down in code blocks(like up from if to function)
           treesitter.context = {
             enable = true;
@@ -148,8 +163,8 @@ in {
             enable = true;
             gitsigns = {
               enable = true;
-              # What features does this enable?
-              codeActions.enable = true;
+              # This is annoyingly verbose
+              codeActions.enable = false;
             };
           };
           languages = {
@@ -273,7 +288,7 @@ in {
           extraPlugins = {
             telescope-frecency-nvim = {
               package = pkgs.vimPlugins.telescope-frecency-nvim;
-              after = "telescope";
+              after = ["telescope"];
               setup = ''require('telescope').load_extension "frecency"'';
             };
             # Debugging if harpoon maybe messes up buffers
@@ -294,6 +309,9 @@ in {
                   root_key = "S",
                 })
               '';
+            };
+            vim-startuptime = {
+              package = pkgs.vimPlugins.vim-startuptime;
             };
           };
           # TODO: Create rule for e.g. nix pairs or moving the cursor after the brackets after insert
