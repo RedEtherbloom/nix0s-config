@@ -3,6 +3,8 @@
   lib,
   osConfig,
   pkgs,
+  self,
+  system,
   ...
 }: let
   cfg = config.myOptions.roles.development;
@@ -127,18 +129,7 @@ in {
         ++ lib.optionals cfg.openscad [
           openscad
         ]
-        # TODO: Merge with DevShell
-        ++ lib.optionals cfg.nix [
-          nixfmt-rfc-style
-          alejandra
-          nh
-          nixd
-          direnv
-          nix-prefetch-scripts
-          nix-prefetch-github
-          nix-tree
-          nixos-rebuild-ng
-        ]
+        ++ lib.optionals cfg.nix self.devShell.${system}
         ++ lib.optionals cfg.electronics [
           kicad
         ]
