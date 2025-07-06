@@ -129,7 +129,17 @@
         };
       in {
         formatter = pkgs.alejandra;
-        # TODO: Build devShell
+        devShell = with pkgs; [
+          nixfmt-rfc-style
+          alejandra
+          nh
+          nixd
+          direnv
+          nix-prefetch-scripts
+          nix-prefetch-github
+          nix-tree
+          nixos-rebuild-ng
+        ];
         legacyPackages = pkgs;
       }
     )
