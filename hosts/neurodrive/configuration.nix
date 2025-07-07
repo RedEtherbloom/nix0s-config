@@ -62,6 +62,8 @@ in {
   boot = {
     # Quarry: Cross-compilation support for audiosink
     binfmt.emulatedSystems = ["aarch64-linux"];
+    # Hoping to increase audio quality/reliability
+    kernelParams = ["btusb.enable_autosuspend=n"];
     kernelModules =
       ["coretemp" "nct6775"]
       ++
@@ -282,6 +284,8 @@ in {
           Experimental = true;
           # Problems with Bose
           ControllerMode = "bredr";
+          # Experimental
+          FastConnectable = true;
         };
       };
     };
