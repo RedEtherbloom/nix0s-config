@@ -24,7 +24,11 @@ in {
       nvf.enable = false;
       neovide.enable = false;
     };
-
+    sops.secrets."ai_keys/anthropic" = {
+      # TODO: Replace inputs.our-secrets with just our-secrets via import in flake.nix
+      sopsFile = "${inputs.our-secrets}/secrets/services/ai_keys.yaml";
+      key = "anthropic";
+    };
     programs = {
       neovide.enable = true;
       nvf = {
@@ -477,14 +481,14 @@ in {
                   i = {
                     "jj" = lib.generators.mkLuaInline ''
                       function(prompt_bufnr)
-                        actions.set_command_line(prompt_bufnr)
+                        require('telescope').actions.set_command_line(prompt_bufnr)
                       end
                     '';
                   };
                   n = {
                     "jj" = lib.generators.mkLuaInline ''
                       function(prompt_bufnr)
-                        actions.close(prompt_bufnr)
+                        require('telescope').actions.close(prompt_bufnr)
                       end
                     '';
                   };
@@ -492,9 +496,27 @@ in {
             };
           };
 
-          # TODO: Setup local or with e.g. Mistral
-          # TODO: Maybe try avante? cursor lke ide in nvim
-          assistant.codecompanion-nvim.enable = true;
+          # TODO: Claude can't read my code
+          assistant.codecompanion-nvim = {
+            enable = true;
+            setupOpts = {
+              display.chat.show_settings = true;
+              strategies = {
+                chat.adapter = "anthropic";
+                inline.adapter = "anthropic";
+                cmd.adapter = "anthropic";
+              };
+              adapters = lib.generators.mkLuaInline ''{
+                anthropic = function()
+                  return require("codecompanion.adapters").extend("anthropic", {
+                    env = {
+                      api_key = "cmd:cat ${config.sops.secrets."ai_keys/anthropic".path}",
+                    },
+                  })
+                end,
+              }'';
+            };
+          };
         };
       };
     };
