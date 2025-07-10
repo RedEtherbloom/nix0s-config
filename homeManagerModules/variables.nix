@@ -18,8 +18,6 @@
         pkgs.libnotify
       ];
       text = ''
-        set -e
-
         kitty zsh -c "cd ${location} && git pull && notify-send \"Sync worked without problem for location $(basename ${location})\" --expire-time=2000 || lazygit"
       '';
     };
