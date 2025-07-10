@@ -43,8 +43,6 @@ in {
             "SC2016"
           ];
           text = ''
-            set -e
-
             # Pull first for immediate sync
             ${lazygitSyncVaultDefault.name}
             # Sync with phone. Has $ variables in single quotes allowed.
