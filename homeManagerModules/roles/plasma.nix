@@ -41,7 +41,7 @@ in {
           family = "OpenDyslexic Nerd Font";
           pointSize = 10;
         };
-        # We're only coding shortcuts for screens 0-3
+        # TODO: Lookup keyformat
         shortcuts =
           lib.attrsets.recursiveUpdate
           {
@@ -150,6 +150,7 @@ in {
             "kwin"."Window to Screen 1" = "Meta+Ctrl+\"";
             "kwin"."Window to Screen 2" = "Meta+Ctrl+§";
             "kwin"."Window to Screen 3" = "Meta+Ctrl+$";
+            # TODO: Why do these not work?
             "kwin"."Window One Screen Down" = "Meta+Shift+Down,,Move Window One Screen Down";
             "kwin"."Window One Screen Up" = "Meta+Shift+Up,,Move Window One Screen Up";
             "kwin"."Window One Screen to the Left" = "Meta+Shift+Left,,Move Window One Screen to the Left";
@@ -394,15 +395,15 @@ in {
           # Disable Mouse precedence mode. Hopefully should make application launcher more usable
           "kwinrc"."Windows"."NextFocusPrefersMouse" = false;
           "kwinrc"."Xwayland"."Scale" = 1;
-          "kxkbrc"."Layout"."DisplayNames" = ",,";
-          "kxkbrc"."Layout"."LayoutList" = "de,de,de";
+          # "kxkbrc"."Layout"."DisplayNames" = ",,";
+          "kxkbrc"."Layout"."LayoutList" = "de,de";
           "kxkbrc"."Layout"."Model" = "pc105";
           "kxkbrc"."Layout"."Options" = "caps:escape,shift:both_capslock_cancel";
           "kxkbrc"."Layout"."ResetOldOptions" = true;
           "kxkbrc"."Layout"."Use" = true;
-          "kxkbrc"."Layout"."VariantList" = ",nodeadkeys,neo";
+          "kxkbrc"."Layout"."VariantList" = "nodeadkeys,neo_qwertz";
 
-          "plasma-localerc"."Formats"."LANG" = "en_US.UTF-8";
+          "plasma-localerc"."Formats"."LANG" = osConfig.i18n.defaultLocale;
           "plasmanotifyrc"."Notifications"."PopupPosition" = "TopRight";
           "plasmanotifyrc"."Notifications"."PopupTimeout" = 10000;
           "plasmaparc"."General"."RaiseMaximumVolume" = true;
