@@ -6,6 +6,7 @@
   ...
 }: let
   cfg = config.myOptions.hostRoles.neural-augmenter;
+  inherit (import ../../homeManagerModules/lib/torrent_lib.nix {inherit osConfig pkgs;}) mullvad-torrent vopono-torrent;
 in {
   options.myOptions.hostRoles.neural-augmenter = {
     enable = lib.mkOption {
@@ -57,19 +58,7 @@ in {
     };
 
     home = {
-      packages = let
-        qbit-mull-check = pkgs.writeShellApplication {
-          name = "qbit-mull-check";
-          runtimeInputs = [
-            pkgs.curl
-            pkgs.jq
-            pkgs.qbittorrent
-          ];
-          text = ''
-            curl https://am.i.mullvad.net/json -q | jq '.mullvad_exit_ip==true' -e && qbittorrent || echo "Could not connect to Mulvlad"
-          '';
-        };
-      in
+      packages =
         (with pkgs; [
           tor-browser
           bitwarden
@@ -136,8 +125,8 @@ in {
           yabridgectl
 
           vopono
-          qbittorrent-nox
-          qbit-mull-check
+          mullvad-torrent
+          vopono-torrent
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
           yubioath-flutter
