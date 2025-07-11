@@ -398,27 +398,6 @@
         "type": "github"
       }
     },
-    "nil": {
-      "inputs": {
-        "nixpkgs": [
-          "nvf",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1750047244,
-        "narHash": "sha256-vluLARrk4485npdyHOj8XKr0yk6H22pNf+KVRNL+i/Y=",
-        "owner": "oxalica",
-        "repo": "nil",
-        "rev": "870a4b1b5f12004832206703ac15aa85c42c247b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "nil",
-        "type": "github"
-      }
-    },
     "nix-comfyui": {
       "inputs": {
         "flake-utils": [
@@ -631,23 +610,22 @@
           "flake-utils"
         ],
         "mnw": "mnw",
-        "nil": "nil",
         "nixpkgs": [
           "nixpkgs"
         ],
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1751520935,
-        "narHash": "sha256-jp5Mzbw0I/DEX4PVFi4C6MzwCZ/st+GUKMl/+IodX0o=",
-        "owner": "NotAShelf",
+        "lastModified": 1752167851,
+        "narHash": "sha256-u/w5T73IzVs3VvdWKRKqODqWW9r8J8/QPFJNY/SsqBY=",
+        "owner": "Redetherbloom",
         "repo": "nvf",
-        "rev": "b4850409336b770d0db4cfd8acd71793747ddfe5",
+        "rev": "b35e331230b5f60ec58770fff891c07ac063885c",
         "type": "github"
       },
       "original": {
-        "owner": "NotAShelf",
-        "ref": "main",
+        "owner": "Redetherbloom",
+        "ref": "feature-language-tex",
         "repo": "nvf",
         "type": "github"
       }

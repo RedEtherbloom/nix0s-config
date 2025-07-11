@@ -70,7 +70,7 @@
       };
     };
     nvf = {
-      url = "github:NotAShelf/nvf/main";
+      url = "github:Redetherbloom/nvf/feature-language-tex";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
