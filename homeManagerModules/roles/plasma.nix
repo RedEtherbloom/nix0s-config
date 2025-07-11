@@ -273,9 +273,8 @@ in {
             "services/org.kde.konsole.desktop"."_launch" = [];
             "services/org.kde.krunner.desktop"."_launch" = ["Alt+F2" "Search" "Alt+Shift+Space"];
             "services/org.kde.plasma.emojier.desktop"."_launch" = "Meta+Ctrl+Alt+Shift+Space";
-            # TODO: This is missing most of the Spectacle specific shortcuts. They for some reason did not get recorded with the plasma-manager config dump.
-            # "services/org.kde.spectacle.desktop"."RecordWindow" = [];
-            "services/org.kde.spectacle.desktop"."_launch" = ["Print"];
+            "services/org.kde.spectacle.desktop"."RecordWindow" = [];
+            "services/org.kde.spectacle.desktop"."_launch" = [];
             "services/systemsettings.desktop"."_launch" = ["Meta+C" "Tools"];
 
             # TODO: Taskwarrior-Tui shortcut
