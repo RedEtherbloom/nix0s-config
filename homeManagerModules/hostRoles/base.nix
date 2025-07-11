@@ -5,23 +5,31 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.hostRoles.base;
 in {
   imports = [
     inputs.nix-index-database.hmModules.nix-index
     inputs.sops-nix.homeManagerModules.sops
+    inputs.catppuccin.homeModules.catppuccin
+    inputs.stylix.homeModules.stylix
   ];
 
-  options.myOptions.hostRoles.base.enable = mkOption {
-    description = "base options for hm settings";
-    type = with types; bool;
-    default = osConfig.myOptions.hostRoles.base.enable;
+  options.myOptions.hostRoles.base = {
+    enable = lib.mkOption {
+      description = "Enable home manager";
+      type = lib.types.bool;
+      default = osConfig.myOptions.hostRoles.base.enable;
+    };
+    theming = lib.mkOption {
+      description = "Enable theming";
+      type = lib.types.bool;
+      default = true;
+    };
   };
 
-  config = mkIf cfg.enable (
-    mkMerge [
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
       {
         sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
 
@@ -30,7 +38,13 @@ in {
 
         programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
       }
-      (mkIf osConfig.security.ownAdditional.yubikey {
+      (lib.mkIf cfg.theming {
+        catppuccin = {
+          enable = true;
+          flavor = "macchiato";
+        };
+      })
+      (lib.mkIf osConfig.security.ownAdditional.yubikey {
         # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)
         programs.gpg = {
           enable = true;

@@ -28,6 +28,7 @@ in {
     };
     security.ownAdditional.yubikey = true;
 
+    # TODO: Configure so that only e.g. grub but nothing else gets the pallet
     stylix = {
       enable = true;
       polarity = "dark";

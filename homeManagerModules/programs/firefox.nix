@@ -374,6 +374,7 @@ in {
             # Force it onto firefox and overwrite
             force = true;
           };
+          extensions.force = true;
         };
         "i2p" = {
           id = 1;
@@ -390,9 +391,11 @@ in {
             }
             // commonConfig;
           #TODO: Try out i2p for private browsing extension
+          extensions.force = true;
         };
       };
     };
     stylix.targets.firefox.profileNames = lib.attrsets.mapAttrsToList (name: _: "${name}") programs.firefox.profiles;
+    catppuccin.firefox.profiles = lib.attrsets.mapAttrs (_: _: {}) programs.firefox.profiles;
   };
 }
