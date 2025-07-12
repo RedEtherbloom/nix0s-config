@@ -7,7 +7,7 @@ index 6e6246c..4d39e94 100644
      {QStringLiteral("/component/kcm_touchpad"), QRegularExpression(QStringLiteral("Toggle Touchpad|Enable Touchpad|Disable Touchpad"))},
      {QStringLiteral("/component/kwin"), QRegularExpression(QStringLiteral("view_zoom_in|view_zoom_out|view_actual_size"))},
 +    // Allow our layout shortcuts on the lockscreen
-+    {QStringLiteral("/component/plasma_manager_commands_desktop"), QRegularExpression(QStringLiteral("kscreen-layout-.*"))},
++    {QStringLiteral("/component/plasma_manager_commands_desktop"), QRegularExpression(QStringLiteral("kscreen-layout-dual|kscreen-layout-lg|kscreen-layout-.*"))},
  };
  
  static uint g_keyModMaskXAccel = 0;
