@@ -52,7 +52,7 @@
       url = "github:danth/stylix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
+        systems.follows = "systems";
       };
     };
     nix-vscode-extensions = {
