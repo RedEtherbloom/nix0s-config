@@ -266,6 +266,11 @@ in {
       SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="zigbee-ap"
       ACTION=="add", SUBSYSTEM=="tty", ENV{DEVLINKS}=="*/dev/zigbee-ap*", RUN+="${config.systemd.package}/bin/systemctl restart podman-homeassistant.service"
     '';
+    # ALVR alternative while the nvenc is broken
+    wivrn = {
+      enable = true;
+      openFirewall = true;
+    };
   };
 
   hardware = {
@@ -317,10 +322,8 @@ in {
       #
       # Incompability with vaapi-driver
       # See: https://github.com/elFarto/nvidia-vaapi-driver/issues/312
-      # TODO: Reevaluate if open works now
-      # 28.01.25: Plasma is having a weird bug where everything but the cursor vanishes. Maaybe this is the cause?
-      # 24.03.25: Update: Nope, stylix issue
-      open = true;
+      # TODO: Check if this helps with the ALVR nvenc problems
+      open = false;
     };
     # Required for GPU passthrough
     nvidia-container-toolkit.enable = true;
