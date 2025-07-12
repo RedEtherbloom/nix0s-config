@@ -85,7 +85,7 @@ in {
       xdg = {
         autostart = {
           enable = true;
-          entries = lib.lists.map (desktop: "${desktop}/share/applications/${desktop.name}.desktop") [
+          entries = lib.lists.map (desktop: "${desktop}/share/applications/${desktop.name}") [
             vopono-torrent-desktop
           ];
         };
