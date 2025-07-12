@@ -69,8 +69,6 @@ in {
       ++
       # Attempt to fix ALVR/NvEnc problems
       ["nvidia" "i915" "nvidia_modeset" "nvidia_drm"];
-    # https://github.com/NixOS/nixpkgs/issues/412299
-    kernelPackages = pkgs.linuxKernel.packages.linux_6_14;
     initrd = {
       availableKernelModules = [
         # Speedup decryption
@@ -95,10 +93,6 @@ in {
         };
       };
     };
-  };
-  sops.secrets.cryptostorage = {
-    sopsFile = "${inputs.our-secrets}/secrets/neurodrive/cryptstorage.key";
-    format = "binary";
   };
   environment.etc."crypttab" = {
     mode = "0600";
@@ -306,8 +300,6 @@ in {
       modesetting.enable = true;
       powerManagement.enable = true;
       nvidiaSettings = true;
-      # Maybe nvenc gets fixed this way
-      package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
 
       # Fine-grained power management. Turns off GPU when not in use.
       # Experimental and only works on modern Nvidia GPUs (Turing or newer).
@@ -384,14 +376,6 @@ in {
   };
   stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
 
-  environment.systemPackages = with pkgs; [
-    cachix
-    cudaPackages.cudatoolkit
-    cudaPackages.cudnn
-    nvtopPackages.full
-    smartmontools
-  ];
-
   programs = {
     ccache = {
       enable = true;
@@ -407,60 +391,73 @@ in {
     };
   };
 
-  environment.sessionVariables = {
-    #LIBVA_DRIVER_NAME = "nvidia";
-    #MOZ_DISABLE_RDD_SANDBOX = "1";
+  environment = {
+    systemPackages = with pkgs; [
+      cachix
+      cudaPackages.cudatoolkit
+      cudaPackages.cudnn
+      nvtopPackages.full
+      smartmontools
+    ];
+    sessionVariables = {
+      #LIBVA_DRIVER_NAME = "nvidia";
+      #MOZ_DISABLE_RDD_SANDBOX = "1";
 
-    # Necessary to correctly enable va-api (video codec hardware
-    # acceleration). If this isn't set, the libvdpau backend will be
-    # picked, and that one doesn't work with most things, including
-    # Firefox.
-    LIBVA_DRIVER_NAME = "nvidia";
-    # Required to run the correct GBM backend for nvidia GPUs on wayland
-    GBM_BACKEND = "nvidia-drm";
-    # Apparently, without this nouveau may attempt to be used instead
-    # (despite it being blacklisted)
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    # Hardware cursors are currently broken on nvidia
-    WLR_NO_HARDWARE_CURSORS = "1";
+      # Necessary to correctly enable va-api (video codec hardware
+      # acceleration). If this isn't set, the libvdpau backend will be
+      # picked, and that one doesn't work with most things, including
+      # Firefox.
+      LIBVA_DRIVER_NAME = "nvidia";
+      # Required to run the correct GBM backend for nvidia GPUs on wayland
+      GBM_BACKEND = "nvidia-drm";
+      # Apparently, without this nouveau may attempt to be used instead
+      # (despite it being blacklisted)
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      # Hardware cursors are currently broken on nvidia
+      WLR_NO_HARDWARE_CURSORS = "1";
 
-    # Required to use va-api it in Firefox. See
-    # https://github.com/elFarto/nvidia-vaapi-driver/issues/96
-    MOZ_DISABLE_RDD_SANDBOX = "1";
-    # It appears that the normal rendering mode is broken on recent
-    # nvidia drivers:
-    # https://github.com/elFarto/nvidia-vaapi-driver/issues/213#issuecomment-1585584038
-    # TODO: I think this may be the culprit that broke it...
-    NVD_BACKEND = "direct";
-    # Required for firefox 98+, see:
-    # https://github.com/elFarto/nvidia-vaapi-driver#firefox
-    EGL_PLATFORM = "wayland";
+      # Required to use va-api it in Firefox. See
+      # https://github.com/elFarto/nvidia-vaapi-driver/issues/96
+      MOZ_DISABLE_RDD_SANDBOX = "1";
+      # It appears that the normal rendering mode is broken on recent
+      # nvidia drivers:
+      # https://github.com/elFarto/nvidia-vaapi-driver/issues/213#issuecomment-1585584038
+      # TODO: I think this may be the culprit that broke it...
+      NVD_BACKEND = "direct";
+      # Required for firefox 98+, see:
+      # https://github.com/elFarto/nvidia-vaapi-driver#firefox
+      EGL_PLATFORM = "wayland";
+    };
   };
 
-  sops.secrets."restic_server/restic.key" = {
-    owner = "restic";
-    format = "binary";
-    sopsFile = "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.key";
-  };
-
-  sops.secrets."mosquitto/users/root" = {
-    uid = config.ids.uids.mosquitto;
-    gid = config.ids.gids.mosquitto;
-    format = "yaml";
-    sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
-  };
-  sops.secrets."mosquitto/users/client" = {
-    uid = config.ids.uids.mosquitto;
-    gid = config.ids.gids.mosquitto;
-    format = "yaml";
-    sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
-  };
-
-  # Copied from Bitwarden
-  # TODO: Cross-sync bitwarden and secret store
-  sops.secrets."paperless/admin_password" = {
-    owner = "paperless";
-    format = "yaml";
-    sopsFile = "${inputs.our-secrets}/secrets/services/paperless.yaml";
+  sops.secrets = {
+    cryptostorage = {
+      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/cryptstorage.key";
+      format = "binary";
+    };
+    "restic_server/restic.key" = {
+      owner = "restic";
+      format = "binary";
+      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.key";
+    };
+    "mosquitto/users/root" = {
+      uid = config.ids.uids.mosquitto;
+      gid = config.ids.gids.mosquitto;
+      format = "yaml";
+      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
+    };
+    "mosquitto/users/client" = {
+      uid = config.ids.uids.mosquitto;
+      gid = config.ids.gids.mosquitto;
+      format = "yaml";
+      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
+    };
+    # Copied from Bitwarden
+    # TODO: Cross-sync bitwarden and secret store
+    "paperless/admin_password" = {
+      owner = "paperless";
+      format = "yaml";
+      sopsFile = "${inputs.our-secrets}/secrets/services/paperless.yaml";
+    };
   };
 }
