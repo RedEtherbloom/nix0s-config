@@ -284,8 +284,6 @@ in {
           Experimental = true;
           # Problems with Bose
           ControllerMode = "bredr";
-          # Experimental
-          FastConnectable = true;
         };
       };
     };
