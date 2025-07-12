@@ -11,7 +11,7 @@
       qbittorrent
       flaresolverr
       jackett
-      # TODO: Try prowlarr instead(more modern, potentially faster)
+      prowlarr
     ];
     text = ''
        PGID="$(ps -o pgid= $$)"
@@ -25,9 +25,10 @@
          exit "$MULLVAD_CONNECTED"
        fi
 
-      qbittorrent &
       HOST="127.0.0.1" TZ="${osConfig.time.timeZone}" LANG="en_US" flaresolverr &
-      jackett
+      jackett &
+      Prowlarr &
+      qbittorrent
     '';
   };
   vopono-torrent = pkgs.writeShellApplication {
@@ -40,6 +41,7 @@
       # qbittorrent is 8180
       # flaresolverr is 8191
       # jacket is 9117
+      # prowlarr is 9696
       vopono exec \
         --provider mullvad \
         --server germany \
@@ -47,6 +49,7 @@
         -f 8180 \
         -f 8191 \
         -f 9117 \
+        -f 9696 \
         mullvad-torrent
     '';
   };
