@@ -136,6 +136,7 @@ in {
       sessionVariables = {
         # Smooth scrolling
         MOZ_USE_XINPUT2 = "1";
+        QT_LOGGING_RULES = "kscreenlocker.debug=true";
       };
       extraOutputsToInstall = [
         "doc"
