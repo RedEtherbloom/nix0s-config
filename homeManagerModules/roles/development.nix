@@ -166,6 +166,8 @@ in {
     }
     (lib.mkIf cfg.git {
       programs.git = {
+        userName = "RedEtherbloom";
+        userEmail = "etherbloom@mailbox.org";
         enable = true;
         extraConfig = {
           push = {
@@ -198,7 +200,6 @@ in {
     (lib.mkIf osConfig.security.ownAdditional.yubikey {
       # TODO: Maybe merge with github config
       programs.git = {
-        userEmail = "etherbloom@mailbox.org";
         signing = {
           format = "openpgp";
           # TODO: Turn into it's own global variable
