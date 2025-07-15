@@ -54,6 +54,11 @@
       enabled = true;
       currentHost = config.networking.ownWireguard.hosts.fractor;
     };
+    # Set MTU to account for some pickier wifi's
+    wireguard.interfaces = {
+      "wg0".mtu = 1312;
+      "wg1".mtu = 1312;
+    };
   };
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
 
