@@ -56,6 +56,9 @@ in {
         # GUI
         package = pkgs.mullvad-vpn;
       };
+      openssh.settings = {
+        StreamLocalBindUnlink = "yes";
+      };
     };
 
     environment.systemPackages = [pkgs.lm_sensors];
