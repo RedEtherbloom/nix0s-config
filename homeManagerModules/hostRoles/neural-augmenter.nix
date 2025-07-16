@@ -1,8 +1,10 @@
 {
   config,
   lib,
+  inputs,
   osConfig,
   pkgs,
+  system,
   ...
 }: let
   cfg = config.myOptions.hostRoles.neural-augmenter;
@@ -65,7 +67,8 @@ in {
           bitwarden
           bitwarden-cli
 
-          # comfyuiPackages.krita-with-extensions
+          # Force installation from nixpkgs to avoid rebuilding mlt and krita due to cuda
+          inputs.nixpkgs.legacyPackages.${system}.krita
 
           # KDE info packages
           clinfo
