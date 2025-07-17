@@ -1,9 +1,7 @@
 {
   config,
   lib,
-  osConfig,
   pkgs,
-  self,
   ...
 }:
 with lib; let
@@ -111,50 +109,53 @@ in {
           (lib.optionalAttrs cfg.vimMode {
             # Performance reasons
             extensions.experimental.affinity.vscodevim.vim = 1;
-            vim.leader = "<space>";
-            vim.handleKeys = {
-              # Clara: Reenable filepicker(although we really need a good one for Vim in general)
-              "<C-p>" = false;
-              # Valerie: Reenable new file
-              "<C-n>" = false;
+            vim = {
+              leader = "<space>";
+              handleKeys = {
+                # Clara: Reenable filepicker(although we really need a good one for Vim in general)
+                "<C-p>" = false;
+                # Valerie: Reenable new file
+                "<C-n>" = false;
 
-              "<C-a>" = false;
-              "<C-f>" = false;
-            };
-            vim.useSystemClipboard = true;
-            vim.useCtrlKeys = true;
-            # TODO: What does this mean?
-            vim.insertModeKeyBindings = [
-              {
-                before = ["j" "j"];
-                after = ["<Esc>"];
-              }
-            ];
-            vim.normalModeKeyBindingsNonRecursive = [
-              {
-                before = ["<leader>" "d"];
-                after = ["d" "d"];
-              }
+                "<C-a>" = false;
+                "<C-f>" = false;
+              };
+              useSystemClipboard = true;
+              useCtrlKeys = true;
               # TODO: What does this mean?
-              {
-                before = ["<C-n>"];
-                commands = ["=nohl"];
-              }
-              {
-                before = ["K"];
-                commands = ["lineBreakInsert"];
-                silent = true;
-              }
-            ];
-            # TODO: What does this mean?
-            vim.easymotion = true;
-            vim.incsearch = true;
-            vim.hlsearch = true;
+              insertModeKeyBindings = [
+                {
+                  before = ["j" "j"];
+                  after = ["<Esc>"];
+                }
+              ];
+              normalModeKeyBindingsNonRecursive = [
+                {
+                  before = ["<leader>" "d"];
+                  after = ["d" "d"];
+                }
+                {
+                  before = ["<C-n>"];
+                  commands = ["=nohl"];
+                }
+                {
+                  before = ["K"];
+                  commands = ["lineBreakInsert"];
+                  silent = true;
+                }
+              ];
+              # TODO: What does this mean?
+              easymotion = true;
+              incsearch = true;
+              hlsearch = true;
+            };
           })
         ];
       };
     };
 
     stylix.targets.vscode.enable = true;
+    # 15.07.2025: Broken
+    catppuccin.vscode.enable = false;
   };
 }
