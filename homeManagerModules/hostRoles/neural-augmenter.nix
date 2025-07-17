@@ -176,6 +176,15 @@ in {
       carapace.enable = true;
     };
 
+    xdg = {
+      autostart = {
+        enable = true;
+        entries = [
+          "${pkgs.obsidian}/share/applications/obsidian.desktop"
+        ];
+      };
+    };
+
     # Set terminal opacity using stlyix instead
     stylix = {
       enable = false;
