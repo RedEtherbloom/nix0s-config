@@ -57,7 +57,8 @@ in {
         package = pkgs.mullvad-vpn;
       };
       openssh.settings = {
-        StreamLocalBindUnlink = "yes";
+        StreamLocalBindUnlink = true;
+        AllowAgentForwarding = true;
       };
     };
 
