@@ -72,7 +72,7 @@ in {
           # cursor_shape = "beam";
           cursor_shape_unfocused = "hollow";
           # TODO: Does not seem to have an effect
-          cursor = "#2ccc1b";
+          # cursor = "#2ccc1b";
           confirm_os_window_close = 0;
         };
       };
