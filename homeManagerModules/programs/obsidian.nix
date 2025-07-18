@@ -60,8 +60,8 @@ in {
           "obsidian-pull-shortcut" = {
             # .name to avoid the path breaking after rebuild until logout
             command = syncObsidianPhone.name;
-            keys = ["Meta+Shift+O"];
-            comment = "Pull and rebase Obsidian vault, drop into lazygit on failure";
+            key = "Meta+Shift+o";
+            comment = "Pull and rebase Obsidian vault and drop into lazygit on failure";
           };
         };
       }))
