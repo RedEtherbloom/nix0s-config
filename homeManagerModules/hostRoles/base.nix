@@ -88,6 +88,7 @@ in {
             require-cross-certification = true;
             # Enforce memory locking to avoid accidentally swapping GPG memory to disk
             require-secmem = true;
+            # TODO: Does this prevent the key caching?
             # Disable caching of passphrase for symmetrical ops
             no-symkey-cache = true;
             # Output ASCII instead of binary
@@ -117,12 +118,16 @@ in {
           # Default
           defaultCacheTtl = 600;
           maxCacheTtl = 7200;
+          defaultCacheTtlSsh = 600;
+          maxCacheTtlSsh = 7200;
 
           enableSshSupport = true;
           enableExtraSocket = true;
           pinentry.package = lib.mkDefault pkgs.pinentry-curses;
+          verbose = true;
           extraConfig = ''
             ttyname $GPG_TTY
+            allow-loopback-pinentry
           '';
         };
       })
