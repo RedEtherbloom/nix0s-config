@@ -82,6 +82,48 @@ in {
       };
 
       xdg = {
+        desktopEntries = {
+          start-vrchat = let
+            launch-oscavmgr = pkgs.writeShellApplication {
+              name = "launch-oscavmgr";
+              runtimeInputs = with pkgs; [
+                oscavmgr
+                vrcadvert
+              ];
+              text = ''
+                # Kill all applications once the non-bged exits
+                trap 'jobs -p | xargs kill' EXIT
+
+                VrcAdvert OscAvMgr 9402 9002 --tracking &
+                # Wivrn support
+                oscavmgr openxr
+              '';
+            };
+            launch-vrchat = pkgs.writeShellApplication {
+              name = "launch-vrchat";
+              runtimeInputs = [
+                launch-oscavmgr
+                osConfig.programs.steam.package
+              ];
+              text = ''
+                launch-oscavmgr &
+                # VRChat App ID
+                steam -applaunch 438100
+              '';
+            };
+          in {
+            name = "Start_VRChat";
+            exec = "${lib.getExe launch-vrchat}";
+            icon = pkgs.fetchurl {
+              url = "https://wiki-files.vrchat.com/VRLogo.png";
+              hash = "sha256-bmgCzkMDuj/IDnC5F3IzEwXVv1g55By2W0Anh3wbchM=";
+            };
+            # TODO: Remove after functionality is confirmed
+            terminal = true;
+            comment = "Launch VRChat using WiVrn with OscAvMgr in the background for proper tracking.";
+            categories = ["X-Games"];
+          };
+        };
         autostart = {
           enable = true;
           entries = lib.lists.map (desktop: "${desktop}/share/applications/${desktop.name}") [
