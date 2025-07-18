@@ -97,19 +97,7 @@ in {
       waydroid.enable = true;
     };
 
-    # TODO: Replace with home-manager option
-    # This is a workaround for podman containers not starting correctly
-    users.users."inf".subUidRanges = [
-      {
-        count = 65534;
-        startUid = 100001;
-      }
-    ];
-    users.users."inf".subGidRanges = [
-      {
-        count = 999;
-        startGid = 1001;
-      }
-    ];
+    # Needed for podman
+    users.users."inf".autoSubUidGidRange = true;
   };
 }
