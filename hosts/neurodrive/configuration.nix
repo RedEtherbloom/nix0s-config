@@ -123,8 +123,14 @@ in {
     };
   };
 
-  # Issues with builds randomly failing
-  systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
+  systemd.services = {
+    i2p = {
+      after = ["local-fs.target" "cryptsetup.target"];
+      serviceConfig.WorkingDirectory = lib.mkForce config.users.users.i2p.home;
+    };
+    # Issues with builds randomly failing
+    NetworkManager-wait-online.enable = lib.mkForce false;
+  };
   # Networking
   networking = {
     hostName = "neurodrive";
@@ -362,19 +368,22 @@ in {
       gitea.enable = true;
     };
   };
-  users.users.inf = {
-    isNormalUser = true;
-    description = "Infinity";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "adbusers"
-      "scanner"
-      "lp"
-      "i2c"
-      "podman"
-      "dialout"
-    ];
+  users.users = {
+    inf = {
+      isNormalUser = true;
+      description = "Infinity";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "adbusers"
+        "scanner"
+        "lp"
+        "i2c"
+        "podman"
+        "dialout"
+      ];
+    };
+    i2p.home = lib.mkForce "/mnt/cryptostorage/i2p";
   };
   stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
 
