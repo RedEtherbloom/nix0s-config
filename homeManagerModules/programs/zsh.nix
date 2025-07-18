@@ -22,7 +22,6 @@ in {
         enableVteIntegration = true;
         autosuggestion.enable = true;
         syntaxHighlighting.enable = true;
-        defaultKeymap = "vicmd";
         oh-my-zsh = {
           enable = true;
           theme = "flazz";
