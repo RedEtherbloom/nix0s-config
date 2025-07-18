@@ -103,23 +103,17 @@ in {
     "/mnt/restic_data" = {
       device = "/dev/disk/by-uuid/2645230e-f8d1-4b00-ad11-c9ec192448cf";
       fsType = "ext4";
-      options = [
-        "nofail"
-      ];
+      options = ["nofail"];
     };
     "/mnt/windows_data" = {
       device = "/dev/disk/by-uuid/587488F374FD109E";
       fsType = "ntfs3";
-      options = [
-        "nofail"
-      ];
+      options = ["nofail"];
     };
     "/mnt/cryptostorage" = {
       device = "/dev/mapper/vg--cryptostorage-lv--cryptostorage";
       fsType = "ext4";
-      options = [
-        "nofail"
-      ];
+      options = ["nofail"];
     };
   };
 
