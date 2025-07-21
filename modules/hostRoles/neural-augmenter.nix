@@ -82,6 +82,8 @@ in {
         registries.search = [
           "docker.io"
           "quay.io"
+          # Google mirror
+          "mirror.gcr.io" 
         ];
       };
       # TODO: Are UIDs for root separated by default?
