@@ -138,8 +138,9 @@ in {
               # TODO: Maybe add color for different indentiation levels
               indent-blankline.enable = true;
             };
+            # TODO: Replace with nvimTree. This one is way too clunky.
             filetree.neo-tree = {
-              enable = true;
+              enable = false;
               setupOpts = {
                 enable_cursor_hijack = true;
                 git_status_async = true;
