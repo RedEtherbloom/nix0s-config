@@ -48,14 +48,12 @@ in {
         # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)
         programs.gpg = {
           enable = true;
-
           # https://support.yubico.com/hc/en-us/articles/4819584884124-Resolving-GPG-s-CCID-conflicts
           # https://wiki.archlinux.org/title/YubiKey#gpg:_no_such_device
           scdaemonSettings = {
             disable-ccid = true;
             pcsc-shared = true;
           };
-
           settings = {
             # Copied from: https://github.com/drduh/YubiKey-Guide/blob/master/config/gpg.conf
             personal-cipher-preferences = "AES256 AES192 AES";
@@ -88,9 +86,8 @@ in {
             require-cross-certification = true;
             # Enforce memory locking to avoid accidentally swapping GPG memory to disk
             require-secmem = true;
-            # TODO: Does this prevent the key caching?
-            # Disable caching of passphrase for symmetrical ops
-            no-symkey-cache = true;
+            # Enable caching of passphrase for symmetrical ops
+            no-symkey-cache = false;
             # Output ASCII instead of binary
             armor = true;
             # Enable smartcard
@@ -103,7 +100,6 @@ in {
             auto-key-locate = "wkd,dane,local";
             auto-key-retrieve = true;
           };
-
           publicKeys = [
             {
               source = "${inputs.our-secrets}/public/gpg/yubikey_personal.asc";
