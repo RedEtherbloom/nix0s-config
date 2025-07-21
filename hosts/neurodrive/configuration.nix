@@ -322,7 +322,7 @@ in {
       # Incompability with vaapi-driver
       # See: https://github.com/elFarto/nvidia-vaapi-driver/issues/312
       # TODO: Check if this helps with the ALVR nvenc problems
-      open = false;
+      open = true;
     };
     # Required for GPU passthrough
     nvidia-container-toolkit.enable = true;
