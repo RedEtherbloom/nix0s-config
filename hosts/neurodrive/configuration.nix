@@ -342,11 +342,20 @@ in {
           "--stop-timeout=30"
         ];
       };
-      libretranslate = {
-        volumes = ["libretranslate_models:/home/libretranslate/.local:rw"];
+      comfyui = {
+        volumes = ["comfyui:/root"];
         environment.TZ = config.time.timeZone;
-        image = "docker.io/libretranslate/libretranslate:latest";
-        ports = ["127.0.0.1:8151:5000"];
+        image = "docker.io/yanwk/comfyui-boot:cu124-megapak";
+        pull = "newer";
+        ports = [
+          "127.0.0.1:8188:8188"
+          "192.168.190.180:8188:8188"
+          "${config.networking.ownWireguard.hosts.${config.networking.hostName}.mainIP}:8188:8188"
+        ];
+        extraOptions = [
+          "--device=nvidia.com/gpu=all"
+          "--security-opt=label=disable"
+        ];
       };
     };
   };
