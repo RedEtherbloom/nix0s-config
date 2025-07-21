@@ -79,6 +79,7 @@ in {
           keyScheme = "vim";
         };
         btop.package = pkgs.btop-cuda;
+        obs-studio.enable = true;
       };
 
       xdg = {
