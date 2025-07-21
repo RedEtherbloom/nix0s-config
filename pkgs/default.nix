@@ -86,6 +86,18 @@ in {
         };
         meta.homepage = "https://github.com/roobert/surround-ui.nvim";
       };
+      vim-coach-nvim = prev.vimUtils.buildVimPlugin {
+        name = "vim-coach.nvim";
+        version = "v2.0.0";
+        buildInputs = [ prev.vimPlugins.snacks-nvim ];
+        src = prev.fetchFromGitHub {
+          owner = "shahshlok";
+          repo = "vim-coach.nvim";
+          rev = "ed31e7b9450691199288180a922d8166ae11a0b9";
+          hash = "sha256-9Nnlghnor8wKKY4ETwNtGFjv1BUW64EWDKhRJJSj0pk=";
+        };
+        meta.homepage = "https://github.com/shahshlok/vim-coach.nvim";
+      };
     };
 
   nix-tree = inputs.nix-tree.packages.${prev.system}.default;

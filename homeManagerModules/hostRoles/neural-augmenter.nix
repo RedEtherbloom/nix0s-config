@@ -26,6 +26,7 @@ in {
           electronics = lib.mkDefault true;
         };
         nvf.enable = lib.mkDefault true;
+        gamedev.enable = lib.mkDefault true;
       };
       vscode.enable = lib.mkDefault true;
 
