@@ -89,7 +89,7 @@ in {
       vim-coach-nvim = prev.vimUtils.buildVimPlugin {
         name = "vim-coach.nvim";
         version = "v2.0.0";
-        buildInputs = [ prev.vimPlugins.snacks-nvim ];
+        buildInputs = [prev.vimPlugins.snacks-nvim];
         src = prev.fetchFromGitHub {
           owner = "shahshlok";
           repo = "vim-coach.nvim";
@@ -109,14 +109,17 @@ in {
     buildInputs = (prevAttrs.buildInputs or []) ++ [prev.libsForQt5.qt5.qtwayland];
   });
 
-  kdePackages =
-    prev.kdePackages
-    // {
-      plasma-desktop = prev.kdePackages.plasma-desktop.overrideAttrs (_: prevAttrs: {
-        patches = (prevAttrs.patches or []) ++ [./shorten-grace-lock.patch];
-      });
-      kscreenlocker = prev.kdePackages.kscreenlocker.overrideAttrs (_: prevAttrs: {
-        patches = (prevAttrs.patches or []) ++ [./kscreenlocker-allow-screen-shortcuts.patch];
-      });
+  kdePackages = prev.kdePackages.overrideScope (_: kdePrev: {
+    # breeze-with-kscreen-timer-patch = kdePrev.breeze.overrideAttrs (_: prevAttrs: {
+    #   # TODO: Lookup build tutorial for copying
+    # });
+    plasma-desktop = kdePrev.plasma-desktop.overrideAttrs (_: prevAttrs: {
+      patches = (prevAttrs.patches or []) ++ [./shorten-grace-lock.patch];
+    });
+    kscreenlocker = kdePrev.kscreenlocker.overrideAttrs (_: prevAttrs: {
+      patches = (prevAttrs.patches or []) ++ [./kscreenlocker-allow-screen-shortcuts.patch];
+    });
+  });
+
     };
 }
