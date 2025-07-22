@@ -1,13 +1,61 @@
 diff --git a/globalaccel.cpp b/globalaccel.cpp
-index 6e6246c..4d39e94 100644
+index 6e6246c..b5835b3 100644
 --- a/globalaccel.cpp
 +++ b/globalaccel.cpp
-@@ -40,6 +40,8 @@ static const QMap<QString, QRegularExpression> s_shortcutWhitelist{
+@@ -20,6 +20,8 @@ SPDX-License-Identifier: GPL-2.0-or-later
+ #include <xcb/xcb.h>
+ #include <xcb/xcb_keysyms.h>
+ 
++#include <kscreenlocker_logging.h>
++
+ static const QString s_kglobalAccelService = QStringLiteral("org.kde.kglobalaccel");
+ static const QString s_componentInterface = QStringLiteral("org.kde.kglobalaccel.Component");
+ 
+@@ -40,6 +42,8 @@ static const QMap<QString, QRegularExpression> s_shortcutWhitelist{
       QRegularExpression(QStringLiteral("Switch to Next Keyboard Layout|Switch keyboard layout to .*"))},
      {QStringLiteral("/component/kcm_touchpad"), QRegularExpression(QStringLiteral("Toggle Touchpad|Enable Touchpad|Disable Touchpad"))},
      {QStringLiteral("/component/kwin"), QRegularExpression(QStringLiteral("view_zoom_in|view_zoom_out|view_actual_size"))},
 +    // Allow our layout shortcuts on the lockscreen
-+    {QStringLiteral("/component/plasma_manager_commands_desktop"), QRegularExpression(QStringLiteral("kscreen-layout-dual|kscreen-layout-lg|kscreen-layout-.*"))},
++    {QStringLiteral("/component/plasma_manager_commands_desktop"), QRegularExpression(QStringLiteral("kscreen-layout-.*"))},
  };
  
  static uint g_keyModMaskXAccel = 0;
+@@ -99,6 +103,7 @@ void GlobalAccel::components(QDBusPendingCallWatcher *self)
+         for (const auto &[key, value] : s_shortcutWhitelist.asKeyValueRange()) {
+             if (objectPath == key) {
+                 whitelisted = true;
++                qCDebug(KSCREENLOCKER) << "Whitelisted KGlobalAccel component: " << key;
+                 break;
+             }
+         }
+@@ -114,6 +119,7 @@ void GlobalAccel::components(QDBusPendingCallWatcher *self)
+             self->deleteLater();
+             // filter out inactive components
+             if (!reply.isValid() || !reply.value()) {
++                qCDebug(KSCREENLOCKER) << "Invalid active(?) response for object: " << objectPath;
+                 m_updatingInformation--;
+                 return;
+             }
+@@ -127,12 +133,14 @@ void GlobalAccel::components(QDBusPendingCallWatcher *self)
+                 QDBusPendingReply<QList<KGlobalShortcutInfo>> reply = *self;
+                 self->deleteLater();
+                 if (!reply.isValid()) {
++                    qCDebug(KSCREENLOCKER) << "Invalid reply in checker received for object path: "  << objectPath;
+                     return;
+                 }
+                 // restrict to whitelist
+                 QList<KGlobalShortcutInfo> infos;
+                 auto whitelist = s_shortcutWhitelist.constFind(objectPath);
+                 if (whitelist == s_shortcutWhitelist.constEnd()) {
++                    qCDebug(KSCREENLOCKER) << "Const end received for object path: "  << objectPath;
+                     // this should not happen, just for safety
+                     return;
+                 }
+@@ -140,6 +148,7 @@ void GlobalAccel::components(QDBusPendingCallWatcher *self)
+                 for (const auto &shortcut : shortcuts) {
+                     auto matches = whitelist.value().match(shortcut.uniqueName());
+                     if (matches.hasMatch()) {
++                         qCDebug(KSCREENLOCKER) << "Unique name of whitelisted shortcut:" << shortcut.uniqueName();
+                         infos.append(shortcut);
+                     }
+                 }
