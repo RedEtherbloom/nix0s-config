@@ -37,7 +37,6 @@ in {
     max-jobs = 10;
     # Max make some builds non deterministic
     cores = 10;
-    extra-sandbox-paths = [config.programs.ccache.cacheDir];
   };
   nixpkgs.config = {
     cudaSupport = true;
@@ -380,10 +379,6 @@ in {
   stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
 
   programs = {
-    ccache = {
-      enable = true;
-      packageNames = ["krita-unwrapped"];
-    };
     coolercontrol = {
       enable = true;
       nvidiaSupport = true;
@@ -391,6 +386,7 @@ in {
     alvr = {
       enable = true;
       openFirewall = true;
+      # package = pkgs.alvr-nightly;
     };
   };
 
