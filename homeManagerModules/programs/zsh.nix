@@ -19,12 +19,10 @@ in {
       zsh = {
         enable = true;
         enableCompletion = true;
-        autosuggestion = {
-          enable = true;
-        };
-        syntaxHighlighting = {
-          enable = true;
-        };
+        enableVteIntegration = true;
+        autosuggestion.enable = true;
+        syntaxHighlighting.enable = true;
+        defaultKeymap = "vicmd";
         oh-my-zsh = {
           enable = true;
           theme = "flazz";
@@ -34,8 +32,20 @@ in {
             "vi-mode"
           ];
         };
-
+        history = {
+          append = true;
+          expireDuplicatesFirst = true;
+          # Timestamps
+          extended = true;
+          # TODO: Do we still get the latest printed, or does it ignore e.g. both?
+          findNoDups = true;
+          # Discard the older dup
+          ignoreAllDups = true;
+          ignoreSpace = true;
+        };
         sessionVariables = {
+          # Hoping to make vi mode and nvim more responsive
+          KEYTIMEOUT = 1;
           ZVM_LINE_INIT_MODE = "ZVM_MODE_INSERT";
           ZVM_VI_INSERT_ESCAPE_BINDKEY = "jj";
           VI_MODE_RESET_PROMPT_ON_MODE_CHANGE = true;
@@ -44,7 +54,6 @@ in {
           # Insert mode Vi-Mode
           INSERT_MODE_INDICATOR = "%F{yellow}+INSERT%f";
         };
-
         shellAliases = {
           ll = "ls -l";
           tt = "taskwarrior-tui";
@@ -70,13 +79,19 @@ in {
           }
         '';
       };
-
       fzf = {
         enable = true;
         enableZshIntegration = true;
       };
-
-      zoxide.enable = true;
+      zoxide = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+      # TODO: Read into and learn
+      zellij = {
+        enable = false;
+        enableZshIntegration = true;
+      };
     };
   };
 }
