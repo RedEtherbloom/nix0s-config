@@ -17,7 +17,6 @@
         lix.follows = "lix";
       };
     };
-
     flake-compat.url = "github:edolstra/flake-compat";
     systems.url = "github:nix-systems/default";
     flake-utils = {
@@ -25,6 +24,10 @@
       inputs.systems.follows = "systems";
     };
 
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
