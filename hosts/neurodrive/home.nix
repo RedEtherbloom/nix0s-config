@@ -51,7 +51,6 @@ in {
           sillytavern
 
           sidequest
-          immersed
 
           # VRChat tools
           oscavmgr
