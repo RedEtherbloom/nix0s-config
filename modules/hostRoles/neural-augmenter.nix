@@ -60,8 +60,15 @@ in {
         StreamLocalBindUnlink = true;
         AllowAgentForwarding = true;
       };
+      colord.enable = true;
+      samba.enable = true;
+      xserver.wacom.enable = true;
+      flatpak.enable = true;
+      hardware.bolt.enable = true;
     };
 
+    # Autoration
+    hardware.sensor.iio.enable = true;
     environment.systemPackages = [pkgs.lm_sensors];
 
     # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
@@ -83,7 +90,7 @@ in {
           "docker.io"
           "quay.io"
           # Google mirror
-          "mirror.gcr.io" 
+          "mirror.gcr.io"
         ];
       };
       # TODO: Are UIDs for root separated by default?
