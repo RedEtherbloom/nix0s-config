@@ -41,7 +41,7 @@ in {
       (lib.mkIf cfg.theming {
         catppuccin = {
           enable = true;
-          flavor = "macchiato";
+          flavor = "frappe";
         };
       })
       (lib.mkIf osConfig.security.ownAdditional.yubikey {
