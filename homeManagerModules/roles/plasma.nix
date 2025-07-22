@@ -498,6 +498,7 @@ in {
     }
     (mkIf osConfig.security.ownAdditional.yubikey
       (let
+        # TODO: This is a problem with remote activation and should be replaced or removed
         qt-pinentry = pkgs.pinentry-qt;
       in {
         # TODO: How to set the default e.g. ncurses as backup
