@@ -60,6 +60,7 @@ in {
       };
       kitty = {
         enable = true;
+        enableGitIntegration = true;
         settings = {
           background_blur = 2;
           dynamic_background_opacity = true;
