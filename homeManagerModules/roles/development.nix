@@ -148,7 +148,6 @@ in {
         ]
         ++ lib.optionals cfg.git [
           git
-          lazygit
           git-lfs
           git-filter-repo
         ]
@@ -165,13 +164,23 @@ in {
         ];
     }
     (lib.mkIf cfg.git {
-      programs.git = {
-        userName = "RedEtherbloom";
-        userEmail = "etherbloom@mailbox.org";
-        enable = true;
-        extraConfig = {
-          push = {
-            autoSetupRemote = true;
+      programs = {
+        git = {
+          userName = "RedEtherbloom";
+          userEmail = "etherbloom@mailbox.org";
+          enable = true;
+          extraConfig = {
+            push = {
+              autoSetupRemote = true;
+            };
+          };
+        };
+        lazygit = {
+          enable = true;
+          settings = {
+            git = {
+              overrideGpg = true;
+            };
           };
         };
       };
