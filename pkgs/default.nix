@@ -117,6 +117,8 @@ in {
       patches = (prevAttrs.patches or []) ++ [./shorten-grace-lock.patch];
     });
     kscreenlocker = kdePrev.kscreenlocker.overrideAttrs (_: prevAttrs: {
+      version = prevAttrs.version + "-pmanager-patched";
+      __intentionallyOverridingVersion = true;
       patches = (prevAttrs.patches or []) ++ [./kscreenlocker-allow-screen-shortcuts.patch];
     });
   });
