@@ -21,18 +21,25 @@ in {
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
-      stylix.targets = {
-        neovim.enable = false;
-        nvf.enable = false;
-        neovide.enable = false;
-      };
       sops.secrets."ai_keys/anthropic" = {
-        # TODO: Replace inputs.our-secrets with just our-secrets via import in flake.nix
         sopsFile = "${inputs.our-secrets}/secrets/services/ai_keys.yaml";
         key = "anthropic";
       };
       programs = {
-        neovide.enable = true;
+        neovide = {
+          enable = true;
+          settings = {
+            font = {
+              # TODO: I think it fell back to it's default. How can I query neovide for it's runtime value?
+              normal = ["OpenDyslexicM Nerd Font Mono"];
+              size = 12.0;
+            };
+            srgb = true;
+            vsync = true;
+            neovide_opacity = 0.5;
+            neovide_normal_opacity = 0.5;
+          };
+        };
         nvf = {
           enable = true;
           defaultEditor = true;
@@ -109,7 +116,10 @@ in {
             # TODO: What exactly are projects?
             projects.project-nvim.enable = true;
 
-            statusline.lualine.enable = true;
+            statusline.lualine = {
+              enable = true;
+              theme = "horizon";
+            };
             # TODO: This is buggy as hell
             tabline.nvimBufferline.enable = false;
             # Should be better than nvim-cmp, e.g. better search via frecency and lower latency
@@ -130,38 +140,40 @@ in {
             syntaxHighlighting = true;
             visuals = {
               # Smooth scrolling!!
+              # TODO: Disable with neovide
               cinnamon-nvim.enable = true;
               # TODO: Check if illuminate is enough, or if we want to add cursorline
               fidget-nvim.enable = true;
               # TODO: Disable on reformat
               highlight-undo.enable = true;
-              # TODO: Maybe add color for different indentiation levels
-              indent-blankline.enable = true;
-            };
-            # TODO: Replace with nvimTree. This one is way too clunky.
-            filetree.neo-tree = {
-              enable = false;
-              setupOpts = {
-                enable_cursor_hijack = true;
-                git_status_async = true;
-                buffers = {
-                  follow_current_file = {
-                    enabled = true;
-                    # Auto-close expanded dirs when no longer needed
-                    leave_dirs_open = false;
+              rainbow-delimiters.enable = true;
+              # TODO: Integrate with rainbow-delimeters
+              indent-blankline = {
+                enable = true;
+                setupOpts = {
+                  scope = {
+                    show_start = true;
+                    show_end = true;
                   };
                 };
-                close_if_last_window = true;
               };
             };
-            # TODO: Does this enable e.g. jumping up and down in code blocks(like up from if to function)
-            treesitter.context = {
+            filetree.nvimTree = {
               enable = true;
-              setupOpts = {
-                separator = "󱙧";
-                max_lines = 1;
-                # TODO: Compare to cursor
-                mode = "topline";
+            };
+            treesitter = {
+              incrementalSelection = {
+                enable = true;
+              };
+              fold = true;
+              context = {
+                enable = true;
+                setupOpts = {
+                  separator = "󱙧";
+                  max_lines = 1;
+                  # TODO: Compare to cursor
+                  mode = "topline";
+                };
               };
             };
             # LSP
@@ -181,7 +193,7 @@ in {
               enableFormat = true;
               enableTreesitter = true;
               enableDAP = true;
-
+              # TODO: This really needs more plugins for e.g. snippes, automatic semicolon
               nix = {
                 enable = true;
                 extraDiagnostics = {
@@ -247,10 +259,62 @@ in {
               ccc.enable = true;
               # Leetcode / programming problems for training
               leetcode-nvim.enable = true;
+              # Lookup other motion plugins
               motion = {
                 leap.enable = true;
-                # TODO: lookup additional options
-                precognition.enable = true;
+                precognition = {
+                  enable = true;
+                  setupOpts = {
+                    highlighColor = {
+                      foreground = "#dcf41f";
+                      background = "#dcf41f";
+                      # background = "#000000";
+                    };
+                    hints = {
+                      Caret = {
+                        text = "_";
+                        prio = 2;
+                      };
+                      Dollar = {
+                        text = "$";
+                        prio = 1;
+                      };
+                      MatchingPair = {
+                        text = "%";
+                        prio = 5;
+                      };
+                      "0" = {
+                        text = "0";
+                        # Disabled
+                        prio = 0;
+                      };
+                      w = {
+                        text = "w";
+                        prio = 10;
+                      };
+                      b = {
+                        text = "b";
+                        prio = 9;
+                      };
+                      e = {
+                        text = "e";
+                        prio = 8;
+                      };
+                      W = {
+                        text = "W";
+                        prio = 7;
+                      };
+                      B = {
+                        text = "B";
+                        prio = 6;
+                      };
+                      E = {
+                        text = "E";
+                        prio = 5;
+                      };
+                    };
+                  };
+                };
               };
               images = {
                 # TODO: Write rule for neovide with require('image-nvim').disable()
@@ -320,7 +384,7 @@ in {
                 package = pkgs.vimPlugins.pomo-nvim;
                 setup = "require('pomo').setup {}";
               };
-              # Learn nvim-surround shortcuts
+              # TODO: Learn nvim-surround shortcuts
               "surround-ui.nvim" = {
                 package = pkgs.vimPlugins.surround-ui-nvim;
                 setup = ''
@@ -405,10 +469,10 @@ in {
               hardtime-nvim = {
                 enable = true;
                 setupOpts = {
-                  max_count = 2;
+                  max_count = 3;
                   disable_mouse = false;
                   timeout = 2000;
-                  restriction_mode = "block";
+                  restriction_mode = "hint";
                   max_insert_idle_ms = 8000;
                 };
               };
@@ -459,6 +523,7 @@ in {
               (mkKeymap "n" "<leader>ts" "<cmd>TSJSplit<CR>" {desc = "Split the current block.";})
               (mkKeymap "n" "<leader>tt" "<cmd>TSJToggle<CR>" {desc = "Toggle splitting or joining the current block.";})
             ];
+            # TODO: Evaluate snacks picker as modern replacement
             telescope = {
               enable = true;
               setupOpts.defaults = {
@@ -493,22 +558,21 @@ in {
                     i = {
                       "jj" = lib.generators.mkLuaInline ''
                         function(prompt_bufnr)
-                          require('telescope').actions.set_command_line(prompt_bufnr)
+                          require('telescope.actions').set_command_line(prompt_bufnr)
                         end
                       '';
                     };
                     n = {
                       "jj" = lib.generators.mkLuaInline ''
                         function(prompt_bufnr)
-                          require('telescope').actions.close(prompt_bufnr)
+                          require('telescope.actions').close(prompt_bufnr)
                         end
                       '';
                     };
                   };
               };
             };
-
-            # TODO: Claude can't read my code
+            # TODO: Claude can't read our code
             assistant.codecompanion-nvim = {
               enable = true;
               setupOpts = {
@@ -531,6 +595,11 @@ in {
             };
           };
         };
+      };
+      stylix.targets = {
+        neovim.enable = false;
+        nvf.enable = false;
+        neovide.enable = false;
       };
     }
     (lib.mkIf config.myOptions.roles.gamedev.enable {
