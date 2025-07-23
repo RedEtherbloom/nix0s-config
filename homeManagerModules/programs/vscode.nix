@@ -153,9 +153,7 @@ in {
         ];
       };
     };
-
     stylix.targets.vscode.enable = true;
-    # 15.07.2025: Broken
-    catppuccin.vscode.enable = false;
+    catppuccin.vscode.profiles.default.enable = true;
   };
 }
