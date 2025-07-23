@@ -140,5 +140,6 @@ in {
     (define-kscreen-layout "lg-aoc" "output.DP-2.disable output.HDMI-A-1.enable output.HDMI-A-1.position.1080,420 output.HDMI-A-1.priority.1 output.DP-3.enable output.DP-3.position.0,0 output.DP-3.rotation.right" "ctrl+shift+f5")
     (define-kscreen-layout "lg-benq" "output.DP-2.enable output.DP-2.position.0,0 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.disable output.HDMI-A-1.enable output.HDMI-A-1.position.1920,0 output.HDMI-A-1.rotation.normal output.HDMI-A-1.priority.2" "ctrl+shift+f6")
     (define-kscreen-layout "trial" "output.DP-2.enable output.DP-2.position.1080,420 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.right output.DP-3.position.0,0 output.DP-3.priority.2 output.HDMI-A-1.enable output.HDMI-A-1.position.3000,420 output.HDMI-A-1.rotation.normal output.HDMI-A-1.priority.3" "ctrl+shift+f7")
+    (define-kscreen-layout "dual-both-horizontal" "output.HDMI-A-1.disable output.DP-2.enable output.DP-2.position.1920,0 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.normal output.DP-3.position.0,0" "ctrl+shift+f8")
   ];
 }
