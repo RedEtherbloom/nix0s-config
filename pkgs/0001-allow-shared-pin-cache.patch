@@ -1,0 +1,14 @@
+diff --git a/scd/app-openpgp.c b/scd/app-openpgp.c
+index 888e23739..8152683c6 100644
+--- a/scd/app-openpgp.c
++++ b/scd/app-openpgp.c
+@@ -2628,9 +2628,6 @@ cache_pin (app_t app, ctrl_t ctrl, int chvno, const char *pin)
+ {
+   const char *keyref;
+ 
+-  if (opt.pcsc_shared)
+-    return;
+-
+   keyref = chvno_to_keyref (chvno);
+   if (!keyref)
+     return;
