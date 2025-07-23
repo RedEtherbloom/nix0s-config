@@ -106,6 +106,7 @@ in {
       waydroid.enable = true;
     };
 
+    sops.secrets."registry/dockerhub/password".sopsFile = "${inputs.our-secrets}/secrets/services/docker.yaml";
     # Needed for podman
     users.users."inf".autoSubUidGidRange = true;
   };
