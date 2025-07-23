@@ -569,8 +569,7 @@
         "type": "github"
       },
       "original": {
-        "owner": "Redetherbloom",
-        "ref": "feature-language-tex",
+        "owner": "NotAShelf",
         "repo": "nvf",
         "type": "github"
       }
@@ -588,11 +587,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1751923738,
-        "narHash": "sha256-KKXT3To6EF3+3fpvxd2l7fc8lQWDN01xbH2MIs2ReCo=",
+        "lastModified": 1753278242,
+        "narHash": "sha256-1kfDnHh4YAnDDDyFQgiP8h+umngtUtCezlY3dP+qYi8=",
         "ref": "refs/heads/main",
-        "rev": "49686a8015aabc239a7e8a214bb4dc560d507c36",
-        "revCount": 37,
+        "rev": "9ddc22075a4e509aaac26de055503d57f5026135",
+        "revCount": 38,
         "type": "git",
         "url": "ssh://git@github.com/RedEtherbloom/nix0s-secrets"
       },

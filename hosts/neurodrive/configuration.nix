@@ -132,21 +132,20 @@ in {
     interfaces."enp0s25".wakeOnLan.enable = true;
 
     firewall = {
-      allowedTCPPorts = [
-        # Mosquitto
-        1883
-        8883
-        #TODO: Pulseaudio Network Sharing. Probably only needed for publish
-        4713
-        # Matter
-        config.services.matter-server.port
-        (lib.strings.toInt config.services.restic.server.listenAddress)
-        # Home Assistant
-        8123
-        config.services.paperless.port
-        # SteamVR
-        27062
-      ];
+      allowedTCPPorts =
+        [
+          # Pulseaudio Network Sharing. Probably only needed for publish
+          4713
+          # Home Assistant
+          8123
+          # SteamVR
+          27062
+          config.services.paperless.port
+          config.services.matter-server.port
+          (lib.strings.toInt config.services.restic.server.listenAddress)
+          config.services.tabby.port
+        ]
+        ++ (lib.lists.concatMap (el: [el.port]) config.services.mosquitto.listeners);
       allowedUDPPorts = [
         # SteamVR
         9944
@@ -214,6 +213,7 @@ in {
       enable = true;
       logType = ["all"];
       listeners = [
+        # TODO: Add encrypted listener
         {
           port = 1883;
           # By default everyone may read everything
@@ -353,14 +353,19 @@ in {
           "${config.networking.ownWireguard.hosts.${config.networking.hostName}.mainIP}:8188:8188"
         ];
         extraOptions = [
-          "--device=nvidia.com/gpu=all"
           "--security-opt=label=disable"
         ];
+        login = {
+          username = "redetherbloom";
+          passwordFile = config.sops.secrets."registry/dockerhub/password".path;
+          registry = "docker.io";
+        };
       };
     };
   };
-  systemd.services."${config.virtualisation.oci-containers.containers.homeassistant.serviceName}" = {
-    after = ["systemd-udevd.service"];
+  systemd.services = {
+    "${config.virtualisation.oci-containers.containers.homeassistant.serviceName}".after = ["systemd-udevd.service"];
+    "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = ["network-online.target"];
   };
 
   myOptions = {
