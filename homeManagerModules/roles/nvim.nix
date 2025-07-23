@@ -222,25 +222,25 @@ in {
               go.enable = true;
               python.enable = true;
               bash.enable = true;
-              tex = {
-                enable = true;
-                # TODO: Unsure how to trigger this
-                build.enable = true;
-                lsp.texlab = {
-                  forwardSearch.enable = true;
-                  enable = true;
-                  chktex = {
-                    enable = true;
-                    onEdit = true;
-                    onOpenAndSave = true;
-                  };
-                };
-                # Package gets automatically setup from enabled viewer
-                pdfViewer.okular = {
-                  enable = true;
-                  package = pkgs.kdePackages.okular;
-                };
-              };
+              # tex = {
+              #   enable = true;
+              #   # TODO: Unsure how to trigger this
+              #   build.enable = true;
+              #   lsp.texlab = {
+              #     forwardSearch.enable = true;
+              #     enable = true;
+              #     chktex = {
+              #       enable = true;
+              #       onEdit = true;
+              #       onOpenAndSave = true;
+              #     };
+              #   };
+              #   # Package gets automatically setup from enabled viewer
+              #   pdfViewer.okular = {
+              #     enable = true;
+              #     package = pkgs.kdePackages.okular;
+              #   };
+              # };
               lua = {
                 enable = true;
                 lsp.lazydev.enable = true;

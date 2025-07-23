@@ -73,10 +73,11 @@
       };
     };
     nvf = {
-      url = "github:Redetherbloom/nvf/feature-language-tex";
+      url = "github:NotAShelf/nvf";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
+        flake-compat.follows = "flake-compat";
       };
     };
     nix-tree = {
@@ -92,6 +93,7 @@
       flake = false;
     };
     rimsort-pr.url = "github:NixOS/nixpkgs?ref=pull/304943/head";
+    # TODO: Replace inputs.our-secrets with just our-secrets via import in flake.nix
     our-secrets = {
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
       inputs = {
