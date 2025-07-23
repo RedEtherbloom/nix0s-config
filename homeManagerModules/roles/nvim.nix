@@ -8,6 +8,7 @@
 }: let
   cfg = config.myOptions.roles.nvf;
   inherit (inputs.nvf.lib.nvim.binds) mkKeymap;
+  inherit (inputs.nvf.lib.nvim) dag;
 in {
   imports = [
     inputs.nvf.homeManagerModules.default
@@ -36,8 +37,6 @@ in {
             };
             srgb = true;
             vsync = true;
-            neovide_opacity = 0.5;
-            neovide_normal_opacity = 0.5;
           };
         };
         nvf = {
@@ -61,6 +60,12 @@ in {
               showmode = false;
               swapfile = true;
             };
+            # Setup transparency
+            # entryBetween is mostly used to keep the entry close to the globals section for visual clarity
+            luaConfigRC.neovide = dag.entryBetween ["basic"] ["globalsScript"] ''
+              vim.g.neovide_opacity = 0.5;
+              vim.g.neovide_normal_opacity = 0.5;
+            '';
             viAlias = true;
             vimAlias = true;
             searchCase = "smart";
@@ -283,7 +288,7 @@ in {
                         text = "%";
                         prio = 5;
                       };
-                      "0" = {
+                      Zero = {
                         text = "0";
                         # Disabled
                         prio = 0;
@@ -601,6 +606,7 @@ in {
         nvf.enable = false;
         neovide.enable = false;
       };
+      catppuccin.nvim.enable = false;
     }
     (lib.mkIf config.myOptions.roles.gamedev.enable {
       programs.nvf.settings.vim = {
