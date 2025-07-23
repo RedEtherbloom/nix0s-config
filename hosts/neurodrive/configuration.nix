@@ -270,6 +270,12 @@ in {
       enable = true;
       openFirewall = true;
     };
+    tabby = {
+      enable = true;
+      acceleration = "cuda";
+      # TODO: Is there a wildcard address that matches both IPv4 and 6?
+      host = "0.0.0.0";
+    };
   };
 
   hardware = {
