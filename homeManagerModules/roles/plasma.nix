@@ -4,9 +4,9 @@
   lib,
   osConfig,
   pkgs,
+  system,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.plasma-manager;
 in {
   imports = [
@@ -14,26 +14,51 @@ in {
   ];
 
   options.myOptions.plasma-manager = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable plasma manager and applications";
-      type = with types; bool;
+      type = lib.types.bool;
       default = false;
     };
-    krohnkite = mkOption {
+    krohnkite = lib.mkOption {
       description = "Enable krohnkite tiling WM shortcuts";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       programs.plasma = {
         enable = true;
-        # TODO: Chekc if stylix automatically does this
-        fonts.windowTitle = {
-          family = "OpenDyslexic Nerd Font";
-          pointSize = 10;
+        fonts = let
+          normalSize = 10;
+          guiSize = 9;
+          generalFont = builtins.head osConfig.fonts.fontconfig.defaultFonts.serif;
+        in {
+          general = {
+            family = generalFont;
+            pointSize = normalSize;
+          };
+          fixedWidth = {
+            family = builtins.head osConfig.fonts.fontconfig.defaultFonts.monospace;
+            pointSize = normalSize;
+          };
+          small = {
+            family = generalFont;
+            pointSize = 7;
+          };
+          toolbar = {
+            family = generalFont;
+            pointSize = guiSize;
+          };
+          menu = {
+            family = generalFont;
+            pointSize = guiSize;
+          };
+          windowTitle = {
+            family = generalFont;
+            pointSize = guiSize;
+          };
         };
         # TODO: Lookup keyformat
         shortcuts =
@@ -492,7 +517,7 @@ in {
         ]
         ++ lib.optionals cfg.krohnkite [krohnkite];
     }
-    (mkIf osConfig.security.ownAdditional.yubikey
+    (lib.mkIf osConfig.security.ownAdditional.yubikey
       (let
         qt-pinentry = pkgs.pinentry-qt;
       in {
