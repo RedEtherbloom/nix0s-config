@@ -30,33 +30,35 @@ in {
 
     environment.systemPackages = with pkgs; [
       appimage-run
-      nerd-fonts.open-dyslexic
     ];
 
-    fonts.fontDir.enable = true;
-    stylix.fonts = {
-      serif = {
-        package = pkgs.nerd-fonts.open-dyslexic;
-        name = "OpenDyslexic Nerd Font";
-      };
-      sansSerif = {
-        package = pkgs.nerd-fonts.open-dyslexic;
-        name = "OpenDyslexic Nerd Font";
-      };
-      monospace = {
-        package = pkgs.nerd-fonts.open-dyslexic;
-        name = "OpenDyslexicM Nerd Font Mono";
-      };
-      emoji = {
-        package = pkgs.noto-fonts-emoji;
-        name = "Noto Color Emoji";
-      };
-      # OpenDyslexic is very large by default. Too large for our taste.
-      sizes = {
-        applications = 10;
-        desktop = 8;
-        popups = 8;
-        terminal = 10;
+    fonts = {
+      fontDir.enable = true;
+      packages = with pkgs; [
+        nerd-fonts.open-dyslexic
+        noto-fonts
+        noto-fonts-cjk-sans
+        noto-fonts-emoji
+      ];
+      fontconfig = {
+        hinting = {
+          # The default of slight always felt to fuzzy
+          style = "medium";
+        };
+        defaultFonts = {
+          serif = ["OpenDyslexic Nerd Font"];
+          sansSerif = ["OpenDyslexic Nerd Font"];
+          monospace = ["OpenDyslexicM Nerd Font Mono"];
+          emoji = ["Noto Color Emoji"];
+          # OpenDyslexic is very large by default. Too large for our taste.
+          # TODO: No clear equivalent without stylix
+          # sizes = {
+          #   applications = 10;
+          #   desktop = 8;
+          #   popups = 8;
+          #   terminal = 10;
+          # };
+        };
       };
     };
   };
