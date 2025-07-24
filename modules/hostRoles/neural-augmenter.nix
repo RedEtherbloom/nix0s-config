@@ -30,9 +30,12 @@ in {
 
     # TODO: Configure so that only e.g. grub but nothing else gets the pallet
     stylix = {
-      enable = true;
+      enable = false;
       polarity = "dark";
-      targets.grub.useImage = true;
+      targets.grub = {
+        enable = true;
+        useWallpaper = true;
+      };
     };
 
     programs = {
