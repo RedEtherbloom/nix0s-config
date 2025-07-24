@@ -144,6 +144,7 @@ in {
           config.services.matter-server.port
           (lib.strings.toInt config.services.restic.server.listenAddress)
           config.services.tabby.port
+          config.services.esphome.port
         ]
         ++ (lib.lists.concatMap (el: [el.port]) config.services.mosquitto.listeners);
       allowedUDPPorts = [
@@ -193,7 +194,10 @@ in {
         };
       };
     };
-    esphome.enable = true;
+    esphome = {
+      enable = true;
+      address = "0.0.0.0";
+    };
     ollama = {
       enable = true;
       acceleration = "cuda";
