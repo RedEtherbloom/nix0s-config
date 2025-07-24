@@ -63,8 +63,8 @@ in {
             # Setup transparency
             # entryBetween is mostly used to keep the entry close to the globals section for visual clarity
             luaConfigRC.neovide = dag.entryBetween ["basic"] ["globalsScript"] ''
-              vim.g.neovide_opacity = 0.5;
-              vim.g.neovide_normal_opacity = 0.5;
+              vim.g.neovide_opacity = 0.8;
+              vim.g.neovide_normal_opacity = 0.8;
             '';
             viAlias = true;
             vimAlias = true;
