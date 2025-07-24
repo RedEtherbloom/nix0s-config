@@ -265,6 +265,7 @@ in {
             "services/org.kde.spectacle.desktop"."RecordWindow" = [];
             "services/org.kde.spectacle.desktop"."_launch" = [];
             "services/systemsettings.desktop"."_launch" = ["Meta+C" "Tools"];
+            "services/neovide.desktop"."_launch" = "Meta+Shift+N";
           }
           (lib.optionalAttrs cfg.krohnkite {
             kwin = {
