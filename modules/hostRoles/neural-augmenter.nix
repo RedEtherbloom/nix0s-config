@@ -96,8 +96,8 @@ in {
           "mirror.gcr.io"
         ];
       };
-      # TODO: Are UIDs for root separated by default?
       podman = {
+        autoPrune.enable = true;
         dockerSocket.enable = true;
         enable = true;
         # Create a `docker` alias for podman, to use it as a drop-in replacement
