@@ -4,10 +4,7 @@
   lib,
   pkgs,
   ...
-}: let
-  restic_private_key = config.sops.secrets."restic_server/restic.key".path;
-  restic_public_certificate = "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.crt";
-in {
+}: {
   imports =
     [
       # !EXCEPTION TO GET AUDIOSINK KICK-STARTED! #
@@ -35,7 +32,7 @@ in {
   nix.settings = {
     # Logical cores: 12
     max-jobs = 10;
-    # Max make some builds non deterministic
+    # May make some builds non deterministic
     cores = 10;
   };
   nixpkgs.config = {
@@ -174,7 +171,6 @@ in {
       openFirewall = true;
     };
     paperless = {
-      # For some reason broken today
       enable = true;
       consumptionDirIsPublic = true;
       address = "0.0.0.0";
@@ -250,17 +246,15 @@ in {
       extraFlags = [
         "--tls"
         "--tls-key"
-        restic_private_key
+        config.sops.secrets."restic_server/restic.key".path
         "--tls-cert"
-        restic_public_certificate
+        "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.crt"
       ];
     };
     smartd = {
       enable = true;
       autodetect = true;
-      notifications = {
-        systembus-notify.enable = true;
-      };
+      notifications.systembus-notify.enable = true;
       # Short daily self-test, long weekly exteded test
       # https://search.nixos.org/options?channel=unstable&show=services.smartd.defaults.monitored
       defaults.monitored = "-a -o on -s (S/../.././02|L/../../7/04)";
@@ -269,7 +263,7 @@ in {
       SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="zigbee-ap"
       ACTION=="add", SUBSYSTEM=="tty", ENV{DEVLINKS}=="*/dev/zigbee-ap*", RUN+="${config.systemd.package}/bin/systemctl restart podman-homeassistant.service"
     '';
-    # ALVR alternative while the nvenc is broken
+    # ALVR alternative while nvenc is broken
     wivrn = {
       enable = true;
       openFirewall = true;
@@ -297,7 +291,6 @@ in {
     };
     # Manage logitech options via solaar
     logitech.wireless.enable = true;
-
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -312,68 +305,55 @@ in {
     };
     nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = true;
+      powerManagement = {
+        enable = true;
+        finegrained = false;
+      };
       nvidiaSettings = true;
-
-      # Fine-grained power management. Turns off GPU when not in use.
-      # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-      powerManagement.finegrained = false;
-
-      # Use the NVidia open source kernel module (not to be confused with the
-      # independent third-party "nouveau" open source driver).
-      # Support is limited to the Turing and later architectures. Full list of
-      # supported GPUs is at:
-      # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
-      # Only available from driver 515.43.04+
-      # Currently alpha-quality/buggy, so false is currently the recommended setting.
-      #
-      # May have improved now
-      #
-      # Incompability with vaapi-driver
-      # See: https://github.com/elFarto/nvidia-vaapi-driver/issues/312
-      # TODO: Check if this helps with the ALVR nvenc problems
       open = true;
     };
-    # Required for GPU passthrough
     nvidia-container-toolkit.enable = true;
   };
-  virtualisation.oci-containers = {
-    containers = {
-      homeassistant = {
-        volumes = ["home-assistant:/config"];
-        devices = [
-          "/dev/zigbee-ap:/dev/ttyUSB0"
-        ];
-        environment.TZ = config.time.timeZone;
-        image = "ghcr.io/home-assistant/home-assistant:stable";
-        # Use the host network namespace for all sockets
-        extraOptions = [
-          "--network=host"
-          "--stop-timeout=30"
-        ];
-      };
-      comfyui = {
-        volumes = ["comfyui:/root"];
-        environment.TZ = config.time.timeZone;
-        image = "docker.io/yanwk/comfyui-boot:cu124-megapak";
-        pull = "newer";
-        ports = [
-          "127.0.0.1:8188:8188"
-          "192.168.190.180:8188:8188"
-          "${config.networking.ownWireguard.hosts.${config.networking.hostName}.mainIP}:8188:8188"
-        ];
-        extraOptions = [
-          "--security-opt=label=disable"
-        ];
-        login = {
-          username = "redetherbloom";
-          passwordFile = config.sops.secrets."registry/dockerhub/password".path;
-          registry = "docker.io";
+  virtualisation = {
     docker.daemon.settings = {
       ipv6 = true;
       # Store containers on second harddrive to save space
       data-root = "/mnt/cryptostorage/var/lib/containers";
     };
+    oci-containers = {
+      containers = {
+        homeassistant = {
+          volumes = ["home-assistant:/config"];
+          devices = [
+            "/dev/zigbee-ap:/dev/ttyUSB0"
+          ];
+          environment.TZ = config.time.timeZone;
+          image = "ghcr.io/home-assistant/home-assistant:stable";
+          # Use the host network namespace for all sockets
+          extraOptions = [
+            "--network=host"
+            "--stop-timeout=30"
+          ];
+        };
+        comfyui = {
+          volumes = ["comfyui:/root"];
+          environment.TZ = config.time.timeZone;
+          image = "docker.io/yanwk/comfyui-boot:cu124-megapak";
+          pull = "newer";
+          ports = [
+            "127.0.0.1:8188:8188"
+            "192.168.190.180:8188:8188"
+            "${config.networking.ownWireguard.hosts.${config.networking.hostName}.mainIP}:8188:8188"
+          ];
+          extraOptions = [
+            "--security-opt=label=disable"
+          ];
+          # TODO: How to set this as default
+          login = {
+            username = "redetherbloom";
+            passwordFile = config.sops.secrets."registry/dockerhub/password".path;
+            registry = "docker.io";
+          };
         };
       };
     };
