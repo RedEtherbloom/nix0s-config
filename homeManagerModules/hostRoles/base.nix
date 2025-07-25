@@ -9,7 +9,7 @@
   cfg = config.myOptions.hostRoles.base;
 in {
   imports = [
-    inputs.nix-index-database.hmModules.nix-index
+    inputs.nix-index-database.homeModules.nix-index
     inputs.sops-nix.homeManagerModules.sops
     inputs.catppuccin.homeModules.catppuccin
     inputs.stylix.homeModules.stylix
