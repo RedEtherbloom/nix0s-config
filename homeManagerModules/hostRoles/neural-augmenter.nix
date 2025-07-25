@@ -150,8 +150,6 @@ in {
     };
 
     services = {
-      # TODO: Look into how to setup this up with multiple hosts. It currently sets the SSH sock, interferring.
-      # yubikey-agent.enable = osConfig.security.ownAdditional.yubikey;
       # TODO: Setup options
       syncthing.enable = true;
     };
