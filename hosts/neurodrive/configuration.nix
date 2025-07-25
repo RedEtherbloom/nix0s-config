@@ -369,6 +369,11 @@ in {
           username = "redetherbloom";
           passwordFile = config.sops.secrets."registry/dockerhub/password".path;
           registry = "docker.io";
+    docker.daemon.settings = {
+      ipv6 = true;
+      # Store containers on second harddrive to save space
+      data-root = "/mnt/cryptostorage/var/lib/containers";
+    };
         };
       };
     };
