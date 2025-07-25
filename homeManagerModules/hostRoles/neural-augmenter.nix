@@ -149,11 +149,8 @@ in {
       ];
     };
 
-    services = {
-      # TODO: Setup options
-      syncthing.enable = true;
-    };
-
+    # TODO: Setup options
+    services.syncthing.enable = true;
     programs = {
       chromium = {
         enable = lib.mkDefault true;
@@ -171,7 +168,8 @@ in {
       # TODO: Try out then reevaluate
       broot.enable = true;
       # TODO: Does this improve completion speed?
-      carapace.enable = true;
+      # TODO: This breaks normal completion with e.g. --user option for systemd too often
+      # carapace.enable = true;
     };
 
     xdg = {
