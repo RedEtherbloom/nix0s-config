@@ -202,6 +202,56 @@ in {
         enable = true;
         nix-direnv.enable = true;
       };
+      systemd.user = {
+        services.gcNixDirenv = {
+          Unit.Description = "Clean up stale or old nix-direnv shells. Script by DrRuhe.";
+          Service = let
+            gcNixDirenv = pkgs.writers.writeNuBin "gcNixDirenv}" ''
+              use std log
+
+              def nixStoreGetDevshellGcRoots [] {
+                  return (nix-store --gc --print-roots |
+                      lines |
+                      parse "{loc} -> {storepath}" |
+                      insert dir {|gcRoot|$gcRoot.loc|parse "{path}/.direnv/{x}" | get -i 0.path} |
+                      group-by --to-table dir |
+                      rename dir gcRoots |
+                      insert modified {|devShell|
+                          $devShell.gcRoots|each {|gcRoot|
+                              ls -D $gcRoot.loc|get 0.modified
+                          }|sort --reverse|first
+                      })
+              }
+
+              def removeGCRootsFromDevshells [] {
+                  let devshells = $in
+
+                  $devshells|each {|devshell|
+                      log info $"(ansi red_bold)Removing devshell last modified ($devshell.modified|date humanize): ($devshell.dir) (ansi reset)"
+                      direnv revoke $devshell.dir
+                      rm -r $"($devshell.dir)/.direnv"
+                  }
+
+                  return
+              }
+
+
+              def main [--delete-older-than : duration = 31day] {
+                  nixStoreGetDevshellGcRoots|where modified < ((date now) - $delete_older_than)|removeGCRootsFromDevshells
+              }
+            '';
+          in {
+            Type = "exec";
+            ExecStart = "${gcNixDirenv} --duration 7day";
+          };
+        };
+        timers.gcNixDirenv = {
+          Timer = {
+            OnCalendar = "weekly";
+            Persistent = true;
+          };
+        };
+      };
     })
     (lib.mkIf cfg.go {
       programs.go.enable = true;
