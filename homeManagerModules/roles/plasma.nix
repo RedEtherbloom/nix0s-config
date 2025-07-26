@@ -461,7 +461,7 @@ in {
               "Options" = "caps:escape,shift:both_capslock_cancel";
               "ResetOldOptions" = true;
               "Use" = true;
-              "VariantList" = "nodeadkeys,neo_qwertz";
+              "VariantList" = "nodeadkeys,colemak,neo_qwertz";
             };
             plasma-localerc."Formats"."LANG" = osConfig.i18n.defaultLocale;
             plasmanotifyrc."Notifications" = {
