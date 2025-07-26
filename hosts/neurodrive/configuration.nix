@@ -31,16 +31,14 @@
 
   nix.settings = {
     # Logical cores: 12
-    max-jobs = 10;
-    # May make some builds non deterministic
-    cores = 10;
+    max-jobs = 8;
+    cores = 8;
   };
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;
     cudaCapabilities = ["7.5"];
   };
-  # Eve: Host-specific package overrides
   nixpkgs.overlays = [
     (_: prev: {
       # Eve: Account for bug: https://fractalsoftworks.com/forum/index.php?topic=30633.0
@@ -56,18 +54,13 @@
   ];
 
   boot = {
-    # Quarry: Cross-compilation support for audiosink
     binfmt.emulatedSystems = ["aarch64-linux"];
     # Hoping to increase audio quality/reliability
     kernelParams = ["btusb.enable_autosuspend=n"];
-    kernelModules =
-      ["coretemp" "nct6775"]
-      ++
-      # Attempt to fix ALVR/NvEnc problems
-      ["nvidia" "i915" "nvidia_modeset" "nvidia_drm"];
+    kernelModules = ["coretemp" "nct6775"];
     initrd = {
       availableKernelModules = [
-        # Speedup decryption
+        # TODO: Lookup remainng crypto models
         "aesni_intel"
       ];
       systemd.enable = true;
@@ -162,7 +155,6 @@
       wayland.enable = true;
     };
     desktopManager.plasma6.enable = true;
-    # Includes Wayland
     xserver.videoDrivers = ["nvidia"];
     avahi = {
       enable = true;
@@ -198,7 +190,6 @@
       enable = true;
       acceleration = "cuda";
       host = "0.0.0.0";
-      # Privacy at home?
       openFirewall = true;
     };
     nextjs-ollama-llm-ui = {
@@ -206,7 +197,7 @@
       # May need to set CORS in ollama variables for VPN to work
       hostname = "${config.networking.ownWireguard.hosts.neurodrive.mainIP}";
       # Reasonably close to ollama
-      port = 11440;
+      port = 8150;
       # May have to set ollamURL to a VPN url
     };
     mosquitto = {
