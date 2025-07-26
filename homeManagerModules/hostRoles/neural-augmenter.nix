@@ -120,7 +120,7 @@ in {
           distrobox
 
           # Music production
-          sonic-pi
+          inputs.nixpkgs-stable.legacyPackages.${system}.sonic-pi
           # FLStudio esque software
           reaper
           reaper-sws-extension
