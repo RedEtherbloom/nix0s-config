@@ -129,7 +129,7 @@ in {
         ++ lib.optionals cfg.openscad [
           openscad
         ]
-        ++ lib.optionals cfg.nix self.devShell.${system}
+        ++ lib.optionals cfg.nix self.devShells.${system}.default.buildInputs
         ++ lib.optionals cfg.electronics [
           kicad
         ]
