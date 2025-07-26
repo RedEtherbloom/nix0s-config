@@ -304,8 +304,6 @@ in {
 
   environment.systemPackages = with pkgs; [
     libraspberrypi
-    podman
-    podman-compose
   ];
 
   programs = {
@@ -323,34 +321,6 @@ in {
       settings.General.Enable = "Source";
     };
     i2c.enable = true;
-  };
-  # Enable common container config files in /etc/containers
-  virtualisation = {
-    containers.enable = true;
-    podman = {
-      enable = true;
-      # Create a `docker` alias for podman, to use it as a drop-in replacement
-      dockerCompat = true;
-      # Required for containers under podman-compose to be able to talk to each other.
-      defaultNetwork.settings.dns_enabled = true;
-    };
-    oci-containers = {
-      backend = "podman";
-      containers.homeassistant = {
-        # How do we backup this?
-        volumes = ["home-assistant:/config"];
-        environment.TZ = "Europe/Berlin";
-        # Okay? What does this mean?
-        # Note: The image will not be updated on rebuilds, unless the version label changes
-        image = "ghcr.io/home-assistant/home-assistant:stable";
-        extraOptions = [
-          # Use the host network namespace for all sockets
-          "--network=host"
-          # Pass devices into the container, so Home Assistant can discover and make use of them
-          # "--device=/dev/ttyACM0:/dev/ttyACM0"
-        ];
-      };
-    };
   };
 
   system.stateVersion = "25.05";
