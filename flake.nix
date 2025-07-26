@@ -130,38 +130,45 @@
       ];
       config.allowUnfree = true;
     };
+    getPatchedNixpkgs = system:
+      (import nixpkgs {inherit system;}).applyPatches {
+        name = "nixpkgs-patched";
+        src = nixpkgs;
+        patches = [];
+      };
   in
     flake-utils.lib.eachDefaultSystem (
       system: let
-        pkgs = import nixpkgs {
+        pkgs = import (getPatchedNixpkgs system) {
           inherit (nixpkgsConfig) overlays config;
           inherit system;
         };
       in {
         formatter = pkgs.alejandra;
-        devShell = with pkgs; [
-          nixfmt-rfc-style
-          alejandra
-          nh
-          nixd
-          direnv
-          nix-prefetch-scripts
-          nix-prefetch-github
-          nix-tree
-          nixos-rebuild-ng
-        ];
         legacyPackages = pkgs;
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            alejandra
+            nh
+            nixd
+            direnv
+            nix-prefetch-scripts
+            nix-prefetch-github
+            nix-tree
+            nixos-rebuild-ng
+          ];
+        };
       }
     )
     // {
       nixosConfigurations = let
         defaultUsername = "inf";
-        # Setup common home-manager and nixpkgs options
         mkSystem = hostName: system: username: let
           specialArgs = {inherit inputs self system;};
         in
-          nixpkgs.lib.nixosSystem {
+          import "${getPatchedNixpkgs system}/nixos/lib/eval-config.nix" {
             inherit specialArgs;
+            inherit system;
 
             modules = [
               home-manager.nixosModules.home-manager
