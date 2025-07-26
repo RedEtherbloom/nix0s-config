@@ -130,11 +130,15 @@
       ];
       config.allowUnfree = true;
     };
+    rpiKernelFix = builtins.fetchurl {
+      url = "https://github.com/NixOS/nixpkgs/pull/427798.patch";
+      sha256 = "sha256-EL3Sz8pN2jPvHMp3hf6mdwKKAXqT6AdhTNiwG132BdY=";
+    };
     getPatchedNixpkgs = system:
       (import nixpkgs {inherit system;}).applyPatches {
         name = "nixpkgs-patched";
         src = nixpkgs;
-        patches = [];
+        patches = [rpiKernelFix];
       };
   in
     flake-utils.lib.eachDefaultSystem (
