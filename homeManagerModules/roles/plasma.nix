@@ -30,6 +30,26 @@ in {
     {
       programs.plasma = {
         enable = true;
+        input.keyboard = {
+          layouts = [
+            {
+              displayName = "Colemak";
+              layout = "us";
+              variant = "colemak_dh_iso";
+            }
+            {
+              displayName = "Qwertz";
+              layout = "de";
+              variant = "nodeadkeys";
+            }
+          ];
+          model = "pc104";
+          options = [
+            "caps:escape"
+            "shift:both_capslock_cancel"
+          ];
+          numlockOnStartup = "off";
+        };
         fonts = let
           normalSize = 10;
           guiSize = 9;
@@ -454,14 +474,6 @@ in {
                 "SwitchingMode" = 1;
                 "MultiScreenMode" = 0;
               };
-            };
-            kxkbrc."Layout" = {
-              "LayoutList" = "de,de";
-              "Model" = "pc105";
-              "Options" = "caps:escape,shift:both_capslock_cancel";
-              "ResetOldOptions" = true;
-              "Use" = true;
-              "VariantList" = "nodeadkeys,colemak,neo_qwertz";
             };
             plasma-localerc."Formats"."LANG" = osConfig.i18n.defaultLocale;
             plasmanotifyrc."Notifications" = {
