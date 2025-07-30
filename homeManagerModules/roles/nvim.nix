@@ -113,7 +113,7 @@ in {
             # TODO: Look what noice does
 
             dashboard = {
-              # Override default dashboard
+              # Disable default dashboard
               dashboard-nvim.enable = false;
               alpha.enable = true;
             };
@@ -164,7 +164,7 @@ in {
               };
             };
             filetree.nvimTree = {
-              enable = true;
+              enable = false;
             };
             treesitter = {
               incrementalSelection = {
