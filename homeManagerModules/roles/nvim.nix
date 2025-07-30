@@ -105,7 +105,7 @@ in {
                 direction = "float";
               };
               mappings = {
-                open = "<c-ö>";
+                open = "<c-k>";
               };
             };
             session.nvim-session-manager.enable = true;
