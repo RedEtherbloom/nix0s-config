@@ -16,11 +16,11 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-      mindustry-wayland
       gcs
       byar-launcher
       rimsort
       starsector
+      (olympus.override {celesteWrapper = pkgs.steam-run;})
 
       dxvk_2
       lutris
