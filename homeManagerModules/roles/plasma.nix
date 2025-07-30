@@ -33,12 +33,12 @@ in {
         input.keyboard = {
           layouts = [
             {
-              displayName = "Colemak";
+              displayName = "co";
               layout = "us";
               variant = "colemak_dh_iso";
             }
             {
-              displayName = "Qwertz";
+              displayName = "de";
               layout = "de";
               variant = "nodeadkeys";
             }
