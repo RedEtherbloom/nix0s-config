@@ -206,7 +206,7 @@ in {
         services.gcNixDirenv = {
           Unit.Description = "Clean up stale or old nix-direnv shells. Script by DrRuhe.";
           Service = let
-            gcNixDirenv = pkgs.writers.writeNuBin "gcNixDirenv}" ''
+            gcNixDirenv = pkgs.writers.writeNu "gcNixDirenv" ''
               use std log
 
               def nixStoreGetDevshellGcRoots [] {
@@ -242,7 +242,7 @@ in {
             '';
           in {
             Type = "exec";
-            ExecStart = "${gcNixDirenv} --duration 7day";
+            ExecStart = "${gcNixDirenv} --delete-older-than 7day";
           };
         };
         timers.gcNixDirenv = {
