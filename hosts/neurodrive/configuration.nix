@@ -134,7 +134,7 @@
           config.services.matter-server.port
           (lib.strings.toInt config.services.restic.server.listenAddress)
           config.services.tabby.port
-          config.services.esphome.port
+          (lib.strings.toInt config.virtualisation.oci-containers.containers.esphome.environment.PORT)
         ]
         ++ (lib.lists.concatMap (el: [el.port]) config.services.mosquitto.listeners);
       allowedUDPPorts = [
@@ -181,10 +181,6 @@
           pdfa_image_compression = "lossless";
         };
       };
-    };
-    esphome = {
-      enable = true;
-      address = "0.0.0.0";
     };
     ollama = {
       enable = true;
@@ -346,12 +342,30 @@
             registry = "docker.io";
           };
         };
+        esphome = rec {
+          image = "ghcr.io/esphome/esphome";
+          pull = "newer";
+          environment.TZ = config.time.timeZone;
+          volumes = [
+            "esphome:/config"
+          ];
+          privileged = true;
+          extraOptions = [
+            "--network=host"
+            "--stop-timeout=30"
+          ];
+          cmd = ["dashboard" "--port=${environment.PORT}" "/config"];
+          environment = {
+            PORT = "8152";
+          };
+        };
       };
     };
   };
   systemd.services = {
     "${config.virtualisation.oci-containers.containers.homeassistant.serviceName}".after = ["systemd-udevd.service"];
     "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = ["network-online.target"];
+    "${config.virtualisation.oci-containers.containers.esphome.serviceName}".serviceConfig.Restart = "always";
   };
 
   myOptions = {
