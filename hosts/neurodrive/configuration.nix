@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  secrets,
   ...
 }: {
   imports =
@@ -224,7 +225,7 @@
         "--tls-key"
         config.sops.secrets."restic_server/restic.key".path
         "--tls-cert"
-        "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.crt"
+        "${secrets}/secrets/neurodrive/restic_server/restic.crt"
       ];
     };
     smartd = {
@@ -380,7 +381,7 @@
     };
     i2p.home = lib.mkForce "/mnt/cryptostorage/i2p";
   };
-  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
+  stylix.image = "${secrets}/dotfiles/wallpapers/current_wallpaper";
 
   programs = {
     coolercontrol = {
@@ -435,32 +436,32 @@
 
   sops.secrets = {
     cryptostorage = {
-      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/cryptstorage.key";
+      sopsFile = "${secrets}/secrets/neurodrive/cryptstorage.key";
       format = "binary";
     };
     "restic_server/restic.key" = {
       owner = "restic";
       format = "binary";
-      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/restic_server/restic.key";
+      sopsFile = "${secrets}/secrets/neurodrive/restic_server/restic.key";
     };
     "mosquitto/users/root" = {
       uid = config.ids.uids.mosquitto;
       gid = config.ids.gids.mosquitto;
       format = "yaml";
-      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
+      sopsFile = "${secrets}/secrets/neurodrive/mosquitto.yaml";
     };
     "mosquitto/users/client" = {
       uid = config.ids.uids.mosquitto;
       gid = config.ids.gids.mosquitto;
       format = "yaml";
-      sopsFile = "${inputs.our-secrets}/secrets/neurodrive/mosquitto.yaml";
+      sopsFile = "${secrets}/secrets/neurodrive/mosquitto.yaml";
     };
     # Copied from Bitwarden
     # TODO: Cross-sync bitwarden and secret store
     "paperless/admin_password" = {
       owner = "paperless";
       format = "yaml";
-      sopsFile = "${inputs.our-secrets}/secrets/services/paperless.yaml";
+      sopsFile = "${secrets}/secrets/services/paperless.yaml";
     };
   };
 }

@@ -1,20 +1,20 @@
 {
   config,
-  inputs,
+  secrets,
   ...
 }: {
   # TODO: Reread secrets managment with yaml
   sops.secrets."resticPassword" = {
     format = "binary";
-    sopsFile = "${inputs.our-secrets}/secrets/fractor/restic/resticPassword";
+    sopsFile = "${secrets}/secrets/fractor/restic/resticPassword";
   };
   sops.secrets."resticRestOptions" = {
     format = "binary";
-    sopsFile = "${inputs.our-secrets}/secrets/fractor/restic/restTransportPassword";
+    sopsFile = "${secrets}/secrets/fractor/restic/restTransportPassword";
   };
   sops.secrets."resticExcludeFile" = {
     format = "binary";
-    sopsFile = "${inputs.our-secrets}/secrets/fractor/restic/backup.exclude";
+    sopsFile = "${secrets}/secrets/fractor/restic/backup.exclude";
   };
   services.restic.backups."root" = {
     timerConfig = {

@@ -3,6 +3,7 @@
   inputs,
   pkgs,
   lib,
+  secrets,
   ...
 }:
 with lib; let
@@ -27,7 +28,7 @@ in {
 
     myOptions.utilities.enable = lib.mkDefault true;
     security.pki.certificateFiles = [
-      "${inputs.our-secrets}/secrets/root_ca/root_ca.crt"
+      "${secrets}/secrets/root_ca/root_ca.crt"
     ];
 
     services = {

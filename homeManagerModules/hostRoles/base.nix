@@ -4,6 +4,7 @@
   inputs,
   osConfig,
   pkgs,
+  secrets,
   ...
 }: let
   cfg = config.myOptions.hostRoles.base;
@@ -103,7 +104,7 @@ in {
           };
           publicKeys = [
             {
-              source = "${inputs.our-secrets}/public/gpg/yubikey_personal.asc";
+              source = "${secrets}/public/gpg/yubikey_personal.asc";
               trust = "ultimate";
             }
           ];

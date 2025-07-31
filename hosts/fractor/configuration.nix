@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  secrets,
   ...
 }: {
   imports = [
@@ -174,6 +175,6 @@
     ];
   };
 
-  stylix.image = "${inputs.our-secrets}/dotfiles/wallpapers/current_wallpaper";
+  stylix.image = "${secrets}/dotfiles/wallpapers/current_wallpaper";
   system.stateVersion = "23.11";
 }

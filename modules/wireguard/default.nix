@@ -1,8 +1,8 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
+  secrets,
   ...
 }:
 with lib; let
@@ -100,11 +100,11 @@ in {
 
       sops.secrets."wireguard/wg0_private" = {
         format = "binary";
-        sopsFile = "${inputs.our-secrets}/secrets/${config.networking.hostName}/wireguard/wg0.priv";
+        sopsFile = "${secrets}/secrets/${config.networking.hostName}/wireguard/wg0.priv";
       };
       sops.secrets."wireguard/wg1_private" = {
         format = "binary";
-        sopsFile = "${inputs.our-secrets}/secrets/${config.networking.hostName}/wireguard/wg1.priv";
+        sopsFile = "${secrets}/secrets/${config.networking.hostName}/wireguard/wg1.priv";
       };
 
       networking = {

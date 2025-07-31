@@ -600,32 +600,6 @@
         "type": "github"
       }
     },
-    "our-secrets": {
-      "inputs": {
-        "home-manager": [
-          "home-manager"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "sops-nix": [
-          "sops-nix"
-        ]
-      },
-      "locked": {
-        "lastModified": 1753278242,
-        "narHash": "sha256-1kfDnHh4YAnDDDyFQgiP8h+umngtUtCezlY3dP+qYi8=",
-        "ref": "refs/heads/main",
-        "rev": "9ddc22075a4e509aaac26de055503d57f5026135",
-        "revCount": 38,
-        "type": "git",
-        "url": "ssh://git@github.com/RedEtherbloom/nix0s-secrets"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/RedEtherbloom/nix0s-secrets"
-      }
-    },
     "plasma-manager": {
       "inputs": {
         "home-manager": [
@@ -715,9 +689,9 @@
         "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable",
         "nvf": "nvf",
-        "our-secrets": "our-secrets",
         "plasma-manager": "plasma-manager",
         "rimsort-pr": "rimsort-pr",
+        "secrets": "secrets",
         "sergv-nixos-config": "sergv-nixos-config",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
@@ -739,6 +713,22 @@
         "ref": "nightly",
         "repo": "rust-analyzer",
         "type": "github"
+      }
+    },
+    "secrets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1753278242,
+        "narHash": "sha256-1kfDnHh4YAnDDDyFQgiP8h+umngtUtCezlY3dP+qYi8=",
+        "ref": "refs/heads/main",
+        "rev": "9ddc22075a4e509aaac26de055503d57f5026135",
+        "revCount": 38,
+        "type": "git",
+        "url": "ssh://git@github.com/RedEtherbloom/nix0s-secrets"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/RedEtherbloom/nix0s-secrets"
       }
     },
     "sergv-nixos-config": {

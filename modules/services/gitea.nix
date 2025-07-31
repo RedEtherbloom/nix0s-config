@@ -1,8 +1,8 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
+  secrets,
   ...
 }:
 with lib; let
@@ -11,7 +11,7 @@ with lib; let
   # DEFAULT Port, reexported
   GITEA_PORT = 3000;
   GITEA_DOMAIN = config.networking.ownWireguard.hosts.neurodrive.mainIP;
-  GITEA_SECRET_DIRECTORY = "${inputs.our-secrets}/secrets/services/gitea";
+  GITEA_SECRET_DIRECTORY = "${secrets}/secrets/services/gitea";
   GITEA_SECRET_FILE = "${GITEA_SECRET_DIRECTORY}/gitea.yaml";
 in {
   options.myOptions.services.gitea = {
@@ -43,7 +43,7 @@ in {
           PROTOCOL = "https";
           DOMAIN = GITEA_DOMAIN;
           HTTP_PORT = GITEA_PORT;
-          CERT_FILE = builtins.toString "${inputs.our-secrets}/secrets/services/gitea/gitea.crt";
+          CERT_FILE = builtins.toString "${secrets}/secrets/services/gitea/gitea.crt";
           KEY_FILE = config.sops.secrets."gitea/gitea.key".path;
         };
         repository = {

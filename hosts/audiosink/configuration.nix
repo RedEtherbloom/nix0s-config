@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  secrets,
   ...
 }: let
   networkSinkPort = 4713;
@@ -47,7 +48,7 @@ in {
   ];
 
   sops.secrets."wifi.env" = {
-    sopsFile = "${inputs.our-secrets}/secrets/common/wifi.yaml";
+    sopsFile = "${secrets}/secrets/common/wifi.yaml";
     # Whole file
     key = "wifiHome";
   };

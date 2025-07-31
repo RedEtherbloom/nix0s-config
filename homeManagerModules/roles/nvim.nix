@@ -5,6 +5,7 @@
   inputs,
   lib,
   pkgs,
+  secrets,
   ...
 }: let
   cfg = config.myOptions.roles.nvf;
@@ -24,7 +25,7 @@ in {
   config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       sops.secrets."ai_keys/anthropic" = {
-        sopsFile = "${inputs.our-secrets}/secrets/services/ai_keys.yaml";
+        sopsFile = "${secrets}/secrets/services/ai_keys.yaml";
         key = "anthropic";
       };
       programs = {

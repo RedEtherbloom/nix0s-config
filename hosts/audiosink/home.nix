@@ -2,6 +2,7 @@
   config,
   inputs,
   pkgs,
+  secrets,
   ...
 }: {
   imports = [
@@ -13,7 +14,7 @@
 
   xdg.configFile."pulse/cookie" = {
     enable = true;
-    source = "${inputs.our-secrets}/secrets/common/pulse_cookie";
+    source = "${secrets}/secrets/common/pulse_cookie";
   };
 
   services = {

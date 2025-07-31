@@ -5,6 +5,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    secrets = {
+      url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
+      flake = false;
+    };
 
     lix = {
       url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
@@ -93,15 +97,6 @@
       flake = false;
     };
     rimsort-pr.url = "github:NixOS/nixpkgs?ref=pull/304943/head";
-    # TODO: Replace inputs.our-secrets with just our-secrets via import in flake.nix
-    our-secrets = {
-      url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-        sops-nix.follows = "sops-nix";
-      };
-    };
     catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -119,6 +114,7 @@
     self,
     nixpkgs,
     flake-utils,
+    secrets,
     ...
   } @ inputs: let
     nixpkgsConfig = {
@@ -166,7 +162,7 @@
       nixosConfigurations = let
         defaultUsername = "inf";
         mkSystem = hostName: system: username: let
-          specialArgs = {inherit inputs self system;};
+          specialArgs = {inherit inputs self system secrets;};
         in
           import "${getPatchedNixpkgs system}/nixos/lib/eval-config.nix" {
             inherit specialArgs;

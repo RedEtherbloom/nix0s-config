@@ -1,8 +1,8 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
+  secrets,
   ...
 }:
 with lib; let
@@ -30,7 +30,7 @@ in {
     (mkIf cfg.enabled {
       sops.secrets."sudoers/optional" = {
         format = "binary";
-        sopsFile = "${inputs.our-secrets}/secrets/common/sudoers";
+        sopsFile = "${secrets}/secrets/common/sudoers";
       };
       security.sudo = {
         enable = true;
