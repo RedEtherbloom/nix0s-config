@@ -321,6 +321,9 @@
             "--network=host"
             "--stop-timeout=30"
           ];
+          capabilities = {
+            CAP_NET_RAW = true;
+          };
         };
         comfyui = {
           volumes = ["comfyui:/root"];
