@@ -53,7 +53,8 @@ in {
 
     services = {
       tailscale.enable = true;
-      udev.packages = [pkgs.platformio-core];
+      # Broken as of 01.08.2025
+      # udev.packages = [pkgs.platformio-core];
       mullvad-vpn = {
         enable = true;
         # GUI

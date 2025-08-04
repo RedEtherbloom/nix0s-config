@@ -152,12 +152,10 @@ in {
           git-filter-repo
         ]
         ++ lib.optionals cfg.mcu [
-          esphome
+          # Broken as of 01.08.2025
+          # esphome
+          # platformio
           esptool
-          platformio
-          arduino-ide
-          arduino-cli
-          arduinoOTA
         ]
         ++ lib.optionals cfg.cursor [
           code-cursor
