@@ -183,6 +183,7 @@ in {
                   mode = "topline";
                 };
               };
+              textobjects.enable = true;
             };
             # LSP
             debugger.nvim-dap = {
@@ -255,6 +256,7 @@ in {
               };
               markdown.enable = true;
               java.enable = true;
+              # TODO: Lookup good supporting plugins
               typst.enable = true;
             };
             utility = {
