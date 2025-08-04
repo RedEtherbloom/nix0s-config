@@ -23,7 +23,7 @@ in {
   config = mkIf cfg.enable {
     # Supposedly required by nixd
     # TODO: Do we need a path of our overlayed nixpkgs?
-    nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
+    nix.nixPath = ["nixpkgs=${pkgs.path}"];
 
     myOptions.utilities.enable = lib.mkDefault true;
     security.pki.certificateFiles = [
