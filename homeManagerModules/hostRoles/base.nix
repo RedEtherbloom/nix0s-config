@@ -124,7 +124,6 @@ in {
           pinentry.package = lib.mkDefault pkgs.pinentry-curses;
           verbose = true;
           extraConfig = ''
-            ttyname $GPG_TTY
             allow-loopback-pinentry
           '';
         };
