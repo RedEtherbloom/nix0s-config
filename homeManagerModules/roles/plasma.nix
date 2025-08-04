@@ -4,7 +4,6 @@
   lib,
   osConfig,
   pkgs,
-  system,
   ...
 }: let
   cfg = config.myOptions.plasma-manager;
@@ -114,7 +113,7 @@ in {
               "ExposeClass" = "Ctrl+F7";
               "ExposeClassCurrentDesktop" = "Ctrl+F8,none,Toggle Present Windows (Window class on current desktop)";
               "Grid View" = "Meta+G";
-              "Kill Window" = ["Meta+Ctrl+Esc" "Meta+Shift+X,Meta+Ctrl+Esc,Kill Window"];
+              "Kill Window" = "Meta+Shift+X";
               "MinimizeAll" = "Meta+Shift+PgDown,none,MinimizeAll";
               # TODO: Revisit when using tablet
               "Move Tablet to Next Output" = [];
@@ -209,7 +208,7 @@ in {
               "view_zoom_in" = ["Meta++" "Meta+=,Meta++" "Meta+=,Zoom In"];
               "view_zoom_out" = "Meta+-";
               # TODO: Lookup format after stylix issue got resolved
-              "Window Close" = ["Meta+X" "Meta+Shift+Q" "Alt+F4,Close Window"];
+              "Window Close" = ["Meta+Shift+Q" "Alt+F4"];
               "Window Fullscreen" = "Ctrl+F11,,Make Window Fullscreen";
               # Very useful
               "ToggleCurrentThumbnail" = "Meta+Ctrl+T";
@@ -526,6 +525,14 @@ in {
           pkgs.plasma-rc2nix
         ]
         ++ lib.optionals cfg.krohnkite [krohnkite];
+      dbus.packages = [
+        # See https://wiki.archlinux.org/title/KDE_Wallet#Automatic_D-Bus_activation
+        (pkgs.writeText "org.freedesktop.secrets.service" ''
+          [D-BUS Service]
+          Name=org.freedesktop.secrets
+          Exec=${pkgs.kdePackages.kwallet}/bin/kwalletd6
+        '')
+      ];
     }
     (lib.mkIf osConfig.security.ownAdditional.yubikey
       (let
