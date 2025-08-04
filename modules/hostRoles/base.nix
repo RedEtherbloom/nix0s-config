@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  pkgs,
   lib,
   ...
 }:
@@ -9,6 +10,8 @@ with lib; let
 in {
   imports = [
     inputs.nix-index-database.nixosModules.nix-index
+    # TODO: Move into it's module named e.g. styling
+    inputs.catppuccin.nixosModules.catppuccin
   ];
 
   options.myOptions.hostRoles.base.enable = mkOption {
@@ -39,6 +42,12 @@ in {
         enable = lib.mkDefault true;
         defaultEditor = lib.mkDefault true;
       };
+    };
+
+    catppuccin = {
+      enable = lib.mkDefault true;
+      flavor = lib.mkDefault "frappe";
+      cache.enable = lib.mkDefault true;
     };
   };
 }
