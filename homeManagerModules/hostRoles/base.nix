@@ -127,6 +127,8 @@ in {
             allow-loopback-pinentry
           '';
         };
+
+        systemd.user.services.gpg-agent.Service.ExecStart = lib.mkForce "${config.programs.gpg.package}/bin/gpg-agent --supervised --verbose --verbose --verbose";
       })
     ]
   );
