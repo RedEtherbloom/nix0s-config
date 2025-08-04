@@ -17,9 +17,6 @@ in {
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       gcs
-      byar-launcher
-      rimsort
-      starsector
       (olympus.override {celesteWrapper = pkgs.steam-run;})
 
       dxvk_2

@@ -63,6 +63,9 @@ in {
           kdePackages.qtstyleplugin-kvantum
 
           vopono-torrent-desktop
+          byar-launcher
+          rimsort
+          starsector-gl-fix
         ];
       };
 
