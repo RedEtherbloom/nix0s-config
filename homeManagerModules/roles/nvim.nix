@@ -1,4 +1,5 @@
 # TODO: Move to programs
+# TODO: Editlist gets filled with trash by some plugin
 {
   config,
   inputs,
@@ -27,6 +28,7 @@ in {
         key = "anthropic";
       };
       programs = {
+        # TODO: System clipboard
         neovide = {
           enable = true;
           settings = {
@@ -95,6 +97,7 @@ in {
 
             # TODO: Lookup gestures
 
+            # Does not work
             # TODO: Look over other mini utilities(https://notashelf.github.io/nvf/options.html#opt-vim.mini.align.enable)
             mini.surround.enable = true;
 
@@ -334,6 +337,7 @@ in {
                 img-clip.enable = true;
               };
               # What does this do again?
+              # Broken at the moment
               surround.enable = true;
               # Needed for nvim-coach
               snacks-nvim.enable = true;

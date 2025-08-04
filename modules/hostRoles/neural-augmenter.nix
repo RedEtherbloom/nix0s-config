@@ -60,10 +60,6 @@ in {
         # GUI
         package = pkgs.mullvad-vpn;
       };
-      openssh.settings = {
-        StreamLocalBindUnlink = true;
-        AllowAgentForwarding = true;
-      };
       colord.enable = true;
       samba.enable = true;
       xserver.wacom.enable = true;
@@ -71,7 +67,7 @@ in {
       hardware.bolt.enable = true;
     };
 
-    # Autoration
+    # Autorotation
     hardware.sensor.iio.enable = true;
     environment.systemPackages = [pkgs.lm_sensors];
 

@@ -39,19 +39,6 @@
     cudnnSupport = true;
     cudaCapabilities = ["7.5"];
   };
-  nixpkgs.overlays = [
-    (_: prev: {
-      # Eve: Account for bug: https://fractalsoftworks.com/forum/index.php?topic=30633.0
-      starsector = prev.starsector.overrideAttrs (oldAttrs: {
-        buildInputs = oldAttrs.buildInputs ++ [pkgs.makeWrapper];
-        postInstall =
-          (oldAttrs.postInstall or "")
-          + ''
-            wrapProgram "$out/bin/starsector" --set __GL_THREADED_OPTIMIZATIONS 0
-          '';
-      });
-    })
-  ];
 
   boot = {
     binfmt.emulatedSystems = ["aarch64-linux"];

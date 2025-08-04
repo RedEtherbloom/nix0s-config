@@ -40,8 +40,8 @@ in {
       }
       (lib.mkIf cfg.theming {
         catppuccin = {
-          enable = true;
-          flavor = "frappe";
+          enable = lib.mkDefault osConfig.catppuccin.enable;
+          flavor = lib.mkDefault osConfig.catppuccin.flavor;
         };
       })
       (lib.mkIf osConfig.security.ownAdditional.yubikey {

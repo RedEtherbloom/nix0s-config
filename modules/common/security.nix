@@ -76,6 +76,7 @@ in {
       services = {
         udev.packages = [pkgs.yubikey-personalization];
         pcscd.enable = true;
+        openssh.settings.StreamLocalBindUnlink = true;
       };
 
       security = {

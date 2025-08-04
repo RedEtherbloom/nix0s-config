@@ -3,9 +3,13 @@
     config.allowUnfree = true;
     inherit (prev) system;
   };
+  nixpkgs-stable = import inputs.nixpkgs-stable {
+    inherit (prev) system;
+    config.allowUnfree = prev.config.allowUnfree;
+  };
 in {
   logger = final.callPackage ./scripts/python/fritz-logger/default.nix {};
-  # TODO: Can probably better be done with e.g.patches
+  nix-tree = inputs.nix-tree.packages.${prev.system}.default;
   nix-search-tv = inputs.nix-search-tv.packages.${prev.system}.default;
 
   thunderbird-external-editor-revived = prev.rustPlatform.buildRustPackage (finalAttrs: {
@@ -18,7 +22,6 @@ in {
       hash = "sha256-K5agRpFJ8iqvPnx3IIMTvrkObT/GB962EtdvWf7Eq4w=";
     };
     cargoHash = "sha256-QYSsdEBNwjpR7lppyOcsc0F8ombBY+dlFRY1GO/D8so=";
-
     meta = {
       description = "Native messaging host for the MailExtension Vim addon for Thunderbird.";
       homepage = "https://github.com/Frederick888/external-editor-revived";
@@ -35,18 +38,12 @@ in {
   });
 
   byar-launcher = final.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
+  nixpkgs-stable = nixpkgs-stable;
   inherit (rimsort-pr) rimsort;
+  # TODO: Figure out how to override name of script for shellApplication
+  plasma-rc2nix = inputs.plasma-manager.packages.${prev.system}.rc2nix.overrideAttrs {name = "plasma-rc2nix";};
 
-  python3 = let
-    # Bug that has to be reported. Was blocking libretranslate build when CUDA enabled
-    # Similar to https://github.com/NixOS/nixpkgs/pull/371640
-    patchedCtranslate = prev.ctranslate2.override {stdenv = prev.cudaPackages.backendStdenv;};
-  in
-    prev.python3.override {
-      packageOverrides = _: pythonPrev: {
-        argostranslate = pythonPrev.argostranslate.override {ctranslate2-cpp = patchedCtranslate;};
-      };
-    };
+  # python3 = let in prev.python3.override { packageOverrides = _: pythonPrev: { }; };
 
   koboldcpp = prev.koboldcpp.overrideAttrs (_: pythonPrev: {
     pythonInputs = pythonPrev.pythonInputs ++ (builtins.attrValues {inherit (prev.python3Packages) psutil;});
@@ -101,8 +98,6 @@ in {
       };
     };
 
-  nix-tree = inputs.nix-tree.packages.${prev.system}.default;
-
   # Fixes https://github.com/NixOS/nixpkgs/issues/418453
   waydroid = prev.waydroid.override {python3Packages = prev.python312Packages;};
 
@@ -139,4 +134,16 @@ in {
     # Address missing PIn caching https://dev.gnupg.org/T7041
     patches = (prevAttrs.patches or []) ++ [./0001-allow-shared-pin-cache.patch];
   });
+
+  # Eve: Account for bug: https://fractalsoftworks.com/forum/index.php?topic=30633.0
+  starsector-gl-fix = prev.starsector.overrideAttrs (oldAttrs: {
+    buildInputs = oldAttrs.buildInputs ++ [prev.makeWrapper];
+    postInstall =
+      (oldAttrs.postInstall or "")
+      + ''
+        wrapProgram "$out/bin/starsector" --set __GL_THREADED_OPTIMIZATIONS 0
+      '';
+  });
+  # Force installation from nixpkgs to avoid rebuilding mlt and krita due to cuda
+  krita-upstream = inputs.nixpkgs.legacyPackages.${prev.system}.krita;
 }

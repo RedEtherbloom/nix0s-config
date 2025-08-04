@@ -9,9 +9,6 @@ with lib; let
   cfg = config.myOptions.common;
 in {
   imports = [
-    # Defined here due to cross-compile issues for audiosink
-    inputs.lix-module.nixosModules.default
-
     ./audio.nix
     ./localisation.nix
     ./security.nix

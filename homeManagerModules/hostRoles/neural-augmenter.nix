@@ -67,8 +67,7 @@ in {
           bitwarden
           bitwarden-cli
 
-          # Force installation from nixpkgs to avoid rebuilding mlt and krita due to cuda
-          inputs.nixpkgs.legacyPackages.${system}.krita
+          krita-upstream
 
           # KDE info packages
           clinfo
@@ -98,12 +97,6 @@ in {
 
           # Speedreading
           speedread
-          hottext
-
-          # nvf music-controls.nvim
-          playerctl
-
-          gtypist
 
           scrcpy
           dumbpipe
@@ -120,7 +113,7 @@ in {
           distrobox
 
           # Music production
-          inputs.nixpkgs-stable.legacyPackages.${system}.sonic-pi
+          nixpkgs-stable.sonic-pi
           # FLStudio esque software
           reaper
           reaper-sws-extension
@@ -152,8 +145,11 @@ in {
       ];
     };
 
-    # TODO: Setup options
-    services.syncthing.enable = true;
+    services = {
+      # TODO: Setup options
+      syncthing.enable = true;
+      playerctld.enable = true;
+    };
     programs = {
       chromium = {
         enable = lib.mkDefault true;

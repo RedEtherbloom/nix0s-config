@@ -523,9 +523,7 @@ in {
         [
           kate
           kalk
-        ]
-        ++ [
-          (pkgs.callPackage inputs.plasma-manager.packages.${system}.rc2nix.overrideAttrs {name = "plasma-rc2nix";})
+          pkgs.plasma-rc2nix
         ]
         ++ lib.optionals cfg.krohnkite [krohnkite];
     }

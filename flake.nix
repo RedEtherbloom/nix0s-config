@@ -118,11 +118,7 @@
   outputs = {
     self,
     nixpkgs,
-    home-manager,
-    sops-nix,
     flake-utils,
-    nix-comfyui,
-    nix-vscode-extensions,
     ...
   } @ inputs: let
     nixpkgsConfig = {
@@ -131,8 +127,8 @@
           inherit inputs;
           inherit (nixpkgs) lib;
         })
-        nix-vscode-extensions.overlays.default
-        nix-comfyui.overlays.default
+        inputs.nix-vscode-extensions.overlays.default
+        inputs.nix-comfyui.overlays.default
       ];
       config.allowUnfree = true;
     };
@@ -177,8 +173,9 @@
             inherit system;
 
             modules = [
-              home-manager.nixosModules.home-manager
-              sops-nix.nixosModules.sops
+              inputs.lix-module.nixosModules.default
+              inputs.home-manager.nixosModules.home-manager
+              inputs.sops-nix.nixosModules.sops
               # TODO: Figure out how to merge with pkgs in flake-utils set
               {nixpkgs = {inherit (nixpkgsConfig) overlays config;};}
 
