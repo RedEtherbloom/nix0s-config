@@ -115,6 +115,7 @@
           4713
           # Home Assistant
           8123
+          9757 # WiVrn
           # SteamVR
           27062
           config.services.paperless.port
@@ -128,6 +129,7 @@
         # SteamVR
         9944
         27062
+        9757 # WiVrn
       ];
     };
     ownWireguard = {
@@ -180,7 +182,7 @@
       # May need to set CORS in ollama variables for VPN to work
       hostname = "${config.networking.ownWireguard.hosts.neurodrive.mainIP}";
       # Reasonably close to ollama
-      port = 8150;
+      port = 8154;
       # May have to set ollamURL to a VPN url
     };
     mosquitto = {
@@ -237,11 +239,6 @@
       SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="zigbee-ap"
       ACTION=="add", SUBSYSTEM=="tty", ENV{DEVLINKS}=="*/dev/zigbee-ap*", RUN+="${config.systemd.package}/bin/systemctl restart podman-homeassistant.service"
     '';
-    # ALVR alternative while nvenc is broken
-    wivrn = {
-      enable = true;
-      openFirewall = true;
-    };
     tabby = {
       enable = true;
       acceleration = "cuda";

@@ -63,6 +63,10 @@ in {
           kdePackages.qtstyleplugin-kvantum
 
           vopono-torrent-desktop
+
+          # ALVR alternative while nvenc is broken
+          wivrn
+
           byar-launcher
           rimsort
           starsector-gl-fix
