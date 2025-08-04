@@ -106,6 +106,13 @@
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-search-tv = {
+      url = "github:3timeslazy/nix-search-tv";
+      inputs =  {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs = {

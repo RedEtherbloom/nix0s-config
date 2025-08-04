@@ -429,6 +429,29 @@
         "type": "github"
       }
     },
+    "nix-search-tv": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1752335731,
+        "narHash": "sha256-BajEmu5s3N9y0O+qaN3LUsjUA34KuYOtQ9lsOiMgk3Q=",
+        "owner": "3timeslazy",
+        "repo": "nix-search-tv",
+        "rev": "e5c399142e78ae3328fb12ff6796b5b9868ba9fb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "3timeslazy",
+        "repo": "nix-search-tv",
+        "type": "github"
+      }
+    },
     "nix-tree": {
       "inputs": {
         "flake-compat": [
@@ -685,6 +708,7 @@
         "lix-module": "lix-module",
         "nix-comfyui": "nix-comfyui",
         "nix-index-database": "nix-index-database",
+        "nix-search-tv": "nix-search-tv",
         "nix-tree": "nix-tree",
         "nix-vscode-extensions": "nix-vscode-extensions",
         "nixos-hardware": "nixos-hardware",

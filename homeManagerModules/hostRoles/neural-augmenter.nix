@@ -131,6 +131,9 @@ in {
           vopono
           mullvad-torrent
           vopono-torrent
+
+          # TODO: Evaluate. If useful move to dev tools.
+          nix-search-tv
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
           yubioath-flutter
@@ -178,6 +181,13 @@ in {
         entries = [
           "${pkgs.obsidian}/share/applications/obsidian.desktop"
         ];
+      };
+      configFile."nix-search-tv/config.json".source = pkgs.writers.writeJSON "nstw-config.json" {
+        "update_interval" = "48h0m0s";
+        experimental."render_docs_indexes" = {
+          "nvf" = "https://notashelf.github.io/nvf/options.html";
+          "plasma_manager" = "https://nix-community.github.io/plasma-manager/options.xhtml";
+        };
       };
     };
 

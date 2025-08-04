@@ -6,6 +6,7 @@
 in {
   logger = final.callPackage ./scripts/python/fritz-logger/default.nix {};
   # TODO: Can probably better be done with e.g.patches
+  nix-search-tv = inputs.nix-search-tv.packages.${prev.system}.default;
 
   thunderbird-external-editor-revived = prev.rustPlatform.buildRustPackage (finalAttrs: {
     pname = "thunderbird-external-editor-revived";
