@@ -168,7 +168,7 @@ in {
               # Shift+2
               "Window to Desktop 2" = "Meta+@";
               # Shift+3
-              "Window to Desktop 3" = "Meta+#";
+              "Window to Desktop 3" = "Meta+\#";
               # Shift+4
               "Window to Desktop 4" = "Meta+$";
               # Shift+5
@@ -332,7 +332,7 @@ in {
               "KrohnkiteNextLayout" = "Meta+:";
               "KrohnkitePreviousLayout" = "Meta+;";
               "KrohnkiteQuarterLayout" = [];
-              "KrohnkiteRotate" = "Meta+#";
+              "KrohnkiteRotate" = "Meta+~";
               "KrohnkiteRotatePart" = "Meta+'";
               "KrohnkiteSetMaster" = "Meta+Return";
               "KrohnkiteShiftDown" = "Meta+Shift+J";
