@@ -27,7 +27,7 @@
 
       HOST="127.0.0.1" TZ="${osConfig.time.timeZone}" LANG="en_US" flaresolverr &
       jackett &
-      Prowlarr &
+      Prowlarr -nobrowser &
       qbittorrent
     '';
   };
