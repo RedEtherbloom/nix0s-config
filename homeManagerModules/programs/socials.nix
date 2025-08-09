@@ -3,29 +3,45 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.socials;
 in {
   options.myOptions.socials = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable socials";
-      type = with types; bool;
+      type = lib.types.bool;
       default = false;
+    };
+    autostart = lib.mkOption {
+      description = "Enable autostart for socials";
+      type = lib.types.bool;
+      default = true;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
-      vesktop
       element-desktop
-      nheko
       fluffychat
       telegram-desktop
-      threema-desktop
       signal-desktop-bin
+      threema-desktop
 
       mumble
     ];
+    programs = {
+      nheko.enable = true;
+      vesktop.enable = true;
+    };
+    xdg.autostart = lib.mkIf cfg.autostart {
+      enable = true;
+      entries = [
+        "${config.programs.nheko.package}/share/applications/nheko.desktop"
+        "${config.programs.vesktop.package}/share/applications/vesktop.desktop"
+        "${pkgs.telegram-desktop}/share/applications/org.telegram.desktop.desktop"
+        "${pkgs.signal-desktop-bin}/share/applications/signal.desktop"
+        "${pkgs.threema-desktop}/share/applications/threema-desktop.desktop"
+      ];
+    };
   };
 }
