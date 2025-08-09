@@ -1,3 +1,4 @@
+# TODO: Split into NixOS and Home-Manager wireplumber configuration
 {
   services.pulseaudio = {
     enable = false;
@@ -82,6 +83,22 @@
                   "bluetooth.autoswitch-to-headset-profile" = "false";
                   # Share volume with headset
                   "bluez5.enable-hw-volume" = true;
+                };
+              };
+            }
+          ];
+        };
+        "bluez-longer-pause" = {
+          # TODO: May need to be set on monitor.alsa.<etc> instead
+          "monitor.bluez.rules" = [
+            {
+              matches = [
+                {"node.name" = "~bluez_output.*";}
+                {"node.name" = "~bluez_input.*";}
+              ];
+              actions = {
+                update-props = {
+                  "session.suspend-timeout-seconds" = 5 * 60;
                 };
               };
             }
