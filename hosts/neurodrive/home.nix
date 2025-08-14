@@ -70,32 +70,6 @@ in {
           byar-launcher
           rimsort
           starsector-gl-fix
-          (prismlauncher.override {
-            additionalLibs = with pkgs; [
-              nss
-              nspr
-              libgbm
-              glib
-              at-spi2-atk
-              cups
-              libdrm
-              xorg.libXcomposite
-              xorg.libXdamage
-              xorg.libXfixes
-              xorg.libX11
-              xorg.libXext
-              xorg.libXrandr
-              xorg.libxcb
-              expat
-              libxkbcommon
-              dbus
-              pango
-              cairo
-              stdenv.cc.cc.lib
-            ];
-            # Optional
-            additionalPrograms = [pkgs.ffmpeg];
-          })
         ];
       };
 
