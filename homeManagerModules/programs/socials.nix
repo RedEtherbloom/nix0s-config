@@ -40,7 +40,6 @@ in {
         "${config.programs.vesktop.package}/share/applications/vesktop.desktop"
         "${pkgs.telegram-desktop}/share/applications/org.telegram.desktop.desktop"
         "${pkgs.signal-desktop-bin}/share/applications/signal.desktop"
-        "${pkgs.threema-desktop}/share/applications/threema-desktop.desktop"
       ];
     };
   };
