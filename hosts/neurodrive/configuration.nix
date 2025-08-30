@@ -154,10 +154,11 @@
       nssmdns6 = true;
       openFirewall = true;
     };
-    paperless = {
+    paperless = rec {
       enable = true;
       consumptionDirIsPublic = true;
       address = "0.0.0.0";
+      domain = address;
       port = 8150;
       passwordFile = config.sops.secrets."paperless/admin_password".path;
       settings = {

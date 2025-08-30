@@ -75,7 +75,8 @@ in {
     (lib.mkIf cfg.thunderbird {
       programs.thunderbird = {
         enable = true;
-        nativeMessagingHosts = [ pkgs.thunderbird-external-editor-revived ];
+        package = pkgs.thunderbird-bin;
+        nativeMessagingHosts = [pkgs.thunderbird-external-editor-revived];
         profiles.personal = {
           isDefault = true;
           withExternalGnupg = true;

@@ -32,6 +32,7 @@ in {
   config = mkIf cfg.enable rec {
     programs.firefox = {
       enable = true;
+      package = pkgs.firefox-bin;
       languagePacks = [
         "en-US"
         "de"
