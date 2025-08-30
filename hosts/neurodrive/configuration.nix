@@ -74,22 +74,24 @@
   environment.etc."crypttab" = {
     mode = "0600";
     text = ''
-      cryptostorage UUID=b61e25b7-2cc5-49b9-b406-3b9a26806a23 ${config.sops.secrets.cryptostorage.path}
+      cryptostorage1 UUID=580fff0d-1c11-442b-9601-839ed7f712d0 ${config.sops.secrets.cryptostorage.path}
+      cryptostorage2 UUID=33c2f6e5-41a4-46fc-86c5-c3b2d46646fe ${config.sops.secrets.cryptostorage.path}
+      restic_storage1 UUID=b43181b9-5377-4e2b-a66e-5714ca9b0beb ${config.sops.secrets.cryptostorage.path}
     '';
   };
   fileSystems = {
-    "/mnt/restic_data" = {
-      device = "/dev/disk/by-uuid/2645230e-f8d1-4b00-ad11-c9ec192448cf";
-      fsType = "ext4";
-      options = ["nofail"];
-    };
     "/mnt/windows_data" = {
       device = "/dev/disk/by-uuid/587488F374FD109E";
       fsType = "ntfs3";
       options = ["nofail"];
     };
+    "/mnt/restic_data" = {
+      device = "/dev/mapper/restic_storage--4096bsize-restic_storage";
+      fsType = "ext4";
+      options = ["nofail"];
+    };
     "/mnt/cryptostorage" = {
-      device = "/dev/mapper/vg--cryptostorage-lv--cryptostorage";
+      device = "/dev/mapper/cryptostorage--512bsize-cryptostorage";
       fsType = "ext4";
       options = ["nofail"];
     };
