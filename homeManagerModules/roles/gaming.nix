@@ -49,5 +49,6 @@ in {
         additionalPrograms = [pkgs.ffmpeg];
       })
     ];
+    programs.mangohud.enable = true;
   };
 }

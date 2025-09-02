@@ -25,7 +25,10 @@ in {
         pdfUtils = true;
         diskUtilities = true;
       };
-      roles.i2p.enable = true;
+      roles = {
+        i2p.enable = true;
+        vtubing.enable = true;
+      };
     };
     security.ownAdditional.yubikey = true;
 
@@ -68,8 +71,12 @@ in {
       hardware.bolt.enable = true;
     };
 
-    # Autorotation
-    hardware.sensor.iio.enable = true;
+    hardware = {
+      # Autorotation
+      sensor.iio.enable = true;
+      # May improve krita comfort
+      opentabletdriver.enable = true;
+    };
     environment.systemPackages = [pkgs.lm_sensors];
 
     # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
