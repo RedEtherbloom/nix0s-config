@@ -38,7 +38,7 @@ in {
         "de"
       ];
       profiles = {
-        "personal" = {
+        personal = {
           id = 0;
           isDefault = true;
           extraConfig = lib.strings.concatLines [
@@ -393,6 +393,10 @@ in {
             // commonConfig;
           #TODO: Try out i2p for private browsing extension
           extensions.force = true;
+        };
+        work = {
+          id = 2;
+          inherit (personal) extraConfig search settings;
         };
       };
     };

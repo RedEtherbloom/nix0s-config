@@ -357,7 +357,10 @@ in {
             comment = "Open the System Settings on the shortcut dialog";
           };
         };
-        configFile =
+        configFile = let
+          uuid_work = "2e8abc71-743b-4183-9852-6d5e4f4d250a";
+          uuid_default = "324fdc50-b863-4b55-9812-26dc670241d1";
+        in
           lib.attrsets.recursiveUpdate {
             baloofilerc."General" = {
               "dbVersion" = 2;
@@ -493,6 +496,23 @@ in {
             };
             ksmserverrc."General"."loginMode" = "emptySession";
             # ? "ksmserverrc"."General"."excludeApps" = "firefox,kitty";
+            kactivitymanagerdrc = {
+              activities = {
+                "${uuid_default}" = "Default";
+                "${uuid_work}" = "Work";
+              };
+              activities-icons."${uuid_work}" = "user";
+            };
+            kwinrulesrc."24125de1-42d4-453b-aa2c-5b9bc671ad61" = {
+              "Description" = "Application settings for obsidian";
+              "activity" = "${uuid_work}";
+              "activityrule" = 3;
+              "shortcut" = "Meta+N";
+              "shortcutrule" = 2;
+              "wmclass" = "electron obsidian";
+              "wmclasscomplete" = true;
+              "wmclassmatch" = 1;
+            };
           } (lib.optionals cfg.krohnkite {
             kwinrc."Script-krohnkite" = {
               "debug" = false;
