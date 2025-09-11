@@ -222,6 +222,9 @@ in {
                 crates.enable = true;
                 lsp.opts = ''
                   ['rust-analyzer'] = {
+                      cargo = {
+                        allFeature = true
+                      },
                       checkOnSave = true,
                       procMacro = {
                         enable = true,
