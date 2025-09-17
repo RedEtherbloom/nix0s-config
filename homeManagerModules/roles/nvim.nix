@@ -48,7 +48,7 @@ in {
           enableManpages = true;
           settings.vim = rec {
             debugMode = {
-              enable = true;
+              enable = false;
               # Afaik by default under "$HOME/.cache/nvim"
               logFile = "${config.xdg.stateHome}/nvim/nvim_log_from_nvf.log";
             };
