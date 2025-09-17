@@ -22,16 +22,18 @@ in {
       roles.ssdp.enable = lib.mkDefault true;
       hostRoles.base.enable = lib.mkDefault true;
     };
-
     programs.appimage = {
       binfmt = true;
       package = appimage-run;
     };
-
     environment.systemPackages = with pkgs; [
       appimage-run
+      piper-tts
     ];
-
+    services.speechd = {
+      enable = true;
+      package = pkgs.speechd-patched;
+    };
     fonts = {
       fontDir.enable = true;
       packages = with pkgs; [
@@ -41,10 +43,8 @@ in {
         noto-fonts-emoji
       ];
       fontconfig = {
-        hinting = {
-          # The default of slight always felt to fuzzy
-          style = "medium";
-        };
+        # The default of slight always felt to fuzzy
+        hinting.style = "medium";
         defaultFonts = {
           serif = ["OpenDyslexic Nerd Font"];
           sansSerif = ["OpenDyslexic Nerd Font"];

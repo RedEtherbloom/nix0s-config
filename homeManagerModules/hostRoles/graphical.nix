@@ -39,7 +39,11 @@ in {
         libnotify
 
         vlc
+        # TODO: Recreate old shortcuts and configure via options instead
         feh
+
+        # Piper-tts voice management
+        pied
       ];
       sessionVariables = {
         # Native Wayland for Chromium apps

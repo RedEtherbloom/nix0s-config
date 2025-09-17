@@ -146,4 +146,14 @@ in {
   });
   # Force installation from nixpkgs to avoid rebuilding mlt and krita due to cuda
   krita-upstream = inputs.nixpkgs.legacyPackages.${prev.system}.krita;
+
+  speechd-patched = prev.speechd.overrideAttrs (_: prevAttrs: {
+    version = prevAttrs.version + "-sh-patch";
+    src = prev.fetchFromGitHub {
+      owner = "brailcom";
+      repo = "speechd";
+      rev = "909ac9bd7f310a9917262c889318e009cdda4286";
+      hash = "sha256-ZZhOG3+g8sj/BUsVoAc+v72BN/SZ9mKkYE4O8NSGwuM=";
+    };
+  });
 }
