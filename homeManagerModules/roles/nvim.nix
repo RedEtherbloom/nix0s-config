@@ -577,13 +577,13 @@ in {
                         end
                       '';
                     };
-                    n = {
-                      "jj" = lib.generators.mkLuaInline ''
-                        function(prompt_bufnr)
-                          require('telescope.actions').close(prompt_bufnr)
-                        end
-                      '';
-                    };
+                    # n = {
+                    #   "jj" = lib.generators.mkLuaInline ''
+                    #     function(prompt_bufnr)
+                    #       require('telescope.actions').close(prompt_bufnr)
+                    #     end
+                    #   '';
+                    # };
                   };
               };
             };
