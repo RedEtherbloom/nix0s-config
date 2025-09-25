@@ -90,6 +90,7 @@ in {
       "olm-3.2.16"
       "fluffychat-linux-1.27.0"
     ];
+    zramSwap.enable = true;
 
     virtualisation = {
       containers = {
