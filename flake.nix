@@ -97,6 +97,8 @@
       flake = false;
     };
     rimsort-pr.url = "github:NixOS/nixpkgs?ref=pull/304943/head";
+    pr-wyoming-piper.url = "github:NixOS/nixpkgs?ref=pull/445344/head";
+    pr-piper-fix.url = "github:NixOS/nixpkgs?ref=pull/445010/head";
     catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";

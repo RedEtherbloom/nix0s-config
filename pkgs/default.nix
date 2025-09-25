@@ -109,9 +109,9 @@ in {
     # breeze-with-kscreen-timer-patch = kdePrev.breeze.overrideAttrs (_: prevAttrs: {
     #   # TODO: Lookup build tutorial for copying
     # });
-    plasma-desktop = kdePrev.plasma-desktop.overrideAttrs (_: prevAttrs: {
-      patches = (prevAttrs.patches or []) ++ [./shorten-grace-lock.patch];
-    });
+    # plasma-desktop = kdePrev.plasma-desktop.overrideAttrs (_: prevAttrs: {
+    #   patches = (prevAttrs.patches or []) ++ [./shorten-grace-lock.patch];
+    # });
     kscreenlocker = kdePrev.kscreenlocker.overrideAttrs (_: prevAttrs: {
       version = prevAttrs.version + "-pmanager-patched";
       __intentionallyOverridingVersion = true;
@@ -156,4 +156,8 @@ in {
       hash = "sha256-ZZhOG3+g8sj/BUsVoAc+v72BN/SZ9mKkYE4O8NSGwuM=";
     };
   });
+  wyoming-piper-2 = prev.callPackage "${inputs.pr-wyoming-piper}/pkgs/by-name/wy/wyoming-piper/package.nix" {};
+  piper-tts = prev.piper-tts.overrideAttrs {
+    patches = ["${inputs.pr-piper-fix}/pkgs/by-name/pi/piper-tts/cmake-system-libs.patch"];
+  };
 }

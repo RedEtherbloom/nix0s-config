@@ -37,6 +37,8 @@ in {
           trusted-users = ["root" "@wheel" "inf"];
           keep-outputs = true;
           keep-derivations = true;
+          # Cache tars for two days to improve dev experience
+          tarball-ttl = 2 * 24 * 3600;
         };
         gc = {
           automatic = true;

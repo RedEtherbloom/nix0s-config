@@ -5,7 +5,9 @@
   pkgs,
   secrets,
   ...
-}: {
+}: let
+  wyomingPort = 10200;
+in {
   imports =
     [
       # !EXCEPTION TO GET AUDIOSINK KICK-STARTED! #
@@ -126,6 +128,7 @@
           (lib.strings.toInt config.services.restic.server.listenAddress)
           config.services.tabby.port
           (lib.strings.toInt config.virtualisation.oci-containers.containers.esphome.environment.PORT)
+          wyomingPort
         ]
         ++ (lib.lists.concatMap (el: [el.port]) config.services.mosquitto.listeners);
       allowedUDPPorts = [
@@ -133,6 +136,7 @@
         9944
         27062
         9757 # WiVrn
+        wyomingPort
       ];
     };
     ownWireguard = {
@@ -249,6 +253,17 @@
       # TODO: Is there a wildcard address that matches both IPv4 and 6?
       host = "0.0.0.0";
     };
+    wyoming.piper = {
+      package = pkgs.wyoming-piper-2;
+      servers."main-voice" = {
+        enable = true;
+        useCUDA = true;
+        voice = "en-us-libritts-high";
+        speaker = 1;
+        streaming = true;
+        uri = "tcp://0.0.0.0:${builtins.toString wyomingPort}";
+      };
+    };
   };
 
   hardware = {
@@ -314,6 +329,8 @@
           };
         };
         comfyui = {
+          # Broken and needs debugging
+          autoStart = false;
           volumes = ["comfyui:/root"];
           environment.TZ = config.time.timeZone;
           image = "docker.io/yanwk/comfyui-boot:cu124-megapak";
