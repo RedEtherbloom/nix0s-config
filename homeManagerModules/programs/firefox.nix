@@ -396,7 +396,8 @@ in {
         };
         work = {
           id = 2;
-          inherit (personal) extraConfig search settings;
+          inherit (programs.firefox.profiles.personal) extraConfig search settings;
+          extensions.force = true;
         };
       };
     };
