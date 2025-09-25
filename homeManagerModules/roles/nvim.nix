@@ -215,22 +215,24 @@ in {
               };
               ts.enable = true;
               nu.enable = true;
-              # TODO: Needs nightly check and formatting set up etc
               rust = {
                 enable = true;
                 dap.enable = true;
                 crates.enable = true;
-                lsp.opts = ''
-                  ['rust-analyzer'] = {
-                      cargo = {
-                        allFeature = true
+                lsp = {
+                  package = pkgs.rust-analyzer-nightly;
+                  opts = ''
+                    ['rust-analyzer'] = {
+                        cargo = {
+                          allFeature = true
+                        },
+                        checkOnSave = true,
+                        procMacro = {
+                          enable = true,
+                        },
                       },
-                      checkOnSave = true,
-                      procMacro = {
-                        enable = true,
-                      },
-                    },
-                '';
+                  '';
+                };
               };
               go.enable = true;
               python.enable = true;

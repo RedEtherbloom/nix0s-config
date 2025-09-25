@@ -103,7 +103,7 @@
     };
     nix-search-tv = {
       url = "github:3timeslazy/nix-search-tv";
-      inputs =  {
+      inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
       };
@@ -125,6 +125,7 @@
         })
         inputs.nix-vscode-extensions.overlays.default
         inputs.nix-comfyui.overlays.default
+        inputs.fenix.overlays.default
       ];
       config.allowUnfree = true;
     };

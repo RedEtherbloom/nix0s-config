@@ -122,9 +122,17 @@ in {
     {
       home.packages = with pkgs;
         lib.optionals cfg.rust [
-          rustup
           clang
           clang-tools
+          pkg-config
+          (fenix.complete.withComponents [
+            "cargo"
+            "clippy"
+            "rust-src"
+            "rustc"
+            "rustfmt"
+          ])
+          rust-analyzer-nightly
         ]
         ++ lib.optionals cfg.openscad [
           openscad
