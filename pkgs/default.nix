@@ -109,9 +109,9 @@ in {
     # breeze-with-kscreen-timer-patch = kdePrev.breeze.overrideAttrs (_: prevAttrs: {
     #   # TODO: Lookup build tutorial for copying
     # });
-    plasma-desktop = kdePrev.plasma-desktop.overrideAttrs (_: prevAttrs: {
-      patches = (prevAttrs.patches or []) ++ [./shorten-grace-lock.patch];
-    });
+    # plasma-desktop = kdePrev.plasma-desktop.overrideAttrs (_: prevAttrs: {
+    #   patches = (prevAttrs.patches or []) ++ [./shorten-grace-lock.patch];
+    # });
     kscreenlocker = kdePrev.kscreenlocker.overrideAttrs (_: prevAttrs: {
       version = prevAttrs.version + "-pmanager-patched";
       __intentionallyOverridingVersion = true;
