@@ -117,5 +117,6 @@ in {
     sops.secrets."registry/dockerhub/password".sopsFile = "${secrets}/secrets/services/docker.yaml";
     # Needed for podman
     users.users."inf".autoSubUidGidRange = true;
+    documentation.dev.enable = true;
   };
 }
