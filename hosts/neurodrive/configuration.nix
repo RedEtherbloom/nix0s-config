@@ -329,6 +329,8 @@ in {
           };
         };
         comfyui = {
+          # Broken and needs debugging
+          autoStart = false;
           volumes = ["comfyui:/root"];
           environment.TZ = config.time.timeZone;
           image = "docker.io/yanwk/comfyui-boot:cu124-megapak";
