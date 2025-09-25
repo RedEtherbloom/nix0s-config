@@ -32,6 +32,12 @@ in {
     };
     security.ownAdditional.yubikey = true;
 
+    # Attempt to keep desktop devices more responsive during e.g. builds or optimization, at expense of longer build times
+    nix.settings = {
+      daemonCPUSchedPolicy = "idle";
+      daemonIOSchedClass = "idle";
+    };
+
     # TODO: Configure so that only e.g. grub but nothing else gets the pallet
     stylix = {
       enable = false;
