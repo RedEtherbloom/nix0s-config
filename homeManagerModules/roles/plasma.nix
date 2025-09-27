@@ -516,7 +516,7 @@ in {
           } (lib.optionals cfg.krohnkite {
             kwinrc."Script-krohnkite" = {
               "debug" = false;
-              "debugActiveWin" = false;
+              "debugActiveWin" = true;
               "enableBTreeLayout" = true;
               "enableFloatingLayout" = true;
               "enableQuarterLayout" = true;
@@ -524,11 +524,11 @@ in {
               "floatedWindowsLayer" = 2;
               "monocleMaximize" = true;
               "newWindowPosition" = 2;
-              "screenGapBottom" = 3;
-              "screenGapLeft" = 6;
-              "screenGapRight" = 6;
-              "screenGapTop" = 3;
-              "tileLayoutGap" = 2;
+              "screenGapBottom" = 4;
+              "screenGapLeft" = 8;
+              "screenGapRight" = 8;
+              "screenGapTop" = 4;
+              "tileLayoutGap" = 6;
               "tiledWindowsLayer" = 1;
             };
           });
