@@ -65,7 +65,7 @@ in {
       default = true;
       description = "3d printing toolchain and tools.";
     };
-    reverse-engineering = lib.mkOption {
+    reverseEngineering = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = "Reverse engineering toolchain.";
@@ -144,7 +144,7 @@ in {
         ++ lib.optionals cfg.three-d-printing [
           prusa-slicer
         ]
-        ++ lib.optionals cfg.reverse-engineering [
+        ++ lib.optionals cfg.reverseEngineering [
           ghidra
         ]
         ++ lib.optionals cfg.network-analysis [

@@ -1,10 +1,8 @@
 {
   config,
   lib,
-  inputs,
   osConfig,
   pkgs,
-  system,
   ...
 }: let
   cfg = config.myOptions.hostRoles.neural-augmenter;
@@ -26,6 +24,7 @@ in {
         development = {
           enable = lib.mkDefault true;
           electronics = lib.mkDefault true;
+          reverseEngineering = lib.mkDefault true;
         };
         nvf.enable = lib.mkDefault true;
         gamedev.enable = lib.mkDefault true;
