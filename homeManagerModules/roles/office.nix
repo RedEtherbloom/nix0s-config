@@ -50,6 +50,11 @@ in {
       type = types.bool;
       default = true;
     };
+    music = mkOption {
+      description = "Enable less-distracting music players.";
+      type = types.bool;
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -70,7 +75,11 @@ in {
         ]
         ++ lib.optionals cfg.pdf_editing [pdfarranger]
         ++ lib.optionals cfg.video_editing [shotcut]
-        ++ lib.optionals cfg.scanning [simple-scan];
+        ++ lib.optionals cfg.scanning [simple-scan]
+        ++ lib.optionals cfg.music [
+          youtube-music
+          youtube-tui
+        ];
     }
     (lib.mkIf cfg.thunderbird {
       programs.thunderbird = {

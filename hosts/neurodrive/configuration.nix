@@ -108,7 +108,9 @@ in {
     NetworkManager-wait-online.enable = lib.mkForce false;
   };
   # Networking
-  networking = {
+  networking = let
+    genConsecutivePorts = start: count: (lib.lists.range start count);
+  in {
     hostName = "neurodrive";
     networkmanager.enable = true;
     interfaces."enp0s25".wakeOnLan.enable = true;
@@ -265,6 +267,23 @@ in {
         uri = "tcp://0.0.0.0:${builtins.toString wyomingPort}";
       };
     };
+    # Disabled due to invidious-companion needing packaging first https://github.com/NixOS/nixpkgs/issues/415116
+    # invidious = {
+    #   enable = true;
+    #   # domain = "${config.networking.ownWireguard.hosts.neurodrive.mainIP}";
+    #   port = invidiousSigHelperPort + 1;
+    #   # Personal and work/music only
+    #   serviceScale = 2;
+    #   nginx.enable = true;
+    #   # Faster loading speeds
+    #   http3-ytproxy.enable = true;
+    #   # Sig helper is broken and should be replaced with the companion app. additionally google seems to often shadownban(inabilit to load videos after a while).
+    # };
+    # # Individious
+    # nginx.virtualHosts."${config.networking.ownWireguard.hosts.neurodrive.mainIP}" = {
+    #   forceSSL = false;
+    #   enableACME = false;
+    # };
   };
 
   hardware = {
