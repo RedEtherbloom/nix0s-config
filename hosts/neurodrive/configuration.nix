@@ -254,10 +254,11 @@ in {
       host = "0.0.0.0";
     };
     wyoming.piper = {
-      package = pkgs.wyoming-piper-2;
+      # Broken with some odd /proc/cpuinfo error in Onnxruntime 26.09.2025
+      # package = pkgs.wyoming-piper-2;
       servers."main-voice" = {
         enable = true;
-        useCUDA = true;
+        useCUDA = false;
         voice = "en-us-libritts-high";
         speaker = 1;
         streaming = true;

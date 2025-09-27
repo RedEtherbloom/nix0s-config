@@ -127,6 +127,8 @@ in {
 
           # TODO: Evaluate. If useful move to dev tools.
           nix-search-tv
+
+          systemctl-tui
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
           yubioath-flutter
