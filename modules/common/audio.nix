@@ -27,37 +27,37 @@
     wireplumber = {
       enable = true;
       extraConfig = {
-        "c310-sample-rate" = {
-          "monitor.alsa.rules" = [
-            {
-              matches = [
-                {
-                  "device.product.name" = "Webcam C310";
-                  "device.product.id" = "0x081b";
-                  "device.vendor.id" = "0x046d";
-                }
-              ];
-              actions = {
-                update-props = {
-                  "default.clock.rate" = 16000;
-                };
-              };
-            }
-            {
-              matches = [
-                {
-                  "node.name" = "~alsa_input.usb-046d_081b*";
-                }
-              ];
-              actions = {
-                update-props = {
-                  # Disable Pro Audio, it does weird things
-                  "audio.position" = "MONO";
-                };
-              };
-            }
-          ];
-        };
+        # "c310-sample-rate" = {
+        #   "monitor.alsa.rules" = [
+        #     {
+        #       matches = [
+        #         {
+        #           "device.product.name" = "Webcam C310";
+        #           "device.product.id" = "0x081b";
+        #           "device.vendor.id" = "0x046d";
+        #         }
+        #       ];
+        #       actions = {
+        #         update-props = {
+        #           "default.clock.rate" = 16000;
+        #         };
+        #       };
+        #     }
+        #     {
+        #       matches = [
+        #         {
+        #           "node.name" = "~alsa_input.usb-046d_081b*";
+        #         }
+        #       ];
+        #       actions = {
+        #         update-props = {
+        #           # Disable Pro Audio, it does weird things
+        #           "audio.position" = "MONO";
+        #         };
+        #       };
+        #     }
+        #   ];
+        # };
         # "log-level-debug" = {
         #   "context.properties" = {
         #     # Output Debug log messages as opposed to only the default level (Notice)
