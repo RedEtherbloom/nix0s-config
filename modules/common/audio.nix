@@ -58,12 +58,12 @@
         #     }
         #   ];
         # };
-        # "log-level-debug" = {
-        #   "context.properties" = {
-        #     # Output Debug log messages as opposed to only the default level (Notice)
-        #     "log.level" = "D";
-        #   };
-        # };
+        "log-level-debug" = {
+          "context.properties" = {
+            # Output Debug log messages as opposed to only the default level (Notice)
+            "log.level" = "I";
+          };
+        };
         "bose-qc35" = {
           "monitor.bluez.rules" = [
             {
