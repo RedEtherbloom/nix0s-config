@@ -59,6 +59,7 @@ in {
         enable = true;
         openFirewall = true;
       };
+      hyprland.enable = true; 
     };
 
     services = {

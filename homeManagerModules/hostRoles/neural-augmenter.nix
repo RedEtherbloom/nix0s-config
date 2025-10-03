@@ -200,5 +200,7 @@ in {
       enable = true;
       opacity.terminal = 0.85;
     };
+
+    wayland.windowManager.hyprland.enable = true;
   };
 }
