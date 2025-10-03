@@ -356,6 +356,11 @@ in {
             keys = ["Meta+Shift+C"];
             comment = "Open the System Settings on the shortcut dialog";
           };
+          "show-keyboard-reference" = {
+            command = "${lib.getExe pkgs.kdePackages.gwenview} ${inputs.secrets}/dotfiles/colemak_dh_iso.png";
+            keys = ["Meta+Y"];
+            comment = "Open a reference to our current keyboard layout";
+          };
         };
         configFile = let
           uuid_work = "2e8abc71-743b-4183-9852-6d5e4f4d250a";
