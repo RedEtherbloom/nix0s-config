@@ -19,7 +19,6 @@ in {
   config = lib.mkIf cfg.enable {
     myOptions = {
       hostRoles.graphical.enable = lib.mkDefault true;
-
       roles = {
         development = {
           enable = lib.mkDefault true;
@@ -28,6 +27,10 @@ in {
         };
         nvf.enable = lib.mkDefault true;
         gamedev.enable = lib.mkDefault true;
+        art = {
+          enable = lib.mkDefault true;
+          stitching = lib.mkDefault true;
+        };
       };
       vscode.enable = lib.mkDefault true;
 
