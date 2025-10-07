@@ -46,7 +46,7 @@ in {
     };
 
     catppuccin = {
-      enable = lib.mkDefault true;
+      enable = lib.mkDefault false;
       flavor = lib.mkDefault "frappe";
       cache.enable = lib.mkDefault true;
     };
