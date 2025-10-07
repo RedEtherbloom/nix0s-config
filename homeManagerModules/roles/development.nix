@@ -135,7 +135,7 @@ in {
           rust-analyzer-nightly
         ]
         ++ lib.optionals cfg.openscad [
-          openscad
+          openscad-unstable
         ]
         ++ lib.optionals cfg.nix self.devShells.${system}.default.buildInputs
         ++ lib.optionals cfg.electronics [
