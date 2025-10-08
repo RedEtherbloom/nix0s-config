@@ -13,7 +13,6 @@ in {
     inputs.nix-index-database.homeModules.nix-index
     inputs.sops-nix.homeManagerModules.sops
     inputs.catppuccin.homeModules.catppuccin
-    inputs.stylix.homeModules.stylix
   ];
 
   options.myOptions.hostRoles.base = {

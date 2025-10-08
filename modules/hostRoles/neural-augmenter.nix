@@ -40,7 +40,7 @@ in {
 
     # TODO: Configure so that only e.g. grub but nothing else gets the pallet
     stylix = {
-      enable = false;
+      enable = true;
       polarity = "dark";
       targets.grub = {
         enable = true;

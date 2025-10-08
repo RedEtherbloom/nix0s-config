@@ -401,7 +401,7 @@ in {
         };
       };
     };
-    # stylix.targets.firefox.profileNames = lib.attrsets.mapAttrsToList (name: _: "${name}") programs.firefox.profiles;
+    stylix.targets.firefox.profileNames = lib.attrsets.mapAttrsToList (name: _: "${name}") programs.firefox.profiles;
     # catppuccin.firefox.profiles = lib.attrsets.mapAttrs (_: _: {}) programs.firefox.profiles;
     catppuccin.firefox.enable = false;
   };

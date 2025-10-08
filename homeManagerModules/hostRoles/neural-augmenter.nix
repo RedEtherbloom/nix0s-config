@@ -194,7 +194,7 @@ in {
 
     # Set terminal opacity using stlyix instead
     stylix = {
-      enable = false;
+      enable = true;
       opacity.terminal = 0.85;
     };
   };
