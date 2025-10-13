@@ -61,8 +61,7 @@ in {
     {
       home.packages = with pkgs;
         lib.optionals cfg.audio_editing [
-          # Broken as of: 01.08.2025
-          # audacity
+          audacity
           reaper
           ocenaudio
         ]

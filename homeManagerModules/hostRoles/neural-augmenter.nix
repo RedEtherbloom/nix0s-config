@@ -108,17 +108,18 @@ in {
           plattenalbum
 
           podman
-          dive # look into docker image layers
+          dive
           podman-tui
           podman-compose
-          docker-compose # start group of containers for dev
+          docker-compose
           distrobox
 
           # Music production
           nixpkgs-stable.sonic-pi
           # FLStudio esque software
           reaper
-          reaper-sws-extension
+          # Broken as of: 13.10.25
+          # reaper-sws-extension
           bitwig-studio5
           yabridge
           yabridgectl
