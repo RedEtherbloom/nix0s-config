@@ -38,12 +38,8 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     (mkIf cfg.enablePixelflutClient {
-      home-manager.sharedModules = [
-        {
-          home.packages = with pkgs; [
-            sturmflut
-          ];
-        }
+      environment.systemPackages = with pkgs; [
+        sturmflut
       ];
     })
   ]);

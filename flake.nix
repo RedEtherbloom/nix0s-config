@@ -14,13 +14,7 @@
       url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
       flake = false;
     };
-    lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/main.tar.gz";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        lix.follows = "lix";
-      };
-    };
+    flake-parts.url = "github:hercules-ci/flake-parts";
     flake-compat.url = "github:edolstra/flake-compat";
     systems.url = "github:nix-systems/default";
     flake-utils = {
@@ -114,39 +108,79 @@
 
   outputs = {
     self,
-    nixpkgs,
-    flake-utils,
-    secrets,
+    flake-parts,
     ...
-  } @ inputs: let
-    nixpkgsConfig = {
-      overlays = [
-        (import ./pkgs {
-          inherit inputs;
-          inherit (nixpkgs) lib;
-        })
-        inputs.nix-vscode-extensions.overlays.default
-        inputs.nix-comfyui.overlays.default
-        inputs.fenix.overlays.default
+  } @ inputs:
+  # TODO: Merge into flake-parts
+  # getPatchedNixpkgs = system:
+  #   (import nixpkgs {inherit system;}).applyPatches {
+  #     name = "nixpkgs-patched";
+  #     src = nixpkgs;
+  #     patches = [];
+  #   };
+    flake-parts.lib.mkFlake {inherit inputs;} ({withSystem, ...}: {
+      imports = [
+        inputs.home-manager.flakeModules.home-manager
       ];
-      config.allowUnfree = true;
-    };
-    getPatchedNixpkgs = system:
-      (import nixpkgs {inherit system;}).applyPatches {
-        name = "nixpkgs-patched";
-        src = nixpkgs;
-        patches = [];
-      };
-  in
-    flake-utils.lib.eachDefaultSystem (
-      system: let
-        pkgs = import (getPatchedNixpkgs system) {
-          inherit (nixpkgsConfig) overlays config;
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+      flake = {lib, ...}: let
+        defaultUsername = "inf";
+        mkSystem = hostName: system:
+          withSystem system (ctx @ {...}: {
+            nixosConfigurations."${hostName}" = inputs.nixpkgs.lib.nixosSystem rec {
+              specialArgs = {
+                inherit inputs self system;
+                inherit (inputs) secrets;
+              };
+              modules = [
+                {nixpkgs = {inherit (ctx.pkgs) config overlays;};}
+                # TODO: Decide how to reorganize module inputs
+                inputs.home-manager.nixosModules.home-manager
+                inputs.sops-nix.nixosModules.sops
+                ./hosts/${hostName}/configuration.nix
+                {
+                  home-manager = {
+                    backupFileExtension = "hm_backup_move";
+                    extraSpecialArgs = specialArgs;
+                    useGlobalPkgs = true;
+                    users.${defaultUsername}.imports = [./hosts/${hostName}/home.nix];
+                  };
+                }
+              ];
+            };
+            # TODO: Extract common resources e.g. IPs into nixos independent wrapper or import nixos into homeManager so that homeConfigurations can be split out
+          });
+      in
+        lib.mkMerge [
+          (mkSystem "fractor" "x86_64-linux")
+          (mkSystem "neurodrive" "x86_64-linux")
+          (mkSystem "audiosink" "aarch64-linux")
+        ];
+      perSystem = {
+        pkgs,
+        system,
+        ...
+      }: {
+        _module.args.pkgs = import inputs.nixpkgs {
           inherit system;
+          config = {
+            allowUnfree = true;
+          };
+          overlays = [
+            (_: prev: {
+              inherit (prev.lixPackages.stable) nixpkgs-review nix-eval-jobs nix-fast-build colmena;
+            })
+            # TODO: Rework own overlay to be compatible with standard overlay techniques
+            (import ./pkgs {inherit inputs;})
+            inputs.nix-vscode-extensions.overlays.default
+            inputs.nix-comfyui.overlays.default
+            inputs.fenix.overlays.default
+          ];
         };
-      in {
         formatter = pkgs.alejandra;
-        legacyPackages = pkgs;
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             alejandra
@@ -159,40 +193,6 @@
             nixos-rebuild-ng
           ];
         };
-      }
-    )
-    // {
-      nixosConfigurations = let
-        defaultUsername = "inf";
-        mkSystem = hostName: system: username: let
-          specialArgs = {inherit inputs self system secrets;};
-        in
-          import "${getPatchedNixpkgs system}/nixos/lib/eval-config.nix" {
-            inherit specialArgs;
-            inherit system;
-
-            modules = [
-              inputs.lix-module.nixosModules.default
-              inputs.home-manager.nixosModules.home-manager
-              inputs.sops-nix.nixosModules.sops
-              # TODO: Figure out how to merge with pkgs in flake-utils set
-              {nixpkgs = {inherit (nixpkgsConfig) overlays config;};}
-
-              ./hosts/${hostName}/configuration.nix
-              {
-                home-manager = {
-                  backupFileExtension = "hm_backup_move";
-                  extraSpecialArgs = specialArgs;
-                  useGlobalPkgs = true;
-                  users.${username}.imports = [./hosts/${hostName}/home.nix];
-                };
-              }
-            ];
-          };
-      in {
-        fractor = mkSystem "fractor" "x86_64-linux" defaultUsername;
-        neurodrive = mkSystem "neurodrive" "x86_64-linux" defaultUsername;
-        audiosink = mkSystem "audiosink" "aarch64-linux" defaultUsername;
       };
-    };
+    });
 }
