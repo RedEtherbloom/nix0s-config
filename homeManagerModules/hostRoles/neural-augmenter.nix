@@ -201,6 +201,46 @@ in {
       opacity.terminal = 0.85;
     };
 
-    wayland.windowManager.hyprland.enable = true;
+    wayland.windowManager.hyprland = {
+      enable = true;
+      # set the Hyprland and XDPH packages to null to use the ones from the NixOS module
+      package = null;
+      portalPackage = null;
+      # Properly setup systemd
+      systemd.variables = ["--all"];
+      settings = {
+        "$mod" = "SUPER";
+        input = {
+          "kb_layout" = "de,de";
+          "kb_variant" = "colemak_dh_iso,de_nodeadkeys";
+          # TODO: Add a compose key for e.g. chinese characters
+          "kb_options" = "terminate:ctrl_alt_bksp";
+          "kb_model" = "pc104";
+        };
+        bind =
+          [
+            "$mod, E, exec, firefox"
+            "$mod, Shift, E, exec, firefox -P work"
+            # TODO: Work mode shortcut with: Work firefox, youtube music, obsidian
+            "$mod, Enter, exec, kitty"
+            # TODO: Setup to autoswitch to it on the same keybinding
+            "$mod, N, exec, obsidian"
+            "$mod, Shift, N, exec, neovide"
+          ]
+          ++ (
+            # workspaces
+            # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
+            builtins.concatLists (builtins.genList (
+                i: let
+                  ws = i + 1;
+                in [
+                  "$mod, code:1${toString i}, workspace, ${toString ws}"
+                  "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
+                ]
+              )
+              9)
+          );
+      };
+    };
   };
 }

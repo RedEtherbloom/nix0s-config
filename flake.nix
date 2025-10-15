@@ -111,13 +111,6 @@
     flake-parts,
     ...
   } @ inputs:
-  # TODO: Merge into flake-parts
-  # getPatchedNixpkgs = system:
-  #   (import nixpkgs {inherit system;}).applyPatches {
-  #     name = "nixpkgs-patched";
-  #     src = nixpkgs;
-  #     patches = [];
-  #   };
     flake-parts.lib.mkFlake {inherit inputs;} ({withSystem, ...}: {
       imports = [
         inputs.home-manager.flakeModules.home-manager
@@ -164,6 +157,13 @@
         system,
         ...
       }: {
+        # TODO: Merge into flake-parts
+        # getPatchedNixpkgs = system:
+        #   (import nixpkgs {inherit system;}).applyPatches {
+        #     name = "nixpkgs-patched";
+        #     src = nixpkgs;
+        #     patches = [];
+        #   };
         _module.args.pkgs = import inputs.nixpkgs {
           inherit system;
           config = {
