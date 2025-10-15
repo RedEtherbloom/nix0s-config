@@ -155,6 +155,8 @@
     roles.gaming.enable = true;
     # Setup event setup and hardening etc.
     event-setup.enable = false;
+    # Broken as of: 15.10.2025
+    roles.i2p.enable = lib.mkForce false;
   };
 
   users.users.inf = {
