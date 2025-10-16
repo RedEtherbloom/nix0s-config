@@ -17,9 +17,13 @@
 
   # TODO: change to colemak
   services.xserver.xkb = {
-    layout = "de";
+    model = "pc104";
+    layout = "us,de";
+    variant = "colemak_dh_iso,nodeadkeys";
+    options = "terminate:ctrl_alt_bksp,caps:escape,shift:both_capslock";
   };
   # Affects LUKS unlock
   # TODO: change to colemak
-  console.keyMap = "de";
+  # Should get generated using xkb
+  # console.keyMap = "de";
 }

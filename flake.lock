@@ -292,6 +292,22 @@
         "type": "github"
       }
     },
+    "hyperland-zaneyos": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1760231330,
+        "narHash": "sha256-icTUpidsnEZo2g5sgQ5nts50tq+B+fw8wkop7i5XPYI=",
+        "owner": "Zaney",
+        "repo": "zaneyos",
+        "rev": "b0c1671d2aa4c8f4b3f2ceba626a8d27baac6928",
+        "type": "gitlab"
+      },
+      "original": {
+        "owner": "Zaney",
+        "repo": "zaneyos",
+        "type": "gitlab"
+      }
+    },
     "lix": {
       "flake": false,
       "locked": {
@@ -688,6 +704,7 @@
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "hyperland-zaneyos": "hyperland-zaneyos",
         "lix": "lix",
         "nix-comfyui": "nix-comfyui",
         "nix-index-database": "nix-index-database",
