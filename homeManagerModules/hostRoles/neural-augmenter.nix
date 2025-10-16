@@ -211,21 +211,26 @@ in {
       settings = {
         "$mod" = "SUPER";
         input = {
-          "kb_layout" = "de,de";
-          "kb_variant" = "colemak_dh_iso,de_nodeadkeys";
+          "kb_layout" = "us,de";
+          "kb_variant" = "colemak_dh_iso,nodeadkeys";
           # TODO: Add a compose key for e.g. chinese characters
-          "kb_options" = "terminate:ctrl_alt_bksp";
+          "kb_options" = "terminate:ctrl_alt_bksp,caps:escape,shift:both_capslock";
           "kb_model" = "pc104";
+        };
+        debug = {
+          disable_logs = false;
+          disable_time = false;
+          overlay = true;
         };
         bind =
           [
-            "$mod, E, exec, firefox"
-            "$mod, Shift, E, exec, firefox -P work"
+            "SUPER, E, exec, firefox"
+            "SUPER_SHIFT, E, exec, firefox -P work"
             # TODO: Work mode shortcut with: Work firefox, youtube music, obsidian
-            "$mod, Enter, exec, kitty"
+            "SUPER, Enter, exec, kitty"
             # TODO: Setup to autoswitch to it on the same keybinding
-            "$mod, N, exec, obsidian"
-            "$mod, Shift, N, exec, neovide"
+            "SUPER, N, exec, obsidian"
+            "SUPER_SHIFT, N, exec, neovide"
           ]
           ++ (
             # workspaces

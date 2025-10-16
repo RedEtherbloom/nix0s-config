@@ -15,9 +15,11 @@
     LC_TIME = "en_IE.UTF-8";
   };
 
+  # TODO: change to colemak
   services.xserver.xkb = {
     layout = "de";
   };
   # Affects LUKS unlock
+  # TODO: change to colemak
   console.keyMap = "de";
 }
