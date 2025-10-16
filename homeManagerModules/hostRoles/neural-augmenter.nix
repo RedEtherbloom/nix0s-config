@@ -164,11 +164,9 @@ in {
         package = pkgs.chromium.override {enableWideVine = true;};
       };
       nushell.enable = true;
-      # Currently useless due to missing KDE support
       rofi = {
         enable = lib.mkDefault false;
         terminal = "${config.programs.kitty.package}";
-        package = pkgs.rofi-wayland;
       };
       spotify-player.enable = true;
       bat.enable = true;

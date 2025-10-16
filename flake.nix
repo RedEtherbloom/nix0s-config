@@ -104,7 +104,7 @@
         flake-utils.follows = "flake-utils";
       };
     };
-    hyperland-zaneyos = {
+    hyprland-zaneyos = {
       url = "gitlab:Zaney/zaneyos";
       flake = false;
     };

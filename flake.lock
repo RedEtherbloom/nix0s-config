@@ -292,7 +292,7 @@
         "type": "github"
       }
     },
-    "hyperland-zaneyos": {
+    "hyprland-zaneyos": {
       "flake": false,
       "locked": {
         "lastModified": 1760231330,
@@ -704,7 +704,7 @@
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
-        "hyperland-zaneyos": "hyperland-zaneyos",
+        "hyprland-zaneyos": "hyprland-zaneyos",
         "lix": "lix",
         "nix-comfyui": "nix-comfyui",
         "nix-index-database": "nix-index-database",
