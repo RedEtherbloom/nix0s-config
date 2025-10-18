@@ -178,8 +178,8 @@ in {
         ];
         bind =
           [
-            "SUPER, E, exec, firefox"
-            "SUPER_SHIFT, E, exec, firefox -P work"
+            "SUPER, W, exec, firefox"
+            "SUPER_SHIFT, W, exec, firefox -P work"
             # TODO: Work mode shortcut with: Work firefox, youtube music, obsidian
             # TODO: Setup to autoswitch to it on the same keybinding
             "SUPER, N, exec, obsidian"
@@ -201,17 +201,16 @@ in {
               "$modifier,Return,exec,kitty"
               # TODO: Needs to be looked up for source
               "$modifier,K,exec,list-keybinds"
-              "$modifier ,R,exec,rofi-launcher"
-              "$modifier SHIFT,Return,exec,rofi-launcher"
+              "$modifier,R,exec,rofi -show window,drun"
+              "$modifier SHIFT,Return,exec,rofi"
               # What is this?
               "$modifier SHIFT,W,exec,web-search"
               # "$modifier ALT,W,exec,wallsetter"
               # What is this?
-              "$modifier SHIFT,N,exec,swaync-client -rs"
-              "$modifier,W,exec,firefox"
+              # "$modifier SHIFT,N,exec,swaync-client -rs"
               # "$modifier,Y,exec,kitty -e yazi"
-              "$modifier SHIFT,W,exec,emopicker9000"
-              "$modifier,E,exec,dolphin"
+              "$modifier SHIFT,Y,exec,emopicker9000"
+              "$modifier,Y,exec,dolphin"
               # "$modifier,S,exec,screenshootin"
               "$modifier CTRL,S,exec,hyprshot -m output -o $HOME/Pictures/ScreenShots"
               "$modifier SHIFT,S,exec,hyprshot -m window -o $HOME/Pictures/ScreenShots"
@@ -264,6 +263,7 @@ in {
               "$modifier CONTROL,left,workspace,e-1"
               "$modifier,mouse_down,workspace, e+1"
               "$modifier,mouse_up,workspace, e-1"
+              "$modifier,Delete,exec,hyprlock"
               "ALT,Tab,cyclenext"
               "ALT,Tab,bringactivetotop"
               ",XF86AudioRaiseVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
