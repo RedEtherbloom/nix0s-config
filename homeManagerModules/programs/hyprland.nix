@@ -59,10 +59,8 @@ in {
         debug = {
           disable_logs = false;
           disable_time = false;
-          overlay = true;
-        };
-        snap = {
-          enabled = true;
+          # FPS overlay
+          overlay = false;
         };
         gestures = {
           workspace_swipe_distance = 300;
@@ -78,7 +76,7 @@ in {
         ];
         general = {
           # Required for the binds, for now. TODO: Merge with mod or ditch
-          "$modifier" = "SUPER";
+          "$mod" = "SUPER";
           no_border_on_floating = false;
           layout = "dwindle";
           gaps_in = 6;
@@ -91,12 +89,14 @@ in {
           # "col.inactive_border" = "rgb(${config.lib.stylix.colors.base01})";
           # Attempt to build better mental model of our workscreen
           no_focus_fallback = true;
+          snap = {
+            enabled = true;
+          };
         };
         misc = {
           font_family = "OpenDyslexic Nerd Font";
           layers_hog_keyboard_focus = true;
-          # Keep new windows contained to their desktop by default
-          initial_workspace_tracking = 2;
+          initial_workspace_tracking = 1;
           mouse_move_enables_dpms = true;
           key_press_enables_dpms = true;
           disable_hyprland_logo = lib.mkForce false;
