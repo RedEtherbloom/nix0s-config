@@ -172,7 +172,10 @@ in {
         opengl = {
           nvidia_anti_flicker = true;
         };
-        # TODO: Monitor config
+        monitor = [
+          # Fallback
+          ", preferred, auto, 1"
+        ];
         bind =
           [
             "SUPER, E, exec, firefox"
