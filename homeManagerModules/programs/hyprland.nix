@@ -390,6 +390,13 @@ in {
           "keepaspectratio, title:^(Picture-in-Picture)$"
           "noblur, tag:games*"
           "fullscreen, tag:games*"
+          # Prevent the fabled odd xwaylandvideobridge from wreaking havoc on our fair hyprland. Source: https://wiki.hypr.land/Useful-Utilities/Screen-Sharing/#xwayland
+          "opacity 0.0 override, class:^(xwaylandvideobridge)$"
+          "noanim, class:^(xwaylandviDeobridge)$"
+          "noinitialfocus, class:^(xwaylandvideobridge)$"
+          "maxsize 1 1, class:^(xwaylandvideobridge)$"
+          "noblur, class:^(xwaylandvideobridge)$"
+          "nofocus, class:^(xwaylandvideobridge)$"
         ];
       };
     };
