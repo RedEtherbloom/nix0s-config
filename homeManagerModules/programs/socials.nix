@@ -24,7 +24,7 @@ in {
       element-desktop
       fluffychat
       telegram-desktop
-      signal-desktop-bin
+      signal-desktop
       threema-desktop
 
       mumble
