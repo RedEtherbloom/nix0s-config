@@ -133,6 +133,9 @@ in {
           nix-search-tv
 
           systemctl-tui
+
+          # Debugging render scenes for Minecraft
+          renderdoc
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
           yubioath-flutter
@@ -175,6 +178,10 @@ in {
       # TODO: Does this improve completion speed?
       # TODO: This breaks normal completion with e.g. --user option for systemd too often
       # carapace.enable = true;
+      # TODO: Try out fish as comparison to zsh
+      fish = {
+        enable = true;
+      };
     };
 
     xdg = {
