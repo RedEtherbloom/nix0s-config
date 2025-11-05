@@ -443,9 +443,14 @@ in {
       style = builtins.readFile "${self}/dotfiles/waybarstyle.css";
       settings.mainBar = {
         position = "top";
+        # TODO: Evaluate
         layer = "top";
-        height = 30;
-        spacing = 20;
+        # Try dynamic
+        # height = 30;
+        spacing = 6;
+        # TODO: Configure sway ipc for hide
+        reload_style_on_change = true;
+        # mode = "hide";
         modules-left = [
           "hyprland/submap"
           "hyprland/workspaces"
@@ -454,58 +459,132 @@ in {
           "hyprland/window"
         ];
         modules-right = [
-          "backlight/slider"
-          "battery"
-          "bluetooth"
-          "network"
           # TODO: Tag social media with windowrules
           # Notifications/DND
           # Audio visualizer
           # "cava"
           # "idle_inhibitor"
           "wireplumber"
+          "bluetooth"
+          # TODO: Shorten and only use e.g. Colemak as name
           "mpris"
           "hyprland/language"
-          "power-profiles-daemon"
-          # TODO: Systemctl-tui on click
-          "systemd-failed-units"
+          # TODO: needs configuring for e.g. speed and showing available networks
+          # "network"
+          # TODO:: Needs other things setup first
+          # "power-profiles-daemon"
+          # TODO: Integrate pomodoro
+          "backlight"
+          "battery"
+          # TODO: Disable blue underline
           "clock"
           "tray"
         ];
+        "bluetooth" = {
+          format = "";
+          format-disabled = "dis";
+          format-connected = "";
+          format-no-connected = "";
+          # TODO: More info on tooltip
+          # Bluetooth scanner on right click
+        };
+        "wireplumber" = {
+          format = "󰝚 {volume}% {node_name:.8}";
+          # TODO: New wallpaper
+          format-muted = "󰝛";
+          max-volume = "175.0";
+        };
         "hyprland/workspaces" = {
-          active-only = true;
+          # active-only = true;
+          # TODO: Format with idon
           workspace-taskar = {
             enable = true;
             # Probably optional
             update-active-window = true;
           };
+          # TODO: How to separate into e.g. work and private?
         };
         "hyprland/window" = {
-          max-length = 30;
+          # format = "{icon} {title}";
+          max-length = 60;
           separate-outputs = true;
+          # TODO: Strip leading parenthesis(e.g. youtube notifications)
+          rewrite = {
+          };
         };
         # See: https://github.com/Alexays/Waybar/wiki/Module:-Backlight-Slider
-        "backlight/slider" = {
-          min = 0;
+        # "backlight/slider" = {
+        #   min = 2;
+        #   max = 100;
+        #   orientation = "vertical";
+        #   # TODO: How to use for all devices?
+        #   # device =
+        # };
+        "backlight" = rec {
+          interval = 2;
+          min = interval;
           max = 100;
-          orientation = "horizontal";
-          # TODO: How to use for all devices?
-          # device =
+          format = "{icon}{percent}%";
+          format-icons = [
+            "🕯️"
+            "🔥"
+            "☀️"
+            # Supernova
+            "💥"
+          ];
         };
         # Autohide?
 
         "tray" = {
-          spacing = 10;
-          icon-size = 20;
+          spacing = 8;
+          icon-size = 24;
         };
         "power-profiles-daemon" = {
           dynamic-len = 30;
+        };
+        "mpris" = {
+          format = "{player_icon}{dynamic}";
+          format-paused = "{status_icon}";
+          # TODO: Can we use the programs icons somehow?
+          player-icons = {
+            default = "🏳️‍⚧️";
+            kdeconnect = "📱";
+            firefox = "🐦‍🔥";
+            mpv = "👩🏽‍🔬";
+            vlc = "🚥";
+            ytmusic = "🎛️";
+            speech-dispatcher = "🦻🏿";
+            subsonic = "🔉";
+          };
+          status-icons = {
+            # TODO: Missing fonst. What provides the md_ symbols?
+            paused = "󰏤";
+          };
+          dynamic-len = 30;
+          dynamic-separator = "🏳️‍⚧️";
+          dynamic-importance-order = [
+            "position"
+            "length"
+            "title"
+            "artist"
+            "album"
+          ];
+        };
+        "hyprland/language" = {
+          format = "{}";
+          format-en-colemak_dh_iso = "col";
+          format-de = "de";
+          format-de_nodeadkeys = "de";
         };
       };
       systemd = {
         enable = true;
         target = "hyprland-session.target";
       };
+    };
+    programs.hyprshot = {
+      enable = true;
+      saveLocation = "$HOME/Pictures/Screenshots";
     };
 
     # TODO: Look over
@@ -517,11 +596,29 @@ in {
       swappy
       ydotool
       hyprpolkitagent
-      hyprshot
       hyprland-qtutils # needed for banners and ANR messages
+
       # Own
       networkmanagerapplet
       # TODO: Try networkmanager_dmenu?
+      cliphist
+      emojipick
+      hyprpicker
+      rofi-bluetooth
+      rofi-calc
+      rofi-emoji
+      rofi-nerdy
+      rofi-power-menu
+      # TODO: Implement bitwarden
+      rofi-rbw
+      rofi-file-browser
+      rofi-screenshot
+      rofi-menugen
+      rofi-pulse-select
+      rofi-network-manager
+
+
+      wdisplays
     ];
   };
 }
