@@ -87,6 +87,10 @@ in {
 
         tmp.cleanOnBoot = true;
       };
+      
+      # Out of memory management
+      systemd.oomd.enable =  true;
+      services.earlyoom.enable = true;
       # Generate a second, much more verbose boot entry
       # specialisation.verbose-boot.configuration = {
       #   boot.consoleLogLevel = 7;
