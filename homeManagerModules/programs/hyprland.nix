@@ -49,12 +49,13 @@ in {
           float_switch_override_focus = 0;
           # What does this do?
           special_fallthrough = false;
+          sensitivity = 0.15;
           touchpad = {
             disable_while_typing = false;
             natural_scroll = true;
             tap-to-click = true;
-            drag_lock = 1;
-            drag_3fg = true;
+            # drag_lock = 1;
+            # drag_3fg = true;
           };
         };
         debug = {
@@ -109,13 +110,13 @@ in {
           # Screen flashing to black momentarily or going black when app is fullscreen
           # Try setting vrr to 0
           # Can cause weird window looks
-          # animate_manual_resizes = true;
-          # animate_mouse_windowdragging = true;
-          focus_on_activate = true;
+          animate_manual_resizes = true;
+          animate_mouse_windowdragging = true;
+          # TODO: This is soft broken as e.g. telegram getting a notification forces us to switch to that desktop
+          focus_on_activate = false;
           middle_click_paste = true;
-          # maybe required for e.g. video player lagging
-          # performance?
-          render_unfocused_fps = true;
+          # maybe required for e.g. video player lagging. Performance though?
+          render_unfocused_fps = false;
 
           #  Application not responding (ANR) settings
           enable_anr_dialog = true;
@@ -123,10 +124,11 @@ in {
         };
 
         dwindle = {
+          # Meaning?
           pseudotile = true;
           # TODO: Evaluate if without to chaotic
           # preserve_split = true;
-          force_split = 2;
+          # force_split = 2;
         };
 
         master = {
@@ -135,8 +137,9 @@ in {
           # May enable more finegrained tiling control
           # allow_small_split = true;
         };
+        # TODO: Get a better one. We don't like this
         decoration = {
-          rounding = 10;
+          rounding = 4;
           # TODO: Experiment with shaders
           # screen_shader = "stubPath";
           blur = {
@@ -182,7 +185,21 @@ in {
         exec-once = [
           "nm-applet --indicator"
         ];
-        bind =
+        # TODO: Setup swallow
+        bind = let
+          getActiveWindowClass = pkgs.writeShellScript "hyprActiveWindow.sh" ''
+            set -e
+            hyprctl activewindow -j | jq  .class
+          '';
+
+          # TODO: Generalize
+          # https://www.reddit.com/r/hyprland/comments/12x9724/comment/lzyt1wr
+          hyprctrlNextLayout = pkgs.writeShellScript "hyprctrlNextLayout.sh" ''
+                        next_layout = "$(hyprctl getoption general:layout | grep -q 'dwindle' && echo 'master' || echo 'dwindle')";
+            hyprctl keyword general:layout "$next_layout";
+
+          '';
+        in
           [
             "SUPER, W, exec, firefox"
             "SUPER_SHIFT, W, exec, firefox -P work"
@@ -198,43 +215,49 @@ in {
                 i: let
                   ws = i + 1;
                 in [
-                  "$mod, code:1${toString i}, workspace, ${toString ws}"
-                  "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
+                  "$mod,code:1${toString i},workspace,${toString ws}"
+                  # TODO: Build a toggle mode between silent and non silent
+                  "$mod SHIFT,code:1${toString i},movetoworkspacesilent, ${toString ws}"
                 ]
               )
-              9)
+              10)
             ++ [
               "$modifier,Return,exec,kitty"
-              # TODO: Needs to be looked up for source
+              # TODO: Needs own implementation. Maybe a rendered version of this file?
               "$modifier,K,exec,list-keybinds"
-              "$modifier,R,exec,rofi -matching fuzzy -modes combi -show combi 'window,drun'"
-              "$modifier SHIFT,Return,exec,rofi -matching fuzzy -modes combi -show combi 'window,drun'"
+              "$modifier,Y,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
+              "$modifier SHIFT,Return,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
+              "$modifier,TAB,exec,rofi -matching fuzzy -modes window -show window"
+              # TODO: Switcher that matches active window class as preselect
+              "$modifier SHIFT,TAB,exec,rofi -matching fuzzy -modes window -filter \"$(${getActiveWindowClass}) \" -window-match-fields 'class,title' -show window"
+              # TODO: I want a social media scratchpad on that combo
               "$modifier SHIFT,D,exec,swaync-client -rs"
-              # "$modifier,Y,exec,kitty -e yazi"
-              "$modifier SHIFT,Y,exec,emopicker9000"
-              "$modifier,Y,exec,dolphin"
-              # "$modifier,S,exec,screenshootin"
-              "$modifier CTRL,S,exec,hyprshot -m output -o $HOME/Pictures/ScreenShots"
-              "$modifier SHIFT,S,exec,hyprshot -m window -o $HOME/Pictures/ScreenShots"
-              "$modifier ALT,S,exec,hyprshot -m region -o $HOME/Pictures/ScreenShots"
-              # TODO: Tag and focus instead
-              # "$modifier,D,exec,discord"
-              # "$modifier,O,exec,obs"
+              # TODO: Replace with a rofi
+              "$modifier SHIFT,Y,exec,emojipick"
+              "$modifier,E,exec,dolphin"
+              "$modifier SHIFT,E,exec,kitty -e yazi"
+              # Check if xdg screenshot gets respected
+              ",PRINT&A,exec,hyprshot -m output"
+              ",PRINT&S,exec,hyprshot -m window"
+              ",PRINT&R,exec,hyprshot -m region"
               "$modifier,C,exec,hyprpicker -a"
-              # "$modifier,G,exec,gimp"
-              # What is this?
-              # "$modifier shift,T,exec,pypr toggle term"
-              # "$modifier,T,exec, thunar"
+              # TODO: Scratchpad?
+              "$modifier shift,T,exec,pypr toggle term"
               "$modifier,M,exec,pavucontrol"
               "$modifier,Q,killactive,"
               "ALT,f4,killactive,"
-              # What is this?
+              # What is dwindle pseudo?
               "$modifier,P,pseudo,"
+              # Master layout
+              # TODO: How to set layout specific bindings? Crashes due to being unknown
+              # "$modifier,P,swapwithmaster,"
+              # TODO: How to setup a database behind clipist?
               "$modifier,V,exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
               "$modifier SHIFT,I,togglesplit,"
-              "$modifier,F,fullscreen,"
-              "$modifier SHIFT,F,togglefloating,"
+              "$modifier SHIFT,F,fullscreen,"
+              "$modifier,F,togglefloating,"
               "$modifier ALT,F,workspaceopt, allfloat"
+              # TODO: Prompt for option via dialog
               "$modifier SHIFT,C,exit,"
               "$modifier SHIFT,left,movewindow,l"
               "$modifier SHIFT,right,movewindow,r"
@@ -264,11 +287,22 @@ in {
               "$modifier,SPACE,togglespecialworkspace"
               "$modifier CONTROL,right,workspace,e+1"
               "$modifier CONTROL,left,workspace,e-1"
+              # "$modifier CONTROL,j,rrsizeactive, 100% 110%"
+              # "$modifier CONTROL,k,resizeactive, 100% 90%"
+              # "$modifier CONTROL,h,resizeactive, 110% 100%"
+              # "$modifier CONTROL,l,resizeactive, 90% 100%"
+              "$modifier CONTROL,j,resizeactive, 0 50"
+              "$modifier CONTROL,k,resizeactive, 0 -50"
+              "$modifier CONTROL,h,resizeactive, 50 0"
+              "$modifier CONTROL,l,resizeactive, -50 0"
               "$modifier,mouse_down,workspace, e+1"
               "$modifier,mouse_up,workspace, e-1"
               "$modifier,Delete,exec,hyprlock"
               "ALT,Tab,cyclenext"
               "ALT,Tab,bringactivetotop"
+
+              "$modifier, semicolon, exec, ${hyprctrlNextLayout}"
+
               ",XF86AudioRaiseVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
               ",XF86AudioLowerVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
               ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
@@ -382,7 +416,8 @@ in {
         };
       };
     };
-    # TODO: Does this support yubikeys?
+    # TODO: New wallpaper
+    # TODO: Nice, fancy theme
     programs.hyprlock.enable = true;
     # TODO: Do we need pyprland?
     # TODO: Needs to be bigger. Preferrably use a prefab config
@@ -393,10 +428,12 @@ in {
       };
       # Theme should get autogenerated by stylix
     };
+    stylix.targets.waybar.enable = false;
     # TODO: Separate bar for work workspace
     programs.waybar = {
       enable = true;
-      style = "${self}/dotfiles/waybarstyle.css";
+      # TODO: clearer separators
+      style = builtins.readFile "${self}/dotfiles/waybarstyle.css";
       settings.mainBar = {
         position = "top";
         layer = "top";
