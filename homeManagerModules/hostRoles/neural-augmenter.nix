@@ -188,7 +188,7 @@ in {
       autostart = {
         enable = true;
         entries = [
-          "${pkgs.obsidian}/share/applications/obsidian.desktop"
+          "${pkgs.bitwarden}/share/applications/bitwarden.desktop"
         ];
       };
       configFile."nix-search-tv/config.json".source = pkgs.writers.writeJSON "nstw-config.json" {
@@ -200,7 +200,6 @@ in {
       };
     };
 
-    # Set terminal opacity using stlyix instead
     stylix = {
       enable = true;
       opacity.terminal = 0.85;

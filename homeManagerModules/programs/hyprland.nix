@@ -144,10 +144,11 @@ in {
           # screen_shader = "stubPath";
           blur = {
             enabled = true;
-            size = 5;
+            # size = 5;
             # May have higher GPU impact
-            passes = 3;
-            ignore_opacity = false;
+            # TODO: Evaluate look
+            passes = 1;
+            # ignore_opacity = false;
             new_optimizations = true;
           };
           shadow = {
@@ -209,8 +210,6 @@ in {
             "SUPER_SHIFT, N, exec, neovide"
           ]
           ++ (
-            # workspaces
-            # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
             builtins.concatLists (builtins.genList (
                 i: let
                   ws = i + 1;
