@@ -357,7 +357,7 @@ in {
             comment = "Open the System Settings on the shortcut dialog";
           };
           "show-keyboard-reference" = {
-            command = "${lib.getExe pkgs.kdePackages.gwenview} ${inputs.secrets}/dotfiles/colemak_dh_iso.png";
+            command = "${pkgs.kdePackages.gwenview}/bin/gwenview ${inputs.secrets}/dotfiles/colemak_dh_iso.png";
             keys = ["Meta+Y"];
             comment = "Open a reference to our current keyboard layout";
           };
@@ -552,6 +552,7 @@ in {
         ++ lib.optionals cfg.krohnkite [krohnkite];
       dbus.packages = [
         # See https://wiki.archlinux.org/title/KDE_Wallet#Automatic_D-Bus_activation
+        # TODO: Turn into xdg portal option
         (pkgs.writeText "org.freedesktop.secrets.service" ''
           [D-BUS Service]
           Name=org.freedesktop.secrets
