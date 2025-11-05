@@ -39,11 +39,11 @@ in {
           kb_layout = "us,de";
           kb_variant = "colemak_dh_iso,nodeadkeys";
           # TODO: Add a compose key for e.g. chinese characters
-          kb_options = "terminate:ctrl_alt_bksp,caps:escape,shift:both_capslock";
+          kb_options = "terminate:ctrl_alt_bksp,caps:escape"; # Breaks with MC 1.7.10 LWJGL in very strang ways ,shift:both_capslock";
           kb_model = "pc104";
           numlock_by_default = true;
           resolve_binds_by_sym = false;
-          scroll_method = "scroll_method";
+          scroll_method = "edge";
           follow_mouse = 1;
           # May need fine tuning
           float_switch_override_focus = 0;
