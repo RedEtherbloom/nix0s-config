@@ -38,6 +38,8 @@ in {
       fontDir.enable = true;
       packages = with pkgs; [
         nerd-fonts.open-dyslexic
+        # E.g. material fonts
+        nerd-fonts.symbols-only
         noto-fonts
         noto-fonts-cjk-sans
         noto-fonts-emoji
