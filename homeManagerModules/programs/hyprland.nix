@@ -422,7 +422,10 @@ in {
           ];
         };
       };
+      gnome-keyring.enable = true;
     };
+    stylix.targets.qt.platform = lib.mkForce "qtct";
+
     # TODO: New wallpaper
     # TODO: Nice, fancy theme
     programs.hyprlock.enable = true;
@@ -617,8 +620,52 @@ in {
       rofi-pulse-select
       rofi-network-manager
 
+      gnome-keyring
+      seahorse
+      gcr
 
       wdisplays
     ];
+
+    xdg.portal = {
+      enable = lib.mkForce true;
+      xdgOpenUsePortal = true;
+      # TODO: Config for secret(gnome?) and filepicker
+      extraPortals = with pkgs; [
+        gnome-keyring
+        xdg-desktop-portal-gtk
+        kdePackages.xdg-desktop-portal-kde
+      ];
+      config = {
+        common = {
+          default = [
+            "gtk"
+            "kde"
+          ];
+          "org.freedesktop.impl.portal.Secret" = [
+            "gnome-keyring"
+          ];
+        };
+        hyprland = {
+          default = [
+            "hyprland"
+            "gtk"
+            "kde"
+          ];
+          "org.freedesktop.impl.portal.Secret" = [
+            "gnome-keyring"
+          ];
+        };
+        kde = {
+          default = [
+            "kde"
+            "gtk"
+          ];
+          "org.freedesktop.impl.portal.Secret" = [
+            "kwallet"
+          ];
+        };
+      };
+    };
   };
 }

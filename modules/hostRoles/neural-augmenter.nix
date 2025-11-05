@@ -76,6 +76,9 @@ in {
       xserver.wacom.enable = true;
       flatpak.enable = true;
       hardware.bolt.enable = true;
+      blueman.enable = true;
+      # Needed for Hyprland
+      gnome.gnome-keyring.enable = true;
     };
 
     hardware = {
