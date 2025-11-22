@@ -11,14 +11,27 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    extraConfig.pipewire-pulse = {
-      "switch-on-connect" = {
-        "pulse.cmd" = [
-          {
-            "cmd" = "load-module";
-            "args" = "module-switch-on-connect";
-          }
-        ];
+    raopOpenFirewall = true;
+    extraConfig = {
+      pipewire = {
+        "10-airplay" = {
+          "context.modules" = [
+            {
+              name = "libpipewire-module-raop-discover";
+              # In case of lagging: Increase buffer size
+            }
+          ];
+        };
+      };
+      pipewire-pulse = {
+        "switch-on-connect" = {
+          "pulse.cmd" = [
+            {
+              "cmd" = "load-module";
+              "args" = "module-switch-on-connect";
+            }
+          ];
+        };
       };
     };
     # JACK devices somehow break the system
