@@ -308,6 +308,8 @@ in {
               "$modifier,mouse_down,workspace, e+1"
               "$modifier,mouse_up,workspace, e-1"
               "$modifier,Delete,exec,hyprlock"
+            # For some reason crashes sddm
+            # TODO: Update, reevaluate. If still happens: switch to gddm
               "$modifier SHIFT,Delete,exec,wlogout"
               "ALT,Tab,cyclenext"
               "ALT,Tab,bringactivetotop"
