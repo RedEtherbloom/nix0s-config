@@ -10,6 +10,7 @@ with lib; let
   cfg = config.myOptions.hostRoles.base;
 in {
   imports = [
+    ../cachix.nix
     inputs.nix-index-database.nixosModules.nix-index
     # TODO: Move into it's module named e.g. styling
     inputs.catppuccin.nixosModules.catppuccin
