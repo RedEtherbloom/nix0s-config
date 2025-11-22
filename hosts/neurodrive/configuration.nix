@@ -503,4 +503,7 @@ in {
       sopsFile = "${secrets}/secrets/services/paperless.yaml";
     };
   };
+
+  # 22.11.2025: Temporary until KDE issues with QT/Stylix can be resolved
+  stylix.targets.qt.enable = false;
 }
