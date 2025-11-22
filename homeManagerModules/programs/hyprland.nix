@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  system,
   self,
   ...
 }: let
@@ -34,6 +35,14 @@ in {
         variables = ["--all"];
       };
       xwayland.enable = true;
+      plugins =
+        [
+          inputs.hyprWorkspaceLayouts.packages.${system}.default
+        ]
+        ++ (with inputs.hyprland-plugins.packages.${system}; [
+          hyprscrolling
+          hyprwinwrap
+        ]);
       settings = {
         input = {
           kb_layout = "us,de";
@@ -42,7 +51,7 @@ in {
           kb_options = "terminate:ctrl_alt_bksp,caps:escape"; # Breaks with MC 1.7.10 LWJGL in very strang ways ,shift:both_capslock";
           kb_model = "pc104";
           numlock_by_default = true;
-          resolve_binds_by_sym = false;
+          # May need fine tuning
           scroll_method = "edge";
           follow_mouse = 1;
           # May need fine tuning
@@ -79,8 +88,7 @@ in {
         general = {
           # Required for the binds, for now. TODO: Merge with mod or ditch
           "$mod" = "SUPER";
-          no_border_on_floating = false;
-          layout = "dwindle";
+          layout = "workspacelayout";
           gaps_in = 6;
           gaps_out = 8;
           border_size = 2;
@@ -101,8 +109,8 @@ in {
           initial_workspace_tracking = 1;
           mouse_move_enables_dpms = true;
           key_press_enables_dpms = true;
-          disable_hyprland_logo = lib.mkForce false;
-          disable_splash_rendering = false;
+          disable_hyprland_logo = lib.mkForce true;
+          disable_splash_rendering = true;
           disable_scale_notification = false;
           enable_swallow = true;
           vfr = true; # Variable Frame Rate
@@ -138,12 +146,13 @@ in {
           # allow_small_split = true;
         };
         # TODO: Get a better one. We don't like this
+        animations.enabled = lib.mkForce false;
         decoration = {
-          rounding = 4;
+          rounding = 2;
           # TODO: Experiment with shaders
           # screen_shader = "stubPath";
           blur = {
-            enabled = true;
+            enabled = false;
             # size = 5;
             # May have higher GPU impact
             # TODO: Evaluate look
@@ -152,7 +161,8 @@ in {
             new_optimizations = true;
           };
           shadow = {
-            enabled = true;
+            # Evaluate performance
+            enabled = false;
             range = 4;
             render_power = 3;
           };
@@ -185,6 +195,7 @@ in {
         ];
         exec-once = [
           "nm-applet --indicator"
+          "wl-paste --watch clipvault store"
         ];
         # TODO: Setup swallow
         bind = let
@@ -242,8 +253,8 @@ in {
               "$modifier,C,exec,hyprpicker -a"
               # TODO: Scratchpad?
               "$modifier shift,T,exec,pypr toggle term"
-              "$modifier,M,exec,pavucontrol"
-              "$modifier,Q,killactive,"
+              "$modifier shift,M,exec,pavucontrol"
+              "$modifier shift,Q,killactive,"
               "ALT,f4,killactive,"
               # What is dwindle pseudo?
               "$modifier,P,pseudo,"
@@ -251,7 +262,7 @@ in {
               # TODO: How to set layout specific bindings? Crashes due to being unknown
               # "$modifier,P,swapwithmaster,"
               # TODO: How to setup a database behind clipist?
-              "$modifier,V,exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+              "$modifier,V,exec, clipvault list | rofi -dmenu -display-columns 2 | clipvault get | wl-copy"
               "$modifier SHIFT,I,togglesplit,"
               "$modifier SHIFT,F,fullscreen,"
               "$modifier,F,togglefloating,"
@@ -297,6 +308,7 @@ in {
               "$modifier,mouse_down,workspace, e+1"
               "$modifier,mouse_up,workspace, e-1"
               "$modifier,Delete,exec,hyprlock"
+              "$modifier SHIFT,Delete,exec,wlogout"
               "ALT,Tab,cyclenext"
               "ALT,Tab,bringactivetotop"
 
@@ -311,6 +323,10 @@ in {
               ",XF86AudioPrev, exec, playerctl previous"
               ",XF86MonBrightnessDown,exec,brightnessctl set 5%-"
               ",XF86MonBrightnessUp,exec,brightnessctl set +5%"
+              ",XF86Display,exec,wdisplays"
+
+              # Submaps
+              "$modifier, M, submap, player"
             ]
           );
         bindm = [
@@ -320,83 +336,105 @@ in {
           "$modifier, mouse:273, resizewindow"
         ];
         windowrule = [
-          #"noblur, xwayland:1" # Helps prevent odd borders/shadows for xwayland apps
+          #"no_blur on, xwayland:1" # Helps prevent odd borders/shadows for xwayland apps
           # downside it can impact other xwayland apps
           # This rule is a template for a more targeted approach
-          "noblur, class:^(\bresolve\b)$, xwayland:1" # Window rule for just resolve
-          "tag +file-manager, class:^([Tt]hunar|org.gnome.Nautilus|[Pp]cmanfm-qt|[Dd]olphin|[Yy]azi)$"
-          "tag +terminal, class:^(com.mitchellh.ghostty|org.wezfurlong.wezterm|Alacritty|kitty|kitty-dropterm)$"
-          "tag +browser, class:^(Brave-browser(-beta|-dev|-unstable)?)$"
-          "tag +browser, class:^([Ff]irefox|org.mozilla.firefox|[Ff]irefox-esr)$"
-          "tag +browser, class:^([Gg]oogle-chrome(-beta|-dev|-unstable)?)$"
-          "tag +browser, class:^([Tt]horium-browser|[Cc]achy-browser)$"
-          "tag +projects, class:^(codium|codium-url-handler|VSCodium)$"
-          "tag +projects, class:^(VSCode|code-url-handler)$"
-          "tag +im, class:^([Dd]iscord|[Ww]ebCord|[Vv]esktop)$"
-          "tag +im, class:^([Ff]erdium)$"
-          "tag +im, class:^([Ww]hatsapp-for-linux)$"
-          "tag +im, class:^(org.telegram.desktop|io.github.tdesktop_x64.TDesktop)$"
-          "tag +im, class:^(teams-for-linux)$"
-          "tag +games, class:^(gamescope)$"
-          "tag +games, class:^(steam_app_\d+)$"
-          "tag +gamestore, class:^([Ss]team)$"
-          "tag +gamestore, title:^([Ll]utris)$"
-          "tag +gamestore, class:^(com.heroicgameslauncher.hgl)$"
-          "tag +settings, class:^(gnome-disks|wihotspot(-gui)?)$"
-          "tag +settings, class:^([Rr]ofi)$"
-          "tag +settings, class:^(file-roller|org.gnome.FileRoller)$"
-          "tag +settings, class:^(nm-applet|nm-connection-editor|blueman-manager)$"
-          "tag +settings, class:^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol)$"
-          "tag +settings, class:^(nwg-look|qt5ct|qt6ct|[Yy]ad)$"
-          "tag +settings, class:(xdg-desktop-portal-gtk)"
-          "tag +settings, class:(.blueman-manager-wrapped)"
-          "tag +settings, class:(nwg-displays)"
-          "move 72% 7%,title:^(Picture-in-Picture)$"
-          "center, class:^([Ff]erdium)$"
-          "float, class:^([Ww]aypaper)$"
-          "center, class:^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol)$"
-          "center, class:([Tt]hunar), title:negative:(.*[Tt]hunar.*)"
-          "center, title:^(Authentication Required)$"
-          "idleinhibit fullscreen, class:^(*)$"
-          "idleinhibit fullscreen, title:^(*)$"
-          "idleinhibit fullscreen, fullscreen:1"
-          "float, tag:settings*"
-          "float, class:^([Ff]erdium)$"
-          "float, title:^(Picture-in-Picture)$"
-          "float, class:^(mpv|com.github.rafostar.Clapper)$"
-          "float, title:^(Authentication Required)$"
-          "float, class:(codium|codium-url-handler|VSCodium), title:negative:(.*codium.*|.*VSCodium.*)"
-          "float, class:^(com.heroicgameslauncher.hgl)$, title:negative:(Heroic Games Launcher)"
-          "float, class:^([Ss]team)$, title:negative:^([Ss]team)$"
-          "float, class:([Tt]hunar), title:negative:(.*[Tt]hunar.*)"
-          "float, initialTitle:(Add Folder to Workspace)"
-          "float, initialTitle:(Open Files)"
-          "float, initialTitle:(wants to save)"
-          "size 70% 60%, initialTitle:(Open Files)"
-          "size 70% 60%, initialTitle:(Add Folder to Workspace)"
-          "size 70% 70%, tag:settings*"
-          "size 60% 70%, class:^([Ff]erdium)$"
-          "opacity 1.0 1.0, tag:browser*"
-          "opacity 0.9 0.8, tag:projects*"
-          "opacity 0.94 0.86, tag:im*"
-          "opacity 0.9 0.8, tag:file-manager*"
-          "opacity 0.8 0.7, tag:terminal*"
-          "opacity 0.8 0.7, tag:settings*"
-          "opacity 0.8 0.7, class:^(gedit|org.gnome.TextEditor|mousepad)$"
-          "opacity 0.9 0.8, class:^(seahorse)$ # gnome-keyring gui"
-          "opacity 0.95 0.75, title:^(Picture-in-Picture)$"
-          "pin, title:^(Picture-in-Picture)$"
-          "keepaspectratio, title:^(Picture-in-Picture)$"
-          "noblur, tag:games*"
-          "fullscreen, tag:games*"
+          "no_blur on, match:class ^(\bresolve\b)$, match:xwayland on" # Window rule for just resolve
+          "tag +file-manager, match:class ^([Tt]hunar|org.gnome.Nautilus|[Pp]cmanfm-qt|[Dd]olphin|[Yy]azi)$"
+          "tag +terminal, match:class ^(com.mitchellh.ghostty|org.wezfurlong.wezterm|Alacritty|kitty|kitty-dropterm)$"
+          "tag +browser, match:class ^(Brave-browser(-beta|-dev|-unstable)?)$"
+          "tag +browser, match:class ^([Ff]irefox|org.mozilla.firefox|[Ff]irefox-esr)$"
+          "tag +browser, match:class ^([Gg]oogle-chrome(-beta|-dev|-unstable)?)$"
+          "tag +browser, match:class ^([Tt]horium-browser|[Cc]achy-browser)$"
+          "tag +projects, match:class ^(codium|codium-url-handler|VSCodium)$"
+          "tag +projects, match:class ^(VSCode|code-url-handler)$"
+          "tag +im, match:class ^([Dd]iscord|[Ww]ebCord|[Vv]esktop)$"
+          "tag +im, match:class ^([Ff]erdium)$"
+          "tag +im, match:class ^([Ww]hatsapp-for-linux)$"
+          "tag +im, match:class ^(org.telegram.desktop|io.github.tdesktop_x64.TDesktop)$"
+          "tag +im, match:class ^(teams-for-linux)$"
+          "tag +games, match:class ^(gamescope)$"
+          "tag +games, match:class ^(steam_app_\d+)$"
+          "tag +gamestore, match:class ^([Ss]team)$"
+          "tag +gamestore, match:title ^([Ll]utris)$"
+          "tag +gamestore, match:class ^(com.heroicgameslauncher.hgl)$"
+          "tag +settings, match:class ^(gnome-disks|wihotspot(-gui)?)$"
+          "tag +settings, match:class ^([Rr]ofi)$"
+          "tag +settings, match:class ^(file-roller|org.gnome.FileRoller)$"
+          "tag +settings, match:class ^(nm-applet|nm-connection-editor|blueman-manager)$"
+          "tag +settings, match:class ^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol)$"
+          "tag +settings, match:class ^(nwg-look|qt5ct|qt6ct|[Yy]ad)$"
+          "tag +settings, match:class (xdg-desktop-portal-gtk)"
+          "tag +settings, match:class (.blueman-manager-wrapped)"
+          "tag +settings, match:class (nwg-displays)"
+          "move 72% 7%, match:title ^(Picture-in-Picture)$"
+          "center on, match:class ^([Ff]erdium)$"
+          "float on, match:class ^([Ww]aypaper)$"
+          "center on, match:class ^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol)$"
+          "center on, match:class ([Tt]hunar), match:title negative:(.*[Tt]hunar.*)"
+          "center on, match:title ^(Authentication Required)$"
+          "idle_inhibit fullscreen, match:class ^(*)$"
+          "idle_inhibit fullscreen, match:title ^(*)$"
+          "idle_inhibit fullscreen, match:fullscreen true"
+          "float on, match:tag settings*"
+          "float on, match:class ^([Ff]erdium)$"
+          "float on, match:title ^(Picture-in-Picture)$"
+          "float on, match:class ^(mpv|com.github.rafostar.Clapper)$"
+          "float on, match:title ^(Authentication Required)$"
+          "float on, match:class (codium|codium-url-handler|VSCodium), match:title negative:(.*codium.*|.*VSCodium.*)"
+          "float on, match:class ^(com.heroicgameslauncher.hgl)$, match:title negative:(Heroic Games Launcher)"
+          "float on, match:class ^([Ss]team)$, match:title negative:^([Ss]team)$"
+          "float on, match:class ([Tt]hunar), match:title negative:(.*[Tt]hunar.*)"
+          "float on, match:initial_title (Add Folder to Workspace)"
+          "float on, match:initial_title (Open Files)"
+          "float on, match:initial_title (wants to save)"
+          "size 70% 60%, match:initial_title (Open Files)"
+          "size 70% 60%, match:initial_title (Add Folder to Workspace)"
+          "size 70% 70%, match:tag settings*"
+          "size 60% 70%, match:class ^([Ff]erdium)$"
+          "opacity 1.0 1.0, match:tag browser*"
+          "opacity 0.9 0.8, match:tag projects*"
+          "opacity 0.94 0.86, match:tag im*"
+          "opacity 0.9 0.8, match:tag file-manager*"
+          "opacity 0.8 0.7, match:tag terminal*"
+          "opacity 0.8 0.7, match:tag settings*"
+          "opacity 0.8 0.7, match:class ^(gedit|org.gnome.TextEditor|mousepad)$"
+          "opacity 0.9 0.8, match:class ^(seahorse)$ # gnome-keyring gui"
+          "opacity 0.95 0.75, match:title ^(Picture-in-Picture)$"
+          "pin on, match:title ^(Picture-in-Picture)$"
+          "keep_aspect_ratio on, match:title ^(Picture-in-Picture)$"
+          "no_blur on, match:tag games*"
+          "fullscreen on, match:tag games*"
           # Prevent the fabled odd xwaylandvideobridge from wreaking havoc on our fair hyprland. Source: https://wiki.hypr.land/Useful-Utilities/Screen-Sharing/#xwayland
-          "opacity 0.0 override, class:^(xwaylandvideobridge)$"
-          "noanim, class:^(xwaylandviDeobridge)$"
-          "noinitialfocus, class:^(xwaylandvideobridge)$"
-          "maxsize 1 1, class:^(xwaylandvideobridge)$"
-          "noblur, class:^(xwaylandvideobridge)$"
-          "nofocus, class:^(xwaylandvideobridge)$"
+          "opacity 0.0 override, match:class ^(xwaylandvideobridge)$"
+          "no_anim on, match:class ^(xwaylandviDeobridge)$"
+          "no_initial_focus on, match:class ^(xwaylandvideobridge)$"
+          "max_size 1 1, match:class ^(xwaylandvideobridge)$"
+          "no_blur on, match:class ^(xwaylandvideobridge)$"
+          "no_focus on, match:class ^(xwaylandvideobridge)$"
         ];
+        bindl = [
+          ",switch:Lid Switch, exec, hyprlock"
+        ];
+        plugins = {
+          wslayout = {
+            default_layout = "dwindle";
+          };
+        };
+      };
+      submaps = {
+        player.settings = {
+          binde = [
+            ", space, exec, playerctl play-pause"
+            ", j, exec, playerctl next"
+            ", k, exec, playerctl previous"
+            ", h, exec, playerctl position 10-"
+            ", l, exec, playerctl position 10+"
+          ];
+          bind = [
+            ", escape, submap, reset"
+          ];
+        };
       };
     };
     services = {
@@ -407,29 +445,38 @@ in {
             after_sleep_cmd = "hyprctl dispatch dpms on";
             ignore_dbus_inhibit = false;
             lock_cmd = "hyprlock";
+            before_sleep_cmd = "hyprlock";
           };
           listener = [
             {
-              timeout = 900;
+              timeout = 600;
               on-timeout = "hyprlock";
             }
             {
-              timeout = 1200;
+              timeout = 900;
               on-timeout = "hyprctl dispatch dpms off";
               on-resume = "hyprctl dispatch dpms on";
+            }
+            {
+              timeout = 1800;
+              on-timeout = "systemctl suspend-then-hibernate";
             }
           ];
         };
       };
       gnome-keyring.enable = true;
     };
-    stylix.targets.qt.platform = lib.mkForce "qtct";
+    # stylix.targets.qt.platform = lib.mkForce "qtct";
 
     # TODO: New wallpaper
     # TODO: Nice, fancy theme
     programs.hyprlock.enable = true;
     # TODO: Do we need pyprland?
     # TODO: Needs to be bigger. Preferrably use a prefab config
+    programs.wlogout = {
+      enable = true;
+      # layout = lib.attrsets.genAttrs ["lock" "hibernate" "logout" "shutdown" "suspend" "reboot"] (_: {circular = true;});
+    };
     programs.rofi = {
       enable = true;
       extraConfig = {
@@ -447,15 +494,14 @@ in {
         position = "top";
         # TODO: Evaluate
         layer = "top";
-        # Try dynamic
-        # height = 30;
-        spacing = 6;
+        height = 20;
+        spacing = 4;
         # TODO: Configure sway ipc for hide
         reload_style_on_change = true;
         # mode = "hide";
         modules-left = [
-          "hyprland/submap"
           "hyprland/workspaces"
+          "hyprland/submap"
         ];
         modules-center = [
           "hyprland/window"
@@ -492,27 +538,25 @@ in {
         };
         "wireplumber" = {
           format = "󰝚 {volume}% {node_name:.8}";
-          # TODO: New wallpaper
           format-muted = "󰝛";
           max-volume = "175.0";
         };
-        "hyprland/workspaces" = {
-          # active-only = true;
-          # TODO: Format with idon
-          workspace-taskar = {
-            enable = true;
-            # Probably optional
-            update-active-window = true;
-          };
-          # TODO: How to separate into e.g. work and private?
-        };
+        # "hyprland/workspaces" = {
+        #   active-only = true;
+        #   # TODO: Format with icon
+        #   workspace-taskar = {
+        #     enable = true;
+        #     # Probably optional
+        #     update-active-window = true;
+        #   };
+        #   # TODO: How to separate into e.g. work and private?
+        # };
         "hyprland/window" = {
           # format = "{icon} {title}";
           max-length = 60;
-          separate-outputs = true;
+          separate-outputs = false;
           # TODO: Strip leading parenthesis(e.g. youtube notifications)
-          rewrite = {
-          };
+          # rewrite = { };
         };
         # See: https://github.com/Alexays/Waybar/wiki/Module:-Backlight-Slider
         # "backlight/slider" = {
@@ -581,7 +625,10 @@ in {
       };
       systemd = {
         enable = true;
-        target = "hyprland-session.target";
+        enableDebug = true;
+        enableInspect = true;
+        # TODO: Waybar keeps starting in plasma too
+        # target = "hyprland-session.target";
       };
     };
     programs.hyprshot = {
@@ -599,11 +646,12 @@ in {
       ydotool
       hyprpolkitagent
       hyprland-qtutils # needed for banners and ANR messages
+      brightnessctl
 
       # Own
       networkmanagerapplet
       # TODO: Try networkmanager_dmenu?
-      cliphist
+      clipvault
       emojipick
       hyprpicker
       rofi-bluetooth
@@ -624,6 +672,9 @@ in {
       gcr
 
       wdisplays
+      wev
+
+      waystt
     ];
 
     xdg.portal = {
@@ -636,15 +687,15 @@ in {
         kdePackages.xdg-desktop-portal-kde
       ];
       config = {
-        common = {
-          default = [
-            "gtk"
-            "kde"
-          ];
-          "org.freedesktop.impl.portal.Secret" = [
-            "gnome-keyring"
-          ];
-        };
+        # common = {
+        #   default = [
+        #     "gtk"
+        #     "kde"
+        #   ];
+        #   "org.freedesktop.impl.portal.Secret" = [
+        #     "gnome-keyring"
+        #   ];
+        # };
         hyprland = {
           default = [
             "hyprland"
@@ -655,15 +706,15 @@ in {
             "gnome-keyring"
           ];
         };
-        kde = {
-          default = [
-            "kde"
-            "gtk"
-          ];
-          "org.freedesktop.impl.portal.Secret" = [
-            "kwallet"
-          ];
-        };
+        # kde = {
+        #   default = [
+        #     "kde"
+        #     "gtk"
+        #   ];
+        #   "org.freedesktop.impl.portal.Secret" = [
+        #     "kwallet"
+        #   ];
+        # };
       };
     };
   };

@@ -105,6 +105,15 @@
       url = "gitlab:Zaney/zaneyos";
       flake = false;
     };
+    hyprland.url = "github:hyprwm/Hyprland";
+    hyprWorkspaceLayouts = {
+      url = "github:zakk4223/hyprWorkspaceLayouts";
+      inputs.hyprland.follows = "hyprland";
+    };
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+    inputs.hyprland.follows = "hyprland";
+    };
   };
 
   outputs = {
@@ -165,6 +174,7 @@
         #     src = nixpkgs;
         #     patches = [];
         #   };
+        # TODO: Check why own packages cannot be referred to via flake syntax
         _module.args.pkgs = import inputs.nixpkgs {
           inherit system;
           config = {

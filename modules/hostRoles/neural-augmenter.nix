@@ -4,6 +4,7 @@
   inputs,
   pkgs,
   secrets,
+  system,
   ...
 }:
 with lib; let
@@ -59,7 +60,11 @@ in {
         enable = true;
         openFirewall = true;
       };
-      hyprland.enable = true; 
+      hyprland = {
+        enable = true;
+        package = inputs.hyprland.packages.${system}.hyprland;
+        portalPackage = inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
+      };
     };
 
     services = {
