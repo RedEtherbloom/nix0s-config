@@ -200,8 +200,9 @@ in {
     (lib.mkIf cfg.java {
       programs.java = {
         enable = true;
-        package = with pkgs; jdk23;
+        package = pkgs.jdk23;
       };
+      home.packages = [pkgs.jetbrains.idea-community-bin];
     })
     (lib.mkIf cfg.direnv {
       programs.direnv = {
