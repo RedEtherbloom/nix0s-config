@@ -431,8 +431,16 @@ in {
     alvr = {
       enable = true;
       openFirewall = true;
-      # package = pkgs.alvr-nightly;
     };
+    nix-ld.libraries = with pkgs; [
+      libxkbcommon
+      libGL
+      wayland
+      libva
+      # After here it became iirc steamvr issues. Probably needs a newer steam linux runtime
+      SDL2
+      glib
+    ];
   };
 
   environment = {
