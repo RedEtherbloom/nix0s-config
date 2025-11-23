@@ -67,14 +67,14 @@ in {
       packages =
         (with pkgs; [
           tor-browser
-          bitwarden
+          bitwarden-desktop
           bitwarden-cli
 
           krita-upstream
 
           # KDE info packages
           clinfo
-          glxinfo
+          mesa-demos
           vulkan-tools
           wayland-utils
           pciutils
@@ -191,7 +191,7 @@ in {
       autostart = {
         enable = true;
         entries = [
-          "${pkgs.bitwarden}/share/applications/bitwarden.desktop"
+          "${pkgs.bitwarden-desktop}/share/applications/bitwarden.desktop"
         ];
       };
       configFile."nix-search-tv/config.json".source = pkgs.writers.writeJSON "nstw-config.json" {

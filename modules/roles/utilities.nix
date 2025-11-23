@@ -147,7 +147,7 @@ in {
           mosh
         ]
         ++ lib.optionals cfg.pdfUtils [
-          poppler_utils
+          poppler-utils
           # pdfs
           ripgrep-all
         ]

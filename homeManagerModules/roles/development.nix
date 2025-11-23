@@ -172,13 +172,13 @@ in {
     (lib.mkIf cfg.git {
       programs = {
         git = {
-          userName = "RedEtherbloom";
-          userEmail = "etherbloom@mailbox.org";
           enable = true;
-          extraConfig = {
-            push = {
-              autoSetupRemote = true;
+          settings = {
+            user = {
+              name = "RedEtherbloom";
+              email = "etherbloom@mailbox.org";
             };
+            push.autoSetupRemote = true;
           };
         };
         lazygit = {
@@ -200,7 +200,7 @@ in {
     (lib.mkIf cfg.java {
       programs.java = {
         enable = true;
-        package = pkgs.jdk23;
+        package = pkgs.jdk25;
       };
       home.packages = [pkgs.jetbrains.idea-community-bin];
     })

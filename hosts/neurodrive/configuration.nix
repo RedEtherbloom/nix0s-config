@@ -238,6 +238,7 @@ in {
         "${secrets}/secrets/neurodrive/restic_server/restic.crt"
       ];
     };
+    systembus-notify.enable = lib.mkForce true;
     smartd = {
       enable = true;
       autodetect = true;
@@ -316,11 +317,11 @@ in {
       enable32Bit = true;
       extraPackages = with pkgs; [
         nvidia-vaapi-driver
-        vaapiVdpau
+        libva-vdpau-driver
         libvdpau-va-gl
       ];
       extraPackages32 = with pkgs; [
-        vaapiVdpau
+        libva-vdpau-driver
       ];
     };
     nvidia = {
@@ -434,10 +435,7 @@ in {
   stylix.image = "${secrets}/dotfiles/wallpapers/current_wallpaper";
 
   programs = {
-    coolercontrol = {
-      enable = true;
-      nvidiaSupport = true;
-    };
+    coolercontrol.enable = true;
     alvr = {
       enable = true;
       openFirewall = true;

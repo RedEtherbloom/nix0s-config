@@ -119,17 +119,6 @@ in {
     });
   });
 
-  # See issue: https://github.com/NixOS/nixpkgs/issues/417312
-  podman = prev.podman.overrideAttrs (_: rec {
-    version = "5.4.1";
-    src = prev.fetchFromGitHub {
-      owner = "containers";
-      repo = "podman";
-      tag = "v${version}";
-      hash = "sha256-RirMBb45KeBLdBJrRa86WxI4FiXdBar+RnVQ2ezEEYc=";
-    };
-  });
-
   gnupg-with-pin-caching = prev.gnupg.overrideAttrs (_: prevAttrs: {
     # Address missing PIn caching https://dev.gnupg.org/T7041
     patches = (prevAttrs.patches or []) ++ [./0001-allow-shared-pin-cache.patch];

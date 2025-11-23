@@ -42,7 +42,8 @@ in {
         nerd-fonts.symbols-only
         noto-fonts
         noto-fonts-cjk-sans
-        noto-fonts-emoji
+        noto-fonts-color-emoji
+        noto-fonts-monochrome-emoji
       ];
       fontconfig = {
         # The default of slight always felt to fuzzy
