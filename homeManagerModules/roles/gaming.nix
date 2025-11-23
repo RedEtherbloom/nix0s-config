@@ -48,6 +48,7 @@ in {
         # Optional
         additionalPrograms = [pkgs.ffmpeg];
       })
+      ut1999
     ];
     programs.mangohud.enable = true;
   };

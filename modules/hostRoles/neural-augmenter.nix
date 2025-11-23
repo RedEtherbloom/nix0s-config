@@ -4,6 +4,7 @@
   inputs,
   pkgs,
   secrets,
+  system,
   ...
 }:
 with lib; let
@@ -60,12 +61,16 @@ in {
         openFirewall = true;
       };
       extra-container.enable = true;
+      hyprland = {
+        enable = true;
+        package = inputs.hyprland.packages.${system}.hyprland;
+        portalPackage = inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
+      };
     };
 
     services = {
       tailscale.enable = true;
-      # Broken as of 01.08.2025
-      # udev.packages = [pkgs.platformio-core];
+      udev.packages = [pkgs.platformio-core];
       mullvad-vpn = {
         enable = true;
         # GUI
@@ -76,6 +81,9 @@ in {
       xserver.wacom.enable = true;
       flatpak.enable = true;
       hardware.bolt.enable = true;
+      blueman.enable = true;
+      # Needed for Hyprland
+      gnome.gnome-keyring.enable = true;
     };
 
     hardware = {

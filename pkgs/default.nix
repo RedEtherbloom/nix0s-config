@@ -160,4 +160,55 @@ in {
   piper-tts = prev.piper-tts.overrideAttrs {
     patches = ["${inputs.pr-piper-fix}/pkgs/by-name/pi/piper-tts/cmake-system-libs.patch"];
   };
+
+  clipvault = prev.rustPlatform.buildRustPackage rec {
+    pname = "clipvault";
+    version = "1.1.0";
+    src = prev.fetchFromGitHub {
+      owner = "rolv-apneseth";
+      repo = "clipvault";
+      rev = "v${version}";
+      hash = "sha256-ahhbUGijNZOjZ/egjdecn/4M6Nicq7PDDac09FNZz/Y=";
+    };
+    cargoHash = "sha256-Mm0att6zu9Yknoa9NBsdrA8lz1o0Q6FzWS0UU+1f/f0=";
+    # Tests fail to due logs dir location not being creatable
+    doCheck = false;
+    meta = {
+      description = "Clipboard history manager for Wayland, inspired by cliphist.";
+      homepage = "https://github.com/rolv-apneseth/clipvault";
+      license = prev.lib.licenses.gpl3Only;
+      maintainers = [
+        {
+          email = "etherbloom@mailbox.org";
+          github = "RedEtherbloom";
+          githubId = "16244495";
+          name = "Etherbloom";
+        }
+      ];
+    };
+  };
+  waystt = prev.rustPlatform.buildRustPackage rec {
+    pname = "waystt";
+    version = "0.3.0";
+    description = "Minimal Speech-To-Text tool for Wayland";
+    src = prev.fetchFromGitHub {
+      owner = "sevos";
+      repo = "waystt";
+      rev = "v${version}";
+      hash = "sha256-7RKYqED2/aPDvofNGAa48DTexQYdUqkQzb7BX0CsDCU=";
+    };
+    cargoHash = "sha256-W2pfYDPFyo/ICZ5Y0nLsP4ZeUe7lBffItelnWXrOSLc=";
+    nativeBuildInputs = with prev; [
+      pkg-config
+      cmake
+      git
+    ];
+    buildInputs = with prev; [
+      alsa-lib.dev
+      openssl.dev
+    ];
+    env = {
+      LIBCLANG_PATH = "${prev.llvmPackages.libclang.lib}/lib";
+    };
+  };
 }

@@ -38,6 +38,8 @@ in {
       fontDir.enable = true;
       packages = with pkgs; [
         nerd-fonts.open-dyslexic
+        # E.g. material fonts
+        nerd-fonts.symbols-only
         noto-fonts
         noto-fonts-cjk-sans
         noto-fonts-emoji
@@ -51,14 +53,28 @@ in {
           monospace = ["OpenDyslexicM Nerd Font Mono"];
           emoji = ["Noto Color Emoji"];
           # OpenDyslexic is very large by default. Too large for our taste.
-          # TODO: No clear equivalent without stylix
-          # sizes = {
-          #   applications = 10;
-          #   desktop = 8;
-          #   popups = 8;
-          #   terminal = 10;
-          # };
         };
+      };
+    };
+    stylix.fonts = {
+      monospace = {
+        # TODO: Need a better mono font
+        package = pkgs.nerd-fonts.open-dyslexic;
+        name = "OpenDyslexicM Nerd Font Mono";
+      };
+      serif = {
+        package = pkgs.nerd-fonts.open-dyslexic;
+        name = "OpenDyslexic Nerd Font";
+      };
+      sansSerif = {
+        package = pkgs.nerd-fonts.open-dyslexic;
+        name = "OpenDyslexic Nerd Font";
+      };
+      sizes = {
+        applications = 10;
+        desktop = 8;
+        popups = 8;
+        terminal = 10;
       };
     };
   };

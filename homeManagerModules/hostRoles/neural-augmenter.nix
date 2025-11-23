@@ -31,6 +31,7 @@ in {
           enable = lib.mkDefault true;
           stitching = lib.mkDefault true;
         };
+        hyprland.enable = lib.mkDefault true;
       };
       vscode.enable = lib.mkDefault true;
 
@@ -136,6 +137,9 @@ in {
           # Subsonic clients
           feishin
           aonsoku
+
+          # Debugging render scenes for Minecraft
+          renderdoc
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
           yubioath-flutter
@@ -146,8 +150,7 @@ in {
         # Smooth scrolling
         MOZ_USE_XINPUT2 = "1";
         #QT_LOGGING_RULES = "kscreenlocker.debug=true;kwin_*.debug=true;plasma*.debug=true";
-        QT_LOGGING_RULES = "*.debug=true";
-
+        #QT_LOGGING_RULES = "*.debug=true";
       };
       extraOutputsToInstall = [
         "doc"
@@ -167,11 +170,9 @@ in {
         package = pkgs.chromium.override {enableWideVine = true;};
       };
       nushell.enable = true;
-      # Currently useless due to missing KDE support
       rofi = {
         enable = lib.mkDefault false;
         terminal = "${config.programs.kitty.package}";
-        package = pkgs.rofi-wayland;
       };
       spotify-player.enable = true;
       bat.enable = true;
@@ -180,13 +181,17 @@ in {
       # TODO: Does this improve completion speed?
       # TODO: This breaks normal completion with e.g. --user option for systemd too often
       # carapace.enable = true;
+      # TODO: Try out fish as comparison to zsh
+      fish = {
+        enable = true;
+      };
     };
 
     xdg = {
       autostart = {
         enable = true;
         entries = [
-          "${pkgs.obsidian}/share/applications/obsidian.desktop"
+          "${pkgs.bitwarden}/share/applications/bitwarden.desktop"
         ];
       };
       configFile."nix-search-tv/config.json".source = pkgs.writers.writeJSON "nstw-config.json" {
@@ -198,7 +203,6 @@ in {
       };
     };
 
-    # Set terminal opacity using stlyix instead
     stylix = {
       enable = true;
       opacity.terminal = 0.85;

@@ -13,7 +13,6 @@ in {
       # !EXCEPTION TO GET AUDIOSINK KICK-STARTED! #
       ../audiosink/raspberry_pi_binary_cache.nix
       ../../modules
-      ../../modules/cachix.nix
       ../../modules/common/ssh.nix
       ../../modules/hdd.nix
       # TODO: Remove once hm sops-nix supports secrets
@@ -523,4 +522,7 @@ in {
       sopsFile = "${secrets}/secrets/services/paperless.yaml";
     };
   };
+
+  # 22.11.2025: Temporary until KDE issues with QT/Stylix can be resolved
+  stylix.targets.qt.enable = false;
 }
