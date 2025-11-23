@@ -160,7 +160,6 @@ in {
       # TODO: Setup options
       syncthing.enable = true;
       playerctld.enable = true;
-      easyeffects.enable = true;
     };
     programs = {
       chromium = {
