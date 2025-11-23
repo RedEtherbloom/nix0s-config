@@ -118,6 +118,8 @@ in {
     firewall = {
       allowedTCPPorts =
         [
+          # Feishin remote control port
+          4333
           # Pulseaudio Network Sharing. Probably only needed for publish
           4713
           # Home Assistant
@@ -284,6 +286,15 @@ in {
     #   forceSSL = false;
     #   enableACME = false;
     # };
+    navidrome = {
+      enable = true;
+      openFirewall = true;
+      group = "users";
+      settings = {
+        Address = "0.0.0.0";
+        MusicFolder = "/mnt/cryptostorage/Music";
+      };
+    };
   };
 
   hardware = {

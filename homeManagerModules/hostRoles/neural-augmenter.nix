@@ -132,6 +132,10 @@ in {
           nix-search-tv
 
           systemctl-tui
+          
+          # Subsonic clients
+          feishin
+          aonsoku
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
           yubioath-flutter
