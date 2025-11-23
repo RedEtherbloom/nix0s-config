@@ -59,6 +59,7 @@ in {
         enable = true;
         openFirewall = true;
       };
+      extra-container.enable = true;
     };
 
     services = {
