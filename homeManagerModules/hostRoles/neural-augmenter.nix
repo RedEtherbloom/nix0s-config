@@ -163,6 +163,11 @@ in {
       # TODO: Setup options
       syncthing.enable = true;
       playerctld.enable = true;
+      kdeconnect = {
+        enable = true;
+        indicator = false;
+        package = pkgs.kdePackages.kdeconnect-kde;
+      };
     };
     programs = {
       chromium = {
@@ -204,6 +209,7 @@ in {
     };
 
     stylix = {
+      targets.kde.enable = false;
       enable = true;
       opacity.terminal = 0.85;
     };

@@ -15,19 +15,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    myOptions = {
-      hostRoles.base.enable = mkDefault true;
-      plasma-manager.enable = true;
-    };
+    myOptions.hostRoles.base.enable = mkDefault true;
 
     home = {
-      # Remove files for stylix
-      # TODO: Try to disable this in KDE
-      activation = {
-        removeStylixBlockersAction = lib.hm.dag.entryBefore ["checkFilesChanged"] ''
-          run rm -rf ~/.config/gtk-3.0 ~/.config/gtk-4.0 ~/.gtkrc-2.0
-        '';
-      };
       packages = with pkgs; [
         helvum
         pavucontrol

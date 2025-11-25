@@ -146,7 +146,7 @@ in {
           # allow_small_split = true;
         };
         # TODO: Get a better one. We don't like this
-        animations.enabled = lib.mkForce false;
+        animations.enabled = true;
         decoration = {
           rounding = 2;
           # TODO: Experiment with shaders
@@ -261,7 +261,7 @@ in {
               # Master layout
               # TODO: How to set layout specific bindings? Crashes due to being unknown
               # "$modifier,P,swapwithmaster,"
-              # TODO: How to setup a database behind clipist?
+              # TODO: How to see e.g. copied images in dmenu?
               "$modifier,V,exec, clipvault list | rofi -dmenu -display-columns 2 | clipvault get | wl-copy"
               "$modifier SHIFT,I,togglesplit,"
               "$modifier SHIFT,F,fullscreen,"
@@ -308,9 +308,9 @@ in {
               "$modifier,mouse_down,workspace, e+1"
               "$modifier,mouse_up,workspace, e-1"
               "$modifier,Delete,exec,hyprlock"
-            # For some reason crashes sddm
-            # TODO: Update, reevaluate. If still happens: switch to gddm
-              "$modifier SHIFT,Delete,exec,wlogout"
+              # For some reason crashes sddm
+              # TODO: Update, reevaluate. If still happens: switch to gddm
+              "ALT CONTROL,Delete,exec,wlogout"
               "ALT,Tab,cyclenext"
               "ALT,Tab,bringactivetotop"
 
@@ -468,13 +468,11 @@ in {
       };
       gnome-keyring.enable = true;
     };
-    # stylix.targets.qt.platform = lib.mkForce "qtct";
 
     # TODO: New wallpaper
     # TODO: Nice, fancy theme
     programs.hyprlock.enable = true;
     # TODO: Do we need pyprland?
-    # TODO: Needs to be bigger. Preferrably use a prefab config
     programs.wlogout = {
       enable = true;
       # TODO: Shrink tile size using CSS
@@ -517,6 +515,7 @@ in {
         }
       ];
     };
+    # TODO: Find good rofi config
     programs.rofi = {
       enable = true;
       extraConfig = {
@@ -528,7 +527,6 @@ in {
     # TODO: Separate bar for work workspace
     programs.waybar = {
       enable = true;
-      # TODO: clearer separators
       style = builtins.readFile "${self}/dotfiles/waybarstyle.css";
       settings.mainBar = {
         position = "top";
@@ -668,15 +666,30 @@ in {
         enableDebug = true;
         enableInspect = true;
         # TODO: Waybar keeps starting in plasma too
-        # target = "hyprland-session.target";
+        target = "hyprland-session.target";
       };
     };
+
+    # Required for waybar animations to properly function
+    gtk = {
+      gtk2.extraConfig = ''
+        gtk-enable-animations = true;
+      '';
+      gtk3.extraConfig.gtk-enable-animations = true;
+      gtk4.extraConfig.gtk-enable-animations = true;
+    };
+    dconf.settings = {
+      "org/gnome/desktop/interface" = {
+        enable-animations = true;
+      };
+    };
+
     programs.hyprshot = {
       enable = true;
       saveLocation = "$HOME/Pictures/Screenshots";
     };
 
-    # TODO: Look over
+    # TODO: Remove unneedded
     home.packages = with pkgs; [
       swww
       grim

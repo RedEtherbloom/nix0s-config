@@ -3,15 +3,15 @@
   config,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   inherit (pkgs.kdePackages) kclock;
 in {
-  config = mkIf config.services.desktopManager.plasma6.enable {
-    services = {
-      dbus.packages = [kclock];
-      desktopManager.plasma6.enableQt5Integration = true;
-    };
+  options.myOptions.roles.plasma.enableKclock = lib.mkOption {
+    type = lib.types.bool;
+    default = false;
+  };
+  config = lib.mkIf (config.services.desktopManager.plasma6.enable && config.myOptions.roles.plasma.enableKclock) {
+    services.dbus.packages = [kclock];
     environment.systemPackages = [kclock];
   };
 }

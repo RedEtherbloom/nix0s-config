@@ -88,7 +88,6 @@
       enable = true;
     };
     # Does this have to be replaced with home-manager?
-    desktopManager.plasma6.enable = true;
     printing = {
       enable = true;
       drivers = with pkgs; [

@@ -73,9 +73,12 @@ in {
         ];
       };
 
-      myOptions.solaar = {
-        enable = true;
-        autostart.enable = true;
+      myOptions = {
+        plasma-manager.enable = true;
+        solaar = {
+          enable = true;
+          autostart.enable = true;
+        };
       };
 
       # Let's try out McFly on our beefier machine
@@ -140,7 +143,6 @@ in {
         };
       };
       # 22.11.2025: Temporary until KDE issues with QT/Stylix can be resolved
-      stylix.targets.kde.enable = false;
       stylix.targets.qt.enable = false;
     })
     (define-kscreen-layout "benq" "output.DP-3.disable output.HDMI-A-1.disable output.DP-2.enable output.DP-2.rotation.normal output.DP-2.position.0,0" "ctrl+shift+f1")
