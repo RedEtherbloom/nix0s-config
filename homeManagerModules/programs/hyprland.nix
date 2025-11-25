@@ -477,7 +477,45 @@ in {
     # TODO: Needs to be bigger. Preferrably use a prefab config
     programs.wlogout = {
       enable = true;
-      # layout = lib.attrsets.genAttrs ["lock" "hibernate" "logout" "shutdown" "suspend" "reboot"] (_: {circular = true;});
+      # TODO: Shrink tile size using CSS
+      layout = [
+        rec {
+          label = "lock";
+          action = "loginctl lock-session";
+          text = "lock(${keybind})";
+          keybind = "l";
+        }
+        rec {
+          label = "hibernate";
+          action = "systemctl hibernate";
+          text = "hibernate(${keybind})";
+          keybind = "h";
+        }
+        rec {
+          label = "logout";
+          action = "hyprctl dispatch exit";
+          text = "logout(${keybind})";
+          keybind = "e";
+        }
+        rec {
+          label = "shutdown";
+          action = "systemctl poweroff";
+          text = "shutdown(${keybind})";
+          keybind = "s";
+        }
+        rec {
+          label = "suspend";
+          action = "systemctl suspend-then-hibernate";
+          text = "suspend(${keybind})";
+          keybind = "u";
+        }
+        rec {
+          label = "reboot";
+          action = "systemctl reboot";
+          text = "reboot(${keybind})";
+          keybind = "r";
+        }
+      ];
     };
     programs.rofi = {
       enable = true;
