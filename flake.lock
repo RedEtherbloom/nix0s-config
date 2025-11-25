@@ -366,6 +366,29 @@
         "type": "github"
       }
     },
+    "hyprDynamicMonitors": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1763738492,
+        "narHash": "sha256-rG9LcMauyp66wwNDy61nsdSunlgJKsHBhqXBOOAA0PU=",
+        "owner": "fiffeek",
+        "repo": "hyprdynamicmonitors",
+        "rev": "d33f75d05a9ad019968b9439a86e404a6d1ff826",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fiffeek",
+        "repo": "hyprdynamicmonitors",
+        "type": "github"
+      }
+    },
     "hyprWorkspaceLayouts": {
       "inputs": {
         "hyprland": [
@@ -1170,6 +1193,7 @@
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "hyprDynamicMonitors": "hyprDynamicMonitors",
         "hyprWorkspaceLayouts": "hyprWorkspaceLayouts",
         "hyprland": "hyprland",
         "hyprland-plugins": "hyprland-plugins",

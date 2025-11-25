@@ -112,7 +112,14 @@
     };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
-    inputs.hyprland.follows = "hyprland";
+      inputs.hyprland.follows = "hyprland";
+    };
+    hyprDynamicMonitors = {
+      url = "github:fiffeek/hyprdynamicmonitors";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
     };
   };
 

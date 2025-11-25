@@ -11,6 +11,7 @@
 in {
   imports = [
     "${inputs.hyprland-zaneyos}/modules/home/hyprland/animations-end4.nix"
+    inputs.hyprDynamicMonitors.homeManagerModules.default
   ];
 
   options.myOptions.roles.hyprland = {
@@ -728,6 +729,7 @@ in {
       wev
 
       waystt
+      config.home.hyprdynamicmonitors.package
     ];
 
     xdg.portal = {
@@ -769,6 +771,11 @@ in {
         #   ];
         # };
       };
+    };
+    home.hyprdynamicmonitors = {
+      enable = true;
+      installExamples = true;
+      installThemes = true;
     };
   };
 }
