@@ -62,13 +62,33 @@ in {
               foldlevelstart = 4;
               showmode = false;
               swapfile = true;
+              # Keep cursor centerred
+              scrolloff = 8;
             };
             # Setup transparency
             # entryBetween is mostly used to keep the entry close to the globals section for visual clarity
-            luaConfigRC.neovide = dag.entryBetween ["basic"] ["globalsScript"] ''
-              vim.g.neovide_opacity = 0.9;
-              vim.g.neovide_normal_opacity = 0.9;
-            '';
+            luaConfigRC = {
+              neovide = dag.entryBetween ["basic"] ["globalsScript"] ''
+                vim.g.neovide_opacity = 0.9;
+                vim.g.neovide_normal_opacity = 0.9;
+              '';
+              neovideClipboard = ''
+                if vim.g.neovide then
+                  vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
+                  vim.keymap.set('v', '<D-c>', '"+y') -- Copy
+                  vim.keymap.set('n', '<D-v>', '"+P') -- Paste normal mode
+                  vim.keymap.set('v', '<D-v>', '"+P') -- Paste visual mode
+                  vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
+                  vim.keymap.set('i', '<D-v>', '<ESC>l"+Pli') -- Paste insert mode
+                end
+
+                -- Allow clipboard copy paste in neovim
+                vim.api.nvim_set_keymap(''', '<D-v>', '+p<CR>', { noremap = true, silent = true})
+                vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+                vim.api.nvim_set_keymap('t', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+                vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+              '';
+            };
             viAlias = true;
             vimAlias = true;
             searchCase = "smart";
