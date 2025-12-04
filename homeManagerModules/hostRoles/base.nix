@@ -120,7 +120,7 @@ in {
 
           enableSshSupport = true;
           enableExtraSocket = true;
-          pinentry.package = lib.mkDefault pkgs.pinentry-curses;
+          pinentry.package = lib.mkDefault pkgs.pinentry-gnome3;
           verbose = true;
           extraConfig = ''
             allow-loopback-pinentry
