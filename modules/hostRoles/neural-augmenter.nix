@@ -136,5 +136,18 @@ in {
     # Needed for podman
     users.users."inf".autoSubUidGidRange = true;
     documentation.dev.enable = true;
+
+    # See: https://github.com/NixOS/nixpkgs/issues/409986
+    # environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
+    environment.etc."xdg/menus/applications.menu".source = let
+      applications-menu = "menu/desktop/plasma-applications.menu";
+      src = pkgs.fetchFromGitHub {
+        owner = "KDE";
+        repo = "plasma-workspace";
+        tag = "v${pkgs.kdePackages.plasma-workspace.version}";
+        hash = "sha256-BFjGHITdV29B4h6UhhK/1kB+Gwuq+AhFnyjTSofZZuo=";
+        sparseCheckout = ["${applications-menu}"];
+      };
+    in "${src}/${applications-menu}";
   };
 }

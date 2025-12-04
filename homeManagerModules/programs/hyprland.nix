@@ -826,5 +826,9 @@ in
       installExamples = false;
       installThemes = true;
     };
+    # Rebuild cache for dolphin
+    home.activation.rebuild-kde-xdg-cache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6
+    '';
   };
 }
