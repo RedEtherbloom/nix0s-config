@@ -1046,15 +1046,16 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1762622004,
-        "narHash": "sha256-NpzzgaoMK8aRHnndHWbYNKLcZN0r1y6icCoJvGoBsoE=",
+        "lastModified": 1764172664,
+        "narHash": "sha256-j06Abkf2/5LtaoUS5XLiX3qDkoigwbt1MT4J8Lqpu2w=",
         "owner": "NotAShelf",
         "repo": "nvf",
-        "rev": "09470524a214ed26633ddc2b6ec0c9bf31a8b909",
+        "rev": "353ade5acc809697febeef1caa2c2a597224cd62",
         "type": "github"
       },
       "original": {
         "owner": "NotAShelf",
+        "ref": "v0.8",
         "repo": "nvf",
         "type": "github"
       }
@@ -1239,11 +1240,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1759450476,
-        "narHash": "sha256-lZziUkqzsN4ybKJXrpMBBSvo1cccOpqzxm7pEh1LpLU=",
+        "lastModified": 1764776468,
+        "narHash": "sha256-6u6DHL/JyhM5rmdOqAF4ESw3jpurZLoqELvgGvaPpc4=",
         "ref": "refs/heads/main",
-        "rev": "658b340ecb3bcab57799cd5e6a279201f57d6876",
-        "revCount": 39,
+        "rev": "2e71f2dda104ce09c9c96b5177869063cb68ebf6",
+        "revCount": 40,
         "type": "git",
         "url": "ssh://git@github.com/RedEtherbloom/nix0s-secrets"
       },
