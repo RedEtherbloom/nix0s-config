@@ -2,13 +2,41 @@
   config,
   inputs,
   lib,
+  osConfig,
   pkgs,
   system,
   self,
   ...
-}: let
+}:
+let
   cfg = config.myOptions.roles.hyprland;
-in {
+  # Concat the monitor lines into a single hyperctl command
+  rofiDisplayLayout =
+    let
+      buildMonitorCommandEntry =
+        attrName: displayConfiguration:
+        "${displayConfiguration.name or attrName}: ${
+          lib.strings.concatStringsSep "; " (
+            lib.lists.forEach displayConfiguration.monitors (
+              monitorLine: "hyprctl keyword ${lib.replaceStrings [ "=" ] [ " " ] monitorLine}"
+            )
+          )
+        }";
+      commandLine =
+        if config.myOptions.roles.hyprland.displayConfigurations != null then
+          (lib.strings.concatLines (
+            lib.attrsets.mapAttrsToList buildMonitorCommandEntry config.myOptions.roles.hyprland.displayConfigurations
+          ))
+        else
+          "No defined layouts:exit";
+    in
+    pkgs.writeShellScriptBin "rofiDisplayLayoutSelector.sh" ''
+      set -x
+      echo -n "${commandLine}" | ${lib.getExe config.programs.rofi.package} -dmenu | ${lib.getExe pkgs.gnused} 's/^[^:]*: //' | ${lib.getExe pkgs.bash}
+    '';
+  terminalClassRegex = "^(com.mitchellh.ghostty|org.wezfurlong.wezterm|Alacritty|kitty|kitty-dropterm)$";
+in
+{
   imports = [
     "${inputs.hyprland-zaneyos}/modules/home/hyprland/animations-end4.nix"
     inputs.hyprDynamicMonitors.homeManagerModules.default
@@ -19,6 +47,20 @@ in {
       description = "Our custom hyprland config.";
       type = lib.types.bool;
       default = false;
+    };
+    displayConfigurations = lib.mkOption {
+      description = "(Temporary) Switch between display configurations";
+      type = lib.types.nullOr (
+        lib.types.attrsOf (
+          lib.types.submodule {
+            options = {
+              name = lib.mkOption { type = lib.types.nullOr lib.types.str; };
+              monitors = lib.mkOption { type = lib.types.listOf lib.types.str; };
+            };
+          }
+        )
+      );
+      default = null;
     };
   };
   config = lib.mkIf cfg.enable {
@@ -33,17 +75,16 @@ in {
         enable = true;
         enableXdgAutostart = true;
         # Properly setup systemd
-        variables = ["--all"];
+        variables = [ "--all" ];
       };
       xwayland.enable = true;
-      plugins =
-        [
-          inputs.hyprWorkspaceLayouts.packages.${system}.default
-        ]
-        ++ (with inputs.hyprland-plugins.packages.${system}; [
-          hyprscrolling
-          hyprwinwrap
-        ]);
+      plugins = [
+        inputs.hyprWorkspaceLayouts.packages.${system}.default
+      ]
+      ++ (with inputs.hyprland-plugins.packages.${system}; [
+        hyprscrolling
+        hyprwinwrap
+      ]);
       settings = {
         input = {
           kb_layout = "us,de";
@@ -114,8 +155,9 @@ in {
           disable_splash_rendering = true;
           disable_scale_notification = false;
           enable_swallow = true;
+          swallow_regex = "${terminalClassRegex}";
           vfr = true; # Variable Frame Rate
-          vrr = 2; #Variable Refresh Rate  Might need to set to 0 for NVIDIA/AQ_DRM_DEVICES
+          vrr = 2; # Variable Refresh Rate  Might need to set to 0 for NVIDIA/AQ_DRM_DEVICES
           # Screen flashing to black momentarily or going black when app is fullscreen
           # Try setting vrr to 0
           # Can cause weird window looks
@@ -198,21 +240,22 @@ in {
           "nm-applet --indicator"
           "wl-paste --watch clipvault store"
         ];
-        # TODO: Setup swallow
-        bind = let
-          getActiveWindowClass = pkgs.writeShellScript "hyprActiveWindow.sh" ''
-            set -e
-            hyprctl activewindow -j | jq  .class
-          '';
+        # TODO: Setup swallow key
+        bind =
+          let
+            getActiveWindowClass = pkgs.writeShellScript "hyprActiveWindow.sh" ''
+              set -e
+              hyprctl activewindow -j | jq  .class
+            '';
 
-          # TODO: Generalize
-          # https://www.reddit.com/r/hyprland/comments/12x9724/comment/lzyt1wr
-          hyprctrlNextLayout = pkgs.writeShellScript "hyprctrlNextLayout.sh" ''
-                        next_layout = "$(hyprctl getoption general:layout | grep -q 'dwindle' && echo 'master' || echo 'dwindle')";
-            hyprctl keyword general:layout "$next_layout";
+            # TODO: Generalize
+            # https://www.reddit.com/r/hyprland/comments/12x9724/comment/lzyt1wr
+            hyprctrlNextLayout = pkgs.writeShellScript "hyprctrlNextLayout.sh" ''
+                          next_layout = "$(hyprctl getoption general:layout | grep -q 'dwindle' && echo 'master' || echo 'dwindle')";
+              hyprctl keyword general:layout "$next_layout";
 
-          '';
-        in
+            '';
+          in
           [
             "SUPER, W, exec, firefox"
             "SUPER_SHIFT, W, exec, firefox -P work"
@@ -222,16 +265,19 @@ in {
             "SUPER_SHIFT, N, exec, neovide"
           ]
           ++ (
-            builtins.concatLists (builtins.genList (
-                i: let
+            builtins.concatLists (
+              builtins.genList (
+                i:
+                let
                   ws = i + 1;
-                in [
+                in
+                [
                   "$mod,code:1${toString i},workspace,${toString ws}"
                   # TODO: Build a toggle mode between silent and non silent
                   "$mod SHIFT,code:1${toString i},movetoworkspacesilent, ${toString ws}"
                 ]
-              )
-              10)
+              ) 10
+            )
             ++ [
               "$modifier,Return,exec,kitty"
               # TODO: Needs own implementation. Maybe a rendered version of this file?
@@ -268,8 +314,6 @@ in {
               "$modifier SHIFT,F,fullscreen,"
               "$modifier,F,togglefloating,"
               "$modifier ALT,F,workspaceopt, allfloat"
-              # TODO: Prompt for option via dialog
-              "$modifier SHIFT,C,exit,"
               "$modifier SHIFT,left,movewindow,l"
               "$modifier SHIFT,right,movewindow,r"
               "$modifier SHIFT,up,movewindow,u"
@@ -338,13 +382,19 @@ in {
           # Right mouse button
           "$modifier, mouse:273, resizewindow"
         ];
+        # Shortcuts that also function on lockscreen
+        bindl = [
+          ",switch:Lid Switch, exec, hyprlock"
+          # Temporary display management
+          "$modifier SHIFT, D, exec, ${lib.getExe rofiDisplayLayout}"
+        ];
         windowrule = [
           #"no_blur on, xwayland:1" # Helps prevent odd borders/shadows for xwayland apps
           # downside it can impact other xwayland apps
           # This rule is a template for a more targeted approach
           "no_blur on, match:class ^(\bresolve\b)$, match:xwayland on" # Window rule for just resolve
           "tag +file-manager, match:class ^([Tt]hunar|org.gnome.Nautilus|[Pp]cmanfm-qt|[Dd]olphin|[Yy]azi)$"
-          "tag +terminal, match:class ^(com.mitchellh.ghostty|org.wezfurlong.wezterm|Alacritty|kitty|kitty-dropterm)$"
+          "tag +terminal, match:class ${terminalClassRegex}"
           "tag +browser, match:class ^(Brave-browser(-beta|-dev|-unstable)?)$"
           "tag +browser, match:class ^([Ff]irefox|org.mozilla.firefox|[Ff]irefox-esr)$"
           "tag +browser, match:class ^([Gg]oogle-chrome(-beta|-dev|-unstable)?)$"
@@ -416,14 +466,15 @@ in {
           "no_blur on, match:class ^(xwaylandvideobridge)$"
           "no_focus on, match:class ^(xwaylandvideobridge)$"
         ];
-        bindl = [
-          ",switch:Lid Switch, exec, hyprlock"
-        ];
         plugins = {
           wslayout = {
             default_layout = "dwindle";
           };
         };
+        source = [
+          # Required by hyprDynamicMonitors
+          "${config.xdg.configHome}/hypr/monitors.conf"
+        ];
       };
       submaps = {
         player.settings = {
@@ -449,6 +500,8 @@ in {
             ignore_dbus_inhibit = false;
             lock_cmd = "hyprlock";
             before_sleep_cmd = "hyprlock";
+            # Attempt to resume without the phantom image
+            inhibit_sleep = 1;
           };
           listener = [
             {
@@ -459,10 +512,6 @@ in {
               timeout = 900;
               on-timeout = "hyprctl dispatch dpms off";
               on-resume = "hyprctl dispatch dpms on";
-            }
-            {
-              timeout = 1800;
-              on-timeout = "systemctl suspend-then-hibernate";
             }
           ];
         };
@@ -689,6 +738,7 @@ in {
       enable = true;
       saveLocation = "$HOME/Pictures/Screenshots";
     };
+    services.hyprsunset.enable = true;
 
     # TODO: Remove unneedded
     home.packages = with pkgs; [
@@ -730,27 +780,26 @@ in {
 
       waystt
       config.home.hyprdynamicmonitors.package
+      rofiDisplayLayout
     ];
 
     xdg.portal = {
       enable = lib.mkForce true;
       xdgOpenUsePortal = true;
-      # TODO: Config for secret(gnome?) and filepicker
+      # TODO: Config for filepicker
       extraPortals = with pkgs; [
         gnome-keyring
         xdg-desktop-portal-gtk
+        osConfig.programs.hyprland.portalPackage
         kdePackages.xdg-desktop-portal-kde
       ];
       config = {
-        # common = {
-        #   default = [
-        #     "gtk"
-        #     "kde"
-        #   ];
-        #   "org.freedesktop.impl.portal.Secret" = [
-        #     "gnome-keyring"
-        #   ];
-        # };
+        common = {
+          default = [
+            "gtk"
+            "kde"
+          ];
+        };
         hyprland = {
           default = [
             "hyprland"
@@ -774,7 +823,7 @@ in {
     };
     home.hyprdynamicmonitors = {
       enable = true;
-      installExamples = true;
+      installExamples = false;
       installThemes = true;
     };
   };

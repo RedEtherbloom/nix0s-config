@@ -84,6 +84,8 @@ in {
       blueman.enable = true;
       # Needed for Hyprland
       gnome.gnome-keyring.enable = true;
+      # HyprDynamicMonitors dependency
+      upower.enable = true;
     };
 
     hardware = {

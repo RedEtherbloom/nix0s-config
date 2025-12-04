@@ -123,11 +123,12 @@ in {
           4713
           # Home Assistant
           8123
-          9757 # WiVrn
+          (lib.mkIf config.myOptions.roles.ssdp.enable 40000)
+          # WiVrn
+          9757
           # SteamVR
           27062
           config.services.paperless.port
-          config.services.matter-server.port
           (lib.strings.toInt config.services.restic.server.listenAddress)
           config.services.tabby.port
           (lib.strings.toInt config.virtualisation.oci-containers.containers.esphome.environment.PORT)
@@ -224,6 +225,8 @@ in {
     };
     matter-server = {
       enable = true;
+      openFirewall = true;
+      logLevel = "debug";
     };
     restic.server = {
       enable = true;

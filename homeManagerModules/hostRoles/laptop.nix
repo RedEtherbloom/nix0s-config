@@ -22,5 +22,11 @@ in {
     home.packages = with pkgs; [
       intel-gpu-tools
     ];
+    services.hypridle.settings.listener = [
+      {
+        timeout = 1800;
+        on-timeout = "systemctl suspend-then-hibernate";
+      }
+    ];
   };
 }

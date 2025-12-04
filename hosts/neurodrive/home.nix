@@ -144,6 +144,25 @@ in {
       };
       # 22.11.2025: Temporary until KDE issues with QT/Stylix can be resolved
       stylix.targets.qt.enable = false;
+
+      myOptions.roles.hyprland.displayConfigurations = {
+        dual = {
+          name = "Dual";
+          monitors = [
+            "monitor=desc:BNQ BenQ xl2411t,1920x1080@60.00000,1940x0,1.00000000,transform,0,vrr,0"
+            "monitor=desc:AOC 2369M,1920x1080@60.00000,20x0,1.00000000,transform,0,vrr,0"
+            "monitor=desc:LG Electronics LG TV,disable"
+          ];
+        };
+        tv = {
+          name = "It's TV-Time!";
+          monitors = [
+            "monitor=desc:LG Electronics LG TV,1920x1080@60.00000,00x0,1.00000000,transform,0,vrr,0"
+            "monitor=desc:BNQ BenQ xl2411t,disable"
+            "monitor=desc:AOC 2369M,disable"
+          ];
+        };
+      };
     })
     (define-kscreen-layout "benq" "output.DP-3.disable output.HDMI-A-1.disable output.DP-2.enable output.DP-2.rotation.normal output.DP-2.position.0,0" "ctrl+shift+f1")
     (define-kscreen-layout "dual" "output.HDMI-A-1.disable output.DP-2.enable output.DP-2.position.1080,420 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.right output.DP-3.position.0,0" "ctrl+shift+f2")
