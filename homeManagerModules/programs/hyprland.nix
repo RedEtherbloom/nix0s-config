@@ -35,6 +35,10 @@ let
       echo -n "${commandLine}" | ${lib.getExe config.programs.rofi.package} -dmenu | ${lib.getExe pkgs.gnused} 's/^[^:]*: //' | ${lib.getExe pkgs.bash}
     '';
   terminalClassRegex = "^(com.mitchellh.ghostty|org.wezfurlong.wezterm|Alacritty|kitty|kitty-dropterm)$";
+  # TODO: Write variation that waits for program to start(via socket) and then focuses or moves it to current ws
+  focusOrStart =
+    selector: selectorValue: program:
+    ''hyprctl clients -j | ${pkgs.jq}/bin/jq -e '[.[] | select(.${selector} == "${selectorValue}")] | length > 0' && hyprctl dispatch focuswindow '${selector}:${selectorValue}' || hyprctl dispatch exec ${program}'';
 in
 {
   imports = [
@@ -260,8 +264,8 @@ in
             "SUPER, W, exec, firefox"
             "SUPER_SHIFT, W, exec, firefox -P work"
             # TODO: Work mode shortcut with: Work firefox, youtube music, obsidian
-            # TODO: Setup to autoswitch to it on the same keybinding
-            "SUPER, N, exec, obsidian"
+            # Could be done via e.g. tags
+            ''SUPER, N, exec, ${focusOrStart "class" "obsidian" "obsidian"}''
             "SUPER_SHIFT, N, exec, neovide"
           ]
           ++ (
@@ -285,6 +289,7 @@ in
               "$modifier,Y,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
               "$modifier SHIFT,Return,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
               "$modifier,TAB,exec,rofi -matching fuzzy -modes window -show window"
+              "$modifier, B, exec, rofi-bluetooth"
               # TODO: Switcher that matches active window class as preselect
               "$modifier SHIFT,TAB,exec,rofi -matching fuzzy -modes window -filter \"$(${getActiveWindowClass}) \" -window-match-fields 'class,title' -show window"
               # TODO: I want a social media scratchpad on that combo
