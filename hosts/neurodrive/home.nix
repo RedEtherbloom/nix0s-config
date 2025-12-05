@@ -34,41 +34,24 @@ in {
           # FNV Mod launcher
           zenity
           yad
-          # Does my bar approach need this?
-          openal
-
-          # TODO: Maybe this will make KRunner less laggy
-          egl-wayland
 
           koboldcpp
-          # comfyuiPackages.comfyui-with-extensions
-
-          coolercontrol.coolercontrol-gui
-
-          gsmartcontrol
-          kdePackages.plasma-disks
-          lmstudio
           sillytavern
 
-          sidequest
+          coolercontrol.coolercontrol-gui
+          gsmartcontrol
 
           # VRChat tools
           oscavmgr
           vrcadvert
           vrcx
-          vrc-get
-          alcom
-
-          # Trying to avoid a stylix issue preventing startup
-          kdePackages.qtstyleplugin-kvantum
-
-          vopono-torrent-desktop
-
+          sidequest
           # ALVR alternative while nvenc is broken
           wivrn
 
+          vopono-torrent-desktop
+
           byar-launcher
-          rimsort
           starsector-gl-fix
         ];
       };
@@ -149,8 +132,8 @@ in {
         dual = {
           name = "Dual";
           monitors = [
-            "monitor=desc:BNQ BenQ xl2411t,1920x1080@60.00000,1940x0,1.00000000,transform,0,vrr,0"
-            "monitor=desc:AOC 2369M,1920x1080@60.00000,20x0,1.00000000,transform,0,vrr,0"
+            "monitor=desc:BNQ BenQ xl2411t,1920x1080@60.00000,1920x0,1.00000000,transform,0,vrr,0"
+            "monitor=desc:AOC 2369M,1920x1080@60.00000,0x0,1.00000000,transform,0,vrr,0"
             "monitor=desc:LG Electronics LG TV,disable"
           ];
         };

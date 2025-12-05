@@ -3,8 +3,6 @@
   lib,
   osConfig,
   pkgs,
-  self,
-  system,
   ...
 }: let
   cfg = config.myOptions.roles.development;
@@ -47,7 +45,7 @@ in {
     };
     vscode = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = "Enable VS-Code and plugins.";
     };
     vscode-accessibility = lib.mkOption {
@@ -137,7 +135,7 @@ in {
         ++ lib.optionals cfg.openscad [
           openscad-unstable
         ]
-        ++ lib.optionals cfg.nix self.devShells.${system}.default.buildInputs
+        # ++ lib.optionals cfg.nix self.devShells.${system}.default.buildInputs
         ++ lib.optionals cfg.electronics [
           kicad
         ]

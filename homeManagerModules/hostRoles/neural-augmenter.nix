@@ -33,7 +33,6 @@ in {
         };
         hyprland.enable = lib.mkDefault true;
       };
-      vscode.enable = lib.mkDefault true;
 
       firefox.enable = lib.mkDefault true;
       socials.enable = lib.mkDefault true;
@@ -70,7 +69,7 @@ in {
           bitwarden-desktop
           bitwarden-cli
 
-          krita-upstream
+          krita
 
           # KDE info packages
           clinfo
@@ -116,14 +115,14 @@ in {
           distrobox
 
           # Music production
-          nixpkgs-stable.sonic-pi
+          sonic-pi
           # FLStudio esque software
           reaper
           # Broken as of: 13.10.25
           # reaper-sws-extension
-          bitwig-studio5
-          yabridge
-          yabridgectl
+          # bitwig-studio5
+          # yabridge
+          # yabridgectl
 
           vopono
           mullvad-torrent
@@ -183,9 +182,6 @@ in {
       bat.enable = true;
       # TODO: Try out then reevaluate
       broot.enable = true;
-      # TODO: Does this improve completion speed?
-      # TODO: This breaks normal completion with e.g. --user option for systemd too often
-      # carapace.enable = true;
       # TODO: Try out fish as comparison to zsh
       fish = {
         enable = true;

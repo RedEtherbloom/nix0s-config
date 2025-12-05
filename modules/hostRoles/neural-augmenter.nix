@@ -4,7 +4,6 @@
   inputs,
   pkgs,
   secrets,
-  system,
   ...
 }:
 with lib; let
@@ -53,7 +52,7 @@ in {
       # Open the ports for KDE-Connect as home manager sadly can't do it
       kdeconnect = {
         enable = true;
-        package = mkForce pkgs.kdePackages.kdeconnect-kde;
+        package = lib.mkForce pkgs.kdePackages.kdeconnect-kde;
       };
       adb.enable = true;
       ausweisapp = {
@@ -63,8 +62,8 @@ in {
       extra-container.enable = true;
       hyprland = {
         enable = true;
-        package = inputs.hyprland.packages.${system}.hyprland;
-        portalPackage = inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
+        package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+        portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
       };
     };
 
@@ -82,8 +81,6 @@ in {
       flatpak.enable = true;
       hardware.bolt.enable = true;
       blueman.enable = true;
-      # Needed for Hyprland
-      gnome.gnome-keyring.enable = true;
       # HyprDynamicMonitors dependency
       upower.enable = true;
     };
@@ -105,7 +102,6 @@ in {
     nixpkgs.config.permittedInsecurePackages = [
       # Required for Nheko to work
       "olm-3.2.16"
-      "fluffychat-linux-1.27.0"
     ];
     zramSwap.enable = true;
 

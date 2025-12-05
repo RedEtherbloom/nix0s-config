@@ -56,18 +56,6 @@
         systems.follows = "systems";
       };
     };
-    nix-vscode-extensions = {
-      url = "github:nix-community/nix-vscode-extensions";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-comfyui = {
-      url = "github:RedEtherbloom/nix-comfyui?ref=both-fixes-merged";
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
-      };
-    };
     nvf = {
       url = "github:NotAShelf/nvf/v0.8";
       inputs = {
@@ -75,24 +63,9 @@
         flake-compat.follows = "flake-compat";
       };
     };
-    nix-tree = {
-      url = "github:utdemir/nix-tree";
-      inputs = {
-        flake-compat.follows = "flake-compat";
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
     sergv-nixos-config = {
       url = "github:sergv/nixos-config?rev=9c6306c86af6130f76d277e382c346360ec124dd";
       flake = false;
-    };
-    rimsort-pr.url = "github:NixOS/nixpkgs?ref=pull/304943/head";
-    pr-wyoming-piper.url = "github:NixOS/nixpkgs?ref=pull/445344/head";
-    pr-piper-fix.url = "github:NixOS/nixpkgs?ref=pull/445010/head";
-    catppuccin = {
-      url = "github:catppuccin/nix";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-search-tv = {
       url = "github:3timeslazy/nix-search-tv";
@@ -123,94 +96,103 @@
     };
   };
 
-  outputs = {
-    self,
-    flake-parts,
-    ...
-  } @ inputs:
-    flake-parts.lib.mkFlake {inherit inputs;} ({withSystem, ...}: {
-      imports = [
-        inputs.home-manager.flakeModules.home-manager
-      ];
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      flake = {lib, ...}: let
-        defaultUsername = "inf";
-        mkSystem = hostName: system:
-          withSystem system (ctx @ {...}: {
-            nixosConfigurations."${hostName}" = inputs.nixpkgs.lib.nixosSystem rec {
-              specialArgs = {
-                inherit inputs self system;
-                inherit (inputs) secrets;
-              };
-              modules = [
-                {nixpkgs = {inherit (ctx.pkgs) config overlays;};}
-                # TODO: Decide how to reorganize module inputs
-                inputs.home-manager.nixosModules.home-manager
-                inputs.sops-nix.nixosModules.sops
-                ./hosts/${hostName}/configuration.nix
+  outputs =
+    {
+      self,
+      flake-parts,
+      ...
+    }@inputs:
+    flake-parts.lib.mkFlake { inherit inputs; } (
+      { withSystem, ... }:
+      {
+        imports = [
+          inputs.home-manager.flakeModules.home-manager
+        ];
+        systems = [
+          "x86_64-linux"
+          "aarch64-linux"
+        ];
+        flake =
+          { lib, ... }:
+          let
+            defaultUsername = "inf";
+            # TODO: Set system in configuration.nix instead, to lessen use of anti patterns
+            mkSystem =
+              hostName: system:
+              withSystem system (
+                ctx@{ ... }:
                 {
-                  home-manager = {
-                    backupFileExtension = "hm_backup_move";
-                    extraSpecialArgs = specialArgs;
-                    useGlobalPkgs = true;
-                    users.${defaultUsername}.imports = [./hosts/${hostName}/home.nix];
+                  nixosConfigurations."${hostName}" = inputs.nixpkgs.lib.nixosSystem rec {
+                    specialArgs = {
+                      inherit inputs self;
+                      inherit (inputs) secrets;
+                    };
+                    modules = [
+                      { nixpkgs = { inherit (ctx.pkgs) config overlays; }; }
+                      # TODO: Decide how to reorganize module inputs
+                      inputs.home-manager.nixosModules.home-manager
+                      inputs.sops-nix.nixosModules.sops
+                      inputs.nix-index-database.nixosModules.nix-index
+                      ./modules/cachix.nix
+                      ./hosts/${hostName}/configuration.nix
+                      {
+                        home-manager = {
+                          backupFileExtension = "hm_backup_move";
+                          extraSpecialArgs = specialArgs;
+                          useGlobalPkgs = true;
+                          users.${defaultUsername}.imports = [ ./hosts/${hostName}/home.nix ];
+                        };
+                      }
+                    ];
                   };
+                  # TODO: Extract common resources e.g. IPs into nixos independent wrapper or import nixos into homeManager so that homeConfigurations can be split out
                 }
+              );
+          in
+          lib.mkMerge [
+            (mkSystem "fractor" "x86_64-linux")
+            (mkSystem "neurodrive" "x86_64-linux")
+            (mkSystem "audiosink" "aarch64-linux")
+          ];
+        perSystem =
+          {
+            pkgs,
+            system,
+            ...
+          }:
+          {
+            # TODO: Merge into flake-parts
+            # getPatchedNixpkgs = system:
+            #   (import nixpkgs {inherit system;}).applyPatches {
+            #     name = "nixpkgs-patched";
+            #     src = nixpkgs;
+            #     patches = [];
+            #   };
+            # TODO: Check why own packages cannot be referred to via flake syntax
+            _module.args.pkgs = import inputs.nixpkgs {
+              inherit system;
+              config = {
+                allowUnfree = true;
+              };
+              overlays = [
+                inputs.fenix.overlays.default
+                (import ./pkgs { inherit inputs; })
               ];
             };
-            # TODO: Extract common resources e.g. IPs into nixos independent wrapper or import nixos into homeManager so that homeConfigurations can be split out
-          });
-      in
-        lib.mkMerge [
-          (mkSystem "fractor" "x86_64-linux")
-          (mkSystem "neurodrive" "x86_64-linux")
-          (mkSystem "audiosink" "aarch64-linux")
-        ];
-      perSystem = {
-        pkgs,
-        system,
-        ...
-      }: {
-        # TODO: Merge into flake-parts
-        # getPatchedNixpkgs = system:
-        #   (import nixpkgs {inherit system;}).applyPatches {
-        #     name = "nixpkgs-patched";
-        #     src = nixpkgs;
-        #     patches = [];
-        #   };
-        # TODO: Check why own packages cannot be referred to via flake syntax
-        _module.args.pkgs = import inputs.nixpkgs {
-          inherit system;
-          config = {
-            allowUnfree = true;
+            formatter = pkgs.alejandra;
+            devShells.default = pkgs.mkShell {
+              buildInputs = with pkgs; [
+                alejandra
+                nh
+                nixd
+                direnv
+                nix-prefetch-scripts
+                nix-prefetch-github
+                nix-tree
+                nixos-rebuild-ng
+              ];
+            };
           };
-          overlays = [
-            (_: prev: {
-              inherit (prev.lixPackages.stable) nixpkgs-review nix-eval-jobs nix-fast-build colmena;
-            })
-            # TODO: Rework own overlay to be compatible with standard overlay techniques
-            (import ./pkgs {inherit inputs;})
-            inputs.nix-vscode-extensions.overlays.default
-            inputs.nix-comfyui.overlays.default
-            inputs.fenix.overlays.default
-          ];
-        };
-        formatter = pkgs.alejandra;
-        devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            alejandra
-            nh
-            nixd
-            direnv
-            nix-prefetch-scripts
-            nix-prefetch-github
-            nix-tree
-            nixos-rebuild-ng
-          ];
-        };
-      };
-    });
+      }
+    );
 }

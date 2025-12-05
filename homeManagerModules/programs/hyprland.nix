@@ -4,7 +4,6 @@
   lib,
   osConfig,
   pkgs,
-  system,
   self,
   ...
 }:
@@ -83,9 +82,9 @@ in
       };
       xwayland.enable = true;
       plugins = [
-        inputs.hyprWorkspaceLayouts.packages.${system}.default
+        inputs.hyprWorkspaceLayouts.packages.${pkgs.stdenv.hostPlatform.system}.default
       ]
-      ++ (with inputs.hyprland-plugins.packages.${system}; [
+      ++ (with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}; [
         hyprscrolling
         hyprwinwrap
       ]);

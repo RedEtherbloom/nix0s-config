@@ -1,21 +1,12 @@
-{inputs, ...}: final: prev: let
-  rimsort-pr = import inputs.rimsort-pr {
-    config.allowUnfree = true;
-    inherit (prev) system;
-  };
-  nixpkgs-stable = import inputs.nixpkgs-stable {
-    inherit (prev) system;
-    config.allowUnfree = prev.config.allowUnfree;
-  };
-in {
-  logger = final.callPackage ./scripts/python/fritz-logger/default.nix {};
-  nix-tree = inputs.nix-tree.packages.${prev.system}.default;
-  nix-search-tv = inputs.nix-search-tv.packages.${prev.system}.default;
+{inputs, ...}: final: prev: {
+  inherit (final.lixPackages.stable) nixpkgs-review nix-eval-jobs nix-fast-build colmena;
+           
+  nix-search-tv = inputs.nix-search-tv.packages.${final.system}.default;
 
-  thunderbird-external-editor-revived = prev.rustPlatform.buildRustPackage (finalAttrs: {
+  thunderbird-external-editor-revived = final.rustPlatform.buildRustPackage (finalAttrs: {
     pname = "thunderbird-external-editor-revived";
     version = "1.2.0";
-    src = prev.fetchFromGitHub {
+    src = final.fetchFromGitHub {
       owner = "Frederick888";
       repo = "external-editor-revived";
       rev = "v${finalAttrs.version}";
@@ -25,7 +16,7 @@ in {
     meta = {
       description = "Native messaging host for the MailExtension Vim addon for Thunderbird.";
       homepage = "https://github.com/Frederick888/external-editor-revived";
-      license = prev.lib.licenses.unlicense;
+      license = final.lib.licenses.unlicense;
       maintainers = [
         {
           email = "etherbloom@mailbox.org";
@@ -38,25 +29,21 @@ in {
   });
 
   byar-launcher = final.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
-  nixpkgs-stable = nixpkgs-stable;
-  inherit (rimsort-pr) rimsort;
-  # TODO: Figure out how to override name of script for shellApplication
-  plasma-rc2nix = inputs.plasma-manager.packages.${prev.system}.rc2nix.overrideAttrs {name = "plasma-rc2nix";};
 
-  # python3 = let in prev.python3.override { packageOverrides = _: pythonPrev: { }; };
+  # python3 = let in final.python3.override { packageOverrides = _: pythonPrev: { }; };
 
   koboldcpp = prev.koboldcpp.overrideAttrs (_: pythonPrev: {
-    pythonInputs = pythonPrev.pythonInputs ++ (builtins.attrValues {inherit (prev.python3Packages) psutil;});
+    pythonInputs = pythonPrev.pythonInputs ++ (builtins.attrValues {inherit (final.python3Packages) psutil;});
   });
 
   vimPlugins =
     (prev.vimPlugins or [])
     // {
       music-controls-nvim = let
-        base = prev.vimUtils.buildVimPlugin {
+        base = final.vimUtils.buildVimPlugin {
           pname = "music-controls.nvim";
           version = "2025-01-01";
-          src = prev.fetchFromGitHub {
+          src = final.fetchFromGitHub {
             owner = "AntonVanAssche";
             repo = "music-controls.nvim";
             rev = "35e6a644d66e916aeaad47b3f76f3dc608a32b68";
@@ -69,14 +56,14 @@ in {
         base.overrideAttrs (_: prevAttrs: {
           buildInputs =
             (prevAttrs.buildInputs or [])
-            ++ (with prev; [
+            ++ (with final; [
               playerctl
             ]);
         });
-      surround-ui-nvim = prev.vimUtils.buildVimPlugin {
+      surround-ui-nvim = final.vimUtils.buildVimPlugin {
         name = "surround-ui.nvim";
         version = "2024-07-16";
-        src = prev.fetchFromGitHub {
+        src = final.fetchFromGitHub {
           owner = "roobert";
           repo = "surround-ui.nvim";
           rev = "40abcba017a943d6d3dd304e523f34a43d80405b";
@@ -84,11 +71,11 @@ in {
         };
         meta.homepage = "https://github.com/roobert/surround-ui.nvim";
       };
-      vim-coach-nvim = prev.vimUtils.buildVimPlugin {
+      vim-coach-nvim = final.vimUtils.buildVimPlugin {
         name = "vim-coach.nvim";
         version = "v2.0.0";
-        buildInputs = [prev.vimPlugins.snacks-nvim];
-        src = prev.fetchFromGitHub {
+        buildInputs = [final.vimPlugins.snacks-nvim];
+        src = final.fetchFromGitHub {
           owner = "shahshlok";
           repo = "vim-coach.nvim";
           rev = "ed31e7b9450691199288180a922d8166ae11a0b9";
@@ -98,20 +85,7 @@ in {
       };
     };
 
-  # Fixes https://github.com/NixOS/nixpkgs/issues/418453
-  waydroid = prev.waydroid.override {python3Packages = prev.python312Packages;};
-
-  sonic-pi = prev.sonic-pi.overrideAttrs (_: prevAttrs: {
-    buildInputs = (prevAttrs.buildInputs or []) ++ [prev.libsForQt5.qt5.qtwayland];
-  });
-
   kdePackages = prev.kdePackages.overrideScope (_: kdePrev: {
-    # breeze-with-kscreen-timer-patch = kdePrev.breeze.overrideAttrs (_: prevAttrs: {
-    #   # TODO: Lookup build tutorial for copying
-    # });
-    # plasma-desktop = kdePrev.plasma-desktop.overrideAttrs (_: prevAttrs: {
-    #   patches = (prevAttrs.patches or []) ++ [./shorten-grace-lock.patch];
-    # });
     kscreenlocker = kdePrev.kscreenlocker.overrideAttrs (_: prevAttrs: {
       version = prevAttrs.version + "-pmanager-patched";
       __intentionallyOverridingVersion = true;
@@ -126,34 +100,28 @@ in {
 
   # Eve: Account for bug: https://fractalsoftworks.com/forum/index.php?topic=30633.0
   starsector-gl-fix = prev.starsector.overrideAttrs (oldAttrs: {
-    buildInputs = oldAttrs.buildInputs ++ [prev.makeWrapper];
+    buildInputs = oldAttrs.buildInputs ++ [final.makeWrapper];
     postInstall =
       (oldAttrs.postInstall or "")
       + ''
         wrapProgram "$out/bin/starsector" --set __GL_THREADED_OPTIMIZATIONS 0
       '';
   });
-  # Force installation from nixpkgs to avoid rebuilding mlt and krita due to cuda
-  krita-upstream = inputs.nixpkgs.legacyPackages.${prev.system}.krita;
 
   speechd-patched = prev.speechd.overrideAttrs (_: prevAttrs: {
     version = prevAttrs.version + "-sh-patch";
-    src = prev.fetchFromGitHub {
+    src = final.fetchFromGitHub {
       owner = "brailcom";
       repo = "speechd";
       rev = "909ac9bd7f310a9917262c889318e009cdda4286";
       hash = "sha256-ZZhOG3+g8sj/BUsVoAc+v72BN/SZ9mKkYE4O8NSGwuM=";
     };
   });
-  wyoming-piper-2 = prev.callPackage "${inputs.pr-wyoming-piper}/pkgs/by-name/wy/wyoming-piper/package.nix" {};
-  piper-tts = prev.piper-tts.overrideAttrs {
-    patches = ["${inputs.pr-piper-fix}/pkgs/by-name/pi/piper-tts/cmake-system-libs.patch"];
-  };
 
-  clipvault = prev.rustPlatform.buildRustPackage rec {
+  clipvault = final.rustPlatform.buildRustPackage rec {
     pname = "clipvault";
     version = "1.1.0";
-    src = prev.fetchFromGitHub {
+    src = final.fetchFromGitHub {
       owner = "rolv-apneseth";
       repo = "clipvault";
       rev = "v${version}";
@@ -165,7 +133,7 @@ in {
     meta = {
       description = "Clipboard history manager for Wayland, inspired by cliphist.";
       homepage = "https://github.com/rolv-apneseth/clipvault";
-      license = prev.lib.licenses.gpl3Only;
+      license = final.lib.licenses.gpl3Only;
       maintainers = [
         {
           email = "etherbloom@mailbox.org";
@@ -176,28 +144,28 @@ in {
       ];
     };
   };
-  waystt = prev.rustPlatform.buildRustPackage rec {
+  waystt = final.rustPlatform.buildRustPackage rec {
     pname = "waystt";
     version = "0.3.0";
     description = "Minimal Speech-To-Text tool for Wayland";
-    src = prev.fetchFromGitHub {
+    src = final.fetchFromGitHub {
       owner = "sevos";
       repo = "waystt";
       rev = "v${version}";
       hash = "sha256-7RKYqED2/aPDvofNGAa48DTexQYdUqkQzb7BX0CsDCU=";
     };
     cargoHash = "sha256-W2pfYDPFyo/ICZ5Y0nLsP4ZeUe7lBffItelnWXrOSLc=";
-    nativeBuildInputs = with prev; [
+    nativeBuildInputs = with final; [
       pkg-config
       cmake
       git
     ];
-    buildInputs = with prev; [
+    buildInputs = with final; [
       alsa-lib.dev
       openssl.dev
     ];
     env = {
-      LIBCLANG_PATH = "${prev.llvmPackages.libclang.lib}/lib";
+      LIBCLANG_PATH = "${final.llvmPackages.libclang.lib}/lib";
     };
   };
 }

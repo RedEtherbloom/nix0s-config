@@ -90,7 +90,6 @@ in {
           withExternalGnupg = true;
         };
       };
-      catppuccin.thunderbird.enable = false;
     })
   ]);
 }

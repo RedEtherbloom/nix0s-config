@@ -12,7 +12,6 @@ in {
   imports = [
     inputs.nix-index-database.homeModules.nix-index
     inputs.sops-nix.homeManagerModules.sops
-    inputs.catppuccin.homeModules.catppuccin
   ];
 
   options.myOptions.hostRoles.base = {
@@ -21,6 +20,7 @@ in {
       type = lib.types.bool;
       default = osConfig.myOptions.hostRoles.base.enable;
     };
+    # TODO: Implement
     theming = lib.mkOption {
       description = "Enable theming";
       type = lib.types.bool;
@@ -38,12 +38,6 @@ in {
 
         programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
       }
-      (lib.mkIf cfg.theming {
-        catppuccin = {
-          enable = lib.mkDefault osConfig.catppuccin.enable;
-          flavor = lib.mkDefault osConfig.catppuccin.flavor;
-        };
-      })
       (lib.mkIf osConfig.security.ownAdditional.yubikey {
         # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)
         programs.gpg = {

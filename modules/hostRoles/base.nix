@@ -9,13 +9,6 @@
 with lib; let
   cfg = config.myOptions.hostRoles.base;
 in {
-  imports = [
-    ../cachix.nix
-    inputs.nix-index-database.nixosModules.nix-index
-    # TODO: Move into it's module named e.g. styling
-    inputs.catppuccin.nixosModules.catppuccin
-  ];
-
   options.myOptions.hostRoles.base.enable = mkOption {
     description = "The base role required by pretty much all hosts";
     type = with types; bool;
@@ -23,10 +16,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Supposedly required by nixd
-    # TODO: Do we need a path of our overlayed nixpkgs?
-    nix.nixPath = ["nixpkgs=${pkgs.path}"];
-
     myOptions.utilities.enable = lib.mkDefault true;
     security.pki.certificateFiles = [
       "${secrets}/secrets/root_ca/root_ca.crt"
@@ -44,12 +33,6 @@ in {
         enable = lib.mkDefault true;
         defaultEditor = lib.mkDefault true;
       };
-    };
-
-    catppuccin = {
-      enable = lib.mkDefault false;
-      flavor = lib.mkDefault "frappe";
-      cache.enable = lib.mkDefault true;
     };
 
     # See: https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix

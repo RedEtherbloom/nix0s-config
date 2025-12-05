@@ -16,7 +16,6 @@
     ./hardware-configuration.nix
   ];
 
-  nixpkgs.system = "x86_64-linux";
   # TODO: Lookup proper X270 settings
   nix.settings = {
     max-jobs = 6;

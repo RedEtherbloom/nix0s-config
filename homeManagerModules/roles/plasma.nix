@@ -542,7 +542,6 @@ in {
         [
           kate
           kalk
-          pkgs.plasma-rc2nix
         ]
         ++ lib.optionals cfg.krohnkite [krohnkite];
       dbus.packages = [

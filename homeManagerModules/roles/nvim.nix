@@ -674,12 +674,13 @@ in
                       "--smart-case"
                     ];
                   };
-                  pickers.find_files.find_command = [
-                    "${pkgs.fd}/bin/fd"
-                    "--hidden"
-                    "--type file"
-                    "--type symlink"
-                  ];
+                  # TODO: Gives empty results. Debug.
+                  # pickers.find_files.find_command = [
+                  #   "${pkgs.fd}/bin/fd"
+                  #   "--hidden"
+                  #   "--type file"
+                  #   "--type symlink"
+                  # ];
                 };
               };
               # TODO: Claude can't read our code
@@ -712,7 +713,6 @@ in
           nvf.enable = false;
           neovide.enable = false;
         };
-        catppuccin.nvim.enable = false;
       }
       (lib.mkIf config.myOptions.roles.gamedev.enable {
         programs.nvf.settings.vim = {

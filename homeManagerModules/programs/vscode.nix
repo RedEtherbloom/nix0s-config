@@ -154,7 +154,5 @@ in {
       };
     };
     stylix.targets.vscode.enable = false;
-    # Zia: 26.07.2025: Broken
-    # catppuccin.vscode.profiles.default.enable = true;
   };
 }

@@ -24,6 +24,7 @@
   hash_directory = directory: allowed_extensions: pkgs: (builtins.hashString "sha256"
     (pkgs.lib.concatMapStrings (file: pkgs.lib.fileContents file)
       (pkgs.lib.lists.filter (el: pkgs.lib.lists.any (ext: pkgs.lib.strings.hasSuffix ext el) allowed_extensions)
+        # TODO: Does this require extra evaluations?
         (pkgs.lib.filesystem.listFilesRecursive directory))));
 in {
   xdg.dataFile."${builtins.baseNameOf own-hm-data-directory}/.keep".text = "";
