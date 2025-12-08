@@ -3,6 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # Last working nixos-unstable. Thought of doing this again.
+    nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=50a96edd8d0db6cc8db57dab6bb6d6ee1f3dc49a";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     secrets = {
@@ -103,7 +105,10 @@
       ...
     }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } (
-      { withSystem, ... }:
+      {
+        withSystem,
+        ...
+      }:
       {
         imports = [
           inputs.home-manager.flakeModules.home-manager
@@ -112,6 +117,7 @@
           "x86_64-linux"
           "aarch64-linux"
         ];
+        # TODO: Extract common resources e.g. IPs into nixos independent wrapper or import nixos into homeManager so that homeConfigurations can be split out
         flake =
           { lib, ... }:
           let
@@ -121,39 +127,78 @@
               hostName: system:
               withSystem system (
                 ctx@{ ... }:
-                {
-                  nixosConfigurations."${hostName}" = inputs.nixpkgs.lib.nixosSystem rec {
-                    specialArgs = {
-                      inherit inputs self;
-                      inherit (inputs) secrets;
-                    };
-                    modules = [
-                      { nixpkgs = { inherit (ctx.pkgs) config overlays; }; }
-                      # TODO: Decide how to reorganize module inputs
-                      inputs.home-manager.nixosModules.home-manager
-                      inputs.sops-nix.nixosModules.sops
-                      inputs.nix-index-database.nixosModules.nix-index
-                      ./modules/cachix.nix
-                      ./hosts/${hostName}/configuration.nix
-                      {
-                        home-manager = {
-                          backupFileExtension = "hm_backup_move";
-                          extraSpecialArgs = specialArgs;
-                          useGlobalPkgs = true;
-                          users.${defaultUsername}.imports = [ ./hosts/${hostName}/home.nix ];
-                        };
-                      }
-                    ];
+                inputs.nixpkgs.lib.nixosSystem rec {
+                  specialArgs = {
+                    inherit inputs self;
+                    inherit (inputs) secrets;
                   };
-                  # TODO: Extract common resources e.g. IPs into nixos independent wrapper or import nixos into homeManager so that homeConfigurations can be split out
+                  modules = [
+                    { nixpkgs = { inherit (ctx.pkgs) config overlays; }; }
+                    # TODO: Decide how to reorganize module inputs
+                    inputs.sops-nix.nixosModules.sops
+                    inputs.nix-index-database.nixosModules.nix-index
+                    ./modules/cachix.nix
+                    ./hosts/${hostName}/configuration.nix
+                    # TODO: Move backupFileExtension to HM-Modules
+                    # {
+                    #   home-manager = {
+                    #     backupFileExtension = "hm_backup_move";
+                    #     extraSpecialArgs = specialArgs;
+                    #     useGlobalPkgs = true;
+                    #     users.${defaultUsername}.imports = [ ./hosts/${hostName}/home.nix ];
+                    #   };
+                    # }
+                  ];
                 }
               );
+            mkHmConfiguration =
+              hostName: host:
+              let
+                osConfig = host.config;
+              in
+              inputs.home-manager.lib.homeManagerConfiguration {
+                # TODO: Force to use the same instance, if possible
+                inherit (host) pkgs;
+                # Remove potentially interferring ones
+                extraSpecialArgs =
+                  (builtins.removeAttrs host._module.specialArgs [
+                    "self"
+                    "modulesPath"
+                  ])
+                  // {
+                    inherit osConfig;
+                    osFlakeSelf = host._module.specialArgs.self;
+
+                    inherit self;
+                  };
+                modules = [
+                  ./hosts/${hostName}/home.nix
+                  ./modules/cachix.nix
+                  {
+                    nix.package = osConfig.nix.package;
+
+                    home = {
+                      username = defaultUsername;
+                      homeDirectory = osConfig.users.users."${defaultUsername}".home;
+                    };
+                  }
+                ];
+              };
+
           in
-          lib.mkMerge [
-            (mkSystem "fractor" "x86_64-linux")
-            (mkSystem "neurodrive" "x86_64-linux")
-            (mkSystem "audiosink" "aarch64-linux")
-          ];
+          # TODO: Remove system here. Should be set in hardware-configuration.nix
+          rec {
+            nixosConfigurations = {
+              fractor = mkSystem "fractor" "x86_64-linux";
+              neurodrive = mkSystem "neurodrive" "x86_64-linux";
+              audiosink = mkSystem "audiosink" "aarch64-linux";
+            };
+            homeConfigurations = {
+              "inf@fractor" = mkHmConfiguration "fractor" nixosConfigurations.fractor;
+              "inf@neurodrive" = mkHmConfiguration "neurodrive" nixosConfigurations.neurodrive;
+              "inf@audiosink" = mkHmConfiguration "audiosink" nixosConfigurations.audiosink;
+            };
+          };
         perSystem =
           {
             pkgs,

@@ -168,4 +168,6 @@
       LIBCLANG_PATH = "${final.llvmPackages.libclang.lib}/lib";
     };
   };
+
+  inherit (inputs.nixpkgs-prev.legacyPackages.${final.system}) gtksourceview;
 }

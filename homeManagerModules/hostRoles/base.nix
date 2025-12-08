@@ -6,12 +6,15 @@
   pkgs,
   secrets,
   ...
-}: let
+}:
+let
   cfg = config.myOptions.hostRoles.base;
-in {
+in
+{
   imports = [
     inputs.nix-index-database.homeModules.nix-index
     inputs.sops-nix.homeManagerModules.sops
+    inputs.stylix.homeModules.stylix
   ];
 
   options.myOptions.hostRoles.base = {
@@ -37,6 +40,11 @@ in {
         programs.home-manager.enable = true;
 
         programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
+        stylix = {
+          base16Scheme = osConfig.stylix.generated.palette;
+          # Broken targets
+          targets.nixos-icons.enable = false;
+        };
       }
       (lib.mkIf osConfig.security.ownAdditional.yubikey {
         # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)
@@ -121,7 +129,8 @@ in {
           '';
         };
 
-        systemd.user.services.gpg-agent.Service.ExecStart = lib.mkForce "${config.programs.gpg.package}/bin/gpg-agent --supervised --verbose --verbose --verbose";
+        systemd.user.services.gpg-agent.Service.ExecStart =
+          lib.mkForce "${config.programs.gpg.package}/bin/gpg-agent --supervised --verbose --verbose --verbose";
       })
     ]
   );
