@@ -5,29 +5,30 @@
   pkgs,
   secrets,
   ...
-}: let
+}:
+let
   wyomingPort = 10200;
-in {
-  imports =
-    [
-      # !EXCEPTION TO GET AUDIOSINK KICK-STARTED! #
-      ../audiosink/raspberry_pi_binary_cache.nix
-      ../../modules
-      ../../modules/common/ssh.nix
-      ../../modules/hdd.nix
-      # TODO: Remove once hm sops-nix supports secrets
-      ../../modules/common/taskwarrior-secrets.nix
+in
+{
+  imports = [
+    # !EXCEPTION TO GET AUDIOSINK KICK-STARTED! #
+    ../audiosink/raspberry_pi_binary_cache.nix
+    ../../modules
+    ../../modules/common/ssh.nix
+    ../../modules/hdd.nix
+    # TODO: Remove once hm sops-nix supports secrets
+    ../../modules/common/taskwarrior-secrets.nix
 
-      ./hardware-configuration.nix
-    ]
-    ++ (with inputs.nixos-hardware.nixosModules; [
-      common-pc
-      common-pc-ssd
-      common-hidpi
-      # Xeon CPU
-      common-cpu-intel-cpu-only
-      common-gpu-nvidia-nonprime
-    ]);
+    ./hardware-configuration.nix
+  ]
+  ++ (with inputs.nixos-hardware.nixosModules; [
+    common-pc
+    common-pc-ssd
+    common-hidpi
+    # Xeon CPU
+    common-cpu-intel-cpu-only
+    common-gpu-nvidia-nonprime
+  ]);
 
   system.stateVersion = "24.05";
 
@@ -39,14 +40,17 @@ in {
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;
-    cudaCapabilities = ["7.5"];
+    cudaCapabilities = [ "7.5" ];
   };
 
   boot = {
-    binfmt.emulatedSystems = ["aarch64-linux"];
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
     # Hoping to increase audio quality/reliability
-    kernelParams = ["btusb.enable_autosuspend=n"];
-    kernelModules = ["coretemp" "nct6775"];
+    kernelParams = [ "btusb.enable_autosuspend=n" ];
+    kernelModules = [
+      "coretemp"
+      "nct6775"
+    ];
     initrd = {
       availableKernelModules = [
         # TODO: Lookup remainng crypto models
@@ -56,7 +60,7 @@ in {
       luks.devices = {
         "nixos-root" = {
           device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
-          crypttabExtraOpts = ["fido2-device=auto"];
+          crypttabExtraOpts = [ "fido2-device=auto" ];
           bypassWorkqueues = true;
           # Weakens security
           allowDiscards = true;
@@ -64,7 +68,7 @@ in {
         "nixos-swap" = {
           device = "/dev/disk/by-uuid/69bd8d21-1c47-4aff-8533-31bf2610c181";
           # Necessary?
-          crypttabExtraOpts = ["fido2-device=auto"];
+          crypttabExtraOpts = [ "fido2-device=auto" ];
           bypassWorkqueues = true;
           # Weakens security
           allowDiscards = true;
@@ -84,39 +88,43 @@ in {
     "/mnt/windows_data" = {
       device = "/dev/disk/by-uuid/587488F374FD109E";
       fsType = "ntfs3";
-      options = ["nofail"];
+      options = [ "nofail" ];
     };
     "/mnt/restic_data" = {
       device = "/dev/mapper/restic_storage--4096bsize-restic_storage";
       fsType = "ext4";
-      options = ["nofail"];
+      options = [ "nofail" ];
     };
     "/mnt/cryptostorage" = {
       device = "/dev/mapper/cryptostorage--512bsize-cryptostorage";
       fsType = "ext4";
-      options = ["nofail"];
+      options = [ "nofail" ];
     };
   };
 
   systemd.services = {
     i2p = {
-      after = ["local-fs.target" "cryptsetup.target"];
+      after = [
+        "local-fs.target"
+        "cryptsetup.target"
+      ];
       serviceConfig.WorkingDirectory = lib.mkForce config.users.users.i2p.home;
     };
     # Issues with builds randomly failing
     NetworkManager-wait-online.enable = lib.mkForce false;
   };
   # Networking
-  networking = let
-    genConsecutivePorts = start: count: (lib.lists.range start count);
-  in {
-    hostName = "neurodrive";
-    networkmanager.enable = true;
-    interfaces."enp0s25".wakeOnLan.enable = true;
+  networking =
+    let
+      genConsecutivePorts = start: count: (lib.lists.range start count);
+    in
+    {
+      hostName = "neurodrive";
+      networkmanager.enable = true;
+      interfaces."enp0s25".wakeOnLan.enable = true;
 
-    firewall = {
-      allowedTCPPorts =
-        [
+      firewall = {
+        allowedTCPPorts = [
           # Feishin remote control port
           4333
           # Pulseaudio Network Sharing. Probably only needed for publish
@@ -134,20 +142,20 @@ in {
           (lib.strings.toInt config.virtualisation.oci-containers.containers.esphome.environment.PORT)
           wyomingPort
         ]
-        ++ (lib.lists.concatMap (el: [el.port]) config.services.mosquitto.listeners);
-      allowedUDPPorts = [
-        # SteamVR
-        9944
-        27062
-        9757 # WiVrn
-        wyomingPort
-      ];
+        ++ (lib.lists.concatMap (el: [ el.port ]) config.services.mosquitto.listeners);
+        allowedUDPPorts = [
+          # SteamVR
+          9944
+          27062
+          9757 # WiVrn
+          wyomingPort
+        ];
+      };
+      ownWireguard = {
+        enabled = true;
+        currentHost = config.networking.ownWireguard.hosts.neurodrive;
+      };
     };
-    ownWireguard = {
-      enabled = true;
-      currentHost = config.networking.ownWireguard.hosts.neurodrive;
-    };
-  };
 
   services = {
     displayManager.sddm = {
@@ -155,7 +163,7 @@ in {
       wayland.enable = true;
     };
     desktopManager.plasma6.enable = true;
-    xserver.videoDrivers = ["nvidia"];
+    xserver.videoDrivers = [ "nvidia" ];
     avahi = {
       enable = true;
       nssmdns4 = true;
@@ -185,7 +193,7 @@ in {
     };
     ollama = {
       enable = true;
-      acceleration = "cuda";
+      package = pkgs.ollama-cuda;
       host = "0.0.0.0";
       openFirewall = true;
     };
@@ -199,21 +207,21 @@ in {
     };
     mosquitto = {
       enable = true;
-      logType = ["all"];
+      logType = [ "all" ];
       listeners = [
         # TODO: Add encrypted listener
         {
           port = 1883;
           # By default everyone may read everything
-          acl = ["pattern read #"];
+          acl = [ "pattern read #" ];
           users = {
             root = {
-              acl = ["readwrite #"];
+              acl = [ "readwrite #" ];
               passwordFile = config.sops.secrets."mosquitto/users/root".path;
             };
             client = {
               # R/W to everything for now until I figure out the proper settings
-              acl = ["readwrite #"];
+              acl = [ "readwrite #" ];
               passwordFile = config.sops.secrets."mosquitto/users/client".path;
             };
           };
@@ -335,6 +343,9 @@ in {
       };
       nvidiaSettings = true;
       open = true;
+      # Fixes: https://github.com/NixOS/nixpkgs/issues/467814
+      # Fix from: https://github.com/NixOS/nixpkgs/issues/467814#issuecomment-3620802561
+      package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
     nvidia-container-toolkit.enable = true;
   };
@@ -347,7 +358,7 @@ in {
     oci-containers = {
       containers = {
         homeassistant = {
-          volumes = ["home-assistant:/config"];
+          volumes = [ "home-assistant:/config" ];
           devices = [
             "/dev/zigbee-ap:/dev/ttyUSB0"
           ];
@@ -365,7 +376,7 @@ in {
         comfyui = {
           # Broken and needs debugging
           autoStart = false;
-          volumes = ["comfyui:/root"];
+          volumes = [ "comfyui:/root" ];
           environment.TZ = config.time.timeZone;
           image = "docker.io/yanwk/comfyui-boot:cu124-megapak";
           pull = "newer";
@@ -396,7 +407,11 @@ in {
             "--network=host"
             "--stop-timeout=30"
           ];
-          cmd = ["dashboard" "--port=${environment.PORT}" "/config"];
+          cmd = [
+            "dashboard"
+            "--port=${environment.PORT}"
+            "/config"
+          ];
           environment = {
             PORT = "8152";
           };
@@ -405,9 +420,14 @@ in {
     };
   };
   systemd.services = {
-    "${config.virtualisation.oci-containers.containers.homeassistant.serviceName}".after = ["systemd-udevd.service"];
-    "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = ["network-online.target"];
-    "${config.virtualisation.oci-containers.containers.esphome.serviceName}".serviceConfig.Restart = "always";
+    "${config.virtualisation.oci-containers.containers.homeassistant.serviceName}".after = [
+      "systemd-udevd.service"
+    ];
+    "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = [
+      "network-online.target"
+    ];
+    "${config.virtualisation.oci-containers.containers.esphome.serviceName}".serviceConfig.Restart =
+      "always";
   };
 
   myOptions = {

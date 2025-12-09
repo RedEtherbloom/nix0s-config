@@ -160,7 +160,7 @@
             system,
             ...
           }:
-          {
+          rec {
             # TODO: Merge into flake-parts
             # getPatchedNixpkgs = system:
             #   (import nixpkgs {inherit system;}).applyPatches {
@@ -180,6 +180,7 @@
               ];
             };
             formatter = pkgs.alejandra;
+            legacyPackages = _module.args.pkgs;
             devShells.default = pkgs.mkShell {
               buildInputs = with pkgs; [
                 alejandra
