@@ -139,6 +139,11 @@ in {
 
           # Debugging render scenes for Minecraft
           renderdoc
+          
+          # Banking
+          hledger
+          hledger-ui
+          aqbanking
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
           yubioath-flutter
