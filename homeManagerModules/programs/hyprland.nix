@@ -548,7 +548,14 @@ in
           ];
         };
       };
-      gnome-keyring.enable = true;
+      gnome-keyring = {
+        enable = true;
+        # Exclude ssh component
+        components = [
+        "pkcs11"
+        "secrets"
+      ];
+      };
     };
 
     # TODO: New wallpaper
