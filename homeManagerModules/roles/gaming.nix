@@ -20,7 +20,16 @@ in {
       (olympus.override {celesteWrapper = pkgs.steam-run;})
 
       dxvk_2
-      lutris
+      (lutris.override {
+        extraLibraries = pkgs: [
+          pkgs.glib-networking
+          pkgs.dconf
+          pkgs.gamemode.lib
+        ];
+        extraPkgs = pkgs: [
+          pkgs.vulkan-tools
+        ];
+      })
       wineWowPackages.stable
       (prismlauncher.override {
         additionalLibs = with pkgs; [
