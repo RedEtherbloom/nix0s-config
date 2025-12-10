@@ -612,12 +612,11 @@ in
       style = builtins.readFile "${self}/dotfiles/waybarstyle.css";
       settings.mainBar = {
         position = "top";
-        # TODO: Evaluate
         layer = "top";
         height = 20;
         spacing = 4;
-        # TODO: Configure sway ipc for hide
         reload_style_on_change = true;
+        # TODO: Configure sway ipc for hide
         # mode = "hide";
         modules-left = [
           "hyprland/workspaces"
@@ -637,14 +636,10 @@ in
           # TODO: Shorten and only use e.g. Colemak as name
           "mpris"
           "hyprland/language"
-          # TODO: needs configuring for e.g. speed and showing available networks
-          # "network"
-          # TODO:: Needs other things setup first
-          # "power-profiles-daemon"
+          "power-profiles-daemon"
           # TODO: Integrate pomodoro
           "backlight"
           "battery"
-          # TODO: Disable blue underline
           "clock"
           "tray"
         ];
@@ -678,14 +673,6 @@ in
           # TODO: Strip leading parenthesis(e.g. youtube notifications)
           # rewrite = { };
         };
-        # See: https://github.com/Alexays/Waybar/wiki/Module:-Backlight-Slider
-        # "backlight/slider" = {
-        #   min = 2;
-        #   max = 100;
-        #   orientation = "vertical";
-        #   # TODO: How to use for all devices?
-        #   # device =
-        # };
         "backlight" = rec {
           interval = 2;
           min = interval;
@@ -699,8 +686,6 @@ in
             "💥"
           ];
         };
-        # Autohide?
-
         "tray" = {
           spacing = 8;
           icon-size = 24;
@@ -723,7 +708,6 @@ in
             subsonic = "🔉";
           };
           status-icons = {
-            # TODO: Missing fonst. What provides the md_ symbols?
             paused = "󰏤";
           };
           dynamic-len = 30;
@@ -742,12 +726,27 @@ in
           format-de = "de";
           format-de_nodeadkeys = "de";
         };
+        "battery" = {
+          interval = 3;
+          states = {
+            full = 100;
+            charging = 99;
+            low = 30;
+            critical = 10;
+          };
+          format = "{capacity} {icon} {time}";
+          format-time = "{H}:{m}h";
+          format-charging-full = "full󰁔";
+          format-icons = {
+            "charging" = "󰁜";
+            "discharging" = "󰁃";
+          };
+        };
       };
       systemd = {
         enable = true;
         enableDebug = true;
         enableInspect = true;
-        # TODO: Waybar keeps starting in plasma too
         target = "hyprland-session.target";
       };
     };
@@ -813,6 +812,7 @@ in
       waystt
       config.home.hyprdynamicmonitors.package
       rofiDisplayLayout
+      kdePackages.dolphin
     ];
 
     xdg.portal = {
