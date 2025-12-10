@@ -13,21 +13,36 @@ let
   cfg = config.myOptions.roles.nvf;
   inherit (inputs.nvf.lib.nvim.binds) mkKeymap;
   inherit (inputs.nvf.lib.nvim) dag;
+  inherit (inputs.nvf.lib) neovimConfiguration;
 in
 {
   imports = [
     inputs.nvf.homeManagerModules.default
   ];
 
-  options.myOptions.roles.nvf.enable = lib.mkOption {
-    description = "Enable the nvf NeoVim configuration suite for home-manager";
-    type = lib.types.bool;
-    default = false;
+  options.myOptions.roles.nvf = {
+    enable = lib.mkOption {
+      description = "Enable the nvf NeoVim configuration suite for home-manager";
+      type = lib.types.bool;
+      default = false;
+    };
+    frankenPackage = lib.mkOption {
+      description = "Badly merged upstream and local config used for refactoring";
+      type = lib.types.package;
+    };
+    newPackage = lib.mkOption {
+      description = "Redone nvf config";
+      type = lib.types.package;
+    };
+    maximalPackage = lib.mkOption {
+      description = "The maximal package of upstream as a comparison";
+      type = lib.types.package;
+    };
   };
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
-      {
+      rec {
         sops.secrets."ai_keys/anthropic" = {
           sopsFile = "${secrets}/secrets/services/ai_keys.yaml";
           key = "anthropic";
@@ -713,6 +728,39 @@ in
           nvf.enable = false;
           neovide.enable = false;
         };
+        myOptions.roles.nvf =
+          let
+            nvfMaximalFixes = {
+              config.vim.utility.motion.hop.enable = lib.mkForce false;
+            };
+          in
+          {
+            frankenPackage =
+              (neovimConfiguration {
+                inherit pkgs;
+                modules = [
+                  nvfMaximalFixes
+                  (lib.attrsets.recursiveUpdate
+                    # Maximal configuration
+                    (import "${inputs.nvf}/configuration.nix" true)
+                    { config = { inherit (programs.nvf.settings) vim; }; }
+                  )
+                ];
+              }).neovim;
+            newPackage =
+              (neovimConfiguration {
+                inherit pkgs;
+                modules = [];
+              }).neovim;
+            maximalPackage =
+              (neovimConfiguration {
+                inherit pkgs;
+                modules = [
+                  nvfMaximalFixes
+                  (import "${inputs.nvf}/configuration.nix" true)
+                ];
+              }).neovim;
+          };
       }
       (lib.mkIf config.myOptions.roles.gamedev.enable {
         programs.nvf.settings.vim = {

@@ -391,6 +391,7 @@ in
 
               # Submaps
               "$modifier, M, submap, player"
+              "$modifier SHIFT, L, submap, neovim"
             ]
           );
         bindm = [
@@ -508,6 +509,15 @@ in
             ", l, exec, playerctl position 10+"
           ];
           bind = [
+            ", escape, submap, reset"
+          ];
+        }; 
+        neovim.settings = {
+          bind = [
+            ", 1, exec, neovide"
+            ", 2, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim"
+            ", 3, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.frankenPackage}/bin/nvim"
+            ", 4, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim"
             ", escape, submap, reset"
           ];
         };
