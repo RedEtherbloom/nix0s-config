@@ -41,6 +41,9 @@ in
 
         programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
         stylix = {
+          inherit (osConfig.stylix) image polarity;
+
+          enable = true;
           base16Scheme = osConfig.stylix.generated.palette;
           # Broken targets
           targets.nixos-icons.enable = false;
