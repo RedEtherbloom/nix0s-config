@@ -117,6 +117,9 @@ in
           disable_time = false;
           # FPS overlay
           overlay = false;
+          # Useful when refactors are needed but we really need to focus first
+          # Or use: hyprctl seterror disable
+          # suppress_errors = true;
         };
         gestures = {
           workspace_swipe_distance = 300;
@@ -124,11 +127,14 @@ in
           workspace_swipe_create_new = false;
           workspace_swipe_forever = true;
         };
+        binds = {
+          hide_special_on_workspace_change = true;
+        };
         gesture = [
           # Standard workspace swipe
           "3, horizontal, workspace"
           # Show default special workspace
-          "2, pinchout, special"
+          "2, pinchout, special, scratchpad"
         ];
         general = {
           # Required for the binds, for now. TODO: Merge with mod or ditch
@@ -147,13 +153,17 @@ in
           snap = {
             enabled = true;
           };
+          allow_tearing = true;
         };
         misc = {
           font_family = "OpenDyslexic Nerd Font";
           layers_hog_keyboard_focus = true;
           initial_workspace_tracking = 1;
-          mouse_move_enables_dpms = true;
+
+          # Only reactivate with keypress
+          mouse_move_enables_dpms = false;
           key_press_enables_dpms = true;
+
           disable_hyprland_logo = lib.mkForce true;
           disable_splash_rendering = true;
           disable_scale_notification = false;
@@ -167,7 +177,7 @@ in
           animate_manual_resizes = true;
           animate_mouse_windowdragging = true;
           # TODO: This is soft broken as e.g. telegram getting a notification forces us to switch to that desktop
-          focus_on_activate = false;
+          focus_on_activate = true;
           middle_click_paste = true;
           # maybe required for e.g. video player lagging. Performance though?
           render_unfocused_fps = false;
@@ -291,6 +301,8 @@ in
               "$modifier, B, exec, rofi-bluetooth"
               # TODO: Switcher that matches active window class as preselect
               "$modifier SHIFT,TAB,exec,rofi -matching fuzzy -modes window -filter \"$(${getActiveWindowClass}) \" -window-match-fields 'class,title' -show window"
+              "$modifier, S, togglespecialworkspace, social"
+              "$modifier SHIFT, S, movetoworkspacesilent, special:social"
               # TODO: I want a social media scratchpad on that combo
               "$modifier SHIFT,D,exec,swaync-client -rs"
               # TODO: Replace with a rofi
@@ -305,8 +317,9 @@ in
               # TODO: Scratchpad?
               "$modifier shift,T,exec,pypr toggle term"
               "$modifier shift,M,exec,pavucontrol"
-              "$modifier shift,Q,killactive,"
-              "ALT,f4,killactive,"
+              "$modifier, Q, killactive,"
+              "$modifier shift,Q,forcekillactive,"
+              "ALT,f4,forcekillactive,"
               # What is dwindle pseudo?
               "$modifier,P,pseudo,"
               # Master layout
@@ -342,8 +355,8 @@ in
               "$modifier,l,movefocus,r"
               "$modifier,k,movefocus,u"
               "$modifier,j,movefocus,d"
-              "$modifier SHIFT,SPACE,movetoworkspace,special"
-              "$modifier,SPACE,togglespecialworkspace"
+              "$modifier SHIFT,SPACE,movetoworkspace,scratchpad"
+              "$modifier,SPACE,togglespecialworkspace,scratchpad"
               "$modifier CONTROL,right,workspace,e+1"
               "$modifier CONTROL,left,workspace,e-1"
               # "$modifier CONTROL,j,rrsizeactive, 100% 110%"
@@ -405,11 +418,11 @@ in
           "tag +browser, match:class ^([Tt]horium-browser|[Cc]achy-browser)$"
           "tag +projects, match:class ^(codium|codium-url-handler|VSCodium)$"
           "tag +projects, match:class ^(VSCode|code-url-handler)$"
-          "tag +im, match:class ^([Dd]iscord|[Ww]ebCord|[Vv]esktop)$"
-          "tag +im, match:class ^([Ff]erdium)$"
-          "tag +im, match:class ^([Ww]hatsapp-for-linux)$"
-          "tag +im, match:class ^(org.telegram.desktop|io.github.tdesktop_x64.TDesktop)$"
-          "tag +im, match:class ^(teams-for-linux)$"
+          "tag +social, match:class ^([Dd]iscord|[Ww]ebCord|[Vv]esktop)$"
+          "tag +social, match:class ^([Ff]erdium)$"
+          "tag +social, match:class ^([Ww]hatsapp-for-linux)$"
+          "tag +social, match:class ^(org.telegram.desktop|io.github.tdesktop_x64.TDesktop)$"
+          "tag +social, match:class ^(teams-for-linux)$"
           "tag +games, match:class ^(gamescope)$"
           "tag +games, match:class ^(steam_app_\d+)$"
           "tag +gamestore, match:class ^([Ss]team)$"
@@ -469,10 +482,15 @@ in
           "max_size 1 1, match:class ^(xwaylandvideobridge)$"
           "no_blur on, match:class ^(xwaylandvideobridge)$"
           "no_focus on, match:class ^(xwaylandvideobridge)$"
+        ]
+        # Own
+        ++ [
+          # TODO: All float, allow resize and maybe use a scrolling layout
+          "workspace special:social, match:tag social"
         ];
-        plugins = {
+        plugin = {
           wslayout = {
-            default_layout = "dwindle";
+            default_layout = "master";
           };
         };
         source = [

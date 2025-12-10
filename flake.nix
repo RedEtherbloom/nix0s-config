@@ -83,7 +83,10 @@
     hyprland.url = "github:hyprwm/Hyprland";
     hyprWorkspaceLayouts = {
       url = "github:zakk4223/hyprWorkspaceLayouts";
-      inputs.hyprland.follows = "hyprland";
+      inputs = {
+        hyprland.follows = "hyprland";
+        nixpkgs.follows = "hyprland/nixpkgs";
+      };
     };
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
