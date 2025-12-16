@@ -298,9 +298,8 @@ in
               "$modifier,Y,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
               "$modifier SHIFT,Return,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
               "$modifier,TAB,exec,rofi -matching fuzzy -modes window -show window"
-              "$modifier, B, exec, rofi-bluetooth"
-              # TODO: Switcher that matches active window class as preselect
               "$modifier SHIFT,TAB,exec,rofi -matching fuzzy -modes window -filter \"$(${getActiveWindowClass}) \" -window-match-fields 'class,title' -show window"
+              "$modifier, B, exec, rofi-bluetooth"
               "$modifier, S, togglespecialworkspace, social"
               "$modifier SHIFT, S, movetoworkspacesilent, special:social"
               # TODO: I want a social media scratchpad on that combo
@@ -392,6 +391,8 @@ in
               # Submaps
               "$modifier, M, submap, player"
               "$modifier SHIFT, L, submap, neovim"
+
+              "$modifier SHIFT, Space, exec, killall -SIGUSR1 .waybar-wrapped, Toggle waybar"
             ]
           );
         bindm = [
