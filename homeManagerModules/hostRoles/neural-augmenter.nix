@@ -144,6 +144,8 @@ in {
           hledger
           hledger-ui
           aqbanking
+
+          calibre
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
           yubioath-flutter
