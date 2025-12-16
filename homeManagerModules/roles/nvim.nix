@@ -625,6 +625,9 @@ in
                 (mkKeymap "n" "<leader>tt" "<cmd>TSJToggle<CR>" {
                   desc = "Toggle splitting or joining the current block.";
                 })
+                (mkKeymap "n" "<leader>mm" ":w<CR>make!<CR>" {
+                  desc = "Trigger a make command";
+                })
               ];
               # TODO: Evaluate snacks picker as modern replacement
               telescope = {
@@ -750,7 +753,262 @@ in
             newPackage =
               (neovimConfiguration {
                 inherit pkgs;
-                modules = [];
+                modules = [
+                  {
+                    # Derived from nvf maximal configuration
+                    config.vim = {
+                      viAlias = true;
+                      vimAlias = true;
+                      debugMode = {
+                        enable = false;
+                        level = 16;
+                        logFile = "/tmp/nvim.log";
+                      };
+
+                      spellcheck = {
+                        enable = true;
+                        programmingWordlist.enable = true;
+                      };
+
+                      lsp = {
+                        enable = true;
+
+                        formatOnSave = true;
+                        lightbulb.enable = true;
+                        lspkind.enable = false;
+                        lspsaga.enable = false;
+                        trouble.enable = true;
+                        lspSignature.enable = false; # conflicts with blink in maximal
+                        otter-nvim.enable = true;
+                        nvim-docs-view.enable = true;
+                        harper-ls.enable = true;
+                      };
+
+                      debugger = {
+                        nvim-dap = {
+                          enable = true;
+                          ui.enable = true;
+                        };
+                      };
+
+                      # This section does not include a comprehensive list of available language modules.
+                      # To list all available language module options, please visit the nvf manual.
+                      languages = {
+                        enableFormat = true;
+                        enableTreesitter = true;
+                        enableExtraDiagnostics = true;
+
+                        nix.enable = true;
+                        markdown.enable = true;
+                        bash.enable = true;
+                        clang.enable = true;
+                        css.enable = true;
+                        html.enable = true;
+                        json.enable = true;
+                        sql.enable = true;
+                        java.enable = true;
+                        kotlin.enable = true;
+                        ts.enable = true;
+                        go.enable = true;
+                        lua.enable = true;
+                        python.enable = true;
+                        typst.enable = true;
+                        rust = {
+                          enable = true;
+                          extensions.crates-nvim.enable = true;
+                          lsp = {
+                            package = pkgs.rust-analyzer-nightly;
+                            opts = ''
+                              ['rust-analyzer'] = {
+                                  cargo = {
+                                    allFeature = true
+                                  },
+                                  checkOnSave = true,
+                                  procMacro = {
+                                    enable = true,
+                                  },
+                                },
+                            '';
+                          };
+                        };
+                        nu.enable = true;
+                        just.enable = false;
+                      };
+
+                      visuals = {
+                        nvim-scrollbar.enable = false;
+                        nvim-web-devicons.enable = true;
+                        nvim-cursorline.enable = true;
+                        cinnamon-nvim.enable = true;
+                        fidget-nvim.enable = true;
+
+                        highlight-undo.enable = true;
+                        indent-blankline.enable = true;
+
+                        # Fun
+                        cellular-automaton.enable = true;
+                      };
+
+                      statusline = {
+                        lualine = {
+                          enable = true;
+                          theme = "catppuccin";
+                        };
+                      };
+
+                      theme = {
+                        enable = true;
+                        name = "catppuccin";
+                        style = "mocha";
+                        transparent = false;
+                      };
+
+                      autopairs.nvim-autopairs.enable = true;
+
+                      autocomplete = {
+                        nvim-cmp.enable = false;
+                        blink-cmp.enable = true;
+                      };
+
+                      snippets.luasnip.enable = true;
+
+                      filetree = {
+                        neo-tree = {
+                          enable = true;
+                        };
+                      };
+
+                      tabline = {
+                        nvimBufferline.enable = true;
+                      };
+
+                      treesitter.context.enable = true;
+
+                      binds = {
+                        whichKey.enable = true;
+                        cheatsheet.enable = true;
+                      };
+
+                      telescope.enable = true;
+
+                      git = {
+                        enable = true;
+                        gitsigns.enable = true;
+                        gitsigns.codeActions.enable = false; # throws an annoying debug message
+                        neogit.enable = true;
+                      };
+
+                      minimap = {
+                        minimap-vim.enable = false;
+                        codewindow.enable = true; # lighter, faster, and uses lua for configuration
+                      };
+
+                      dashboard = {
+                        dashboard-nvim.enable = false;
+                        alpha.enable = true;
+                      };
+
+                      notify = {
+                        nvim-notify.enable = true;
+                      };
+
+                      projects = {
+                        project-nvim.enable = true;
+                      };
+
+                      utility = {
+                        ccc.enable = false;
+                        vim-wakatime.enable = false;
+                        diffview-nvim.enable = true;
+                        yanky-nvim.enable = false;
+                        qmk-nvim.enable = false; # requires hardware specific options
+                        icon-picker.enable = true;
+                        surround.enable = true;
+                        leetcode-nvim.enable = true;
+                        multicursors.enable = true;
+                        smart-splits.enable = true;
+                        undotree.enable = true;
+                        nvim-biscuits.enable = true;
+
+                        motion = {
+                          hop.enable = false;
+                          leap.enable = true;
+                          precognition.enable = true;
+                        };
+                        images = {
+                          image-nvim.enable = false;
+                          img-clip.enable = true;
+                        };
+                      };
+
+                      notes = {
+                        obsidian.enable = true;
+                        neorg.enable = false;
+                        # True: Try out
+                        orgmode.enable = false;
+                        mind-nvim.enable = true;
+                        todo-comments.enable = true;
+                      };
+
+                      terminal = {
+                        toggleterm = {
+                          enable = true;
+                          lazygit.enable = true;
+                        };
+                      };
+
+                      ui = {
+                        borders.enable = true;
+                        noice.enable = true;
+                        colorizer.enable = true;
+                        modes-nvim.enable = false; # the theme looks terrible with catppuccin
+                        illuminate.enable = true;
+                        breadcrumbs = {
+                          enable = true;
+                          navbuddy.enable = true;
+                        };
+                        smartcolumn = {
+                          enable = true;
+                          setupOpts.custom_colorcolumn = {
+                            # this is a freeform module, it's `buftype = int;` for configuring column position
+                            nix = "110";
+                            ruby = "120";
+                            java = "130";
+                            go = [
+                              "90"
+                              "130"
+                            ];
+                          };
+                        };
+                        fastaction.enable = true;
+                      };
+
+                      assistant = {
+                        chatgpt.enable = false;
+                        copilot = {
+                          enable = false;
+                          cmp.enable = true;
+                        };
+                        codecompanion-nvim.enable = false;
+                        avante-nvim.enable = true;
+                      };
+                      comments = {
+                        comment-nvim.enable = true;
+                      };
+
+                      # TODO: Evaluate if we want these
+                      session = {
+                        nvim-session-manager.enable = false;
+                      };
+                      gestures = {
+                        gesture-nvim.enable = false;
+                      };
+                      presence = {
+                        neocord.enable = false;
+                      };
+                    };
+                  }
+                ];
               }).neovim;
             maximalPackage =
               (neovimConfiguration {
