@@ -4,7 +4,8 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.myOptions.firefox;
   commonConfig = {
     # middle-click behavior
@@ -14,13 +15,15 @@ with lib; let
     "browser.uidensity" = "1";
   };
   # Map each alias to a version with @ prepended and : appended
-  defineAliasVariants = baseAlias: (lists.concatMap (x: [
+  defineAliasVariants =
+    baseAlias:
+    (lists.concatMap (x: [
       ("@" + x)
       (x + ":")
-    ])
-    baseAlias);
+    ]) baseAlias);
   iconRefreshInterval = 24 * 60 * 60 * 1000;
-in {
+in
+{
   options.myOptions.firefox = {
     enable = mkOption {
       description = "Enable firefox";
@@ -45,14 +48,17 @@ in {
             (builtins.readFile ../../dotfiles/firefox/betterfox.js)
             (builtins.readFile ../../dotfiles/firefox/media_decoding.js)
           ];
-          settings = {} // commonConfig;
+          settings = { } // commonConfig;
           search = {
             enable = true;
 
             # TODO: Add Icon settings
             engines = {
               "NixPkgs(Unstable)" = {
-                definedAliases = defineAliasVariants ["nix" "nixpkgs"];
+                definedAliases = defineAliasVariants [
+                  "nix"
+                  "nixpkgs"
+                ];
                 icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                 urls = [
                   {
@@ -76,7 +82,12 @@ in {
                 ];
               };
               "NixOS Options(Unstable)" = {
-                definedAliases = defineAliasVariants ["no" "nopt" "nixopt" "nix-options"];
+                definedAliases = defineAliasVariants [
+                  "no"
+                  "nopt"
+                  "nixopt"
+                  "nix-options"
+                ];
                 icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                 urls = [
                   {
@@ -95,7 +106,10 @@ in {
                 ];
               };
               "NixOS Wiki" = {
-                definedAliases = defineAliasVariants ["nw" "nixwiki"];
+                definedAliases = defineAliasVariants [
+                  "nw"
+                  "nixwiki"
+                ];
                 icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                 urls = [
                   {
@@ -110,7 +124,11 @@ in {
                 ];
               };
               "NixOS Issues" = {
-                definedAliases = defineAliasVariants ["ni" "nixi" "nix-issues"];
+                definedAliases = defineAliasVariants [
+                  "ni"
+                  "nixi"
+                  "nix-issues"
+                ];
                 # icon = "";
                 urls = [
                   {
@@ -119,7 +137,11 @@ in {
                 ];
               };
               "NixOS PRs" = {
-                definedAliases = defineAliasVariants ["np" "nixp" "nix-pr"];
+                definedAliases = defineAliasVariants [
+                  "np"
+                  "nixp"
+                  "nix-pr"
+                ];
                 # icon = "";
                 urls = [
                   {
@@ -128,7 +150,10 @@ in {
                 ];
               };
               "NixOS PR build status" = {
-                definedAliases = defineAliasVariants ["npr" "nix-pr-status"];
+                definedAliases = defineAliasVariants [
+                  "npr"
+                  "nix-pr-status"
+                ];
                 # icon = "";
                 urls = [
                   {
@@ -143,7 +168,10 @@ in {
                 ];
               };
               "NixOS Discourse search" = {
-                definedAliases = defineAliasVariants ["disc" "discourse"];
+                definedAliases = defineAliasVariants [
+                  "disc"
+                  "discourse"
+                ];
                 # icon = "";
                 urls = [
                   {
@@ -158,7 +186,11 @@ in {
                 ];
               };
               "Home-Manager Option(Unstable)" = {
-                definedAliases = defineAliasVariants ["hm" "hmo" "hmoptions"];
+                definedAliases = defineAliasVariants [
+                  "hm"
+                  "hmo"
+                  "hmoptions"
+                ];
                 icon = "https://home-manager-options.extranix.com/images/favicon.png";
                 urls = [
                   {
@@ -177,7 +209,11 @@ in {
                 ];
               };
               "Home-Manager Issues" = {
-                definedAliases = defineAliasVariants ["hmi" "home-i" "home-manager-issues"];
+                definedAliases = defineAliasVariants [
+                  "hmi"
+                  "home-i"
+                  "home-manager-issues"
+                ];
                 # icon = "";
                 urls = [
                   {
@@ -186,7 +222,11 @@ in {
                 ];
               };
               "Home-Manager PRs" = {
-                definedAliases = defineAliasVariants ["hmp" "home-pr" "home-manager-pr"];
+                definedAliases = defineAliasVariants [
+                  "hmp"
+                  "home-pr"
+                  "home-manager-pr"
+                ];
                 # icon = "";
                 urls = [
                   {
@@ -195,7 +235,7 @@ in {
                 ];
               };
               "Go Pkgs" = {
-                definedAliases = defineAliasVariants ["go"];
+                definedAliases = defineAliasVariants [ "go" ];
                 icon = "https://pkg.go.dev/static/shared/icon/favicon.ico";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -210,9 +250,33 @@ in {
                   }
                 ];
               };
+              "Noogle.dev" = {
+                definedAliases = defineAliasVariants [
+                  "noo"
+                  "noog"
+                  "noogle"
+                ];
+                icon = "https://noogle.dev/favicon.png";
+                updateInterval = iconRefreshInterval;
+                urls = [
+                  {
+                    template = "https://noogle.dev/q";
+                    params = [
+                      {
+                        name = "term";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+              };
 
               "PerplexityAI" = {
-                definedAliases = defineAliasVariants ["p" "per" "perplexity"];
+                definedAliases = defineAliasVariants [
+                  "p"
+                  "per"
+                  "perplexity"
+                ];
                 icon = "https://www.perplexity.ai/favicon.ico";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -229,7 +293,10 @@ in {
               };
               # Gemini does not have a simple search URL
               "dict.cc english" = {
-                definedAliases = defineAliasVariants ["dc" "dict"];
+                definedAliases = defineAliasVariants [
+                  "dc"
+                  "dict"
+                ];
                 icon = "https://www4.dict.cc/img/favicons/favicon4.png";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -245,7 +312,10 @@ in {
                 ];
               };
               "youtube" = {
-                definedAliases = defineAliasVariants ["youtube" "yt"];
+                definedAliases = defineAliasVariants [
+                  "youtube"
+                  "yt"
+                ];
                 icon = "https://www.youtube.com/s/desktop/c01ea7e3/img/logos/favicon.ico";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -261,7 +331,10 @@ in {
                 ];
               };
               "duckduckgo" = {
-                definedAliases = defineAliasVariants ["dg" "duckduckgo"];
+                definedAliases = defineAliasVariants [
+                  "dg"
+                  "duckduckgo"
+                ];
                 icon = "https://duckduckgo.com/favicon.ico";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -277,7 +350,10 @@ in {
                 ];
               };
               "reddit" = {
-                definedAliases = defineAliasVariants ["red" "reddit"];
+                definedAliases = defineAliasVariants [
+                  "red"
+                  "reddit"
+                ];
                 icon = "https://www.redditstatic.com/shreddit/assets/favicon/64x64.png";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -294,7 +370,11 @@ in {
               };
 
               "github" = {
-                definedAliases = defineAliasVariants ["gh" "git" "github"];
+                definedAliases = defineAliasVariants [
+                  "gh"
+                  "git"
+                  "github"
+                ];
                 icon = "https://github.githubassets.com/favicons/favicon-dark.png";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -311,7 +391,10 @@ in {
               };
 
               "amazon" = {
-                definedAliases = defineAliasVariants ["ama" "amazon"];
+                definedAliases = defineAliasVariants [
+                  "ama"
+                  "amazon"
+                ];
                 icon = "https://www.amazon.de/favicon.ico";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -329,7 +412,11 @@ in {
 
               # General aggregated option search
               "mynixos" = {
-                definedAliases = defineAliasVariants ["mn" "mynix" "mynixos"];
+                definedAliases = defineAliasVariants [
+                  "mn"
+                  "mynix"
+                  "mynixos"
+                ];
                 icon = "https://mynixos.com/favicon.ico";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -345,7 +432,11 @@ in {
                 ];
               };
               "chatgpt" = {
-                definedAliases = defineAliasVariants ["ct" "chat" "chatgpt"];
+                definedAliases = defineAliasVariants [
+                  "ct"
+                  "chat"
+                  "chatgpt"
+                ];
                 icon = "https://cdn.oaistatic.com/assets/favicon-miwirzcw.ico";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -379,18 +470,17 @@ in {
         };
         "i2p" = {
           id = 1;
-          settings =
-            {
-              "media.peerConnection.ice.proxy_only" = true;
-              # manual mode
-              "network.proxy.type" = 1;
-              "network.proxy.socks_version" = 5;
-              "network.proxy.http" = "127.0.0.1";
-              "network.proxy.http_port" = 4444;
-              "network.proxy.ssl" = "127.0.0.1";
-              "network.proxy.ssl_port" = 4444;
-            }
-            // commonConfig;
+          settings = {
+            "media.peerConnection.ice.proxy_only" = true;
+            # manual mode
+            "network.proxy.type" = 1;
+            "network.proxy.socks_version" = 5;
+            "network.proxy.http" = "127.0.0.1";
+            "network.proxy.http_port" = 4444;
+            "network.proxy.ssl" = "127.0.0.1";
+            "network.proxy.ssl_port" = 4444;
+          }
+          // commonConfig;
           #TODO: Try out i2p for private browsing extension
           extensions.force = true;
         };
@@ -401,6 +491,8 @@ in {
         };
       };
     };
-    stylix.targets.firefox.profileNames = lib.attrsets.mapAttrsToList (name: _: "${name}") programs.firefox.profiles;
+    stylix.targets.firefox.profileNames = lib.attrsets.mapAttrsToList (
+      name: _: "${name}"
+    ) programs.firefox.profiles;
   };
 }
