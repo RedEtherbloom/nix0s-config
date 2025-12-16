@@ -48,6 +48,8 @@ in
           # Broken targets
           targets.nixos-icons.enable = false;
         };
+
+        news.display = "silent";
       }
       (lib.mkIf osConfig.security.ownAdditional.yubikey {
         # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)
