@@ -11,6 +11,7 @@ with lib; let
 in {
   imports = [
     inputs.stylix.nixosModules.stylix
+    ../binary-cache/hyprland.nix
   ];
 
   options.myOptions.hostRoles.neural-augmenter.enable = mkEnableOption "workstation options";

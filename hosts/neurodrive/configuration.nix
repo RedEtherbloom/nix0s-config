@@ -11,13 +11,12 @@ let
 in
 {
   imports = [
-    # !EXCEPTION TO GET AUDIOSINK KICK-STARTED! #
-    ../audiosink/raspberry_pi_binary_cache.nix
     ../../modules
     ../../modules/common/ssh.nix
     ../../modules/hdd.nix
     # TODO: Remove once hm sops-nix supports secrets
     ../../modules/common/taskwarrior-secrets.nix
+    ../../modules/binary-cache/cuda-maintainers.nix
 
     ./hardware-configuration.nix
   ]

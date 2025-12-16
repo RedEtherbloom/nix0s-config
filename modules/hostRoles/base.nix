@@ -1,7 +1,5 @@
 {
   config,
-  inputs,
-  pkgs,
   lib,
   secrets,
   ...
@@ -9,6 +7,10 @@
 with lib; let
   cfg = config.myOptions.hostRoles.base;
 in {
+  imports = [
+    ../binary-cache
+  ];
+
   options.myOptions.hostRoles.base.enable = mkOption {
     description = "The base role required by pretty much all hosts";
     type = with types; bool;

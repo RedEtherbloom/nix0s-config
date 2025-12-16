@@ -140,17 +140,8 @@
                     # TODO: Decide how to reorganize module inputs
                     inputs.sops-nix.nixosModules.sops
                     inputs.nix-index-database.nixosModules.nix-index
-                    ./modules/cachix.nix
+                    ./modules/binary-cache/default.nix
                     ./hosts/${hostName}/configuration.nix
-                    # TODO: Move backupFileExtension to HM-Modules
-                    # {
-                    #   home-manager = {
-                    #     backupFileExtension = "hm_backup_move";
-                    #     extraSpecialArgs = specialArgs;
-                    #     useGlobalPkgs = true;
-                    #     users.${defaultUsername}.imports = [ ./hosts/${hostName}/home.nix ];
-                    #   };
-                    # }
                   ];
                 }
               );
@@ -159,10 +150,10 @@
               let
                 osConfig = host.config;
               in
+              # TODO: Move backupFileExtension to HM-Modules
               inputs.home-manager.lib.homeManagerConfiguration {
-                # TODO: Force to use the same instance, if possible
                 inherit (host) pkgs;
-                # Remove potentially interferring ones
+                # Remove potentially interferring attrs
                 extraSpecialArgs =
                   (builtins.removeAttrs host._module.specialArgs [
                     "self"
@@ -176,9 +167,13 @@
                   };
                 modules = [
                   ./hosts/${hostName}/home.nix
-                  ./modules/cachix.nix
                   {
-                    nix.package = osConfig.nix.package;
+                    nix = {
+                      package = osConfig.nix.package;
+                      settings = {
+                        inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys;
+                      };
+                    };
 
                     home = {
                       username = defaultUsername;

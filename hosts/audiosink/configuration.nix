@@ -5,15 +5,15 @@
   pkgs,
   secrets,
   ...
-}: let
+}:
+let
   networkSinkPort = 4713;
-in {
+in
+{
   imports = [
     inputs.nixos-hardware.nixosModules.raspberry-pi-3
     inputs.sops-nix.nixosModules.sops
-
     ./hardware-configuration.nix
-    ./raspberry_pi_binary_cache.nix
 
     ../../modules/common/ssh.nix
     ../../modules/roles/ssdp.nix
@@ -28,7 +28,10 @@ in {
         "nix-command"
         "flakes"
       ];
-      trusted-users = ["root" "@wheel" "inf"];
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
     };
     gc = {
       automatic = true;
@@ -37,7 +40,7 @@ in {
     };
     optimise = {
       automatic = true;
-      dates = ["07:00"];
+      dates = [ "07:00" ];
     };
   };
   swapDevices = [
@@ -76,12 +79,14 @@ in {
               key-mgmt = "wpa-psk";
               psk = "$WIFI_PASSWORD";
             };
-            ipv4 = {method = "auto";};
+            ipv4 = {
+              method = "auto";
+            };
             ipv6 = {
               addr-gen-mode = "default";
               method = "auto";
             };
-            proxy = {};
+            proxy = { };
           };
         };
       };
@@ -154,7 +159,7 @@ in {
           "sound.target"
           "bluetooth.target"
         ];
-        wantedBy = ["default.target"];
+        wantedBy = [ "default.target" ];
       };
     };
     services = {
@@ -162,47 +167,53 @@ in {
         description = "Close the port for the pipewire service during night.";
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = lib.getExe (pkgs.writeShellApplication {
-            name = "closeNetworkSinkPort";
-            runtimeInputs = with pkgs; [
-              iptables
-              nixos-firewall-tool
-            ];
-            text = ''
-              nixos-firewall-tool reset
-            '';
-          });
+          ExecStart = lib.getExe (
+            pkgs.writeShellApplication {
+              name = "closeNetworkSinkPort";
+              runtimeInputs = with pkgs; [
+                iptables
+                nixos-firewall-tool
+              ];
+              text = ''
+                nixos-firewall-tool reset
+              '';
+            }
+          );
         };
-        conflicts = ["restart-network-sink.service"];
+        conflicts = [ "restart-network-sink.service" ];
       };
       restart-network-sink = {
         description = "Restart librespot in the morning.";
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = lib.getExe (pkgs.writeShellApplication {
-            name = "openNetworkSinkPort";
-            text = ''
-              nixos-firewall-tool open tcp ${builtins.toString networkSinkPort}
-            '';
-            runtimeInputs = with pkgs; [
-              iptables
-              nixos-firewall-tool
-            ];
-          });
+          ExecStart = lib.getExe (
+            pkgs.writeShellApplication {
+              name = "openNetworkSinkPort";
+              text = ''
+                nixos-firewall-tool open tcp ${builtins.toString networkSinkPort}
+              '';
+              runtimeInputs = with pkgs; [
+                iptables
+                nixos-firewall-tool
+              ];
+            }
+          );
         };
       };
       network-sink-after-boot = {
         description = "Decide after boot what state the firewall should be in..";
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = lib.getExe (pkgs.writeShellScriptBin "networkSinkPortBoot" ''
-            HOUR=$(date +%H)
-            if [ "$HOUR" -lt 22 ] && [ "$HOUR" -ge 8 ]; then
-              systemctl start retart-network-sink.service
-            else
-              systemctl start stop-network-sink.service
-            fi
-          '');
+          ExecStart = lib.getExe (
+            pkgs.writeShellScriptBin "networkSinkPortBoot" ''
+              HOUR=$(date +%H)
+              if [ "$HOUR" -lt 22 ] && [ "$HOUR" -ge 8 ]; then
+                systemctl start retart-network-sink.service
+              else
+                systemctl start stop-network-sink.service
+              fi
+            ''
+          );
         };
       };
     };
