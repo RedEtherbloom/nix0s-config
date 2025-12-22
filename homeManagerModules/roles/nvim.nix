@@ -998,7 +998,7 @@ in
 
                       # TODO: Evaluate if we want these
                       session = {
-                        nvim-session-manager.enable = false;
+                        nvim-session-manager.enable = true;
                       };
                       gestures = {
                         gesture-nvim.enable = false;
