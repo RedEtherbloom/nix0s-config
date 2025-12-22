@@ -193,7 +193,7 @@ in {
         enable = true;
         package = pkgs.jdk25;
       };
-      home.packages = [pkgs.jetbrains.idea-community-bin];
+      home.packages = [pkgs.jetbrains.idea];
     })
     (lib.mkIf cfg.direnv {
       programs.direnv = {
