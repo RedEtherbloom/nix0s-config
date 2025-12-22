@@ -5,7 +5,8 @@
   pkgs,
   secrets,
   ...
-}: {
+}:
+{
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
     ../../modules
@@ -23,7 +24,7 @@
   };
 
   boot = {
-    binfmt.emulatedSystems = ["aarch64-linux"];
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
     # Attempt to fix some intel stuttering
     kernelParams = [
       "i915.enable_psr=0"
@@ -36,7 +37,7 @@
       luks.devices."luks" = {
         device = "/dev/disk/by-uuid/7da6adea-a5ff-4044-bd33-38decf43fd60";
         # Needs to be enrolled with systemd-cryptenroll, with sudo systemd-cryptenroll --fido2-with-client-pin=true --fido2-device=auto <disk id>
-        crypttabExtraOpts = ["fido2-device=auto"];
+        crypttabExtraOpts = [ "fido2-device=auto" ];
         bypassWorkqueues = true;
         # Potential security implications
         allowDiscards = true;
@@ -71,19 +72,8 @@
       # nssmdns6 = true;
       openFirewall = true;
     };
-    power-profiles-daemon.enable = true;
-    # Power managment, whoop whoop!
-    # Valerie: Think this causes sleep issues :/
-    # services.tlp.enable = true;
-    # Maybe this fixes it?
-    # services.tlp.settings = {
-    #   WIFI_PWR_ON_BAT = "off";
-    #   USB_EXCLUDE_BTUSB = 1;
-    # };
-
     displayManager.sddm = {
       wayland.enable = true;
-      # This separate configuration is necessary?
       enable = true;
     };
     # Does this have to be replaced with home-manager?
@@ -93,12 +83,12 @@
         gutenprint
         foomatic-db
         foomatic-db-nonfree
-        # (callPackage ../../modules/drivers/printers/kyocera-classic-universal-kpdl/default.nix {})
       ];
     };
     udev.extraRules = ''
       SUBSYSTEM=="usb", ATTRS{idVendor}=="0a5c", ATTRS{idProduct}=="21e6", ATTR{authorized}="0"
     '';
+    tlp.enable = true;
   };
 
   hardware = {
@@ -110,11 +100,10 @@
     bluetooth = {
       enable = true;
       powerOnBoot = true;
-      # Clara: Disable built-in bluetooth. It breaks and crashes frequently
       settings = {
         General = {
           Experimental = true;
-          ControllerMode = "bredr";
+          # ControllerMode = "bredr";
           # Die HFP mode, die, die, die!
           Disable = "Headset";
         };
@@ -143,16 +132,12 @@
         	["bluez5.enable-hw-volume"] = true,
         }
       '';
-      # Trying to disable headset mode, some of these aren't as attrocious as I originally thought though
-      #["bluez5.headset-roles"] = "[ hsp_hs hsp_ag hfp_hf hfp_ag ]"
     };
   };
 
   myOptions = {
     hostRoles.laptop.enable = true;
     roles.gaming.enable = true;
-    # Setup event setup and hardening etc.
-    event-setup.enable = false;
     # Broken as of: 15.10.2025
     roles.i2p.enable = lib.mkForce false;
   };
@@ -170,11 +155,12 @@
       "podman"
       "dialout"
     ];
-    packages = with pkgs; [
-      aircrack-ng
-    ];
   };
 
   stylix.image = "${secrets}/dotfiles/wallpapers/current_wallpaper";
   system.stateVersion = "23.11";
+  environment.systemPackages = with pkgs; [
+    # Sddm styling
+    kdePackages.breeze
+  ];
 }
