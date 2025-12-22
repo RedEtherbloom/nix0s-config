@@ -1,81 +1,149 @@
+@define-color urgent-red #f0112c;
+@define-color urgent-orange #efbb52;
+@define-color urgent-orange-transparent rgba(199, 227, 42, 0.6);
+@define-color bar-background #2d2d2d;
+@define-color bar-background-transparent rgba(45, 45, 45, 0.6);
+@define-color bar-background-very-transparent rgba(45, 45, 45, 0.2);
+
+
+/* Suprepsses gtk changes for everything but the tray icons */
+/* *:not(#tray) { */
+/*   all: initial; */
+/* } */
+/**/
 * {
-    font-family: OpenDyslexic Nerd Font, Symbols Nerd Fonts, FontAwesome, Roboto, Helvetica, Arial, sans-serif;
-    font-size: 18px;
+  font-family: OpenDyslexic Nerd Font, Symbols Nerd Fonts, FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  /* min-width: 16px; */
+  /* all: initial; */
+}
+
+/* .modules-right needs more specificity */
+.modules-left *, .modules-center *, .modules-right widget box:not(#tray) * {
+  all: initial;
 }
 
 window#waybar {
-    background: #222222;
-    color: #dfdfdf;
-    border-radius: 20px;
-}
-
-#clock {
-    border-bottom: 4px solid #0a6cf5;
-}
-
-#temperature {
-    border-bottom: 4px solid #f50a4d;
-}
-
-#temperature.critical {
-    color: #bd2c40;
-}
-
-#battery {
-    border-bottom: 4px solid #ffb52a;
-}
-
-#battery.not\ charging {
-    background: rgb(111.5, 39, 49);
+  background-color: @bar-background-very-transparent;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 #battery.charging {
-    background: rgb(39, 111.5, 49);
-
+  border-bottom: 4px solid alpha(#b9e04d, 0.6);
 }
 
-#network.wireless {
-    border-bottom: 4px solid #9f78e1;
+#battery.discharging {
+  border-bottom: 4px solid alpha(#efbb52, 0.6);
 }
 
-#network.wireless.disconnected {
-    border-bottom: 4px solid #473666;
+#battery.low {
+  background-color: @urgent-orange-transparent;
 }
 
-#network.disconnected {
-    color: #ABABAB;
+#battery.critical:not(.charging) {
+  background-color: @urgent-red;
 }
 
-#network.eth {
-    border-bottom: 4px solid #55aa55;
-}
-
-#cpu {
-    border-bottom: 4px solid #00f9f9;
-}
-
-#pulseaudio {
-    border-bottom: 4px solid#dd7a00;
+#battery.full {
+  border-bottom: 4px solid #27c48d;
 }
 
 #pulseaudio.muted {
     color: #ABABAB;
 }
 
-#disk {
-    border-bottom: 4px solid #6988ed;
+.modules-left, .modules-center, .modules-right {
+  border-radius: 6px;
+  /* How to set exact opacity? */
+  background-color: alpha(@bar-background, 0.6);
+  padding: 2px;
+  border: 1px solid rgba(69, 69, 69, 0.7);
+}
+.modules-left {
+    margin-left: 10px;
+}
+.modules-right {
+    margin-right: 10px;
+}
+/* Hide the window label on empty workspaces */
+window#waybar.empty #window * {
+  background-color: transparent;
+  min-width: 0px;
 }
 
-#tray {
-    margin-right: 20px;
+.modules-center {
+  /* border-radius: 50%/50%; */
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  font-size: 20px;
 }
 
-#workspaces {
-    margin-left: 20px;
+#workspaces button {
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 0.4em 1.85em 0.6em 1.85em;
+  margin-top: 3px;
+  margin-bottom: 7px;
+  /* background-color: rgba(190, 121, 61, 0.8); */
+  background-color: slateblue;
+  margin-left: 1px;
+  margin-right: 1px;
+  border: 1px solid dimgray;
+  box-shadow: navy 0px 3px;
 }
 
-#workspaces button.focused {
-    background-color: #5f5f5f;
-    border-bottom: 4px solid #ffb52a;
-    border-radius: 0;
+#workspaces button label {
+  font-size: 16px;
 }
+
+#workspaces button.active label {
+  background-size: 80% 40%;
+  background-position: center;
+  /* TODO: Replace this with a shadow */
+  background-image: image(@bar-background);
+  background-repeat: no-repeat;
+  font-size: 20px;
+  font-weight: 700;
+  min-height: 0px;
+  /* padding-top: 10px; */
+  /* margin-top: 20px; */
+  border-radius: 400px;
+  border-width: 40px;
+}
+
+#workspaces button.visible {
+  background-color: #9f78e1;
+}
+
+#workspaces button.urgent {
+  border-bottom: 4px solid @urgent-red; 
+}
+
+#workspaces button.active {
+  /* TODO: How to remove the behinds's elements color? Maybe a not?*/
+  margin-top: 0px;
+  margin-bottom: 0px;
+  min-width: 40px;
+  min-height: 40px;
+    animation-name: PrideScroll;
+    animation-duration: 40s;
+    animation-timing-function: steps(240);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    /* Pad with the first color to mask the stripe end */
+    /* Divided into segments of about 11%, -2% of blend region */
+    background-image: linear-gradient(180deg, rgba(237, 254, 0, 0.7), rgba(237, 254, 0, 0.7) 9%, rgba(255, 255, 255, 0.7) 11% ,rgba(255, 255, 255, 0.7) 20%, rgba(154, 89, 207, 0.7) 22%, rgba(154, 89, 207, 0.7) 31%, rgba(45, 45, 45, 0.7) 33%, rgba(45, 45, 45, 0.7) 42%, rgba(91, 207, 250, 0.7) 44%, rgba(91, 207, 250, 0.7) 53%, rgba(245, 171, 185, 0.7) 55%, rgba(245, 171, 185, 0.7) 64%, rgba(255, 255, 255, 0.7) 66%, rgba(255, 255, 255, 0.7) 75%, rgba(91, 207, 250, 0.7) 77%, rgba(91, 207, 250, 0.7) 86%, #f4abb9 88%, rgba(245, 171, 185, 0.7) 97%, rgba(237, 254, 0, 0.7) 99%);
+    background-size: 300% 200%;
+    background-repeat: repeat-y;
+}
+
+@keyframes PrideScroll {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 0% -800%;
+  }
+}
+
