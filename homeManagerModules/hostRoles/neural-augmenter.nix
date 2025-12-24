@@ -69,6 +69,7 @@ in
             }
           ));
       };
+
       services.piper-web-tts = {
         enable = true;
         model = "en_US-libritts_r-medium";
@@ -159,6 +160,20 @@ in
           aqbanking
 
           calibre
+
+          # KDE utilites
+          kdePackages.ark
+          kdePackages.gwenview
+          kdePackages.okular
+          kdePackages.kate
+          kdePackages.ktexteditor
+          kdePackages.dolphin
+          kdePackages.dolphin-plugins
+          kdePackages.baloo-widgets
+          kdePackages.ffmpegthumbs
+
+          # Gnome utilites
+          nautilus
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
           with pkgs;

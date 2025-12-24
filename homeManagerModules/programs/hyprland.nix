@@ -567,6 +567,10 @@ in
         "secrets"
       ];
       };
+      udiskie = {
+        enable = true;
+        automount = false;
+      };
     };
 
     # TODO: New wallpaper
@@ -841,7 +845,6 @@ in
       waystt
       config.home.hyprdynamicmonitors.package
       rofiDisplayLayout
-      kdePackages.dolphin
 
       # Fonts
       nerd-fonts.commit-mono
