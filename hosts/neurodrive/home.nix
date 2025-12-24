@@ -187,7 +187,7 @@ in
 
         myOptions.services.piper-web-tts = {
           enable = true;
-          model = "en_US-kristin-medium";
+          model = "en_US-libritts_r-medium";
         };
       }
     )
