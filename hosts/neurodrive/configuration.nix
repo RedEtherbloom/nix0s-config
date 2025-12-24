@@ -6,9 +6,6 @@
   secrets,
   ...
 }:
-let
-  wyomingPort = 10200;
-in
 {
   imports = [
     ../../modules
@@ -139,15 +136,14 @@ in
           (lib.strings.toInt config.services.restic.server.listenAddress)
           config.services.tabby.port
           (lib.strings.toInt config.virtualisation.oci-containers.containers.esphome.environment.PORT)
-          wyomingPort
         ]
         ++ (lib.lists.concatMap (el: [ el.port ]) config.services.mosquitto.listeners);
         allowedUDPPorts = [
           # SteamVR
           9944
           27062
-          9757 # WiVrn
-          wyomingPort
+          # WiVrn
+          9757
         ];
       };
       ownWireguard = {
@@ -261,24 +257,6 @@ in
       SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="zigbee-ap"
       ACTION=="add", SUBSYSTEM=="tty", ENV{DEVLINKS}=="*/dev/zigbee-ap*", RUN+="${config.systemd.package}/bin/systemctl restart podman-homeassistant.service"
     '';
-    tabby = {
-      enable = true;
-      acceleration = "cuda";
-      # TODO: Is there a wildcard address that matches both IPv4 and 6?
-      host = "0.0.0.0";
-    };
-    wyoming.piper = {
-      # Broken with some odd /proc/cpuinfo error in Onnxruntime 26.09.2025
-      # package = pkgs.wyoming-piper-2;
-      servers."main-voice" = {
-        enable = true;
-        useCUDA = false;
-        voice = "en-us-libritts-high";
-        speaker = 1;
-        streaming = true;
-        uri = "tcp://0.0.0.0:${builtins.toString wyomingPort}";
-      };
-    };
     # Disabled due to invidious-companion needing packaging first https://github.com/NixOS/nixpkgs/issues/415116
     # invidious = {
     #   enable = true;

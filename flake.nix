@@ -6,6 +6,7 @@
     # Last working nixos-unstable. Thought of doing this again.
     nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=50a96edd8d0db6cc8db57dab6bb6d6ee1f3dc49a";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     secrets = {
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
@@ -98,6 +99,14 @@
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
       };
+    };
+    mechabar = {
+      url = "github:sejjy/mechabar";
+      flake = false;
+    };
+    tokyonight = {
+      url = "github:stronk-dev/Tokyo-Night-Linux";
+      flake = false;
     };
   };
 
