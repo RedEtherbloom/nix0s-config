@@ -5,9 +5,15 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.myOptions.hostRoles.graphical;
-in {
+in
+{
+  imports = [
+    ../services/piper-web-tts.nix
+  ];
+
   options.myOptions.hostRoles.graphical.enable = mkOption {
     description = "graphical hostRole hm settings";
     type = with types; bool;

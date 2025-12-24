@@ -4,10 +4,15 @@
   osConfig,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.myOptions.hostRoles.neural-augmenter;
-  inherit (import ../../homeManagerModules/lib/torrent_lib.nix {inherit osConfig pkgs;}) mullvad-torrent vopono-torrent;
-in {
+  inherit (import ../../homeManagerModules/lib/torrent_lib.nix { inherit osConfig pkgs; })
+    mullvad-torrent
+    vopono-torrent
+    ;
+in
+{
   options.myOptions.hostRoles.neural-augmenter = {
     enable = lib.mkOption {
       description = "workstation hm settings";
@@ -46,19 +51,27 @@ in {
       taskwarrior-tui = {
         enable = lib.mkDefault true;
         # TODO: Update and/or move to overlay
-        package = with pkgs; (taskwarrior-tui.overrideAttrs (_: oldAttrs: rec {
-          version = oldAttrs.version + "-fix";
-          src = pkgs.fetchFromGitHub {
-            owner = "RedEtherbloom";
-            repo = "taskwarrior-tui";
-            hash = "sha256-YNd4vtaWm+1fsB8ly3toq2u74Nicmhx2ey1m557q4K8=";
-            rev = "ee24bfb4a36f246933e6d2502ab85d3fc6abb85b";
-          };
-          cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-            inherit src;
-            hash = "sha256-7q85YszWmetjWry9nvc2irQeLFCWHwOAkEUHtc9CK/c=";
-          };
-        }));
+        package =
+          with pkgs;
+          (taskwarrior-tui.overrideAttrs (
+            _: oldAttrs: rec {
+              version = oldAttrs.version + "-fix";
+              src = pkgs.fetchFromGitHub {
+                owner = "RedEtherbloom";
+                repo = "taskwarrior-tui";
+                hash = "sha256-YNd4vtaWm+1fsB8ly3toq2u74Nicmhx2ey1m557q4K8=";
+                rev = "ee24bfb4a36f246933e6d2502ab85d3fc6abb85b";
+              };
+              cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+                inherit src;
+                hash = "sha256-7q85YszWmetjWry9nvc2irQeLFCWHwOAkEUHtc9CK/c=";
+              };
+            }
+          ));
+      };
+      services.piper-web-tts = {
+        enable = true;
+        model = "en_US-libritts_r-medium";
       };
     };
 
@@ -132,14 +145,14 @@ in {
           nix-search-tv
 
           systemctl-tui
-          
+
           # Subsonic clients
           feishin
           aonsoku
 
           # Debugging render scenes for Minecraft
           renderdoc
-          
+
           # Banking
           hledger
           hledger-ui
@@ -147,10 +160,13 @@ in {
 
           calibre
         ])
-        ++ (lib.optionals osConfig.security.ownAdditional.yubikey (with pkgs; [
-          yubioath-flutter
-          yubikey-manager
-        ]));
+        ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
+          with pkgs;
+          [
+            yubioath-flutter
+            yubikey-manager
+          ]
+        ));
       # May not work due to https://github.com/nix-community/home-manager/issues/1011
       sessionVariables = {
         # Smooth scrolling
@@ -178,7 +194,7 @@ in {
     programs = {
       chromium = {
         enable = lib.mkDefault true;
-        package = pkgs.chromium.override {enableWideVine = true;};
+        package = pkgs.chromium.override { enableWideVine = true; };
       };
       nushell.enable = true;
       rofi = {
