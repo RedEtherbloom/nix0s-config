@@ -400,7 +400,7 @@ in
 
               # Submaps
               "$modifier, M, submap, player"
-              "$modifier SHIFT, L, submap, neovim"
+              "$modifier CONTROL, L, submap, neovim"
 
               "$modifier SHIFT, Space, exec, killall -SIGUSR1 .waybar-wrapped, Toggle waybar"
             ]
@@ -539,12 +539,12 @@ in
         enable = true;
         settings = {
           general = {
-            after_sleep_cmd = "hyprctl dispatch dpms on";
             ignore_dbus_inhibit = false;
-            lock_cmd = "hyprlock";
-            before_sleep_cmd = "hyprlock";
+            lock_cmd = "pidof hyprlock || hyprlock";
+            before_sleep_cmd = "loginctl lock-session";
+            after_sleep_cmd = "hyprctl dispatch dpms on";
             # Attempt to resume without the phantom image
-            inhibit_sleep = 1;
+            inhibit_sleep = 3;
           };
           listener = [
             {
@@ -553,8 +553,10 @@ in
             }
             {
               timeout = 900;
-              on-timeout = "hyprctl dispatch dpms off";
+              on-timeout = "echo 'Turned off display via dpms' && hyprctl dispatch dpms off";
               on-resume = "hyprctl dispatch dpms on";
+              # Could cause issues with e.g. videos
+              ignore_inhibit = true;
             }
           ];
         };
@@ -619,20 +621,13 @@ in
         }
       ];
     };
-    # TODO: Find good rofi config
     programs.rofi = {
       enable = true;
       extraConfig = {
         show-icons = true;
       };
-      # TODO: Take as inspiration, turn it bigger and into one bar
-      theme = "${inputs.tokyonight}/.config/wofi/launcher.rasi";
+      theme = ../../dotfiles/rofi/launcher.rasi;
     };
-    home.file."${config.programs.rofi.configPath}".text = ''
-      listview {
-        columns: 1;
-      }
-    '';
     stylix.targets = {
       rofi.enable = false;
       waybar.enable = false;

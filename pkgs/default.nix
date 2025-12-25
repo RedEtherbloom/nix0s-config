@@ -170,4 +170,17 @@
   };
 
   inherit (inputs.nixpkgs-prev.legacyPackages.${final.system}) gtksourceview;
+
+  hyprlock-styles.style-3 = final.stdenv.mkDerivation {
+    pname = "hyprlock-styles-style-6";
+    version = "0.0.1";
+    src = final.fetchzip {
+      url = "https://github.com/MrVivekRajan/Hyprlock-Styles/releases/download/style3/Style-3.tar.gz";
+      hash = "sha256-A9fq1fDn86v6uORKAI8QviAeJzDip6PCije9Ml2s9Lk=";
+    };
+    
+    installPhase = ''
+      cp -r $src/ $out/
+    '';
+  };
 }
