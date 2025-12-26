@@ -3,13 +3,13 @@
   al:                             #00000000;
   bg:                             #1a1b26FF;
   bga:                            #414868FF;
-  fga:                            #c0caf5FF;
-  fg:                             #c0caf5FF;
+  fga:                            #ff007cFF;
+  fg:                             #ff007cFF;
   ac:                             #343b58FF;
 }
 
 configuration {
-  font:                           "Iosevka Nerd Font 10";
+  font:                           "CommitMono Nerd Font Mono 10";
   show-icons:                     true;
   icon-theme:                     "Papirus";
   display-drun:                   "";
@@ -27,10 +27,10 @@ window {
   border:                         1px 3px 5px 1px;
   border-color:                   @ac;
   border-radius:                  2px;
-  width:                          600px;
-  location:                       center;
+  width:                          40%;
+  location:                       north;
   x-offset:                       0;
-  y-offset:                       0;
+  y-offset:                       24px;
 }
 
 prompt {
@@ -38,7 +38,7 @@ prompt {
   padding:                        2px 0px 0px 4px;
   background-color:               @al;
   text-color:                     @fg;
-  font:                           "feather 12";
+  font:                           "CommitMono Nerd Font Mono 12";
 }
 
 entry {
@@ -47,7 +47,7 @@ entry {
   placeholder-color:              @fg;
   expand:                         true;
   horizontal-align:               0;
-  placeholder:                    "Search...";
+  placeholder:                    "Input....";
   padding:                        2px 0px 0px 6px;
   blink:                          true;
 }
@@ -68,8 +68,8 @@ listview {
   background-color:               @al;
   padding:                        0px;
   columns:                        1;
-  lines:                          7;
-  spacing:                        6px;
+  lines:                          16;
+  spacing:                        4px;
   cycle:                          true;
   dynamic:                        true;
   layout:                         vertical;
@@ -90,11 +90,11 @@ element {
   text-color:                     @fga;
   orientation:                    horizontal;
   border-radius:                  0px;
-  padding:                        8px;
+  padding:                        4px;
 }
 
 element-icon {
-  size:                           24px;
+  size:                           20px;
   background-color:               transparent;
   border:                         0px;
 }
@@ -105,7 +105,7 @@ element-text {
   text-color:                     @fg;
   horizontal-align:               0;
   vertical-align:                 0.5;
-  margin:                         0px 2.5px 0px 2.5px;
+  margin:                         0px 1.5px 0px 1.5px;
 }
 
 element selected {
