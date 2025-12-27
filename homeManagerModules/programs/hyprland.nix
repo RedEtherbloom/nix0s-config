@@ -187,7 +187,7 @@ in
           animate_manual_resizes = true;
           animate_mouse_windowdragging = true;
           # TODO: This is soft broken as e.g. telegram getting a notification forces us to switch to that desktop
-          focus_on_activate = true;
+          focus_on_activate = false;
           middle_click_paste = true;
           # maybe required for e.g. video player lagging. Performance though?
           render_unfocused_fps = false;
@@ -364,7 +364,7 @@ in
               "$modifier,l,movefocus,r"
               "$modifier,k,movefocus,u"
               "$modifier,j,movefocus,d"
-              "$modifier SHIFT,SPACE,movetoworkspace,scratchpad"
+              "$modifier SHIFT,SPACE,movetoworkspacesilent,special:scratchpad"
               "$modifier,SPACE,togglespecialworkspace,scratchpad"
               "$modifier CONTROL,right,workspace,e+1"
               "$modifier CONTROL,left,workspace,e-1"
@@ -402,7 +402,7 @@ in
               "$modifier, M, submap, player"
               "$modifier CONTROL, L, submap, neovim"
 
-              "$modifier SHIFT, Space, exec, killall -SIGUSR1 .waybar-wrapped, Toggle waybar"
+              "$modifier Control, Space, exec, killall -SIGUSR1 .waybar-wrapped, Toggle waybar"
             ]
           );
         bindm = [
@@ -565,9 +565,9 @@ in
         enable = true;
         # Exclude ssh component
         components = [
-        "pkcs11"
-        "secrets"
-      ];
+          "pkcs11"
+          "secrets"
+        ];
       };
       udiskie = {
         enable = true;
@@ -874,15 +874,6 @@ in
             "gnome-keyring"
           ];
         };
-        # kde = {
-        #   default = [
-        #     "kde"
-        #     "gtk"
-        #   ];
-        #   "org.freedesktop.impl.portal.Secret" = [
-        #     "kwallet"
-        #   ];
-        # };
       };
     };
     home.hyprdynamicmonitors = {
