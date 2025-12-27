@@ -55,6 +55,7 @@
                 pkgs.writeShellApplication {
                   name = "piper-web-tts";
                   runtimeInputs = with pkgs; [
+                    coreutils
                     fd
                     python
                     config.myOptions.services.piper-web-tts.package
