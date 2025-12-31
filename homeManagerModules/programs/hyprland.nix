@@ -644,8 +644,7 @@ in
     programs.waybar = {
       enable = true;
       # style = "@import url(\"${inputs.mechabar}/style.css\");";
-      style = "@import url(\"${inputs.tokyonight}/.config/waybar/style.css\");";
-      # style = builtins.readFile "${self}/dotfiles/waybarstyle.css";
+      style = "@import url(\"${self}/dotfiles/waybar/style.css\");";
       settings.mainBar = {
         position = "top";
         layer = "top";
