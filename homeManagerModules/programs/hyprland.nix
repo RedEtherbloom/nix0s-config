@@ -170,8 +170,7 @@ in
           layers_hog_keyboard_focus = true;
           initial_workspace_tracking = 1;
 
-          # Only reactivate with keypress
-          mouse_move_enables_dpms = false;
+          mouse_move_enables_dpms = true;
           key_press_enables_dpms = true;
 
           disable_hyprland_logo = lib.mkForce true;
