@@ -6,9 +6,11 @@
   secrets,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.myOptions.hostRoles.neural-augmenter;
-in {
+in
+{
   imports = [
     inputs.stylix.nixosModules.stylix
     ../binary-cache/hyprland.nix
@@ -64,13 +66,14 @@ in {
       hyprland = {
         enable = true;
         package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-        portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+        portalPackage =
+          inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
       };
     };
 
     services = {
       tailscale.enable = true;
-      udev.packages = [pkgs.platformio-core];
+      udev.packages = [ pkgs.platformio-core ];
       mullvad-vpn = {
         enable = true;
         # GUI
@@ -84,6 +87,14 @@ in {
       blueman.enable = true;
       # HyprDynamicMonitors dependency
       upower.enable = true;
+
+      # VR experimenation
+      wivrn = {
+        enable = true;
+        openFirewall = true;
+        defaultRuntime = true;
+        steam.importOXRRuntimes = true;
+      };
     };
 
     hardware = {
@@ -92,12 +103,15 @@ in {
       # May improve krita comfort
       opentabletdriver.enable = true;
     };
-    environment.systemPackages = [pkgs.lm_sensors];
+    environment.systemPackages = [ pkgs.lm_sensors ];
 
     # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
-    system.extraDependencies = let
-      collectFlakeInputs = input: [input] ++ builtins.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or {}));
-    in
+    system.extraDependencies =
+      let
+        collectFlakeInputs =
+          input:
+          [ input ] ++ builtins.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or { }));
+      in
       builtins.concatMap collectFlakeInputs (builtins.attrValues inputs);
 
     nixpkgs.config.permittedInsecurePackages = [
@@ -136,15 +150,17 @@ in {
 
     # See: https://github.com/NixOS/nixpkgs/issues/409986
     # environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
-    environment.etc."xdg/menus/applications.menu".source = let
-      applications-menu = "menu/desktop/plasma-applications.menu";
-      src = pkgs.fetchFromGitHub {
-        owner = "KDE";
-        repo = "plasma-workspace";
-        tag = "v${pkgs.kdePackages.plasma-workspace.version}";
-        hash = "sha256-BFjGHITdV29B4h6UhhK/1kB+Gwuq+AhFnyjTSofZZuo=";
-        sparseCheckout = ["${applications-menu}"];
-      };
-    in "${src}/${applications-menu}";
+    environment.etc."xdg/menus/applications.menu".source =
+      let
+        applications-menu = "menu/desktop/plasma-applications.menu";
+        src = pkgs.fetchFromGitHub {
+          owner = "KDE";
+          repo = "plasma-workspace";
+          tag = "v${pkgs.kdePackages.plasma-workspace.version}";
+          hash = "sha256-BFjGHITdV29B4h6UhhK/1kB+Gwuq+AhFnyjTSofZZuo=";
+          sparseCheckout = [ "${applications-menu}" ];
+        };
+      in
+      "${src}/${applications-menu}";
   };
 }
