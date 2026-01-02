@@ -81,6 +81,25 @@ in
                   }
                 ];
               };
+              "Nixpkgs source search" = {
+                definedAliases = defineAliasVariants [ "nis" ];
+                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                urls = [
+                  {
+                    template = "https://github.com/search";
+                    params = [
+                      {
+                        name = "type";
+                        value = "code";
+                      }
+                      {
+                        name = "q";
+                        value = "repo:NixOS/nixpkgs {searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+              };
               "NixOS Options(Unstable)" = {
                 definedAliases = defineAliasVariants [
                   "no"
@@ -125,7 +144,6 @@ in
               };
               "NixOS Issues" = {
                 definedAliases = defineAliasVariants [
-                  "ni"
                   "nixi"
                   "nix-issues"
                 ];
@@ -138,7 +156,6 @@ in
               };
               "NixOS PRs" = {
                 definedAliases = defineAliasVariants [
-                  "np"
                   "nixp"
                   "nix-pr"
                 ];
@@ -149,6 +166,7 @@ in
                   }
                 ];
               };
+              # TODO: Replace with ocofox
               "NixOS PR build status" = {
                 definedAliases = defineAliasVariants [
                   "npr"
@@ -187,7 +205,6 @@ in
               };
               "Home-Manager Option(Unstable)" = {
                 definedAliases = defineAliasVariants [
-                  "hm"
                   "hmo"
                   "hmoptions"
                 ];
@@ -252,7 +269,6 @@ in
               };
               "Noogle.dev" = {
                 definedAliases = defineAliasVariants [
-                  "noo"
                   "noog"
                   "noogle"
                 ];
