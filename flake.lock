@@ -101,6 +101,22 @@
         "type": "github"
       }
     },
+    "catppuccin-wlogout": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1754591901,
+        "narHash": "sha256-0VCk+7t/cSEmcnfvKdxUDwwrtK0VLhZrVpw4enoBEbc=",
+        "owner": "catppuccin",
+        "repo": "wlogout",
+        "rev": "b51d7189efb414fc76cb6c08f27c0c69706b9f78",
+        "type": "github"
+      },
+      "original": {
+        "owner": "catppuccin",
+        "repo": "wlogout",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -1076,8 +1092,25 @@
         "type": "github"
       }
     },
+    "rofi-home-assistant": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1627519637,
+        "narHash": "sha256-2kZgMYZ1GR7fwEnXXg4vn5b6xwxjCoPYI/YENbrea2Q=",
+        "owner": "flxai",
+        "repo": "rofi-home-assistant",
+        "rev": "aa348dee26763e1c8c394c55788d84b83aff4c73",
+        "type": "github"
+      },
+      "original": {
+        "owner": "flxai",
+        "repo": "rofi-home-assistant",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
+        "catppuccin-wlogout": "catppuccin-wlogout",
         "disko": "disko",
         "fenix": "fenix",
         "flake-compat": "flake-compat",
@@ -1099,6 +1132,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "nvf": "nvf",
         "plasma-manager": "plasma-manager",
+        "rofi-home-assistant": "rofi-home-assistant",
         "secrets": "secrets",
         "sergv-nixos-config": "sergv-nixos-config",
         "sops-nix": "sops-nix",

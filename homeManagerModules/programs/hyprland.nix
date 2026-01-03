@@ -4,6 +4,7 @@
   lib,
   osConfig,
   pkgs,
+  secrets,
   self,
   ...
 }:
@@ -48,6 +49,24 @@ let
 
     # Next: Feed the windows to rofi for choice
   '';
+  rofi-home-assistant = pkgs.writeShellApplication {
+    name = "rofi-home-assistant";
+    runtimeInputs = with pkgs; [
+      rofi
+      jq
+      home-assistant-cli
+    ];
+    text = ''
+      set -e
+
+      export HASS_SERVER="http://${osConfig.networking.ownWireguard.hosts.neurodrive.mainIP}:8123"
+      HASS_TOKEN="$(cat ${config.sops.secrets.hass_cli_token.path})"
+      export HASS_TOKEN
+
+      ${inputs.rofi-home-assistant}/bin/rofi-hass
+    '';
+  };
+  # TODO: Live output updated with filter?
 in
 {
   imports = [
@@ -869,6 +888,7 @@ in
       nerd-fonts.commit-mono
       powerline-symbols
       powerline-fonts
+      rofi-home-assistant
     ];
 
     xdg.portal = {
@@ -909,5 +929,10 @@ in
     home.activation.rebuild-kde-xdg-cache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6
     '';
+
+    sops.secrets."hass_cli_token" = {
+      sopsFile = "${secrets}/secrets/services/home-assistant.yaml";
+      key = "access_tokens/cli";
+    };
   };
 }

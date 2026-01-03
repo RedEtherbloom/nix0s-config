@@ -1,6 +1,12 @@
-{inputs, ...}: final: prev: {
-  inherit (final.lixPackages.stable) nixpkgs-review nix-eval-jobs nix-fast-build colmena;
-           
+{ inputs, ... }:
+final: prev: {
+  inherit (final.lixPackages.stable)
+    nixpkgs-review
+    nix-eval-jobs
+    nix-fast-build
+    colmena
+    ;
+
   nix-search-tv = inputs.nix-search-tv.packages.${final.system}.default;
 
   thunderbird-external-editor-revived = final.rustPlatform.buildRustPackage (finalAttrs: {
@@ -28,18 +34,20 @@
     };
   });
 
-  byar-launcher = final.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
+  byar-launcher = final.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" { };
 
   # python3 = let in final.python3.override { packageOverrides = _: pythonPrev: { }; };
 
-  koboldcpp = prev.koboldcpp.overrideAttrs (_: pythonPrev: {
-    pythonInputs = pythonPrev.pythonInputs ++ (builtins.attrValues {inherit (final.python3Packages) psutil;});
-  });
+  koboldcpp = prev.koboldcpp.overrideAttrs (
+    _: pythonPrev: {
+      pythonInputs =
+        pythonPrev.pythonInputs ++ (builtins.attrValues { inherit (final.python3Packages) psutil; });
+    }
+  );
 
-  vimPlugins =
-    (prev.vimPlugins or [])
-    // {
-      music-controls-nvim = let
+  vimPlugins = (prev.vimPlugins or [ ]) // {
+    music-controls-nvim =
+      let
         base = final.vimUtils.buildVimPlugin {
           pname = "music-controls.nvim";
           version = "2025-01-01";
@@ -50,62 +58,68 @@
             hash = "sha256-cPam2gwmEHq1OPB65It9797PZ9xXVLXGMYsHfM2LJeA=";
           };
           meta.homepage = "https://github.com/troydm/zoomwintab.vim/";
-          meta.hydraPlatforms = [];
+          meta.hydraPlatforms = [ ];
         };
       in
-        base.overrideAttrs (_: prevAttrs: {
+      base.overrideAttrs (
+        _: prevAttrs: {
           buildInputs =
-            (prevAttrs.buildInputs or [])
+            (prevAttrs.buildInputs or [ ])
             ++ (with final; [
               playerctl
             ]);
-        });
-      surround-ui-nvim = final.vimUtils.buildVimPlugin {
-        name = "surround-ui.nvim";
-        version = "2024-07-16";
-        src = final.fetchFromGitHub {
-          owner = "roobert";
-          repo = "surround-ui.nvim";
-          rev = "40abcba017a943d6d3dd304e523f34a43d80405b";
-          hash = "sha256-sUtu+Z20rDh9mefTwvEJVI4g7oL+FuYdY9bmGrWcrM0=";
-        };
-        meta.homepage = "https://github.com/roobert/surround-ui.nvim";
+        }
+      );
+    surround-ui-nvim = final.vimUtils.buildVimPlugin {
+      name = "surround-ui.nvim";
+      version = "2024-07-16";
+      src = final.fetchFromGitHub {
+        owner = "roobert";
+        repo = "surround-ui.nvim";
+        rev = "40abcba017a943d6d3dd304e523f34a43d80405b";
+        hash = "sha256-sUtu+Z20rDh9mefTwvEJVI4g7oL+FuYdY9bmGrWcrM0=";
       };
-      vim-coach-nvim = final.vimUtils.buildVimPlugin {
-        name = "vim-coach.nvim";
-        version = "v2.0.0";
-        buildInputs = [final.vimPlugins.snacks-nvim];
-        src = final.fetchFromGitHub {
-          owner = "shahshlok";
-          repo = "vim-coach.nvim";
-          rev = "ed31e7b9450691199288180a922d8166ae11a0b9";
-          hash = "sha256-9Nnlghnor8wKKY4ETwNtGFjv1BUW64EWDKhRJJSj0pk=";
-        };
-        meta.homepage = "https://github.com/shahshlok/vim-coach.nvim";
-      };
+      meta.homepage = "https://github.com/roobert/surround-ui.nvim";
     };
+    vim-coach-nvim = final.vimUtils.buildVimPlugin {
+      name = "vim-coach.nvim";
+      version = "v2.0.0";
+      buildInputs = [ final.vimPlugins.snacks-nvim ];
+      src = final.fetchFromGitHub {
+        owner = "shahshlok";
+        repo = "vim-coach.nvim";
+        rev = "ed31e7b9450691199288180a922d8166ae11a0b9";
+        hash = "sha256-9Nnlghnor8wKKY4ETwNtGFjv1BUW64EWDKhRJJSj0pk=";
+      };
+      meta.homepage = "https://github.com/shahshlok/vim-coach.nvim";
+    };
+  };
 
-  kdePackages = prev.kdePackages.overrideScope (_: kdePrev: {
-    kscreenlocker = kdePrev.kscreenlocker.overrideAttrs (_: prevAttrs: {
-      version = prevAttrs.version + "-pmanager-patched";
-      __intentionallyOverridingVersion = true;
-      patches = (prevAttrs.patches or []) ++ [./kscreenlocker-allow-screen-shortcuts.patch];
-    });
-  });
+  kdePackages = prev.kdePackages.overrideScope (
+    _: kdePrev: {
+      kscreenlocker = kdePrev.kscreenlocker.overrideAttrs (
+        _: prevAttrs: {
+          version = prevAttrs.version + "-pmanager-patched";
+          __intentionallyOverridingVersion = true;
+          patches = (prevAttrs.patches or [ ]) ++ [ ./kscreenlocker-allow-screen-shortcuts.patch ];
+        }
+      );
+    }
+  );
 
-  gnupg-with-pin-caching = prev.gnupg.overrideAttrs (_: prevAttrs: {
-    # Address missing PIn caching https://dev.gnupg.org/T7041
-    patches = (prevAttrs.patches or []) ++ [./0001-allow-shared-pin-cache.patch];
-  });
+  gnupg-with-pin-caching = prev.gnupg.overrideAttrs (
+    _: prevAttrs: {
+      # Address missing PIn caching https://dev.gnupg.org/T7041
+      patches = (prevAttrs.patches or [ ]) ++ [ ./0001-allow-shared-pin-cache.patch ];
+    }
+  );
 
   # Eve: Account for bug: https://fractalsoftworks.com/forum/index.php?topic=30633.0
   starsector-gl-fix = prev.starsector.overrideAttrs (oldAttrs: {
-    buildInputs = oldAttrs.buildInputs ++ [final.makeWrapper];
-    postInstall =
-      (oldAttrs.postInstall or "")
-      + ''
-        wrapProgram "$out/bin/starsector" --set __GL_THREADED_OPTIMIZATIONS 0
-      '';
+    buildInputs = oldAttrs.buildInputs ++ [ final.makeWrapper ];
+    postInstall = (oldAttrs.postInstall or "") + ''
+      wrapProgram "$out/bin/starsector" --set __GL_THREADED_OPTIMIZATIONS 0
+    '';
   });
 
   clipvault = final.rustPlatform.buildRustPackage rec {
@@ -168,7 +182,7 @@
       url = "https://github.com/MrVivekRajan/Hyprlock-Styles/releases/download/style3/Style-3.tar.gz";
       hash = "sha256-A9fq1fDn86v6uORKAI8QviAeJzDip6PCije9Ml2s9Lk=";
     };
-    
+
     installPhase = ''
       cp -r $src/ $out/
     '';
