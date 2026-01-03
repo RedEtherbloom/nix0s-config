@@ -398,6 +398,7 @@ in
               # Submaps
               "SUPER, M, submap, player"
               "SUPER CONTROL, L, submap, neovim"
+              "SUPER CONTROL, S, submap, hyprctl-layout"
 
               "SUPER Control, Space, exec, killall -SIGUSR1 .waybar-wrapped, Toggle waybar"
             ]
@@ -519,7 +520,17 @@ in
           bind = [
             ", escape, submap, reset"
           ];
-        }; 
+        };
+        hyprctl-layout.settings = {
+          binde = [
+            ", d, exec, hyprctl dispatch layoutmsg dwindle"
+            ", s, exec, hyprctl dispatch layoutmsg scrolling"
+            ", m, exec, hyprctl dispatch layoutmsg master"
+          ];
+          bind = [
+            ", escape, submap, reset"
+          ];
+        };
         neovim.settings = {
           bind = [
             ", 1, exec, neovide"
