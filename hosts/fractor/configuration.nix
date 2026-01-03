@@ -72,10 +72,6 @@
       # nssmdns6 = true;
       openFirewall = true;
     };
-    displayManager.sddm = {
-      wayland.enable = true;
-      enable = true;
-    };
     # Does this have to be replaced with home-manager?
     printing = {
       enable = true;
@@ -159,8 +155,4 @@
 
   stylix.image = "${secrets}/dotfiles/wallpapers/current_wallpaper";
   system.stateVersion = "23.11";
-  environment.systemPackages = with pkgs; [
-    # Sddm styling
-    kdePackages.breeze
-  ];
 }

@@ -187,4 +187,15 @@ final: prev: {
       cp -r $src/ $out/
     '';
   };
+
+  sddm-fallback-patched = prev.kdePackages.sddm.overrideAttrs (
+    _: prevAttrs: {
+      buildCommand = (
+        prevAttrs.buildCommand
+        + ''
+          ln -s $out/bin/sddm-greeter-qt6 $out/bin/sddm-greeter
+        ''
+      );
+    }
+  );
 }

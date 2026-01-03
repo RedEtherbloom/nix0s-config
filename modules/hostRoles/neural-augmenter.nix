@@ -95,6 +95,13 @@ in
         defaultRuntime = true;
         steam.importOXRRuntimes = true;
       };
+      displayManager.sddm = {
+        wayland.enable = true;
+        enable = true;
+        theme = "sddm-astronaut-theme";
+        package = pkgs.sddm-fallback-patched;
+        extraPackages = [ pkgs.kdePackages.qtmultimedia ];
+      };
     };
 
     hardware = {
@@ -103,7 +110,10 @@ in
       # May improve krita comfort
       opentabletdriver.enable = true;
     };
-    environment.systemPackages = [ pkgs.lm_sensors ];
+    environment.systemPackages = with pkgs; [
+      lm_sensors
+      (sddm-astronaut.override { embeddedTheme = "hyprland_kath"; })
+    ];
 
     # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
     system.extraDependencies =
