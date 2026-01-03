@@ -422,7 +422,7 @@ in
               "SUPER,Delete,exec,hyprlock"
               # For some reason crashes sddm
               # TODO: Update, reevaluate. If still happens: switch to gddm
-              "ALT CONTROL,Delete,exec,wlogout"
+              "ALT CONTROL,Delete,exec,wleave"
               "ALT,Tab,cyclenext"
               "ALT,Tab,bringactivetotop"
 
@@ -512,6 +512,7 @@ in
           "float on, match:initial_title (Add Folder to Workspace)"
           "float on, match:initial_title (Open Files)"
           "float on, match:initial_title (wants to save)"
+          "float on, match:initial_title Edit Item, match:initial_class thunderbird"
           "size 70% 60%, match:initial_title (Open Files)"
           "size 70% 60%, match:initial_title (Add Folder to Workspace)"
           "size 70% 70%, match:tag settings*"
@@ -650,47 +651,64 @@ in
     # TODO: Nice, fancy theme
     programs.hyprlock.enable = true;
     # TODO: Do we need pyprland?
-    programs.wlogout = {
+    programs.wleave = {
       enable = true;
-      # TODO: Shrink tile size using CSS
-      layout = [
-        rec {
-          label = "lock";
-          action = "loginctl lock-session";
-          text = "lock(${keybind})";
-          keybind = "l";
-        }
-        rec {
-          label = "hibernate";
-          action = "systemctl hibernate";
-          text = "hibernate(${keybind})";
-          keybind = "h";
-        }
-        rec {
-          label = "logout";
-          action = "hyprctl dispatch exit";
-          text = "logout(${keybind})";
-          keybind = "e";
-        }
-        rec {
-          label = "shutdown";
-          action = "systemctl poweroff";
-          text = "shutdown(${keybind})";
-          keybind = "s";
-        }
-        rec {
-          label = "suspend";
-          action = "systemctl suspend-then-hibernate";
-          text = "suspend(${keybind})";
-          keybind = "u";
-        }
-        rec {
-          label = "reboot";
-          action = "systemctl reboot";
-          text = "reboot(${keybind})";
-          keybind = "r";
-        }
-      ];
+      settings = {
+        margin = 200;
+        buttons-per-row = "1/1";
+        delay-command-ms = 100;
+        close-on-lost-focus = true;
+        show-keybinds = true;
+        buttons = [
+          {
+            label = "lock";
+            action = "loginctl lock-session";
+            text = "Lock";
+            keybind = "l";
+            icon = "${inputs.catppuccin-wlogout}/icons/wleave/macchiato/maroon/lock.svg";
+          }
+          {
+            label = "logout";
+            # action = "loginctl terminate-user $USER";
+            action = "hyprctl dispatch exit";
+            text = "Logout";
+            keybind = "e";
+            icon = "${inputs.catppuccin-wlogout}/icons/wleave/macchiato/maroon/logout.svg";
+          }
+          {
+            label = "hibernate";
+            action = "hyprctl dispatch exit";
+            text = "hibernate";
+            keybind = "h";
+            icon = "${inputs.catppuccin-wlogout}/icons/wleave/macchiato/maroon/hibernate.svg";
+          }
+          {
+            label = "shutdown";
+            action = "systemctl poweroff";
+            text = "Shutdown";
+            keybind = "s";
+            icon = "${inputs.catppuccin-wlogout}/icons/wleave/macchiato/maroon/shutdown.svg";
+          }
+          {
+            label = "suspend";
+            action = "systemctl suspend-then-hibernate";
+            text = "Suspend";
+            keybind = "u";
+            icon = "${inputs.catppuccin-wlogout}/icons/wleave/macchiato/maroon/suspend.svg";
+          }
+
+          {
+            label = "reboot";
+            action = "systemctl reboot";
+            text = "Reboot";
+            keybind = "r";
+            icon = "${inputs.catppuccin-wlogout}/icons/wleave/macchiato/maroon/reboot.svg";
+          }
+        ];
+      };
+      style = ''
+        @import url("${inputs.catppuccin-wlogout}/themes/macchiato/maroon.css");
+      '';
     };
     programs.rofi = {
       enable = true;
