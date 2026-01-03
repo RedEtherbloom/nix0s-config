@@ -67,6 +67,22 @@ let
     '';
   };
   # TODO: Live output updated with filter?
+  rofi-tag-switcher = pkgs.writeShellApplication {
+    name = "rofi-tag-switcher";
+    runtimeInputs = with pkgs; [
+      jq
+      hyprland
+      rofi
+    ];
+    text = ''
+      TAGGED="$(hyprctl clients -j | jq "map(select(.tags | contains([\"$1\"])))")"
+      TITLES=$(echo "$TAGGED" | jq -r 'map(.title + " - " + .initialTitle)[] | @sh')
+      # TODO: Pango markup for symbol
+      SELECTED="$(echo "$TITLES" | rofi -dmenu -format "i")"
+      WINDOW_ADDRESS="$(echo "$SELECTED" | jq -r --argjson "tagged" "$TAGGED" '$tagged.[.].address')"
+      hyprctl dispatch focuswindow "address:$WINDOW_ADDRESS"
+    '';
+  };
 in
 {
   imports = [
@@ -210,7 +226,7 @@ in
 
           #  Application not responding (ANR) settings
           enable_anr_dialog = true;
-          anr_missed_pings = 20;
+          anr_missed_pings = 40;
         };
 
         dwindle = {
@@ -218,7 +234,11 @@ in
           pseudotile = true;
           # TODO: Evaluate if without to chaotic
           # preserve_split = true;
-          # force_split = 2;
+          # Open new to the right
+          force_split = 2;
+          default_split_ratio = 0.5;
+          # Current window should receive the bigger size
+          split_bias = 1;
         };
 
         master = {
@@ -328,6 +348,8 @@ in
               "SUPER, B, exec, rofi-bluetooth"
               "SUPER, S, togglespecialworkspace, social"
               "SUPER SHIFT, S, movetoworkspacesilent, special:social"
+              "SUPER, T, exec, rofi-tag-switcher current"
+              "SUPER SHIFT, T, tagwindow, current"
               # TODO: I want a social media scratchpad on that combo
               "SUPER SHIFT,D,exec,swaync-client -rs"
               # TODO: Replace with a rofi
@@ -889,6 +911,7 @@ in
       powerline-symbols
       powerline-fonts
       rofi-home-assistant
+      rofi-tag-switcher
     ];
 
     xdg.portal = {
