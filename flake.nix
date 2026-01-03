@@ -4,8 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     # Last working nixos-unstable. Thought of doing this again.
-    nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=50a96edd8d0db6cc8db57dab6bb6d6ee1f3dc49a";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=c6245e83d836d0433170a16eb185cefe0572f8b8";
+    # nixkpgs-next.url = "";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     secrets = {

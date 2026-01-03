@@ -108,16 +108,6 @@
       '';
   });
 
-  speechd-patched = prev.speechd.overrideAttrs (_: prevAttrs: {
-    version = prevAttrs.version + "-sh-patch";
-    src = final.fetchFromGitHub {
-      owner = "brailcom";
-      repo = "speechd";
-      rev = "909ac9bd7f310a9917262c889318e009cdda4286";
-      hash = "sha256-ZZhOG3+g8sj/BUsVoAc+v72BN/SZ9mKkYE4O8NSGwuM=";
-    };
-  });
-
   clipvault = final.rustPlatform.buildRustPackage rec {
     pname = "clipvault";
     version = "1.1.0";
@@ -169,7 +159,7 @@
     };
   };
 
-  inherit (inputs.nixpkgs-prev.legacyPackages.${final.system}) gtksourceview;
+  inherit (inputs.nixpkgs-prev.legacyPackages.${final.system}) sillytavern gtksourceview;
 
   hyprlock-styles.style-3 = final.stdenv.mkDerivation {
     pname = "hyprlock-styles-style-6";

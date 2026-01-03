@@ -734,7 +734,10 @@ in
         myOptions.roles.nvf =
           let
             nvfMaximalFixes = {
-              config.vim.utility.motion.hop.enable = lib.mkForce false;
+              config.vim = {
+                utility.motion.hop.enable = lib.mkForce false;
+                languages.sql.enable = lib.mkForce false;
+              };
             };
           in
           {
@@ -805,7 +808,7 @@ in
                         css.enable = true;
                         html.enable = true;
                         json.enable = true;
-                        sql.enable = true;
+                        sql.enable = false;
                         java.enable = true;
                         kotlin.enable = true;
                         ts.enable = true;

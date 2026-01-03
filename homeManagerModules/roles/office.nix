@@ -76,7 +76,7 @@ in {
         ++ lib.optionals cfg.video_editing [shotcut]
         ++ lib.optionals cfg.scanning [simple-scan]
         ++ lib.optionals cfg.music [
-          youtube-music
+          pear-desktop
           youtube-tui
         ];
     }

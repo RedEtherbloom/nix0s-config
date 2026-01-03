@@ -147,8 +147,6 @@ in
           "2, pinchout, special, scratchpad"
         ];
         general = {
-          # Required for the binds, for now. TODO: Merge with mod or ditch
-          "$mod" = "SUPER";
           layout = "workspacelayout";
           gaps_in = 6;
           gaps_out = 8;
@@ -294,97 +292,97 @@ in
                   ws = i + 1;
                 in
                 [
-                  "$mod,code:1${toString i},workspace,${toString ws}"
+                  "SUPER,code:1${toString i},workspace,${toString ws}"
                   # TODO: Build a toggle mode between silent and non silent
-                  "$mod SHIFT,code:1${toString i},movetoworkspacesilent, ${toString ws}"
+                  "SUPER SHIFT,code:1${toString i},movetoworkspacesilent, ${toString ws}"
                 ]
               ) 10
             )
             ++ [
-              "$modifier,Return,exec,kitty"
+              "SUPER,Return,exec,kitty"
               # TODO: Needs own implementation. Maybe a rendered version of this file?
-              "$modifier,K,exec,list-keybinds"
-              "$modifier,Y,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
-              "$modifier SHIFT,Return,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
-              "$modifier,TAB,exec,rofi -matching fuzzy -modes window -show window"
-              "$modifier SHIFT,TAB,exec,rofi -matching fuzzy -modes window -filter \"$(${getActiveWindowClass}) \" -window-match-fields 'class,title' -show window"
-              "$modifier, B, exec, rofi-bluetooth"
-              "$modifier, S, togglespecialworkspace, social"
-              "$modifier SHIFT, S, movetoworkspacesilent, special:social"
+              "SUPER,K,exec,list-keybinds"
+              "SUPER,Y,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
+              "SUPER SHIFT,Return,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
+              "SUPER,TAB,exec,rofi -matching fuzzy -modes window -show window"
+              "SUPER SHIFT,TAB,exec,rofi -matching fuzzy -modes window -filter \"$(${getActiveWindowClass}) \" -window-match-fields 'class,title' -show window"
+              "SUPER, B, exec, rofi-bluetooth"
+              "SUPER, S, togglespecialworkspace, social"
+              "SUPER SHIFT, S, movetoworkspacesilent, special:social"
               # TODO: I want a social media scratchpad on that combo
-              "$modifier SHIFT,D,exec,swaync-client -rs"
+              "SUPER SHIFT,D,exec,swaync-client -rs"
               # TODO: Replace with a rofi
-              "$modifier SHIFT,Y,exec,emojipick"
-              "$modifier,E,exec,dolphin"
-              "$modifier SHIFT,E,exec,kitty -e yazi"
+              "SUPER SHIFT,Y,exec,emojipick"
+              "SUPER,E,exec,dolphin"
+              "SUPER SHIFT,E,exec,kitty -e yazi"
               # Check if xdg screenshot gets respected
               ",PRINT&A,exec,hyprshot -m output"
               ",PRINT&S,exec,hyprshot -m window"
               ",PRINT&R,exec,hyprshot -m region"
-              "$modifier,C,exec,hyprpicker -a"
+              "SUPER,C,exec,hyprpicker -a"
               # TODO: Scratchpad?
-              "$modifier shift,T,exec,pypr toggle term"
-              "$modifier shift,M,exec,pavucontrol"
-              "$modifier, Q, killactive,"
-              "$modifier shift,Q,forcekillactive,"
+              "SUPER shift,T,exec,pypr toggle term"
+              "SUPER shift,M,exec,pavucontrol"
+              "SUPER, Q, killactive,"
+              "SUPER shift,Q,forcekillactive,"
               "ALT,f4,forcekillactive,"
               # What is dwindle pseudo?
-              "$modifier,P,pseudo,"
+              "SUPER,P,pseudo,"
               # Master layout
               # TODO: How to set layout specific bindings? Crashes due to being unknown
-              # "$modifier,P,swapwithmaster,"
+              # "SUPER,P,swapwithmaster,"
               # TODO: How to see e.g. copied images in dmenu?
-              "$modifier,V,exec, clipvault list | rofi -dmenu -display-columns 2 | clipvault get | wl-copy"
-              "$modifier SHIFT,I,togglesplit,"
-              "$modifier SHIFT,F,fullscreen,"
-              "$modifier,F,togglefloating,"
-              "$modifier ALT,F,workspaceopt, allfloat"
-              "$modifier SHIFT,left,movewindow,l"
-              "$modifier SHIFT,right,movewindow,r"
-              "$modifier SHIFT,up,movewindow,u"
-              "$modifier SHIFT,down,movewindow,d"
-              "$modifier SHIFT,h,movewindow,l"
-              "$modifier SHIFT,l,movewindow,r"
-              "$modifier SHIFT,k,movewindow,u"
-              "$modifier SHIFT,j,movewindow,d"
-              "$modifier ALT, left, swapwindow,l"
-              "$modifier ALT, right, swapwindow,r"
-              "$modifier ALT, up, swapwindow,u"
-              "$modifier ALT, down, swapwindow,d"
-              "$modifier ALT, 43, swapwindow,l"
-              "$modifier ALT, 46, swapwindow,r"
-              "$modifier ALT, 45, swapwindow,u"
-              "$modifier ALT, 44, swapwindow,d"
-              "$modifier,left,movefocus,l"
-              "$modifier,right,movefocus,r"
-              "$modifier,up,movefocus,u"
-              "$modifier,down,movefocus,d"
-              "$modifier,h,movefocus,l"
-              "$modifier,l,movefocus,r"
-              "$modifier,k,movefocus,u"
-              "$modifier,j,movefocus,d"
-              "$modifier SHIFT,SPACE,movetoworkspacesilent,special:scratchpad"
-              "$modifier,SPACE,togglespecialworkspace,scratchpad"
-              "$modifier CONTROL,right,workspace,e+1"
-              "$modifier CONTROL,left,workspace,e-1"
-              # "$modifier CONTROL,j,rrsizeactive, 100% 110%"
-              # "$modifier CONTROL,k,resizeactive, 100% 90%"
-              # "$modifier CONTROL,h,resizeactive, 110% 100%"
-              # "$modifier CONTROL,l,resizeactive, 90% 100%"
-              "$modifier CONTROL,j,resizeactive, 0 50"
-              "$modifier CONTROL,k,resizeactive, 0 -50"
-              "$modifier CONTROL,h,resizeactive, 50 0"
-              "$modifier CONTROL,l,resizeactive, -50 0"
-              "$modifier,mouse_down,workspace, e+1"
-              "$modifier,mouse_up,workspace, e-1"
-              "$modifier,Delete,exec,hyprlock"
+              "SUPER,V,exec, clipvault list | rofi -dmenu -display-columns 2 | clipvault get | wl-copy"
+              "SUPER SHIFT,I,togglesplit,"
+              "SUPER SHIFT,F,fullscreen,"
+              "SUPER,F,togglefloating,"
+              "SUPER ALT,F,workspaceopt, allfloat"
+              "SUPER SHIFT,left,movewindow,l"
+              "SUPER SHIFT,right,movewindow,r"
+              "SUPER SHIFT,up,movewindow,u"
+              "SUPER SHIFT,down,movewindow,d"
+              "SUPER SHIFT,h,movewindow,l"
+              "SUPER SHIFT,l,movewindow,r"
+              "SUPER SHIFT,k,movewindow,u"
+              "SUPER SHIFT,j,movewindow,d"
+              "SUPER ALT, left, swapwindow,l"
+              "SUPER ALT, right, swapwindow,r"
+              "SUPER ALT, up, swapwindow,u"
+              "SUPER ALT, down, swapwindow,d"
+              "SUPER ALT, 43, swapwindow,l"
+              "SUPER ALT, 46, swapwindow,r"
+              "SUPER ALT, 45, swapwindow,u"
+              "SUPER ALT, 44, swapwindow,d"
+              "SUPER,left,movefocus,l"
+              "SUPER,right,movefocus,r"
+              "SUPER,up,movefocus,u"
+              "SUPER,down,movefocus,d"
+              "SUPER,h,movefocus,l"
+              "SUPER,l,movefocus,r"
+              "SUPER,k,movefocus,u"
+              "SUPER,j,movefocus,d"
+              "SUPER SHIFT,SPACE,movetoworkspacesilent,special:scratchpad"
+              "SUPER,SPACE,togglespecialworkspace,scratchpad"
+              "SUPER CONTROL,right,workspace,e+1"
+              "SUPER CONTROL,left,workspace,e-1"
+              # "SUPER CONTROL,j,rrsizeactive, 100% 110%"
+              # "SUPER CONTROL,k,resizeactive, 100% 90%"
+              # "SUPER CONTROL,h,resizeactive, 110% 100%"
+              # "SUPER CONTROL,l,resizeactive, 90% 100%"
+              "SUPER CONTROL,j,resizeactive, 0 50"
+              "SUPER CONTROL,k,resizeactive, 0 -50"
+              "SUPER CONTROL,h,resizeactive, 50 0"
+              "SUPER CONTROL,l,resizeactive, -50 0"
+              "SUPER,mouse_down,workspace, e+1"
+              "SUPER,mouse_up,workspace, e-1"
+              "SUPER,Delete,exec,hyprlock"
               # For some reason crashes sddm
               # TODO: Update, reevaluate. If still happens: switch to gddm
               "ALT CONTROL,Delete,exec,wlogout"
               "ALT,Tab,cyclenext"
               "ALT,Tab,bringactivetotop"
 
-              "$modifier, semicolon, exec, ${hyprctrlNextLayout}"
+              "SUPER, semicolon, exec, ${hyprctrlNextLayout}"
 
               ",XF86AudioRaiseVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
               ",XF86AudioLowerVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
@@ -398,23 +396,23 @@ in
               ",XF86Display,exec,wdisplays"
 
               # Submaps
-              "$modifier, M, submap, player"
-              "$modifier CONTROL, L, submap, neovim"
+              "SUPER, M, submap, player"
+              "SUPER CONTROL, L, submap, neovim"
 
-              "$modifier Control, Space, exec, killall -SIGUSR1 .waybar-wrapped, Toggle waybar"
+              "SUPER Control, Space, exec, killall -SIGUSR1 .waybar-wrapped, Toggle waybar"
             ]
           );
         bindm = [
           # Left mouse button
-          "$modifier, mouse:272, movewindow"
+          "SUPER, mouse:272, movewindow"
           # Right mouse button
-          "$modifier, mouse:273, resizewindow"
+          "SUPER, mouse:273, resizewindow"
         ];
         # Shortcuts that also function on lockscreen
         bindl = [
           ",switch:Lid Switch, exec, hyprlock"
           # Temporary display management
-          "$modifier SHIFT, D, exec, ${lib.getExe rofiDisplayLayout}"
+          "SUPER SHIFT, D, exec, ${lib.getExe rofiDisplayLayout}"
         ];
         windowrule = [
           #"no_blur on, xwayland:1" # Helps prevent odd borders/shadows for xwayland apps

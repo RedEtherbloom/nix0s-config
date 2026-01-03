@@ -27,7 +27,7 @@ in {
     vit = mkOption {
       description = "Enable vit";
       type = types.bool;
-      default = true;
+      default = false;
     };
   };
 
