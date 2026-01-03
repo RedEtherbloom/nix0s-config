@@ -351,7 +351,10 @@ in
               "SUPER, T, exec, rofi-tag-switcher current"
               "SUPER SHIFT, T, tagwindow, current"
               # TODO: I want a social media scratchpad on that combo
-              "SUPER SHIFT,D,exec,swaync-client -rs"
+              # Show notification panel
+              "SUPER,D,exec,swaync-client -t"
+              # Toggle do not disturb
+              "SUPER SHIFT,D,exec,swaync-client -d"
               # TODO: Replace with a rofi
               "SUPER SHIFT,Y,exec,emojipick"
               "SUPER,E,exec,dolphin"
@@ -622,6 +625,25 @@ in
         enable = true;
         automount = false;
       };
+      services.hyprsunset = {
+        enable = true;
+        settings = {
+          max-gamma = 150;
+
+          profile = [
+            {
+              time = "7:30";
+              identity = true;
+            }
+            {
+              time = "21:00";
+              temperature = 5000;
+              gamma = 0.8;
+            }
+          ];
+        };
+      };
+      swaync.enable = true;
     };
 
     # TODO: New wallpaper
@@ -875,6 +897,7 @@ in
       hyprpolkitagent
       hyprland-qtutils # needed for banners and ANR messages
       brightnessctl
+      swaynotificationcenter
 
       # Own
       networkmanagerapplet
@@ -910,6 +933,7 @@ in
       nerd-fonts.commit-mono
       powerline-symbols
       powerline-fonts
+
       rofi-home-assistant
       rofi-tag-switcher
     ];
