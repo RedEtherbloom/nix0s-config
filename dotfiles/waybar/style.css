@@ -33,9 +33,9 @@ window#waybar {
     color: #a9b1d6;
 }
 
-#workspaces button.focused {
-    border-top: 3px solid #7aa2f7;
-    border-bottom: 3px solid #7aa2f7;
+#workspaces button.active {
+    border-top: 3px solid #bb9af7;
+    border-bottom: 3px solid #bb9af7;
 }
 
 #workspaces button.urgent {
@@ -51,10 +51,10 @@ window#waybar {
 
 /* Repeat style here to ensure properties are overwritten as there's no !important and button:hover above resets the colour */
 
-#workspaces button.focused {
-    color: #7aa2f7;
+#workspaces button.active {
+    color: #bb9af7;
 }
-#workspaces button.focused:hover {
+#workspaces button.active:hover {
     color: #bb9af7;
 }
 
