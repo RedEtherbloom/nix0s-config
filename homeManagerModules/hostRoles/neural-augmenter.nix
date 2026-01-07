@@ -171,6 +171,7 @@ in
           kdePackages.dolphin-plugins
           kdePackages.baloo-widgets
           kdePackages.ffmpegthumbs
+          kdePackages.kcharselect
 
           # Gnome utilites
           nautilus
