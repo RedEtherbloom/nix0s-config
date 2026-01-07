@@ -596,12 +596,13 @@ in
             lock_cmd = "pidof hyprlock || hyprlock";
             before_sleep_cmd = "loginctl lock-session";
             after_sleep_cmd = "hyprctl dispatch dpms on";
-            # Attempt to resume without the phantom image
-            inhibit_sleep = 3;
+            # Use default value again, dpms has gotten hard to use
+            # inhibit_sleep = 3;
           };
           listener = [
             {
-              timeout = 600;
+              # Longer default
+              timeout = 1800;
               on-timeout = "hyprlock";
             }
             {
@@ -630,16 +631,15 @@ in
         enable = true;
         settings = {
           max-gamma = 150;
-
           profile = [
             {
               time = "7:30";
               identity = true;
             }
             {
-              time = "21:00";
-              temperature = 5000;
-              gamma = 0.8;
+              time = "22:30";
+              temperature = 4000;
+              gamma = 0.6;
             }
           ];
         };
