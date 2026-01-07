@@ -93,6 +93,18 @@ final: prev: {
       };
       meta.homepage = "https://github.com/shahshlok/vim-coach.nvim";
     };
+    jj-nvim = final.vimUtils.buildVimPlugin {
+      pname = "jj.nvim";
+      version = "0.3.0-unstable-2026-01-06";
+      src = final.fetchFromGitHub {
+        owner = "NicolasGB";
+        repo = "jj.nvim";
+        rev = "ba48ed08b5c08a7192b1a47a689e0c9f949fe5a4";
+        hash = "sha256-bmLNfG5J2wtjzpsfd5Pkk9n7hYw+rw2b8CmnVwQY2Co=";
+      };
+      meta.homepage = "https://github.com/NicolasGB/jj.nvim/";
+      meta.hydraPlatforms = [ ];
+    };
   };
 
   kdePackages = prev.kdePackages.overrideScope (

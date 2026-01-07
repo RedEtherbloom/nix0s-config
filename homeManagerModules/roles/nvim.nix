@@ -393,7 +393,6 @@ in
                       backend = "kitty";
                     };
                   };
-                  # Pasting image support
                   img-clip.enable = true;
                 };
                 # What does this do again?
@@ -414,19 +413,6 @@ in
                     default_player = "spotify_client";
                   };
                 };
-                # TODO: Command doesn't load for some reason
-                treesj = {
-                  package = pkgs.vimPlugins.treesj;
-                  setupModule = "treesj";
-                  cmd = [
-                    "TSJToggle"
-                    "TSJSplit"
-                    "TSJJoin"
-                  ];
-                  setupOpts = {
-                    use_default_keymaps = false;
-                  };
-                };
                 ale = {
                   package = pkgs.vimPlugins.ale;
                   # TODO: Does this autoload without a configured cmd etc.?
@@ -435,7 +421,18 @@ in
                 "vimplugin-vim-coach.nvim" = {
                   package = pkgs.vimPlugins.vim-coach-nvim;
                   setupModule = "vim-coach";
+                  setupOpts = { };
                   cmd = [ "VimCoach" ];
+                };
+                "jj.nvim" = {
+                  package = pkgs.vimPlugins.jj-nvim;
+                  setupModule = "jj";
+                  setupOpts = { };
+                };
+                "lazyjj.nvim" = {
+                  package = pkgs.vimPlugins.lazyjj-nvim;
+                  setupModule = "lazyjj";
+                  setupOpts = { };
                 };
               };
               extraPlugins = {
@@ -444,25 +441,10 @@ in
                   after = [ "telescope" ];
                   setup = ''require('telescope').load_extension "frecency"'';
                 };
-                # Debugging if harpoon maybe messes up buffers
-                # harpoon = {
-                #   package = pkgs.vimPlugins.harpoon2;
-                #   setup = "require('harpoon').setup {}";
-                # };
                 pomo-nvim = {
                   package = pkgs.vimPlugins.pomo-nvim;
                   setup = "require('pomo').setup {}";
                 };
-                # TODO: Learn nvim-surround shortcuts
-                # "surround-ui.nvim" = {
-                #   package = pkgs.vimPlugins.surround-ui-nvim;
-                #   setup = ''
-                #     require("surround-ui").setup({
-                #       -- Default
-                #       root_key = "S",
-                #     })
-                #   '';
-                # };
                 vim-startuptime = {
                   package = pkgs.vimPlugins.vim-startuptime;
                 };
