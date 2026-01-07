@@ -155,6 +155,25 @@ in
             ];
           };
         };
+        # Does not work at the moment as hyprland immediately overrides it again
+        # systemd.user = {
+        #   services."morning-layout" = {
+        #     Unit.Description = "Switch back to a defined easy layout in the morning, for a blank slate.";
+        #     Service = {
+        #       Type = "oneshot";
+        #       ExecStart = "${pkgs.coreutils}/bin/cp --update=all ${config.xdg.configHome}/hyprdynamicmonitors/hyprconfigs/Dual.go.tmpl ${config.xdg.configHome}/hypr/monitors.conf";
+        #     };
+        #   };
+        #   timers."morning-layout" = {
+        #     Unit.Description = "Switch back to a defined easy layout in the morning, for a blank slate.";
+        #     Timer = {
+        #       Unit = "morning-layout.service";
+        #       OnCalendar = "07:00:00";
+        #       Persistent = true;
+        #     };
+        #     Install.WantedBy = [ "timers.target" ];
+        #   };
+        # };
       }
     )
     (define-kscreen-layout "benq"
