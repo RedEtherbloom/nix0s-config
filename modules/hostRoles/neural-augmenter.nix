@@ -99,7 +99,7 @@ in
         wayland.enable = true;
         enable = true;
         theme = "sddm-astronaut-theme";
-        package = pkgs.sddm-fallback-patched;
+        package = lib.mkForce pkgs.sddm-fallback-patched;
         extraPackages = [ pkgs.kdePackages.qtmultimedia ];
       };
     };
