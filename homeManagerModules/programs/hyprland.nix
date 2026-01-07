@@ -645,6 +645,8 @@ in
         };
       };
       swaync.enable = true;
+      hyprpolkitagent.enable = true;
+      hyprshell.enable = true;
     };
 
     # TODO: New wallpaper
