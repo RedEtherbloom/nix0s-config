@@ -341,8 +341,8 @@ in
               "SUPER,Return,exec,kitty"
               # TODO: Needs own implementation. Maybe a rendered version of this file?
               "SUPER,K,exec,list-keybinds"
-              "SUPER,Y,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
-              "SUPER SHIFT,Return,exec,rofi -matching fuzzy -combi-mode 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
+              "SUPER,Y,exec,rofi -matching fuzzy -combi-modi 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
+              "SUPER SHIFT,Return,exec,rofi -matching fuzzy -combi-modi 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
               "SUPER,TAB,exec,rofi -matching fuzzy -modes window -show window"
               "SUPER SHIFT,TAB,exec,rofi -matching fuzzy -modes window -filter \"$(${getActiveWindowClass}) \" -window-match-fields 'class,title' -show window"
               "SUPER, B, exec, rofi-bluetooth"
