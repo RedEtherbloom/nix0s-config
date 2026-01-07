@@ -97,7 +97,7 @@ final: prev: {
 
   kdePackages = prev.kdePackages.overrideScope (
     _: kdePrev: {
-      kscreenlocker = kdePrev.kscreenlocker.overrideAttrs (
+      kscreenlocker-patched = kdePrev.kscreenlocker.overrideAttrs (
         _: prevAttrs: {
           version = prevAttrs.version + "-pmanager-patched";
           __intentionallyOverridingVersion = true;
