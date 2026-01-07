@@ -861,8 +861,8 @@ in
       };
       systemd = {
         enable = true;
-        enableDebug = true;
-        enableInspect = true;
+        enableDebug = false;
+        enableInspect = false;
         target = "hyprland-session.target";
       };
     };
