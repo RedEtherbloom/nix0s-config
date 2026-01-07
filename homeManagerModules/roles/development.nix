@@ -220,11 +220,19 @@ in
         };
       })
       (lib.mkIf cfg.jj {
-        programs.jjui = {
-          enable = true;
+        programs = {
+          jjui = {
+            enable = true;
+          };
+          jujutsu = {
+            enable = true;
+            settings.user = {
+              name = "RedEtherbloom";
+              email = "etherbloom@mailbox.org";
+            };
+          };
         };
         home.packages = with pkgs; [
-          jujutsu
           lazyjj
           jj-fzf
         ];
