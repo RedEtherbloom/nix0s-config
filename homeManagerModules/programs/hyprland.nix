@@ -626,7 +626,7 @@ in
         enable = true;
         automount = false;
       };
-      services.hyprsunset = {
+      hyprsunset = {
         enable = true;
         settings = {
           max-gamma = 150;
