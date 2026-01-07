@@ -296,6 +296,7 @@ in
           };
           timers.gcNixDirenv = {
             Timer = {
+              Unit = "gcNixDirenv.service";
               OnCalendar = "weekly";
               Persistent = true;
             };
