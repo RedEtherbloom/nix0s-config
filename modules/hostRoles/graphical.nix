@@ -30,7 +30,10 @@ in {
       appimage-run
       piper-tts
     ];
-    services.speechd.enable = true;
+    services.speechd = {
+      enable = true;
+      # package = pkgs.speechd-patched;
+    };
     fonts = {
       fontDir.enable = true;
       packages = with pkgs; [
