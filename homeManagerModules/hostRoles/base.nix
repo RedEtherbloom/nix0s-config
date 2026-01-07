@@ -34,7 +34,26 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
-        sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+
+        # Adapted from: https://github.com/Mic92/sops-nix/issues/356#issuecomment-2655735346
+        sops =
+          let
+            keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+            keyExists = builtins.pathExists keyFile;
+          in
+          lib.mkMerge [
+            # With key
+            (lib.mkIf keyExists {
+              age.keyFile = keyFile;
+              # Bypass Yubikey, as it will attempt to always use it first
+              environment.SOPS_GPG_EXEC = "/usr/bin/env true";
+            })
+
+            # Without the key
+            (lib.mkIf (!keyExists) {
+              gnupg.home = "${config.home.homeDirectory}/.gnupg";
+            })
+          ];
 
         xdg.userDirs.createDirectories = true;
         programs.home-manager.enable = true;
