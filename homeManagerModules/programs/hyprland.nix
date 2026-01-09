@@ -650,8 +650,15 @@ in
     };
 
     # TODO: New wallpaper
-    # TODO: Nice, fancy theme
-    programs.hyprlock.enable = true;
+    programs.hyprlock = {
+      enable = true;
+      settings.source = [
+        (pkgs.replaceVars ../../dotfiles/hypr/hyprlock.conf {
+          BACKGROUND_IMAGE = config.stylix.image;
+          FONT = "CommitMono Nerd Font Mono";
+        })
+      ];
+    };
     # TODO: Do we need pyprland?
     programs.wleave = {
       enable = true;
@@ -722,6 +729,7 @@ in
     stylix.targets = {
       rofi.enable = false;
       waybar.enable = false;
+      hyprlock.enable = false;
     };
     # TODO: Separate bar for work workspace
     programs.waybar = {
