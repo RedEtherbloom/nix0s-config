@@ -426,7 +426,7 @@
     };
     i2p.home = lib.mkForce "/mnt/cryptostorage/i2p";
   };
-  stylix.image = "${secrets}/dotfiles/wallpapers/current_wallpaper";
+  stylix.image = "${secrets}/dotfiles/wallpapers/cyborg_girl_tactical.jpg";
 
   programs = {
     coolercontrol.enable = true;

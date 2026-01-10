@@ -152,6 +152,6 @@
     ];
   };
 
-  stylix.image = "${secrets}/dotfiles/wallpapers/current_wallpaper";
+  stylix.image = "${secrets}/dotfiles/wallpapers/cyborg_girl_tactical.jpg";
   system.stateVersion = "23.11";
 }
