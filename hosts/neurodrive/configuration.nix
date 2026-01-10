@@ -128,8 +128,6 @@
           # Home Assistant
           8123
           (lib.mkIf config.myOptions.roles.ssdp.enable 40000)
-          # WiVrn
-          9757
           # SteamVR
           27062
           config.services.paperless.port
@@ -142,8 +140,6 @@
           # SteamVR
           9944
           27062
-          # WiVrn
-          9757
         ];
       };
       ownWireguard = {
