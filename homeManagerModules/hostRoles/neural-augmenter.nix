@@ -176,6 +176,7 @@ in
           # Gnome utilites
           nautilus
 
+          wivrn
           wlx-overlay-s
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
