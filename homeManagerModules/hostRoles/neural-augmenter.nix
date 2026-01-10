@@ -175,6 +175,10 @@ in {
 
           wivrn
           wlx-overlay-s
+
+          # dbus debugging
+          bustle
+          d-spy
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
           with pkgs; [
