@@ -148,7 +148,7 @@ in
                   direction = "float";
                 };
                 mappings = {
-                  open = "<c-k>";
+                  open = "<leader>tt";
                 };
               };
               session.nvim-session-manager.enable = true;
