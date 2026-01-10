@@ -6,11 +6,9 @@
   secrets,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.myOptions.hostRoles.neural-augmenter;
-in
-{
+in {
   imports = [
     inputs.stylix.nixosModules.stylix
     ../binary-cache/hyprland.nix
@@ -73,7 +71,7 @@ in
 
     services = {
       tailscale.enable = true;
-      udev.packages = [ pkgs.platformio-core ];
+      udev.packages = [pkgs.platformio-core];
       mullvad-vpn = {
         enable = true;
         # GUI
@@ -100,7 +98,7 @@ in
         enable = true;
         theme = "sddm-astronaut-theme";
         package = lib.mkForce pkgs.sddm-fallback-patched;
-        extraPackages = [ pkgs.kdePackages.qtmultimedia ];
+        extraPackages = [pkgs.kdePackages.qtmultimedia];
       };
     };
 
@@ -112,16 +110,14 @@ in
     };
     environment.systemPackages = with pkgs; [
       lm_sensors
-      (sddm-astronaut.override { embeddedTheme = "hyprland_kath"; })
+      (sddm-astronaut.override {embeddedTheme = "hyprland_kath";})
     ];
 
     # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
-    system.extraDependencies =
-      let
-        collectFlakeInputs =
-          input:
-          [ input ] ++ builtins.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or { }));
-      in
+    system.extraDependencies = let
+      collectFlakeInputs = input:
+        [input] ++ builtins.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or {}));
+    in
       builtins.concatMap collectFlakeInputs (builtins.attrValues inputs);
 
     nixpkgs.config.permittedInsecurePackages = [
@@ -160,17 +156,15 @@ in
 
     # See: https://github.com/NixOS/nixpkgs/issues/409986
     # environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
-    environment.etc."xdg/menus/applications.menu".source =
-      let
-        applications-menu = "menu/desktop/plasma-applications.menu";
-        src = pkgs.fetchFromGitHub {
-          owner = "KDE";
-          repo = "plasma-workspace";
-          tag = "v${pkgs.kdePackages.plasma-workspace.version}";
-          hash = "sha256-BFjGHITdV29B4h6UhhK/1kB+Gwuq+AhFnyjTSofZZuo=";
-          sparseCheckout = [ "${applications-menu}" ];
-        };
-      in
-      "${src}/${applications-menu}";
+    environment.etc."xdg/menus/applications.menu".source = let
+      applications-menu = "menu/desktop/plasma-applications.menu";
+      src = pkgs.fetchFromGitHub {
+        owner = "KDE";
+        repo = "plasma-workspace";
+        tag = "v${pkgs.kdePackages.plasma-workspace.version}";
+        hash = "sha256-BFjGHITdV29B4h6UhhK/1kB+Gwuq+AhFnyjTSofZZuo=";
+        sparseCheckout = ["${applications-menu}"];
+      };
+    in "${src}/${applications-menu}";
   };
 }

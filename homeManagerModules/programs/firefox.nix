@@ -4,8 +4,7 @@
   pkgs,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.myOptions.firefox;
   commonConfig = {
     # middle-click behavior
@@ -15,15 +14,13 @@ let
     "browser.uidensity" = "1";
   };
   # Map each alias to a version with @ prepended and : appended
-  defineAliasVariants =
-    baseAlias:
-    (lists.concatMap (x: [
+  defineAliasVariants = baseAlias: (lists.concatMap (x: [
       ("@" + x)
       (x + ":")
-    ]) baseAlias);
+    ])
+    baseAlias);
   iconRefreshInterval = 24 * 60 * 60 * 1000;
-in
-{
+in {
   options.myOptions.firefox = {
     enable = mkOption {
       description = "Enable firefox";
@@ -48,7 +45,7 @@ in
             (builtins.readFile ../../dotfiles/firefox/betterfox.js)
             (builtins.readFile ../../dotfiles/firefox/media_decoding.js)
           ];
-          settings = { } // commonConfig;
+          settings = {} // commonConfig;
           search = {
             enable = true;
 
@@ -82,7 +79,7 @@ in
                 ];
               };
               "Nixpkgs source search" = {
-                definedAliases = defineAliasVariants [ "nis" ];
+                definedAliases = defineAliasVariants ["nis"];
                 icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                 urls = [
                   {
@@ -252,7 +249,7 @@ in
                 ];
               };
               "Go Pkgs" = {
-                definedAliases = defineAliasVariants [ "go" ];
+                definedAliases = defineAliasVariants ["go"];
                 icon = "https://pkg.go.dev/static/shared/icon/favicon.ico";
                 updateInterval = iconRefreshInterval;
                 urls = [
@@ -486,17 +483,18 @@ in
         };
         "i2p" = {
           id = 1;
-          settings = {
-            "media.peerConnection.ice.proxy_only" = true;
-            # manual mode
-            "network.proxy.type" = 1;
-            "network.proxy.socks_version" = 5;
-            "network.proxy.http" = "127.0.0.1";
-            "network.proxy.http_port" = 4444;
-            "network.proxy.ssl" = "127.0.0.1";
-            "network.proxy.ssl_port" = 4444;
-          }
-          // commonConfig;
+          settings =
+            {
+              "media.peerConnection.ice.proxy_only" = true;
+              # manual mode
+              "network.proxy.type" = 1;
+              "network.proxy.socks_version" = 5;
+              "network.proxy.http" = "127.0.0.1";
+              "network.proxy.http_port" = 4444;
+              "network.proxy.ssl" = "127.0.0.1";
+              "network.proxy.ssl_port" = 4444;
+            }
+            // commonConfig;
           #TODO: Try out i2p for private browsing extension
           extensions.force = true;
         };
@@ -507,8 +505,10 @@ in
         };
       };
     };
-    stylix.targets.firefox.profileNames = lib.attrsets.mapAttrsToList (
-      name: _: "${name}"
-    ) programs.firefox.profiles;
+    stylix.targets.firefox.profileNames =
+      lib.attrsets.mapAttrsToList (
+        name: _: "${name}"
+      )
+      programs.firefox.profiles;
   };
 }

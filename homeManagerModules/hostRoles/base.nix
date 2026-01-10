@@ -6,11 +6,9 @@
   pkgs,
   secrets,
   ...
-}:
-let
+}: let
   cfg = config.myOptions.hostRoles.base;
-in
-{
+in {
   imports = [
     inputs.nix-index-database.homeModules.nix-index
     inputs.sops-nix.homeManagerModules.sops
@@ -34,13 +32,11 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
-
         # Adapted from: https://github.com/Mic92/sops-nix/issues/356#issuecomment-2655735346
-        sops =
-          let
-            keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
-            keyExists = builtins.pathExists keyFile;
-          in
+        sops = let
+          keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+          keyExists = builtins.pathExists keyFile;
+        in
           lib.mkMerge [
             # With key
             (lib.mkIf keyExists {

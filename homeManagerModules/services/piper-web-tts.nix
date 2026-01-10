@@ -3,9 +3,7 @@
   pkgs,
   config,
   ...
-}:
-{
-
+}: {
   options.myOptions.services = {
     piper-web-tts = {
       enable = lib.mkOption {
@@ -45,12 +43,11 @@
           Service = {
             Type = "exec";
 
-            ExecStart =
-              let
-                python = pkgs.python313.withPackages (_: [
-                  (pkgs.python3Packages.toPythonModule config.myOptions.services.piper-web-tts.package)
-                ]);
-              in
+            ExecStart = let
+              python = pkgs.python313.withPackages (_: [
+                (pkgs.python3Packages.toPythonModule config.myOptions.services.piper-web-tts.package)
+              ]);
+            in
               lib.getExe (
                 pkgs.writeShellApplication {
                   name = "piper-web-tts";
@@ -85,11 +82,10 @@
           Install = {
             # Auto-start, to avoid delay
             # TODO: Offer startup via TCP socket
-            WantedBy = [ "default.target" ];
+            WantedBy = ["default.target"];
           };
         };
       };
     };
-
   };
 }

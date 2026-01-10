@@ -115,18 +115,13 @@
     };
   };
 
-  outputs =
-    {
-      self,
-      flake-parts,
-      ...
-    }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } (
-      {
-        withSystem,
-        ...
-      }:
-      {
+  outputs = {
+    self,
+    flake-parts,
+    ...
+  } @ inputs:
+    flake-parts.lib.mkFlake {inherit inputs;} (
+      {withSystem, ...}: {
         imports = [
           inputs.home-manager.flakeModules.home-manager
         ];
@@ -135,22 +130,19 @@
           "aarch64-linux"
         ];
         # TODO: Extract common resources e.g. IPs into nixos independent wrapper or import nixos into homeManager so that homeConfigurations can be split out
-        flake =
-          { lib, ... }:
-          let
-            defaultUsername = "inf";
-            # TODO: Set system in configuration.nix instead, to lessen use of anti patterns
-            mkSystem =
-              hostName: system:
-              withSystem system (
-                ctx@{ ... }:
+        flake = {lib, ...}: let
+          defaultUsername = "inf";
+          # TODO: Set system in configuration.nix instead, to lessen use of anti patterns
+          mkSystem = hostName: system:
+            withSystem system (
+              ctx @ {...}:
                 inputs.nixpkgs.lib.nixosSystem rec {
                   specialArgs = {
                     inherit inputs self;
                     inherit (inputs) secrets;
                   };
                   modules = [
-                    { nixpkgs = { inherit (ctx.pkgs) config overlays; }; }
+                    {nixpkgs = {inherit (ctx.pkgs) config overlays;};}
                     # TODO: Decide how to reorganize module inputs
                     inputs.sops-nix.nixosModules.sops
                     inputs.nix-index-database.nixosModules.nix-index
@@ -158,46 +150,43 @@
                     ./hosts/${hostName}/configuration.nix
                   ];
                 }
-              );
-            mkHmConfiguration =
-              hostName: host:
-              let
-                osConfig = host.config;
-              in
-              # TODO: Move backupFileExtension to HM-Modules
-              inputs.home-manager.lib.homeManagerConfiguration {
-                inherit (host) pkgs;
-                # Remove potentially interferring attrs
-                extraSpecialArgs =
-                  (builtins.removeAttrs host._module.specialArgs [
-                    "self"
-                    "modulesPath"
-                  ])
-                  // {
-                    inherit osConfig;
-                    osFlakeSelf = host._module.specialArgs.self;
-
-                    inherit self;
-                  };
-                modules = [
-                  ./hosts/${hostName}/home.nix
-                  {
-                    nix = {
-                      package = osConfig.nix.package;
-                      settings = {
-                        inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys;
-                      };
-                    };
-
-                    home = {
-                      username = defaultUsername;
-                      homeDirectory = osConfig.users.users."${defaultUsername}".home;
-                    };
-                  }
-                ];
-              };
-
+            );
+          mkHmConfiguration = hostName: host: let
+            osConfig = host.config;
           in
+            # TODO: Move backupFileExtension to HM-Modules
+            inputs.home-manager.lib.homeManagerConfiguration {
+              inherit (host) pkgs;
+              # Remove potentially interferring attrs
+              extraSpecialArgs =
+                (builtins.removeAttrs host._module.specialArgs [
+                  "self"
+                  "modulesPath"
+                ])
+                // {
+                  inherit osConfig;
+                  osFlakeSelf = host._module.specialArgs.self;
+
+                  inherit self;
+                };
+              modules = [
+                ./hosts/${hostName}/home.nix
+                {
+                  nix = {
+                    package = osConfig.nix.package;
+                    settings = {
+                      inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys;
+                    };
+                  };
+
+                  home = {
+                    username = defaultUsername;
+                    homeDirectory = osConfig.users.users."${defaultUsername}".home;
+                  };
+                }
+              ];
+            };
+        in
           # TODO: Remove system here. Should be set in hardware-configuration.nix
           rec {
             nixosConfigurations = {
@@ -211,46 +200,44 @@
               "inf@audiosink" = mkHmConfiguration "audiosink" nixosConfigurations.audiosink;
             };
           };
-        perSystem =
-          {
-            pkgs,
-            system,
-            ...
-          }:
-          rec {
-            # TODO: Merge into flake-parts
-            # getPatchedNixpkgs = system:
-            #   (import nixpkgs {inherit system;}).applyPatches {
-            #     name = "nixpkgs-patched";
-            #     src = nixpkgs;
-            #     patches = [];
-            #   };
-            # TODO: Check why own packages cannot be referred to via flake syntax
-            _module.args.pkgs = import inputs.nixpkgs {
-              inherit system;
-              config = {
-                allowUnfree = true;
-              };
-              overlays = [
-                inputs.fenix.overlays.default
-                (import ./pkgs { inherit inputs; })
-              ];
+        perSystem = {
+          pkgs,
+          system,
+          ...
+        }: rec {
+          # TODO: Merge into flake-parts
+          # getPatchedNixpkgs = system:
+          #   (import nixpkgs {inherit system;}).applyPatches {
+          #     name = "nixpkgs-patched";
+          #     src = nixpkgs;
+          #     patches = [];
+          #   };
+          # TODO: Check why own packages cannot be referred to via flake syntax
+          _module.args.pkgs = import inputs.nixpkgs {
+            inherit system;
+            config = {
+              allowUnfree = true;
             };
-            formatter = pkgs.alejandra;
-            legacyPackages = _module.args.pkgs;
-            devShells.default = pkgs.mkShell {
-              buildInputs = with pkgs; [
-                alejandra
-                nh
-                nixd
-                direnv
-                nix-prefetch-scripts
-                nix-prefetch-github
-                nix-tree
-                nixos-rebuild-ng
-              ];
-            };
+            overlays = [
+              inputs.fenix.overlays.default
+              (import ./pkgs {inherit inputs;})
+            ];
           };
+          formatter = pkgs.alejandra;
+          legacyPackages = _module.args.pkgs;
+          devShells.default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              alejandra
+              nh
+              nixd
+              direnv
+              nix-prefetch-scripts
+              nix-prefetch-github
+              nix-tree
+              nixos-rebuild-ng
+            ];
+          };
+        };
       }
     );
 }

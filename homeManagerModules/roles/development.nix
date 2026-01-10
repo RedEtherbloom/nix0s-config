@@ -4,11 +4,9 @@
   osConfig,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.myOptions.roles.development;
-in
-{
+in {
   options.myOptions.roles.development = {
     enable = lib.mkOption {
       type = with lib.types; bool;
@@ -126,8 +124,7 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
-        home.packages =
-          with pkgs;
+        home.packages = with pkgs;
           lib.optionals cfg.rust [
             clang
             clang-tools
@@ -145,9 +142,7 @@ in
             openscad-unstable
           ]
           ++ lib.optionals cfg.nix (
-            with pkgs;
-            [
-
+            with pkgs; [
               alejandra
               nh
               nixd
@@ -242,7 +237,7 @@ in
           enable = true;
           package = pkgs.jdk25;
         };
-        home.packages = [ pkgs.jetbrains.idea ];
+        home.packages = [pkgs.jetbrains.idea];
       })
       (lib.mkIf cfg.direnv {
         programs.direnv = {
@@ -252,47 +247,45 @@ in
         systemd.user = {
           services.gcNixDirenv = {
             Unit.Description = "Clean up stale or old nix-direnv shells. Script by DrRuhe.";
-            Service =
-              let
-                gcNixDirenv = pkgs.writers.writeNu "gcNixDirenv" ''
-                  use std log
+            Service = let
+              gcNixDirenv = pkgs.writers.writeNu "gcNixDirenv" ''
+                use std log
 
-                  def nixStoreGetDevshellGcRoots [] {
-                      return (nix-store --gc --print-roots |
-                          lines |
-                          parse "{loc} -> {storepath}" |
-                          insert dir {|gcRoot|$gcRoot.loc|parse "{path}/.direnv/{x}" | get -i 0.path} |
-                          group-by --to-table dir |
-                          rename dir gcRoots |
-                          insert modified {|devShell|
-                              $devShell.gcRoots|each {|gcRoot|
-                                  ls -D $gcRoot.loc|get 0.modified
-                              }|sort --reverse|first
-                          })
-                  }
+                def nixStoreGetDevshellGcRoots [] {
+                    return (nix-store --gc --print-roots |
+                        lines |
+                        parse "{loc} -> {storepath}" |
+                        insert dir {|gcRoot|$gcRoot.loc|parse "{path}/.direnv/{x}" | get -i 0.path} |
+                        group-by --to-table dir |
+                        rename dir gcRoots |
+                        insert modified {|devShell|
+                            $devShell.gcRoots|each {|gcRoot|
+                                ls -D $gcRoot.loc|get 0.modified
+                            }|sort --reverse|first
+                        })
+                }
 
-                  def removeGCRootsFromDevshells [] {
-                      let devshells = $in
+                def removeGCRootsFromDevshells [] {
+                    let devshells = $in
 
-                      $devshells|each {|devshell|
-                          log info $"(ansi red_bold)Removing devshell last modified ($devshell.modified|date humanize): ($devshell.dir) (ansi reset)"
-                          direnv revoke $devshell.dir
-                          rm -r $"($devshell.dir)/.direnv"
-                      }
+                    $devshells|each {|devshell|
+                        log info $"(ansi red_bold)Removing devshell last modified ($devshell.modified|date humanize): ($devshell.dir) (ansi reset)"
+                        direnv revoke $devshell.dir
+                        rm -r $"($devshell.dir)/.direnv"
+                    }
 
-                      return
-                  }
+                    return
+                }
 
 
-                  def main [--delete-older-than : duration = 31day] {
-                      nixStoreGetDevshellGcRoots|where modified < ((date now) - $delete_older_than)|removeGCRootsFromDevshells
-                  }
-                '';
-              in
-              {
-                Type = "exec";
-                ExecStart = "${gcNixDirenv} --delete-older-than 7day";
-              };
+                def main [--delete-older-than : duration = 31day] {
+                    nixStoreGetDevshellGcRoots|where modified < ((date now) - $delete_older_than)|removeGCRootsFromDevshells
+                }
+              '';
+            in {
+              Type = "exec";
+              ExecStart = "${gcNixDirenv} --delete-older-than 7day";
+            };
           };
           timers.gcNixDirenv = {
             Timer = {

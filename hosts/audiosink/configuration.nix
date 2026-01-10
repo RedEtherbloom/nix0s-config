@@ -5,11 +5,9 @@
   pkgs,
   secrets,
   ...
-}:
-let
+}: let
   networkSinkPort = 4713;
-in
-{
+in {
   imports = [
     inputs.nixos-hardware.nixosModules.raspberry-pi-3
     inputs.sops-nix.nixosModules.sops
@@ -40,7 +38,7 @@ in
     };
     optimise = {
       automatic = true;
-      dates = [ "07:00" ];
+      dates = ["07:00"];
     };
   };
   swapDevices = [
@@ -86,7 +84,7 @@ in
               addr-gen-mode = "default";
               method = "auto";
             };
-            proxy = { };
+            proxy = {};
           };
         };
       };
@@ -159,7 +157,7 @@ in
           "sound.target"
           "bluetooth.target"
         ];
-        wantedBy = [ "default.target" ];
+        wantedBy = ["default.target"];
       };
     };
     services = {
@@ -180,7 +178,7 @@ in
             }
           );
         };
-        conflicts = [ "restart-network-sink.service" ];
+        conflicts = ["restart-network-sink.service"];
       };
       restart-network-sink = {
         description = "Restart librespot in the morning.";

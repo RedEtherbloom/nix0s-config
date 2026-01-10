@@ -5,11 +5,9 @@
   pkgs,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.myOptions.hostRoles.graphical;
-in
-{
+in {
   imports = [
     ../services/piper-web-tts.nix
   ];

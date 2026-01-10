@@ -87,7 +87,7 @@ in {
         enableBashIntegration = true;
         enableZshIntegration = true;
 
-        options = [ "--cmd cd" ];
+        options = ["--cmd cd"];
       };
       # TODO: Read into and learn
       zellij = {

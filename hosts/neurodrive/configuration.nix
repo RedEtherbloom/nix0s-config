@@ -134,17 +134,17 @@
           config.services.tabby.port
           (lib.strings.toInt config.virtualisation.oci-containers.containers.esphome.environment.PORT)
         ]
-        ++ (lib.lists.concatMap (el: [ el.port ]) config.services.mosquitto.listeners);
-        allowedUDPPorts = [
-          # SteamVR
-          9944
-          27062
-        ];
-      };
-      ownWireguard = {
-        enabled = true;
-        currentHost = config.networking.ownWireguard.hosts.neurodrive;
-      };
+        ++ (lib.lists.concatMap (el: [el.port]) config.services.mosquitto.listeners);
+      allowedUDPPorts = [
+        # SteamVR
+        9944
+        27062
+      ];
+    };
+    ownWireguard = {
+      enabled = true;
+      currentHost = config.networking.ownWireguard.hosts.neurodrive;
+    };
   };
 
   services = {

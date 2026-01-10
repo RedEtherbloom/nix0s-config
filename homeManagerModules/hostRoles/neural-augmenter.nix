@@ -4,15 +4,14 @@
   osConfig,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.myOptions.hostRoles.neural-augmenter;
-  inherit (import ../../homeManagerModules/lib/torrent_lib.nix { inherit osConfig pkgs; })
+  inherit
+    (import ../../homeManagerModules/lib/torrent_lib.nix {inherit osConfig pkgs;})
     mullvad-torrent
     vopono-torrent
     ;
-in
-{
+in {
   options.myOptions.hostRoles.neural-augmenter = {
     enable = lib.mkOption {
       description = "workstation hm settings";
@@ -51,23 +50,21 @@ in
       taskwarrior-tui = {
         enable = lib.mkDefault true;
         # TODO: Update and/or move to overlay
-        package =
-          with pkgs;
-          (taskwarrior-tui.overrideAttrs (
-            _: oldAttrs: rec {
-              version = oldAttrs.version + "-fix";
-              src = pkgs.fetchFromGitHub {
-                owner = "RedEtherbloom";
-                repo = "taskwarrior-tui";
-                hash = "sha256-YNd4vtaWm+1fsB8ly3toq2u74Nicmhx2ey1m557q4K8=";
-                rev = "ee24bfb4a36f246933e6d2502ab85d3fc6abb85b";
-              };
-              cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-                inherit src;
-                hash = "sha256-7q85YszWmetjWry9nvc2irQeLFCWHwOAkEUHtc9CK/c=";
-              };
-            }
-          ));
+        package = with pkgs; (taskwarrior-tui.overrideAttrs (
+          _: oldAttrs: rec {
+            version = oldAttrs.version + "-fix";
+            src = pkgs.fetchFromGitHub {
+              owner = "RedEtherbloom";
+              repo = "taskwarrior-tui";
+              hash = "sha256-YNd4vtaWm+1fsB8ly3toq2u74Nicmhx2ey1m557q4K8=";
+              rev = "ee24bfb4a36f246933e6d2502ab85d3fc6abb85b";
+            };
+            cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+              inherit src;
+              hash = "sha256-7q85YszWmetjWry9nvc2irQeLFCWHwOAkEUHtc9CK/c=";
+            };
+          }
+        ));
       };
 
       services.piper-web-tts = {
@@ -180,8 +177,7 @@ in
           wlx-overlay-s
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
-          with pkgs;
-          [
+          with pkgs; [
             yubioath-flutter
             yubikey-manager
           ]
@@ -213,7 +209,7 @@ in
     programs = {
       chromium = {
         enable = lib.mkDefault true;
-        package = pkgs.chromium.override { enableWideVine = true; };
+        package = pkgs.chromium.override {enableWideVine = true;};
       };
       nushell.enable = true;
       rofi = {

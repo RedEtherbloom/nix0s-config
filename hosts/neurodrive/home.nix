@@ -4,16 +4,16 @@
   osConfig,
   pkgs,
   ...
-}:
-let
-  inherit (import ../../homeManagerModules/lib/plasma_lib.nix { inherit pkgs; })
+}: let
+  inherit
+    (import ../../homeManagerModules/lib/plasma_lib.nix {inherit pkgs;})
     define-kscreen-layout
     ;
-  inherit (import ../../homeManagerModules/lib/torrent_lib.nix { inherit osConfig pkgs; })
+  inherit
+    (import ../../homeManagerModules/lib/torrent_lib.nix {inherit osConfig pkgs;})
     vopono-torrent
     ;
-in
-{
+in {
   imports = [
     ../../homeManagerModules
   ];
@@ -33,8 +33,7 @@ in
             "X-Utilities"
           ];
         };
-      in
-      {
+      in {
         home = {
           stateVersion = "24.05";
           packages = with pkgs; [
@@ -84,48 +83,46 @@ in
 
         xdg = {
           desktopEntries = {
-            start-vrchat =
-              let
-                launch-oscavmgr = pkgs.writeShellApplication {
-                  name = "launch-oscavmgr";
-                  runtimeInputs = with pkgs; [
-                    oscavmgr
-                    vrcadvert
-                  ];
-                  text = ''
-                    # Kill all applications once the non-bged exits
-                    trap 'jobs -p | xargs kill' EXIT
+            start-vrchat = let
+              launch-oscavmgr = pkgs.writeShellApplication {
+                name = "launch-oscavmgr";
+                runtimeInputs = with pkgs; [
+                  oscavmgr
+                  vrcadvert
+                ];
+                text = ''
+                  # Kill all applications once the non-bged exits
+                  trap 'jobs -p | xargs kill' EXIT
 
-                    VrcAdvert OscAvMgr 9402 9002 --tracking &
-                    # Wivrn support
-                    oscavmgr openxr
-                  '';
-                };
-                launch-vrchat = pkgs.writeShellApplication {
-                  name = "launch-vrchat";
-                  runtimeInputs = [
-                    launch-oscavmgr
-                    osConfig.programs.steam.package
-                  ];
-                  text = ''
-                    launch-oscavmgr &
-                    # VRChat App ID
-                    steam -applaunch 438100
-                  '';
-                };
-              in
-              {
-                name = "Start_VRChat";
-                exec = "${lib.getExe launch-vrchat}";
-                icon = pkgs.fetchurl {
-                  url = "https://wiki-files.vrchat.com/VRLogo.png";
-                  hash = "sha256-bmgCzkMDuj/IDnC5F3IzEwXVv1g55By2W0Anh3wbchM=";
-                };
-                # TODO: Remove after functionality is confirmed
-                terminal = true;
-                comment = "Launch VRChat using WiVrn with OscAvMgr in the background for proper tracking.";
-                categories = [ "X-Games" ];
+                  VrcAdvert OscAvMgr 9402 9002 --tracking &
+                  # Wivrn support
+                  oscavmgr openxr
+                '';
               };
+              launch-vrchat = pkgs.writeShellApplication {
+                name = "launch-vrchat";
+                runtimeInputs = [
+                  launch-oscavmgr
+                  osConfig.programs.steam.package
+                ];
+                text = ''
+                  launch-oscavmgr &
+                  # VRChat App ID
+                  steam -applaunch 438100
+                '';
+              };
+            in {
+              name = "Start_VRChat";
+              exec = "${lib.getExe launch-vrchat}";
+              icon = pkgs.fetchurl {
+                url = "https://wiki-files.vrchat.com/VRLogo.png";
+                hash = "sha256-bmgCzkMDuj/IDnC5F3IzEwXVv1g55By2W0Anh3wbchM=";
+              };
+              # TODO: Remove after functionality is confirmed
+              terminal = true;
+              comment = "Launch VRChat using WiVrn with OscAvMgr in the background for proper tracking.";
+              categories = ["X-Games"];
+            };
           };
           autostart = {
             enable = true;
@@ -176,35 +173,43 @@ in
         # };
       }
     )
-    (define-kscreen-layout "benq"
+    (
+      define-kscreen-layout "benq"
       "output.DP-3.disable output.HDMI-A-1.disable output.DP-2.enable output.DP-2.rotation.normal output.DP-2.position.0,0"
       "ctrl+shift+f1"
     )
-    (define-kscreen-layout "dual"
+    (
+      define-kscreen-layout "dual"
       "output.HDMI-A-1.disable output.DP-2.enable output.DP-2.position.1080,420 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.right output.DP-3.position.0,0"
       "ctrl+shift+f2"
     )
-    (define-kscreen-layout "aoc"
+    (
+      define-kscreen-layout "aoc"
       "output.HDMI-A-1.disable output.DP-3.enable output.DP-3.position.0,0 output.DP-3.rotation.right output.DP-2.disable"
       "ctrl+shift+f3"
     )
-    (define-kscreen-layout "lg"
+    (
+      define-kscreen-layout "lg"
       "output.DP-2.disable output.DP-3.disable output.HDMI-A-1.enable output.HDMI-A-1.position.0,0"
       "ctrl+shift+f4"
     )
-    (define-kscreen-layout "lg-aoc"
+    (
+      define-kscreen-layout "lg-aoc"
       "output.DP-2.disable output.HDMI-A-1.enable output.HDMI-A-1.position.1080,420 output.HDMI-A-1.priority.1 output.DP-3.enable output.DP-3.position.0,0 output.DP-3.rotation.right"
       "ctrl+shift+f5"
     )
-    (define-kscreen-layout "lg-benq"
+    (
+      define-kscreen-layout "lg-benq"
       "output.DP-2.enable output.DP-2.position.0,0 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.disable output.HDMI-A-1.enable output.HDMI-A-1.position.1920,0 output.HDMI-A-1.rotation.normal output.HDMI-A-1.priority.2"
       "ctrl+shift+f6"
     )
-    (define-kscreen-layout "trial"
+    (
+      define-kscreen-layout "trial"
       "output.DP-2.enable output.DP-2.position.1080,420 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.right output.DP-3.position.0,0 output.DP-3.priority.2 output.HDMI-A-1.enable output.HDMI-A-1.position.3000,420 output.HDMI-A-1.rotation.normal output.HDMI-A-1.priority.3"
       "ctrl+shift+f7"
     )
-    (define-kscreen-layout "dual-both-horizontal"
+    (
+      define-kscreen-layout "dual-both-horizontal"
       "output.HDMI-A-1.disable output.DP-2.enable output.DP-2.position.1920,0 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.normal output.DP-3.position.0,0"
       "ctrl+shift+f8"
     )

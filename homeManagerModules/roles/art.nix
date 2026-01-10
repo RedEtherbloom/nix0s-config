@@ -29,7 +29,7 @@ in {
     {
       home.packages = with pkgs;
         lib.optionals cfg.inkscape [
-          (inkscape-with-extensions.override{inkscapeExtensions = with inkscape-extensions; lib.optionals cfg.stitching [inkstitch];})
+          (inkscape-with-extensions.override {inkscapeExtensions = with inkscape-extensions; lib.optionals cfg.stitching [inkstitch];})
         ];
     }
     (lib.mkIf cfg.stitching {
