@@ -432,7 +432,17 @@ in
                 "lazyjj.nvim" = {
                   package = pkgs.vimPlugins.lazyjj-nvim;
                   setupModule = "lazyjj";
-                  setupOpts = { };
+                  setupOpts = {};
+                };
+                "lean.nvim" = {
+                  package = pkgs.vimPlugins.lean-nvim;
+                  setupModule = "lean";
+                  # No default mappings for now
+                  setupOpts = {};
+                  event = [
+                    "BufReadPre *.lean"
+                    "BufNewFile *.lean"
+                  ];
                 };
               };
               extraPlugins = {
