@@ -8,14 +8,12 @@
   pkgs,
   secrets,
   ...
-}:
-let
+}: let
   cfg = config.myOptions.roles.nvf;
   inherit (inputs.nvf.lib.nvim.binds) mkKeymap;
   inherit (inputs.nvf.lib.nvim) dag;
   inherit (inputs.nvf.lib) neovimConfiguration;
-in
-{
+in {
   imports = [
     inputs.nvf.homeManagerModules.default
   ];
@@ -54,7 +52,7 @@ in
             settings = {
               font = {
                 # TODO: I think it fell back to it's default. How can I query neovide for it's runtime value?
-                normal = [ "OpenDyslexicM Nerd Font Mono" ];
+                normal = ["OpenDyslexicM Nerd Font Mono"];
                 size = 12.0;
               };
               srgb = true;
@@ -87,7 +85,7 @@ in
               # Setup transparency
               # entryBetween is mostly used to keep the entry close to the globals section for visual clarity
               luaConfigRC = {
-                neovide = dag.entryBetween [ "basic" ] [ "globalsScript" ] ''
+                neovide = dag.entryBetween ["basic"] ["globalsScript"] ''
                   vim.g.neovide_opacity = 0.9;
                   vim.g.neovide_normal_opacity = 0.9;
                 '';
@@ -256,7 +254,7 @@ in
                   };
                   format = {
                     enable = true;
-                    type = [ "alejandra" ];
+                    type = ["alejandra"];
                   };
                   # TODO: Checkout nixd from git
                   # TODO: Nixd formatting is currently broken?
@@ -404,7 +402,7 @@ in
               lazy.plugins = {
                 vim-be-good = {
                   package = pkgs.vimPlugins.vim-be-good;
-                  cmd = [ "VimBeGood" ];
+                  cmd = ["VimBeGood"];
                 };
                 "music-controls.nvim" = {
                   package = pkgs.vimPlugins.music-controls-nvim;
@@ -421,13 +419,13 @@ in
                 "vimplugin-vim-coach.nvim" = {
                   package = pkgs.vimPlugins.vim-coach-nvim;
                   setupModule = "vim-coach";
-                  setupOpts = { };
-                  cmd = [ "VimCoach" ];
+                  setupOpts = {};
+                  cmd = ["VimCoach"];
                 };
                 "jj.nvim" = {
                   package = pkgs.vimPlugins.jj-nvim;
                   setupModule = "jj";
-                  setupOpts = { };
+                  setupOpts = {};
                 };
                 "lazyjj.nvim" = {
                   package = pkgs.vimPlugins.lazyjj-nvim;
@@ -448,7 +446,7 @@ in
               extraPlugins = {
                 telescope-frecency-nvim = {
                   package = pkgs.vimPlugins.telescope-frecency-nvim;
-                  after = [ "telescope" ];
+                  after = ["telescope"];
                   setup = ''require('telescope').load_extension "frecency"'';
                 };
                 pomo-nvim = {
@@ -473,7 +471,7 @@ in
                         color = "info";
                         signs = false;
                         # TODO: Does this properly include the # symbol? Doesn't seem like it
-                        alt = [ "# TODO:" ];
+                        alt = ["# TODO:"];
                       };
                     };
                   };
@@ -540,14 +538,14 @@ in
               };
               keymaps = [
                 {
-                  mode = [ "i" ];
+                  mode = ["i"];
                   key = "jj";
                   action = "<Esc>";
                   desc = "Exit insert mode";
                   silent = true;
                 }
                 {
-                  mode = [ "t" ];
+                  mode = ["t"];
                   key = terminal.toggleterm.mappings.open;
                   # Default toggleterm action set by nvf
                   action = "<Cmd>execute v:count . \"ToggleTerm\"<CR>";
@@ -557,15 +555,15 @@ in
                 (mkKeymap "n" "<leader>fk" "<cmd>Telescope keymaps<CR>" {
                   desc = "Open Telescopes built in keymap";
                 })
-                (mkKeymap "n" "<leader>fp" "<cmd>Telescope oldfiles<CR>" { desc = "Open list of previous files."; })
+                (mkKeymap "n" "<leader>fp" "<cmd>Telescope oldfiles<CR>" {desc = "Open list of previous files.";})
                 (mkKeymap "n" "<leader>fo" "<cmd>ObsidianQuickSwitch<CR>" {
                   desc = "Open quick switcher for obsidian files.";
                 })
                 (mkKeymap "n" "<leader>oty" "<cmd>ObsidianYesterday<CR>" {
                   desc = "Open yesterday's Obsidian note";
                 })
-                (mkKeymap "n" "<leader>otn" "<cmd>ObsidianToday<CR>" { desc = "Open today's Obsidian note"; })
-                (mkKeymap "n" "<leader>ott" "<cmd>ObsidianTomorrow<CR>" { desc = "Open tomorrow's Obsidian note"; })
+                (mkKeymap "n" "<leader>otn" "<cmd>ObsidianToday<CR>" {desc = "Open today's Obsidian note";})
+                (mkKeymap "n" "<leader>ott" "<cmd>ObsidianTomorrow<CR>" {desc = "Open tomorrow's Obsidian note";})
                 (mkKeymap "n" "<leader>otp" "<cmd>ObsidianDailies<CR>" {
                   desc = "Open a picker with the dailies of this week.";
                 })
@@ -578,22 +576,22 @@ in
                 (mkKeymap "n" "<leader>of" "<cmd>ObsidianFollowLink<CR>" {
                   desc = "Follow the link under the Obsidian cursor.";
                 })
-                (mkKeymap "n" "<leader>onn" "<cmd>ObsidianNew<CR>" { desc = "Create new Obsidian note."; })
+                (mkKeymap "n" "<leader>onn" "<cmd>ObsidianNew<CR>" {desc = "Create new Obsidian note.";})
                 (mkKeymap "n" "<leader>ont" "<cmd>ObsidianNewFromTemplate<CR>" {
                   desc = "Create new Obsidian note from template.";
                 })
                 (mkKeymap "n" "<leader>one" "<cmd>ObsidianExtractNote<CR>" {
                   desc = "Extract marked text into new note.";
                 })
-                (mkKeymap "n" "<leader>onr" "<cmd>ObsidianRename<CR>" { desc = "Rename current note."; })
+                (mkKeymap "n" "<leader>onr" "<cmd>ObsidianRename<CR>" {desc = "Rename current note.";})
                 (mkKeymap "n" "<leader>oll" "<cmd>ObsidianLink<CR>" {
                   desc = "Insert link to existing Obsidian note.";
                 })
                 (mkKeymap "n" "<leader>oln" "<cmd>ObsidianLinkNew<CR>" {
                   desc = "Insert link to new Obsidian note.";
                 })
-                (mkKeymap "n" "<leader>oss" "<cmd>ObsidianSearch<CR>" { desc = "Search through Obsidian vault."; })
-                (mkKeymap "n" "<leader>ost" "<cmd>ObsidianTags<CR>" { desc = "Search through Obsidian tags."; })
+                (mkKeymap "n" "<leader>oss" "<cmd>ObsidianSearch<CR>" {desc = "Search through Obsidian vault.";})
+                (mkKeymap "n" "<leader>ost" "<cmd>ObsidianTags<CR>" {desc = "Search through Obsidian tags.";})
                 (mkKeymap "n" "<leader>osc" "<cmd>ObsidianTOC<CR>" {
                   desc = "Jump to Obsidian table of contents.";
                 })
@@ -603,17 +601,17 @@ in
                 (mkKeymap "n" "<leader>osb" "<cmd>ObsidianBacklinks<CR>" {
                   desc = "Open all backlinks in current note in picker.";
                 })
-                (mkKeymap "n" "<leader>osr" "<cmd>ObsidianCheck<CR>" { desc = "Check integrity of Vault."; })
+                (mkKeymap "n" "<leader>osr" "<cmd>ObsidianCheck<CR>" {desc = "Check integrity of Vault.";})
                 (mkKeymap "n" "<leader>osv" "<cmd>ObsidianDebug<CR>" {
                   desc = "Turn on additional Obsidian logging.";
                 })
-                (mkKeymap "n" "<leader>oww" "<cmd>ObsidianWorkspace<CR>" { desc = "Switch Obsidian workspace."; })
+                (mkKeymap "n" "<leader>oww" "<cmd>ObsidianWorkspace<CR>" {desc = "Switch Obsidian workspace.";})
                 (mkKeymap "n" "<leader>opi" "<cmd>ObsidianPasteImg<CR>" {
                   desc = "Paste image from clipboard into note.";
                 })
-                (mkKeymap "n" "<leader>se" "<cmd>SessionManager<CR>" { desc = "Open Session manager dialog."; })
-                (mkKeymap "n" "<leader>tj" "<cmd>TSJJoin<CR>" { desc = "Join the current block."; })
-                (mkKeymap "n" "<leader>ts" "<cmd>TSJSplit<CR>" { desc = "Split the current block."; })
+                (mkKeymap "n" "<leader>se" "<cmd>SessionManager<CR>" {desc = "Open Session manager dialog.";})
+                (mkKeymap "n" "<leader>tj" "<cmd>TSJJoin<CR>" {desc = "Join the current block.";})
+                (mkKeymap "n" "<leader>ts" "<cmd>TSJSplit<CR>" {desc = "Split the current block.";})
                 (mkKeymap "n" "<leader>tt" "<cmd>TSJToggle<CR>" {
                   desc = "Toggle splitting or joining the current block.";
                 })
@@ -626,53 +624,52 @@ in
                 enable = true;
                 setupOpts = {
                   defaults = {
-                    path_display = [ "truncate" ];
+                    path_display = ["truncate"];
                     # TODO: Maybe try closest instead
                     selection_strategy = "follow";
                     selection_caret = "󱙧";
                     layout_strategy = "flex";
                     color_devicons = true;
                     winblend = 10;
-                    mappings =
-                      let
-                        multi_select = lib.generators.mkLuaInline ''
-                          function(prompt_bufnr)
-                            local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
-                            local multi = picker:get_multi_selection()
-                            if not vim.tbl_isempty(multi) then
-                              require('telescope.actions').close(prompt_bufnr)
-                              for _, j in pairs(multi) do
-                                if j.path ~= nil then
-                                  vim.cmd(string.format('%s %s', 'edit', j.path))
-                                end
+                    mappings = let
+                      multi_select = lib.generators.mkLuaInline ''
+                        function(prompt_bufnr)
+                          local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
+                          local multi = picker:get_multi_selection()
+                          if not vim.tbl_isempty(multi) then
+                            require('telescope.actions').close(prompt_bufnr)
+                            for _, j in pairs(multi) do
+                              if j.path ~= nil then
+                                vim.cmd(string.format('%s %s', 'edit', j.path))
                               end
-                            else
-                              require('telescope.actions').select_default(prompt_bufnr)
                             end
+                          else
+                            require('telescope.actions').select_default(prompt_bufnr)
                           end
-                        '';
-                      in
+                        end
+                      '';
+                    in
                       lib.attrsets.recursiveUpdate
-                        {
-                          i."<CR>" = multi_select;
-                          n."<CR>" = multi_select;
-                        }
-                        {
-                          i = {
-                            "jj" = lib.generators.mkLuaInline ''
-                              function(prompt_bufnr)
-                                require('telescope.actions').set_command_line(prompt_bufnr)
-                              end
-                            '';
-                          };
-                          # n = {
-                          #   "jj" = lib.generators.mkLuaInline ''
-                          #     function(prompt_bufnr)
-                          #       require('telescope.actions').close(prompt_bufnr)
-                          #     end
-                          #   '';
-                          # };
+                      {
+                        i."<CR>" = multi_select;
+                        n."<CR>" = multi_select;
+                      }
+                      {
+                        i = {
+                          "jj" = lib.generators.mkLuaInline ''
+                            function(prompt_bufnr)
+                              require('telescope.actions').set_command_line(prompt_bufnr)
+                            end
+                          '';
                         };
+                        # n = {
+                        #   "jj" = lib.generators.mkLuaInline ''
+                        #     function(prompt_bufnr)
+                        #       require('telescope.actions').close(prompt_bufnr)
+                        #     end
+                        #   '';
+                        # };
+                      };
                     # Default, except ignore gets respected and hidden filessearched
                     vimgrep_arguments = [
                       "${pkgs.ripgrep}/bin/rg"
@@ -723,297 +720,299 @@ in
           nvf.enable = false;
           neovide.enable = false;
         };
-        myOptions.roles.nvf =
-          let
-            nvfMaximalFixes = {
-              config.vim = {
-                utility.motion.hop.enable = lib.mkForce false;
-                languages.sql.enable = lib.mkForce false;
-              };
+        myOptions.roles.nvf = let
+          nvfMaximalFixes = {
+            config.vim = {
+              utility.motion.hop.enable = lib.mkForce false;
+              languages.sql.enable = lib.mkForce false;
             };
-          in
-          {
-            frankenPackage =
-              (neovimConfiguration {
-                inherit pkgs;
-                modules = [
-                  nvfMaximalFixes
-                  (lib.attrsets.recursiveUpdate
-                    # Maximal configuration
-                    (import "${inputs.nvf}/configuration.nix" true)
-                    { config = { inherit (programs.nvf.settings) vim; }; }
-                  )
-                ];
-              }).neovim;
-            newPackage =
-              (neovimConfiguration {
-                inherit pkgs;
-                modules = [
-                  {
-                    # Derived from nvf maximal configuration
-                    config.vim = {
-                      viAlias = true;
-                      vimAlias = true;
-                      debugMode = {
-                        enable = false;
-                        level = 16;
-                        logFile = "/tmp/nvim.log";
-                      };
+          };
+        in {
+          frankenPackage =
+            (neovimConfiguration {
+              inherit pkgs;
+              modules = [
+                nvfMaximalFixes
+                (
+                  lib.attrsets.recursiveUpdate
+                  {config = {inherit (programs.nvf.settings) vim;};}
+                  # Maximal configuration should take precedence
+                  (import "${inputs.nvf}/configuration.nix" true)
+                )
+              ];
+            }).neovim;
+          newPackage =
+            (neovimConfiguration {
+              inherit pkgs;
+              modules = [
+                {
+                  # Derived from nvf maximal configuration
+                  config.vim = {
+                    viAlias = true;
+                    vimAlias = true;
+                    debugMode = {
+                      enable = false;
+                      level = 16;
+                      logFile = "/tmp/nvim.log";
+                    };
 
-                      spellcheck = {
+                    spellcheck = {
+                      enable = true;
+                      programmingWordlist.enable = true;
+                    };
+
+                    lsp = {
+                      enable = true;
+
+                      formatOnSave = true;
+                      lightbulb.enable = true;
+                      lspkind.enable = false;
+                      lspsaga.enable = false;
+                      trouble.enable = true;
+                      lspSignature.enable = false; # conflicts with blink in maximal
+                      otter-nvim.enable = true;
+                      nvim-docs-view.enable = true;
+                      harper-ls.enable = true;
+                    };
+
+                    debugger = {
+                      nvim-dap = {
                         enable = true;
-                        programmingWordlist.enable = true;
-                      };
-
-                      lsp = {
-                        enable = true;
-
-                        formatOnSave = true;
-                        lightbulb.enable = true;
-                        lspkind.enable = false;
-                        lspsaga.enable = false;
-                        trouble.enable = true;
-                        lspSignature.enable = false; # conflicts with blink in maximal
-                        otter-nvim.enable = true;
-                        nvim-docs-view.enable = true;
-                        harper-ls.enable = true;
-                      };
-
-                      debugger = {
-                        nvim-dap = {
-                          enable = true;
-                          ui.enable = true;
-                        };
-                      };
-
-                      # This section does not include a comprehensive list of available language modules.
-                      # To list all available language module options, please visit the nvf manual.
-                      languages = {
-                        enableFormat = true;
-                        enableTreesitter = true;
-                        enableExtraDiagnostics = true;
-
-                        nix.enable = true;
-                        markdown.enable = true;
-                        bash.enable = true;
-                        clang.enable = true;
-                        css.enable = true;
-                        html.enable = true;
-                        json.enable = true;
-                        sql.enable = false;
-                        java.enable = true;
-                        kotlin.enable = true;
-                        ts.enable = true;
-                        go.enable = true;
-                        lua.enable = true;
-                        python.enable = true;
-                        typst.enable = true;
-                        rust = {
-                          enable = true;
-                          extensions.crates-nvim.enable = true;
-                          lsp = {
-                            package = pkgs.rust-analyzer-nightly;
-                            opts = ''
-                              ['rust-analyzer'] = {
-                                  cargo = {
-                                    allFeature = true
-                                  },
-                                  checkOnSave = true,
-                                  procMacro = {
-                                    enable = true,
-                                  },
-                                },
-                            '';
-                          };
-                        };
-                        nu.enable = true;
-                        just.enable = false;
-                      };
-
-                      visuals = {
-                        nvim-scrollbar.enable = false;
-                        nvim-web-devicons.enable = true;
-                        nvim-cursorline.enable = true;
-                        cinnamon-nvim.enable = true;
-                        fidget-nvim.enable = true;
-
-                        highlight-undo.enable = true;
-                        indent-blankline.enable = true;
-
-                        # Fun
-                        cellular-automaton.enable = true;
-                      };
-
-                      statusline = {
-                        lualine = {
-                          enable = true;
-                          theme = "catppuccin";
-                        };
-                      };
-
-                      theme = {
-                        enable = true;
-                        name = "catppuccin";
-                        style = "mocha";
-                        transparent = false;
-                      };
-
-                      autopairs.nvim-autopairs.enable = true;
-
-                      autocomplete = {
-                        nvim-cmp.enable = false;
-                        blink-cmp.enable = true;
-                      };
-
-                      snippets.luasnip.enable = true;
-
-                      filetree = {
-                        neo-tree = {
-                          enable = true;
-                        };
-                      };
-
-                      tabline = {
-                        nvimBufferline.enable = true;
-                      };
-
-                      treesitter.context.enable = true;
-
-                      binds = {
-                        whichKey.enable = true;
-                        cheatsheet.enable = true;
-                      };
-
-                      telescope.enable = true;
-
-                      git = {
-                        enable = true;
-                        gitsigns.enable = true;
-                        gitsigns.codeActions.enable = false; # throws an annoying debug message
-                        neogit.enable = true;
-                      };
-
-                      minimap = {
-                        minimap-vim.enable = false;
-                        codewindow.enable = true; # lighter, faster, and uses lua for configuration
-                      };
-
-                      dashboard = {
-                        dashboard-nvim.enable = false;
-                        alpha.enable = true;
-                      };
-
-                      notify = {
-                        nvim-notify.enable = true;
-                      };
-
-                      projects = {
-                        project-nvim.enable = true;
-                      };
-
-                      utility = {
-                        ccc.enable = false;
-                        vim-wakatime.enable = false;
-                        diffview-nvim.enable = true;
-                        yanky-nvim.enable = false;
-                        qmk-nvim.enable = false; # requires hardware specific options
-                        icon-picker.enable = true;
-                        surround.enable = true;
-                        leetcode-nvim.enable = true;
-                        multicursors.enable = true;
-                        smart-splits.enable = true;
-                        undotree.enable = true;
-                        nvim-biscuits.enable = true;
-
-                        motion = {
-                          hop.enable = false;
-                          leap.enable = true;
-                          precognition.enable = true;
-                        };
-                        images = {
-                          image-nvim.enable = false;
-                          img-clip.enable = true;
-                        };
-                      };
-
-                      notes = {
-                        obsidian.enable = true;
-                        neorg.enable = false;
-                        # True: Try out
-                        orgmode.enable = false;
-                        mind-nvim.enable = true;
-                        todo-comments.enable = true;
-                      };
-
-                      terminal = {
-                        toggleterm = {
-                          enable = true;
-                          lazygit.enable = true;
-                        };
-                      };
-
-                      ui = {
-                        borders.enable = true;
-                        noice.enable = true;
-                        colorizer.enable = true;
-                        modes-nvim.enable = false; # the theme looks terrible with catppuccin
-                        illuminate.enable = true;
-                        breadcrumbs = {
-                          enable = true;
-                          navbuddy.enable = true;
-                        };
-                        smartcolumn = {
-                          enable = true;
-                          setupOpts.custom_colorcolumn = {
-                            # this is a freeform module, it's `buftype = int;` for configuring column position
-                            nix = "110";
-                            ruby = "120";
-                            java = "130";
-                            go = [
-                              "90"
-                              "130"
-                            ];
-                          };
-                        };
-                        fastaction.enable = true;
-                      };
-
-                      assistant = {
-                        chatgpt.enable = false;
-                        copilot = {
-                          enable = false;
-                          cmp.enable = true;
-                        };
-                        codecompanion-nvim.enable = false;
-                        avante-nvim.enable = true;
-                      };
-                      comments = {
-                        comment-nvim.enable = true;
-                      };
-
-                      # TODO: Evaluate if we want these
-                      session = {
-                        nvim-session-manager.enable = true;
-                      };
-                      gestures = {
-                        gesture-nvim.enable = false;
-                      };
-                      presence = {
-                        neocord.enable = false;
+                        ui.enable = true;
                       };
                     };
-                  }
-                ];
-              }).neovim;
-            maximalPackage =
-              (neovimConfiguration {
-                inherit pkgs;
-                modules = [
-                  nvfMaximalFixes
-                  (import "${inputs.nvf}/configuration.nix" true)
-                ];
-              }).neovim;
-          };
+
+                    # This section does not include a comprehensive list of available language modules.
+                    # To list all available language module options, please visit the nvf manual.
+                    languages = {
+                      enableFormat = true;
+                      enableTreesitter = true;
+                      enableExtraDiagnostics = true;
+
+                      nix.enable = true;
+                      markdown.enable = true;
+                      bash.enable = true;
+                      clang.enable = true;
+                      css.enable = true;
+                      html.enable = true;
+                      json.enable = true;
+                      sql.enable = false;
+                      java.enable = true;
+                      kotlin.enable = true;
+                      ts.enable = true;
+                      go.enable = true;
+                      lua.enable = true;
+                      python.enable = true;
+                      typst.enable = true;
+                      rust = {
+                        enable = true;
+                        extensions.crates-nvim.enable = true;
+                        lsp = {
+                          package = pkgs.rust-analyzer-nightly;
+                          opts = ''
+                            ['rust-analyzer'] = {
+                                cargo = {
+                                  allFeature = true
+                                },
+                                checkOnSave = true,
+                                procMacro = {
+                                  enable = true,
+                                },
+                              },
+                          '';
+                        };
+                      };
+                      nu.enable = true;
+                      just.enable = false;
+                    };
+
+                    visuals = {
+                      nvim-scrollbar.enable = false;
+                      nvim-web-devicons.enable = true;
+                      nvim-cursorline.enable = true;
+                      cinnamon-nvim.enable = true;
+                      fidget-nvim.enable = true;
+
+                      highlight-undo.enable = true;
+                      indent-blankline.enable = true;
+
+                      # Fun
+                      cellular-automaton.enable = true;
+                    };
+
+                    statusline = {
+                      lualine = {
+                        enable = true;
+                        theme = "catppuccin";
+                      };
+                    };
+
+                    theme = {
+                      enable = true;
+                      name = "catppuccin";
+                      style = "mocha";
+                      transparent = false;
+                    };
+
+                    autopairs.nvim-autopairs.enable = true;
+
+                    autocomplete = {
+                      nvim-cmp.enable = false;
+                      blink-cmp.enable = true;
+                    };
+
+                    snippets.luasnip.enable = true;
+
+                    filetree = {
+                      neo-tree = {
+                        enable = true;
+                      };
+                    };
+
+                    tabline = {
+                      nvimBufferline.enable = true;
+                    };
+
+                    treesitter.context.enable = true;
+
+                    binds = {
+                      whichKey.enable = true;
+                      cheatsheet.enable = true;
+                    };
+
+                    telescope.enable = true;
+
+                    git = {
+                      enable = true;
+                      gitsigns.enable = true;
+                      gitsigns.codeActions.enable = false; # throws an annoying debug message
+                      neogit.enable = true;
+                    };
+
+                    minimap = {
+                      minimap-vim.enable = false;
+                      codewindow.enable = true; # lighter, faster, and uses lua for configuration
+                    };
+
+                    dashboard = {
+                      dashboard-nvim.enable = false;
+                      alpha.enable = true;
+                    };
+
+                    notify = {
+                      nvim-notify.enable = true;
+                    };
+
+                    projects = {
+                      project-nvim.enable = true;
+                    };
+
+                    utility = {
+                      ccc.enable = false;
+                      vim-wakatime.enable = false;
+                      diffview-nvim.enable = true;
+                      yanky-nvim.enable = false;
+                      qmk-nvim.enable = false; # requires hardware specific options
+                      icon-picker.enable = true;
+                      surround.enable = true;
+                      leetcode-nvim.enable = true;
+                      multicursors.enable = true;
+                      smart-splits.enable = true;
+                      undotree.enable = true;
+                      nvim-biscuits.enable = true;
+
+                      motion = {
+                        hop.enable = false;
+                        leap.enable = true;
+                        precognition.enable = true;
+                      };
+                      images = {
+                        image-nvim.enable = false;
+                        img-clip.enable = true;
+                      };
+                    };
+
+                    notes = {
+                      obsidian.enable = true;
+                      neorg.enable = false;
+                      # True: Try out
+                      orgmode.enable = false;
+                      mind-nvim.enable = true;
+                      todo-comments.enable = true;
+                    };
+
+                    terminal = {
+                      toggleterm = {
+                        enable = true;
+                        lazygit.enable = true;
+                      };
+                    };
+
+                    ui = {
+                      borders.enable = true;
+                      noice.enable = true;
+                      colorizer.enable = true;
+                      modes-nvim.enable = false; # the theme looks terrible with catppuccin
+                      illuminate.enable = true;
+                      breadcrumbs = {
+                        enable = true;
+                        navbuddy.enable = true;
+                      };
+                      smartcolumn = {
+                        enable = true;
+                        setupOpts.custom_colorcolumn = {
+                          # this is a freeform module, it's `buftype = int;` for configuring column position
+                          nix = "110";
+                          ruby = "120";
+                          java = "130";
+                          go = [
+                            "90"
+                            "130"
+                          ];
+                        };
+                      };
+                      fastaction.enable = true;
+                    };
+
+                    assistant = {
+                      chatgpt.enable = false;
+                      copilot = {
+                        enable = false;
+                        cmp.enable = true;
+                      };
+                      codecompanion-nvim.enable = false;
+                      avante-nvim.enable = true;
+                    };
+                    comments = {
+                      comment-nvim.enable = true;
+                    };
+
+                    # TODO: Evaluate if we want these
+                    session = {
+                      nvim-session-manager.enable = true;
+                    };
+                    gestures = {
+                      gesture-nvim.enable = false;
+                    };
+                    presence = {
+                      neocord.enable = false;
+                    };
+                  };
+                }
+              ];
+            }).neovim;
+          maximalPackage =
+            (neovimConfiguration {
+              inherit pkgs;
+              modules = [
+                nvfMaximalFixes
+                (import "${inputs.nvf}/configuration.nix" true)
+              ];
+            }).neovim;
+        };
+        home.packages = with pkgs; [
+          lean4
+        ];
       }
       (lib.mkIf config.myOptions.roles.gamedev.enable {
         programs.nvf.settings.vim = {
