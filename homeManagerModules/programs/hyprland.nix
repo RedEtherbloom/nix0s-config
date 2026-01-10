@@ -646,7 +646,22 @@ in
       };
       swaync.enable = true;
       hyprpolkitagent.enable = true;
-      hyprshell.enable = true;
+      hyprshell = {
+        enable = false;
+        settings = {
+          windows = {
+            scale = 8.0;
+            overview = {
+              launcher = {
+                max_items = 6;
+              };
+            };
+            switch = {
+              modifier = "alt";
+            };
+          };
+        };
+      };
     };
 
     # TODO: New wallpaper
