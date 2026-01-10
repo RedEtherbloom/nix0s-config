@@ -5,26 +5,26 @@
   pkgs,
   secrets,
   ...
-}:
-{
-  imports = [
-    ../../modules
-    ../../modules/common/ssh.nix
-    ../../modules/hdd.nix
-    # TODO: Remove once hm sops-nix supports secrets
-    ../../modules/common/taskwarrior-secrets.nix
-    ../../modules/binary-cache/cuda-maintainers.nix
+}: {
+  imports =
+    [
+      ../../modules
+      ../../modules/common/ssh.nix
+      ../../modules/hdd.nix
+      # TODO: Remove once hm sops-nix supports secrets
+      ../../modules/common/taskwarrior-secrets.nix
+      ../../modules/binary-cache/cuda-maintainers.nix
 
-    ./hardware-configuration.nix
-  ]
-  ++ (with inputs.nixos-hardware.nixosModules; [
-    common-pc
-    common-pc-ssd
-    common-hidpi
-    # Xeon CPU
-    common-cpu-intel-cpu-only
-    common-gpu-nvidia-nonprime
-  ]);
+      ./hardware-configuration.nix
+    ]
+    ++ (with inputs.nixos-hardware.nixosModules; [
+      common-pc
+      common-pc-ssd
+      common-hidpi
+      # Xeon CPU
+      common-cpu-intel-cpu-only
+      common-gpu-nvidia-nonprime
+    ]);
 
   system.stateVersion = "24.05";
 
@@ -36,13 +36,13 @@
   nixpkgs.config = {
     cudaSupport = true;
     cudnnSupport = true;
-    cudaCapabilities = [ "7.5" ];
+    cudaCapabilities = ["7.5"];
   };
 
   boot = {
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
+    binfmt.emulatedSystems = ["aarch64-linux"];
     # Hoping to increase audio quality/reliability
-    kernelParams = [ "btusb.enable_autosuspend=n" ];
+    kernelParams = ["btusb.enable_autosuspend=n"];
     kernelModules = [
       "coretemp"
       "nct6775"
@@ -56,7 +56,7 @@
       luks.devices = {
         "nixos-root" = {
           device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
-          crypttabExtraOpts = [ "fido2-device=auto" ];
+          crypttabExtraOpts = ["fido2-device=auto"];
           bypassWorkqueues = true;
           # Weakens security
           allowDiscards = true;
@@ -64,7 +64,7 @@
         "nixos-swap" = {
           device = "/dev/disk/by-uuid/69bd8d21-1c47-4aff-8533-31bf2610c181";
           # Necessary?
-          crypttabExtraOpts = [ "fido2-device=auto" ];
+          crypttabExtraOpts = ["fido2-device=auto"];
           bypassWorkqueues = true;
           # Weakens security
           allowDiscards = true;
@@ -84,17 +84,17 @@
     "/mnt/windows_data" = {
       device = "/dev/disk/by-uuid/587488F374FD109E";
       fsType = "ntfs3";
-      options = [ "nofail" ];
+      options = ["nofail"];
     };
     "/mnt/restic_data" = {
       device = "/dev/mapper/restic_storage--4096bsize-restic_storage";
       fsType = "ext4";
-      options = [ "nofail" ];
+      options = ["nofail"];
     };
     "/mnt/cryptostorage" = {
       device = "/dev/mapper/cryptostorage--512bsize-cryptostorage";
       fsType = "ext4";
-      options = [ "nofail" ];
+      options = ["nofail"];
     };
   };
 
@@ -110,17 +110,16 @@
     NetworkManager-wait-online.enable = lib.mkForce false;
   };
   # Networking
-  networking =
-    let
-      genConsecutivePorts = start: count: (lib.lists.range start count);
-    in
-    {
-      hostName = "neurodrive";
-      networkmanager.enable = true;
-      interfaces."enp0s25".wakeOnLan.enable = true;
+  networking = let
+    genConsecutivePorts = start: count: (lib.lists.range start count);
+  in {
+    hostName = "neurodrive";
+    networkmanager.enable = true;
+    interfaces."enp0s25".wakeOnLan.enable = true;
 
-      firewall = {
-        allowedTCPPorts = [
+    firewall = {
+      allowedTCPPorts =
+        [
           # Feishin remote control port
           4333
           # Pulseaudio Network Sharing. Probably only needed for publish
@@ -146,11 +145,11 @@
         enabled = true;
         currentHost = config.networking.ownWireguard.hosts.neurodrive;
       };
-    };
+  };
 
   services = {
     desktopManager.plasma6.enable = true;
-    xserver.videoDrivers = [ "nvidia" ];
+    xserver.videoDrivers = ["nvidia"];
     avahi = {
       enable = true;
       nssmdns4 = true;
@@ -183,6 +182,10 @@
       package = pkgs.ollama-cuda;
       host = "0.0.0.0";
       openFirewall = true;
+      environmentVariables = {
+        # Fix CORS errors
+        OLLAMA_ORIGINS = "*";
+      };
     };
     nextjs-ollama-llm-ui = {
       enable = true;
@@ -194,21 +197,21 @@
     };
     mosquitto = {
       enable = true;
-      logType = [ "all" ];
+      logType = ["all"];
       listeners = [
         # TODO: Add encrypted listener
         {
           port = 1883;
           # By default everyone may read everything
-          acl = [ "pattern read #" ];
+          acl = ["pattern read #"];
           users = {
             root = {
-              acl = [ "readwrite #" ];
+              acl = ["readwrite #"];
               passwordFile = config.sops.secrets."mosquitto/users/root".path;
             };
             client = {
               # R/W to everything for now until I figure out the proper settings
-              acl = [ "readwrite #" ];
+              acl = ["readwrite #"];
               passwordFile = config.sops.secrets."mosquitto/users/client".path;
             };
           };
@@ -327,7 +330,7 @@
     oci-containers = {
       containers = {
         homeassistant = {
-          volumes = [ "home-assistant:/config" ];
+          volumes = ["home-assistant:/config"];
           devices = [
             "/dev/zigbee-ap:/dev/ttyUSB0"
           ];
@@ -345,7 +348,7 @@
         comfyui = {
           # Broken and needs debugging
           autoStart = false;
-          volumes = [ "comfyui:/root" ];
+          volumes = ["comfyui:/root"];
           environment.TZ = config.time.timeZone;
           image = "docker.io/yanwk/comfyui-boot:cu124-megapak";
           pull = "newer";
@@ -395,8 +398,7 @@
     "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = [
       "network-online.target"
     ];
-    "${config.virtualisation.oci-containers.containers.esphome.serviceName}".serviceConfig.Restart =
-      "always";
+    "${config.virtualisation.oci-containers.containers.esphome.serviceName}".serviceConfig.Restart = "always";
   };
 
   myOptions = {
