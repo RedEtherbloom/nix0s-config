@@ -610,11 +610,6 @@ in {
                   desc = "Paste image from clipboard into note.";
                 })
                 (mkKeymap "n" "<leader>se" "<cmd>SessionManager<CR>" {desc = "Open Session manager dialog.";})
-                (mkKeymap "n" "<leader>tj" "<cmd>TSJJoin<CR>" {desc = "Join the current block.";})
-                (mkKeymap "n" "<leader>ts" "<cmd>TSJSplit<CR>" {desc = "Split the current block.";})
-                (mkKeymap "n" "<leader>tt" "<cmd>TSJToggle<CR>" {
-                  desc = "Toggle splitting or joining the current block.";
-                })
                 (mkKeymap "n" "<leader>mm" ":w<CR>make!<CR>" {
                   desc = "Trigger a make command";
                 })
