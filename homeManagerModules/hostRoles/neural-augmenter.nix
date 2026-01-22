@@ -181,6 +181,7 @@ in {
           d-spy
 
           android-tools
+          easyeffects
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
           with pkgs; [
