@@ -1030,5 +1030,42 @@ in {
       sopsFile = "${secrets}/secrets/services/home-assistant.yaml";
       key = "access_tokens/cli";
     };
+
+    #     systemd.user.services = let
+    # dbus_user_services = "${config.xdg.dataHome}/dbus-1/services";
+    #       kde6_blocker_unit_name = "org.kde.kded6.service";
+    #     in{
+    #       create-kde6-blocker = {
+    #         Unit = {
+    #           Description = "Prevent kde6 from starting and stealing the notification dbus";
+    #         };
+    #         Service = let blocker_file = pkgs.writeText "kde6_blocker" ''
+    #           [D-BUS Service]
+    #           Name=org.kde.kde6
+    #           Exec=/bin/false
+    #         ''; in {
+    #           Type = "oneshot";
+    #           ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${dbus_user_services}";
+    #           ExecStart = "${pkgs.coreutils}/bin/cp -f ${blocker_file} ${dbus_user_services}/${kde6_blocker_unit_name}";
+    #         };
+    #         Install = {
+    #           WantedBy = ["hyprland.target"];
+    #         };
+    #       };
+    #       delete-kde6-blocker = {
+    #         Unit = {
+    #           Description = "Delete modified kded6 service file";
+    #         };
+    #         Service = {
+    #           Type = "oneshot";
+    #           RemainAfterExit = "yes";
+    #           ExecStart = "/bin/true";
+    #           ExecStop = "${pkgs.coreutils}/bin/rm -f ${dbus_user_services}/${kde6_blocker_unit_name}";
+    #         };
+    #         Install = {
+    #           WantedBy = ["hyprland.target"];
+    #         };
+    #       };
+    #     };
   };
 }
