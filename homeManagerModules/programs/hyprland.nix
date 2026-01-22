@@ -651,7 +651,7 @@ in {
       hyprsunset = {
         enable = true;
         settings = {
-          max-gamma = 150;
+          max-gamma = 200;
           profile = [
             {
               time = "7:30";
@@ -659,8 +659,8 @@ in {
             }
             {
               time = "22:30";
-              temperature = 4000;
-              gamma = 0.6;
+              temperature = 4800;
+              gamma = 0.9;
             }
           ];
         };
