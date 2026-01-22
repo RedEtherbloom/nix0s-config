@@ -55,7 +55,7 @@ in {
     }
     (lib.mkIf cfg.enableBoot {
       boot = {
-        kernelPackages = lib.mkOverride 1001 pkgs.linuxPackages_latest;
+        kernelPackages = lib.mkOverride 1001 pkgs.linuxPackages-rt_latest;
         loader = {
           efi.canTouchEfiVariables = true;
           timeout = 2;
