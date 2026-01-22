@@ -179,6 +179,8 @@ in {
           # dbus debugging
           bustle
           d-spy
+
+          android-tools
         ])
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
           with pkgs; [

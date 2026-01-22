@@ -13,6 +13,8 @@
   inherit (inputs.nvf.lib.nvim.binds) mkKeymap;
   inherit (inputs.nvf.lib.nvim) dag;
   inherit (inputs.nvf.lib) neovimConfiguration;
+
+  nixpkgs-nvf-working = inputs.nixpkgs-nvf-working.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in {
   imports = [
     inputs.nvf.homeManagerModules.default
@@ -208,10 +210,7 @@ in {
                 enable = false;
               };
               treesitter = {
-                incrementalSelection = {
-                  enable = true;
-                };
-                fold = true;
+                fold = false;
                 # TODO: Think we don't needs this
                 context = {
                   enable = true;
@@ -222,7 +221,7 @@ in {
                     mode = "cursor";
                   };
                 };
-                textobjects.enable = true;
+                textobjects.enable = false;
               };
               # LSP
               debugger.nvim-dap = {
@@ -498,14 +497,13 @@ in {
                     };
                     templates.folder = "02-Templates";
                     new_notes_location = "note_subdir";
-                    # TODO: Add follow_link_function. Otherwise images etc. get ignored. Maybe they can be rendered inline some way?
-                    # Force Obsidian to focus on :ObsidianOpen
-                    open_app_foreground = true;
                     # TODO: May need to specify telescope etc. in picker
-                    sort_by = "modified";
-                    sort_reversed = true;
+                    search = {
+                      sort_by = "modified";
+                      sort_reversed = true;
+                    };
                     # TODO: may want to up search_max_lines from 1000 default iirc
-                    attachments.img_folder = "XX-Files";
+                    attachments.folder = "XX-Files";
                     ui = {
                       checkboxes = lib.generators.mkLuaInline ''
                         {
@@ -720,25 +718,26 @@ in {
             config.vim = {
               utility.motion.hop.enable = lib.mkForce false;
               languages.sql.enable = lib.mkForce false;
+              treesitter.textobjects.enable = lib.mkForce false;
             };
           };
         in {
           frankenPackage =
             (neovimConfiguration {
-              inherit pkgs;
+              pkgs = nixpkgs-nvf-working;
               modules = [
                 nvfMaximalFixes
                 (
-                  lib.attrsets.recursiveUpdate
-                  {config = {inherit (programs.nvf.settings) vim;};}
+                  lib.attrsets.recursiveUpdate {config = {inherit (programs.nvf.settings) vim;};}
                   # Maximal configuration should take precedence
                   (import "${inputs.nvf}/configuration.nix" true)
                 )
               ];
             }).neovim;
+          # TODO: Trash and fill in both, then merge until no more conflicts
           newPackage =
             (neovimConfiguration {
-              inherit pkgs;
+              pkgs = nixpkgs-nvf-working;
               modules = [
                 {
                   # Derived from nvf maximal configuration
@@ -927,6 +926,7 @@ in {
                       };
                     };
 
+                    # TODO: Errors with at least one workspace being required
                     notes = {
                       obsidian.enable = true;
                       neorg.enable = false;
@@ -998,7 +998,7 @@ in {
             }).neovim;
           maximalPackage =
             (neovimConfiguration {
-              inherit pkgs;
+              pkgs = nixpkgs-nvf-working;
               modules = [
                 nvfMaximalFixes
                 (import "${inputs.nvf}/configuration.nix" true)

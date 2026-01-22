@@ -8,6 +8,7 @@
     # nixkpgs-next.url = "";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
+    nixpkgs-nvf-working.url = "github:NixOS/nixpkgs/cad22e7d996aea55ecab064e84834289143e44a0"; 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     secrets = {
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
@@ -57,9 +58,9 @@
       };
     };
     nvf = {
-      url = "github:NotAShelf/nvf/v0.8";
+      url = "github:NotAShelf/nvf";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
+        nixpkgs.follows = "nixpkgs-nvf-working";
         flake-compat.follows = "flake-compat";
       };
     };

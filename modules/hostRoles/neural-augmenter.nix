@@ -55,7 +55,6 @@ in {
         enable = true;
         package = lib.mkForce pkgs.kdePackages.kdeconnect-kde;
       };
-      adb.enable = true;
       ausweisapp = {
         enable = true;
         openFirewall = true;
