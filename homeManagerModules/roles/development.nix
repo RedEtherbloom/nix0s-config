@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   osConfig,
   pkgs,
@@ -181,6 +182,7 @@ in {
           ++ lib.optionals cfg.git [
             git
             git-lfs
+            git-xet
             git-filter-repo
           ]
           ++ lib.optionals cfg.mcu [
