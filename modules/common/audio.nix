@@ -77,22 +77,15 @@
         #     "log.level" = "I";
         #   };
         # };
-        "bose-qc35" = {
+        "no-headset-autoswitch" = {
           "monitor.bluez.rules" = [
             {
               matches = [
-                {
-                  # Match any bluetooth device with ids equal to that of a WH-1000XM3
-                  "device.name" = "~bluez_card.*";
-                  "device.product.id" = "0x4020";
-                  # Hope this won't match our bluetooth adapter
-                  "device.vendor.id" = "bluetooth:009e";
-                }
+                {"node.name" = "~bluez_output.*";}
+                {"node.name" = "~bluez_input.*";}
               ];
               actions = {
                 update-props = {
-                  # Set quality to high quality instead of the default of auto
-                  "bluez5.a2dp.ldac.quality" = "hq";
                   "bluetooth.autoswitch-to-headset-profile" = "false";
                   # Share volume with headset
                   "bluez5.enable-hw-volume" = true;
