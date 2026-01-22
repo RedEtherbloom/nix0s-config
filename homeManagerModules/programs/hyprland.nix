@@ -334,9 +334,9 @@ in {
             ++ [
               "SUPER,Return,exec,kitty"
               # TODO: Needs own implementation. Maybe a rendered version of this file?
-              "SUPER,K,exec,list-keybinds"
-              "SUPER,Y,exec,rofi -matching fuzzy -combi-modi 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
-              "SUPER SHIFT,Return,exec,rofi -matching fuzzy -combi-modi 'window,drun,ssh' -modes combi,window,drun,ssh -show combi"
+              # "SUPER,K,exec,list-keybinds"
+              "SUPER,Y,exec,rofi -matching fuzzy -combi-modi 'window,drun,run,ssh' -modes combi,window,drun,run,ssh -show combi"
+              "SUPER SHIFT,Return,exec,rofi -matching fuzzy -combi-modi 'window,drun,run,ssh' -modes combi,window,drun,run,ssh -show combi"
               "SUPER,TAB,exec,rofi -matching fuzzy -modes window -show window"
               "SUPER SHIFT,TAB,exec,rofi -matching fuzzy -modes window -filter \"$(${getActiveWindowClass}) \" -window-match-fields 'class,title' -show window"
               "SUPER, B, exec, rofi-bluetooth"
@@ -436,7 +436,8 @@ in {
               # Submaps
               "SUPER, M, submap, player"
               "SUPER CONTROL, L, submap, neovim"
-              "SUPER CONTROL, S, submap, hryprctl-layout"
+              "SUPER CONTROL, S, submap, hyprctl-layout"
+              "SUPER CONTROL, G, submap, hyprctl-groups"
 
               "SUPER Control, Space, exec, killall -SIGUSR1 .waybar-wrapped, Toggle waybar"
             ]
@@ -568,6 +569,17 @@ in {
             ", escape, submap, reset"
           ];
         };
+        # Map to autoexit the map again
+        neovim.settings = {
+          bind = [
+            ", 1, exec, neovide"
+            ", 2, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim"
+            ", 3, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.frankenPackage}/bin/nvim"
+            ", 4, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim"
+            ", escape, submap, reset"
+          ];
+        };
+        # TODO: Replace hyprctl with correct dispatchers
         hyprctl-layout.settings = {
           binde = [
             ", d, exec, hyprctl dispatch layoutmsg setlayout dwindle"
@@ -578,13 +590,16 @@ in {
             ", escape, submap, reset"
           ];
         };
-        # Map to autoexit the map again
-        neovim.settings = {
+        hyprctl-groups.settings = {
           bind = [
-            ", 1, exec, neovide"
-            ", 2, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim"
-            ", 3, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.frankenPackage}/bin/nvim"
-            ", 4, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim"
+            ", SPACE, exec, hyprctl dispatch togglegroup"
+            # TODO:Do the normal focus keys also work?
+            ", J, exec, hyprctl dispatch changegroupactive b"
+            ", K, exec, hyprctl dispatch changegroupactive f"
+            ", escape, submap, reset"
+          ];
+        };
+          bind = [
             ", escape, submap, reset"
           ];
         };
