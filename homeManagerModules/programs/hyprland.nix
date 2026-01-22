@@ -316,7 +316,7 @@ in {
             # TODO: Work mode shortcut with: Work firefox, youtube music, obsidian
             # Could be done via e.g. tags
             ''SUPER, N, exec, ${focusOrStart "class" "obsidian" "obsidian"}''
-            "SUPER_SHIFT, N, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.frankenPackage}/bin/nvim"
+            "SUPER_SHIFT, N, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim"
           ]
           ++ (
             builtins.concatLists (
