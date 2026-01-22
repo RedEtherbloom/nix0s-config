@@ -683,6 +683,10 @@ in {
           };
         };
       };
+      hyprpaper = {
+        enable = true;
+        settings.splash = false;
+      };
     };
 
     # TODO: New wallpaper
@@ -770,7 +774,6 @@ in {
     # TODO: Separate bar for work workspace
     programs.waybar = {
       enable = true;
-      # style = "@import url(\"${inputs.mechabar}/style.css\");";
       style = "@import url(\"${self}/dotfiles/waybar/style.css\");";
       settings.mainBar = {
         position = "top";
