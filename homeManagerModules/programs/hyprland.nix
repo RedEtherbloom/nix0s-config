@@ -438,6 +438,7 @@ in {
               "SUPER CONTROL, L, submap, neovim"
               "SUPER CONTROL, S, submap, hyprctl-layout"
               "SUPER CONTROL, G, submap, hyprctl-groups"
+              "SUPER SHIFT, SEMICOLON, submap, neovimnt"
 
               "SUPER Control, Space, exec, killall -SIGUSR1 .waybar-wrapped, Toggle waybar"
             ]
@@ -599,6 +600,8 @@ in {
             ", escape, submap, reset"
           ];
         };
+        # Neovimn't bindings, aka trying to replicate some vim-escque commands
+        neovimnt.settings = {
           bind = [
             ", escape, submap, reset"
           ];
