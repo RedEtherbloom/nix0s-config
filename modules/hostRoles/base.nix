@@ -2,22 +2,24 @@
   config,
   lib,
   secrets,
+  pkgs,
   ...
 }:
-with lib; let
+let
   cfg = config.myOptions.hostRoles.base;
-in {
+in
+{
   imports = [
     ../binary-cache
   ];
 
-  options.myOptions.hostRoles.base.enable = mkOption {
+  options.myOptions.hostRoles.base.enable = lib.mkOption {
     description = "The base role required by pretty much all hosts";
-    type = with types; bool;
+    type = lib.types.bool;
     default = true;
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     myOptions.utilities.enable = lib.mkDefault true;
     security.pki.certificateFiles = [
       "${secrets}/secrets/root_ca/root_ca.crt"
@@ -42,5 +44,7 @@ in {
       "/share/xdg-desktop-portal"
       "/share/applications"
     ];
+
+    stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-storm.yaml";
   };
 }
