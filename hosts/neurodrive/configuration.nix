@@ -178,22 +178,13 @@
       };
     };
     ollama = {
-      enable = true;
       package = pkgs.ollama-cuda;
       host = "0.0.0.0";
       openFirewall = true;
-      environmentVariables = {
-        # Fix CORS errors
-        OLLAMA_ORIGINS = "*";
-      };
     };
     nextjs-ollama-llm-ui = {
-      enable = true;
       # May need to set CORS in ollama variables for VPN to work
       hostname = "${config.networking.ownWireguard.hosts.neurodrive.mainIP}";
-      # Reasonably close to ollama
-      port = 8154;
-      # May have to set ollamURL to a VPN url
     };
     mosquitto = {
       enable = true;

@@ -98,6 +98,19 @@ in {
         theme = "sddm-astronaut-theme";
         package = lib.mkForce pkgs.sddm-fallback-patched;
         extraPackages = [pkgs.kdePackages.qtmultimedia];
+      ollama = {
+        enable = true;
+        # Fix CORS errors
+        environmentVariables.OLLAMA_ORIGINS = "*";
+        loadModels = [
+          "qwen3:1.7b"
+          "qwen3:4b"
+        ];
+      };
+      nextjs-ollama-llm-ui = {
+        enable = true;
+        # Reasonably close to ollama
+        port = 8154;
       };
     };
 
