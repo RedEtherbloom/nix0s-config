@@ -17,7 +17,9 @@
           monitorLine: "hyprctl keyword ${lib.replaceStrings ["="] [" "] monitorLine}"
         )
       )
-    }";
+    }" 
+    # Remove duplicated waybars
+    + "; sleep 1; ${pkgs.systemd}/bin/systemctl restart --user waybar.service";
     commandLine =
       if config.myOptions.roles.hyprland.displayConfigurations != null
       then
