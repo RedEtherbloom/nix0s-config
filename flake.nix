@@ -114,6 +114,10 @@
       url = "github:catppuccin/wlogout";
       flake = false;
     };
+    pyproject-nix = {
+      url = "github:pyproject-nix/pyproject.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

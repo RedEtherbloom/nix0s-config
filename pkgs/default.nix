@@ -225,4 +225,70 @@
       );
     }
   );
+
+  flathunter-image = let 
+    src = final.fetchFromGitHub {
+        owner = "flathunters";
+        repo = "flathunter";
+        rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
+        hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
+    };
+    requirements_txt = final.lib.debug.traceValSeq final.runCommand "flathunter-requirements.txt" {} ''
+      mkdir home
+      export HOME=$(pwd)/home
+      cd ${src}
+      ${final.pipenv}/bin/pipenv requirements > $out
+    '';
+    project = inputs.pyproject-nix.lib.project.loadRequirementsTxt { requirements = (builtins.readFile "${requirements_txt}"); projectRoot = src;};
+    python = final.python313;
+  in final.dockerTools.buildImage {
+    name = "flathunter";
+    tag = "latest";
+    copyToRoot = final.buildEnv {
+      name = "image-root";
+      pathsToLink = [
+"/bin"
+      ];
+      paths = with final; [
+        undetected-chromedriver
+        coreutils
+          (python.withPackages (project.renderers.withPackages { inherit python;}))
+      ];
+    };
+  };
+
+  flathunter-docker-image = final.stdenv.mkDerivation {
+    name = "flathunter-docker-image";
+    src = final.fetchFromGitHub {
+        owner = "flathunters";
+        repo = "flathunter";
+        rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
+        hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
+    };
+    
+    nativeBuildInputs = with final; [
+      podman
+      openssh
+    ];
+
+    buildPhase = ''
+      runHook preBuild
+      # Docker build fails due to no home directory
+      mkdir home
+      export HOME=$(pwd)/home
+
+      ls .
+      pwd
+      podman machine init
+      podman machine start
+      podman --log-level trace build --tag flathunter -f $src/Dockerfile .
+      runHook postBuild
+    '';
+
+    installPhase = ''
+      runHook preInstall
+      cp $src/flathunter.tar $out
+      runHook postInstall
+    '';
+  };
 }

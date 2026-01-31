@@ -1094,6 +1094,26 @@
         "type": "github"
       }
     },
+    "pyproject-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769116518,
+        "narHash": "sha256-M+etHAj3oI9zr+Cpj5u2kMAddvxcJCmnWRtH/SklYlY=",
+        "owner": "pyproject-nix",
+        "repo": "pyproject.nix",
+        "rev": "ab521eddafb936498f18c86d83e1774a53b1cb8a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pyproject-nix",
+        "repo": "pyproject.nix",
+        "type": "github"
+      }
+    },
     "rofi-home-assistant": {
       "flake": false,
       "locked": {
@@ -1135,6 +1155,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "nvf": "nvf",
         "plasma-manager": "plasma-manager",
+        "pyproject-nix": "pyproject-nix",
         "rofi-home-assistant": "rofi-home-assistant",
         "secrets": "secrets",
         "sergv-nixos-config": "sergv-nixos-config",
