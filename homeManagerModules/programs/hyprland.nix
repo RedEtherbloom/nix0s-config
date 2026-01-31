@@ -457,23 +457,18 @@ in {
         ];
         windowrule =
           [
-            #"no_blur on, xwayland:1" # Helps prevent odd borders/shadows for xwayland apps
-            # downside it can impact other xwayland apps
-            # This rule is a template for a more targeted approach
-            "no_blur on, match:class ^(\bresolve\b)$, match:xwayland on" # Window rule for just resolve
             "tag +file-manager, match:class ^([Tt]hunar|org.gnome.Nautilus|[Pp]cmanfm-qt|[Dd]olphin|[Yy]azi)$"
             "tag +terminal, match:class ${terminalClassRegex}"
-            "tag +browser, match:class ^(Brave-browser(-beta|-dev|-unstable)?)$"
             "tag +browser, match:class ^([Ff]irefox|org.mozilla.firefox|[Ff]irefox-esr)$"
             "tag +browser, match:class ^([Gg]oogle-chrome(-beta|-dev|-unstable)?)$"
-            "tag +browser, match:class ^([Tt]horium-browser|[Cc]achy-browser)$"
             "tag +projects, match:class ^(codium|codium-url-handler|VSCodium)$"
             "tag +projects, match:class ^(VSCode|code-url-handler)$"
+            "tag +projects, match:class ^(neovide)$"
+            "tag +projects, match:class ${terminalClassRegex}, match:title ^(nvim|tmux)$"
             "tag +social, match:class ^([Dd]iscord|[Ww]ebCord|[Vv]esktop)$"
             "tag +social, match:class ^([Ff]erdium)$"
             "tag +social, match:class ^([Ww]hatsapp-for-linux)$"
             "tag +social, match:class ^(org.telegram.desktop|io.github.tdesktop_x64.TDesktop)$"
-            "tag +social, match:class ^(teams-for-linux)$"
             "tag +games, match:class ^(gamescope)$"
             "tag +games, match:class ^(steam_app_\d+)$"
             "tag +gamestore, match:class ^([Ss]team)$"
@@ -481,7 +476,6 @@ in {
             "tag +gamestore, match:class ^(com.heroicgameslauncher.hgl)$"
             "tag +settings, match:class ^(gnome-disks|wihotspot(-gui)?)$"
             "tag +settings, match:class ^([Rr]ofi)$"
-            "tag +settings, match:class ^(file-roller|org.gnome.FileRoller)$"
             "tag +settings, match:class ^(nm-applet|nm-connection-editor|blueman-manager)$"
             "tag +settings, match:class ^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol)$"
             "tag +settings, match:class ^(nwg-look|qt5ct|qt6ct|[Yy]ad)$"
@@ -510,18 +504,18 @@ in {
             "float on, match:initial_title (Open Files)"
             "float on, match:initial_title (wants to save)"
             "float on, match:initial_title Edit Item, match:initial_class thunderbird"
-            "size 70% 60%, match:initial_title (Open Files)"
-            "size 70% 60%, match:initial_title (Add Folder to Workspace)"
-            "size 70% 70%, match:tag settings*"
-            "size 60% 70%, match:class ^([Ff]erdium)$"
-            "opacity 1.0 1.0, match:tag browser*"
-            "opacity 0.9 0.8, match:tag projects*"
-            "opacity 0.94 0.86, match:tag im*"
-            "opacity 0.9 0.8, match:tag file-manager*"
-            "opacity 0.8 0.7, match:tag terminal*"
-            "opacity 0.8 0.7, match:tag settings*"
+            "size 80% 70%, match:initial_title (Open Files)"
+            "size 80% 70%, match:initial_title (Add Folder to Workspace)"
+            "size 80% 80%, match:tag settings*"
+            "size 70% 80%, match:class ^([Ff]erdium)$"
+            "opacity 0.95 0.7, match:tag browser*"
+            "opacity 0.9 0.7, match:tag projects*"
+            "opacity 0.94 0.7, match:tag im*"
+            "opacity 0.9 0.7, match:tag file-manager*"
+            "opacity 0.9 0.7, match:tag terminal*"
+            "opacity 0.9 0.7, match:tag settings*"
             "opacity 0.8 0.7, match:class ^(gedit|org.gnome.TextEditor|mousepad)$"
-            "opacity 0.9 0.8, match:class ^(seahorse)$ # gnome-keyring gui"
+            "opacity 0.9 0.7, match:class ^(seahorse)$ # gnome-keyring gui"
             "opacity 0.95 0.75, match:title ^(Picture-in-Picture)$"
             "pin on, match:title ^(Picture-in-Picture)$"
             "keep_aspect_ratio on, match:title ^(Picture-in-Picture)$"
@@ -534,8 +528,11 @@ in {
             "max_size 1 1, match:class ^(xwaylandvideobridge)$"
             "no_blur on, match:class ^(xwaylandvideobridge)$"
             "no_focus on, match:class ^(xwaylandvideobridge)$"
+            #"no_blur on, xwayland:1" # Helps prevent odd borders/shadows for xwayland apps
+            # downside it can impact other xwayland apps
+            # This rule is a template for a more targeted approach
+            "no_blur on, match:class ^(\bresolve\b)$, match:xwayland on" # Window rule for just resolve
           ]
-          # Own
           ++ [
             # TODO: All float, allow resize and maybe use a scrolling layout
             "workspace special:social, match:tag social"

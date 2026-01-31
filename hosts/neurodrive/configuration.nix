@@ -110,9 +110,7 @@
     NetworkManager-wait-online.enable = lib.mkForce false;
   };
   # Networking
-  networking = let
-    genConsecutivePorts = start: count: (lib.lists.range start count);
-  in {
+  networking = {
     hostName = "neurodrive";
     networkmanager.enable = true;
     interfaces."enp0s25".wakeOnLan.enable = true;
@@ -120,15 +118,12 @@
     firewall = {
       allowedTCPPorts =
         [
-          # Feishin remote control port
-          4333
-          # Pulseaudio Network Sharing. Probably only needed for publish
-          4713
-          # Home Assistant
-          8123
+          4333 # Feishin remote control port
+          4713 # Pulseaudio Network Sharing. Probably only needed for publish
+          8123 # Home Assistant
+          10222 # Taskwarrior
+          27062 # SteamVR
           (lib.mkIf config.myOptions.roles.ssdp.enable 40000)
-          # SteamVR
-          27062
           config.services.paperless.port
           (lib.strings.toInt config.services.restic.server.listenAddress)
           config.services.tabby.port
@@ -136,9 +131,8 @@
         ]
         ++ (lib.lists.concatMap (el: [el.port]) config.services.mosquitto.listeners);
       allowedUDPPorts = [
-        # SteamVR
-        9944
-        27062
+        9944 # SteamVR
+        27062 # SteamVR
       ];
     };
     ownWireguard = {

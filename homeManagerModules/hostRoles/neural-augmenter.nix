@@ -75,114 +75,101 @@ in {
 
     home = {
       packages =
-        (with pkgs; [
-          tor-browser
-          bitwarden-desktop
-          bitwarden-cli
+        (with pkgs;
+          [
+            tor-browser
+            bitwarden-desktop
+            bitwarden-cli
+            restic
+            autorestic
 
-          krita
+            krita
 
-          # KDE info packages
-          clinfo
-          mesa-demos
-          vulkan-tools
-          wayland-utils
-          pciutils
-          aha
-          # Monitor brightness control
-          ddcutil
-          usbutils
+            # KDE info packages
+            clinfo
+            mesa-demos
+            vulkan-tools
+            wayland-utils
+            pciutils
+            aha
+            ddcutil
+            usbutils
 
-          # TODO: Move to restic module
-          restic
-          autorestic
+            ffmpeg-full
+            gst_all_1.gst-plugins-good
+            gst_all_1.gst-plugins-bad
+            handbrake
+            imagemagick
+            yt-dlp
 
-          ffmpeg-full
-          gst_all_1.gst-plugins-good
-          gst_all_1.gst-plugins-bad
-          handbrake
-          imagemagick
-          yt-dlp
+            vopono
+            mullvad-torrent
+            vopono-torrent
+            tailscale
+            # Certificate creation
+            xca
+            dumbpipe
 
-          tailscale
-          # Certificate creation
-          xca
+            calibre
+            speedread
 
-          # Speedreading
-          speedread
+            scrcpy
+            android-tools
 
-          scrcpy
-          dumbpipe
+            podman
+            dive
+            podman-tui
+            podman-compose
+            docker-compose
+            distrobox
 
-          # mpd players to compare
-          cantata
-          plattenalbum
+            sonic-pi
+            reaper
+            # mpd players to compare
+            cantata
+            plattenalbum
+            # Subsonic clients
+            feishin
+            aonsoku
 
-          podman
-          dive
-          podman-tui
-          podman-compose
-          docker-compose
-          distrobox
+            # TODO: Evaluate. If useful move to dev tools.
+            nix-search-tv
 
-          # Music production
-          sonic-pi
-          # FLStudio esque software
-          reaper
-          # Broken as of: 13.10.25
-          # reaper-sws-extension
-          # bitwig-studio5
-          # yabridge
-          # yabridgectl
+            systemctl-tui
 
-          vopono
-          mullvad-torrent
-          vopono-torrent
+            # Debugging render scenes for Minecraft
+            renderdoc
 
-          # TODO: Evaluate. If useful move to dev tools.
-          nix-search-tv
+            # Banking
+            hledger
+            hledger-ui
+            aqbanking
 
-          systemctl-tui
+            wivrn
+            wlx-overlay-s
 
-          # Subsonic clients
-          feishin
-          aonsoku
+            # dbus debugging
+            bustle
+            d-spy
 
-          # Debugging render scenes for Minecraft
-          renderdoc
+            easyeffects
 
-          # Banking
-          hledger
-          hledger-ui
-          aqbanking
-
-          calibre
-
-          # KDE utilites
-          kdePackages.ark
-          kdePackages.gwenview
-          kdePackages.okular
-          kdePackages.kate
-          kdePackages.ktexteditor
-          kdePackages.dolphin
-          kdePackages.dolphin-plugins
-          kdePackages.baloo-widgets
-          kdePackages.ffmpegthumbs
-          kdePackages.kcharselect
-
-          # Gnome utilites
-          nautilus
-
-          wivrn
-          wlx-overlay-s
-
-          # dbus debugging
-          bustle
-          d-spy
-
-          android-tools
-          easyeffects
-        ])
+            qalculate-qt
+            # gnome-calculator
+            nautilus
+          ]
+          ++ (with pkgs.kdePackages; [
+            ark
+            gwenview
+            okular
+            kate
+            ktexteditor
+            dolphin
+            dolphin-plugins
+            baloo-widgets
+            ffmpegthumbs
+            kcharselect
+          ]))
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
           with pkgs; [
             yubioath-flutter
