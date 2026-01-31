@@ -828,11 +828,17 @@ in {
         #   # TODO: How to separate into e.g. work and private?
         # };
         "hyprland/window" = {
-          # format = "{icon} {title}";
-          max-length = 60;
-          separate-outputs = false;
-          # TODO: Strip leading parenthesis(e.g. youtube notifications)
-          # rewrite = { };
+          icon = true;
+          max-length = 80;
+          separate-outputs = true;
+          # Don't work
+          rewrite = {
+            "(\(\d+\))(.*?YouTube.*?)" = "\2"; # Remove notification number from YouTube
+            "Telegram (\(\d+\))" = "Telegram";
+            "(\(\d+\)) (Discord.*)" = "\2";
+            "Signal (\(\d+\))" = "Signal";
+            "nheko (\(\d+\))" = "nheko";
+          };
         };
         "backlight" = rec {
           interval = 2;
@@ -848,8 +854,16 @@ in {
           ];
         };
         "tray" = {
-          spacing = 8;
-          icon-size = 24;
+          spacing = 4;
+          icon-size = 20;
+          icons = {
+            # TODO: Maybe turn monochrome or graysale with imagemagick
+            # Remove notification badges
+            "signal desktop" = "${config.home.homeDirectory}/.nix-profile/share/icons/hicolor/32x32/apps/signal-desktop.png";
+            "TelegramDesktop" = "${config.home.homeDirectory}/.nix-profile/share/icons/hicolor/32x32/apps/org.telegram.desktop.png";
+            "nheko" = "${config.home.homeDirectory}/.nix-profile/share/icons/hicolor/32x32/apps/nheko.png";
+            # TODO: Vesktop
+          };
         };
         "power-profiles-daemon" = {
           dynamic-len = 30;
@@ -906,7 +920,7 @@ in {
       };
       systemd = {
         enable = true;
-        enableDebug = false;
+        enableDebug = true;
         enableInspect = false;
         target = "hyprland-session.target";
       };
@@ -981,7 +995,7 @@ in {
 
       rofi-home-assistant
       rofi-tag-switcher
-    ];
+     ] ++ (lib.attrsets.mapAttrsToList (_: script: script) layoutScripts);
 
     xdg.portal = {
       enable = lib.mkForce true;
