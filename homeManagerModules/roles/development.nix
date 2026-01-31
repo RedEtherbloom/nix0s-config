@@ -231,7 +231,7 @@ in {
         };
         home.packages = with pkgs; [
           lazyjj
-          jj-fzf
+          # jj-fzf
         ];
       })
       (lib.mkIf cfg.java {

@@ -137,8 +137,7 @@ in {
 
             systemctl-tui
 
-            # Debugging render scenes for Minecraft
-            renderdoc
+            renderdoc # Debugging render scenes for Minecraft
 
             # Banking
             hledger
@@ -146,7 +145,7 @@ in {
             aqbanking
 
             wivrn
-            wlx-overlay-s
+            wayvr
 
             # dbus debugging
             bustle
