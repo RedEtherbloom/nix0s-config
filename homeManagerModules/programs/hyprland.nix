@@ -759,6 +759,13 @@ in {
       rofi.enable = false;
       waybar.enable = false;
       hyprlock.enable = false;
+      hyprpaper.image.override = let
+        blurred_wallpaper = pkgs.runCommand "blurred-wallpaper.png" {} ''
+          echo "${config.stylix.image}"
+          echo "$out"
+          ${pkgs.imagemagick}/bin/magick "${config.stylix.image}" -channel RGBA -blur 0x16 "$out"
+        '';
+      in "${blurred_wallpaper}";
     };
     # TODO: Separate bar for work workspace
     programs.waybar = {
