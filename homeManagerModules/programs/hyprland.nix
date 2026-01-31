@@ -9,28 +9,25 @@
   ...
 }: let
   cfg = config.myOptions.roles.hyprland;
-  # Concat the monitor lines into a single hyperctl command
-  rofiDisplayLayout = let
-    buildMonitorCommandEntry = attrName: displayConfiguration: "${displayConfiguration.name or attrName}: ${
-      lib.strings.concatStringsSep "; " (
-        lib.lists.forEach displayConfiguration.monitors (
-          monitorLine: "hyprctl keyword ${lib.replaceStrings ["="] [" "] monitorLine}"
-        )
-      )
-    }" 
-    # Remove duplicated waybars
-    + "; sleep 1; ${pkgs.systemd}/bin/systemctl restart --user waybar.service";
-    commandLine =
-      if config.myOptions.roles.hyprland.displayConfigurations != null
-      then
-        (lib.strings.concatLines (
-          lib.attrsets.mapAttrsToList buildMonitorCommandEntry config.myOptions.roles.hyprland.displayConfigurations
-        ))
-      else "No defined layouts:exit";
-  in
-    pkgs.writeShellScriptBin "rofiDisplayLayoutSelector.sh" ''
-      set -x
-      echo -n "${commandLine}" | ${lib.getExe config.programs.rofi.package} -dmenu | ${lib.getExe pkgs.gnused} 's/^[^:]*: //' | ${lib.getExe pkgs.bash}
+    normalizedName = name: builtins.readFile (pkgs.runCommand "normalizedName" {} ''
+      echo -n "${name}" | ${pkgs.gnused}/bin/sed -E 's/[^a-zA-Z0-9-]/_/g' - | ${pkgs.coreutils}/bin/tr -d '\n' > $out
+    '');
+    genMonitorLayoutScript = layout: pkgs.writeShellScriptBin "hyprland-layout-${normalizedName layout.name}.sh" ''
+    set -e
+
+    ${lib.strings.concatLines (lib.lists.forEach layout.monitors (monitorLine: "hyprctl keyword ${lib.replaceStrings ["="] [" "] monitorLine}"))}
+
+      # Remove duplicated waybars
+sleep 1
+    ${pkgs.systemd}/bin/systemctl restart --user waybar.service
+    '' ;
+    layoutScripts = lib.attrsets.mapAttrs' (_: layout: (lib.attrsets.nameValuePair "${normalizedName layout.name}" (genMonitorLayoutScript layout))) config.myOptions.roles.hyprland.displayConfigurations;
+  rofiDisplayLayout = let layouts = lib.attrsets.mapAttrsToList (name: script: "${name}: ${lib.getExe script}") layoutScripts; in
+    pkgs.writeShellScriptBin "rofiLayoutSelector.sh" ''
+      set -e
+
+      SELECTED="$(echo -n "${lib.strings.concatLines layouts}" | ${lib.getExe config.programs.rofi.package} -dmenu | ${lib.getExe pkgs.gnused} 's/^[^:]*: //')"
+      eval "$SELECTED"
     '';
   terminalClassRegex = "^(com.mitchellh.ghostty|org.wezfurlong.wezterm|Alacritty|kitty|kitty-dropterm)$";
   # TODO: Write variation that waits for program to start(via socket) and then focuses or moves it to current ws
@@ -421,6 +418,7 @@ in {
               "ALT,Tab,bringactivetotop"
 
               "SUPER, semicolon, exec, ${hyprctrlNextLayout}"
+              "SUPER SHIFT, C, exec, ${lib.getExe rofiDisplayLayout}"
 
               ",XF86AudioRaiseVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
               ",XF86AudioLowerVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
@@ -450,11 +448,6 @@ in {
           "SUPER, mouse:273, resizewindow"
         ];
         # Shortcuts that also function on lockscreen
-        bindl = [
-          ",switch:Lid Switch, exec, hyprlock"
-          # Temporary display management
-          "SUPER SHIFT, D, exec, ${lib.getExe rofiDisplayLayout}"
-        ];
         windowrule =
           [
             "tag +file-manager, match:class ^([Tt]hunar|org.gnome.Nautilus|[Pp]cmanfm-qt|[Dd]olphin|[Yy]azi)$"
@@ -612,10 +605,8 @@ in {
           general = {
             ignore_dbus_inhibit = false;
             lock_cmd = "pidof hyprlock || hyprlock";
-            before_sleep_cmd = "loginctl lock-session";
+            before_sleep_cmd = "${lib.getExe pkgs.playerctl} pause; loginctl lock-session";
             after_sleep_cmd = "hyprctl dispatch dpms on";
-            # Use default value again, dpms has gotten hard to use
-            # inhibit_sleep = 3;
           };
           listener = [
             {

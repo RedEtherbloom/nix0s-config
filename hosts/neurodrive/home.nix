@@ -149,7 +149,7 @@ in
           tv = {
             name = "It's TV-Time!";
             monitors = [
-              "monitor=desc:LG Electronics LG TV,1920x1080@60.00000,00x0,1.00000000,transform,0,vrr,0"
+              "monitor=desc:LG Electronics LG TV,1920x1080@60.00000,0x0,1.00000000,transform,0,vrr,0"
               "monitor=desc:BNQ BenQ xl2411t,disable"
               "monitor=desc:AOC 2369M,disable"
             ];
@@ -157,25 +157,11 @@ in
         };
         systemd.user = {
           services."morning-layout" =
-            let
-              morning-layout = pkgs.writeShellApplication {
-                name = "morning-layout.sh";
-                runtimeInputs = with pkgs; [
-                  hyprland
-                  coreutils
-                ];
-                text = ''
-                  hyprctl keyword monitor desc:BNQ BenQ xl2411t,1920x1080@60.00000,1920x0,1.00000000,transform,0,vrr,0
-                  hyprctl keyword monitor desc:AOC 2369M,1920x1080@60.00000,0x0,1.00000000,transform,0,vrr,0
-                  hyprctl keyword monitor desc:LG Electronics LG TV,disable
-                '';
-              };
-            in
             {
               Unit.Description = "Switch back to a defined easy layout in the morning, for a blank slate.";
               Service = {
                 Type = "oneshot";
-                ExecStart = "${lib.getExe morning-layout}";
+                ExecStart = "${config.home.homeDirectory}/.nix-profile/bin/hyprland-layout-Dual.sh";
               };
             };
           timers."morning-layout" = {
@@ -188,6 +174,10 @@ in
             Install.WantedBy = [ "timers.target" ];
           };
         };
+        # Bind with description on lock screen.
+wayland.windowManager.hyprland.settings.binddl = [
+          "SUPER SHIFT, R, Reset layout to Dual even when locked, exec, hyprland-layout-Dual.sh" # Intent: 'Reset' combination to bring Hyprland(just monitors for now) back to a good state.
+        ];
       }
     )
     (define-kscreen-layout "benq"
