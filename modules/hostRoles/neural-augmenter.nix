@@ -31,7 +31,10 @@ in {
         vtubing.enable = true;
       };
     };
-    security.ownAdditional.yubikey = true;
+    security = {
+      pam.services.login.enableGnomeKeyring = true;
+      ownAdditional.yubikey = true;
+    };
 
     # Attempt to keep desktop devices more responsive during e.g. builds or optimization, at expense of longer build times
     nix = {
