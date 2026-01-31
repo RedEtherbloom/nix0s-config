@@ -98,6 +98,7 @@ in {
         theme = "sddm-astronaut-theme";
         package = lib.mkForce pkgs.sddm-fallback-patched;
         extraPackages = [pkgs.kdePackages.qtmultimedia];
+      };
       ollama = {
         enable = true;
         # Fix CORS errors
