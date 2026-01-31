@@ -693,6 +693,7 @@ in {
         (pkgs.replaceVars ../../dotfiles/hypr/hyprlock.conf {
           BACKGROUND_IMAGE = config.stylix.image;
           FONT = "CommitMono Nerd Font Mono";
+          SYMBOL_SCRIPT = ../../dotfiles/hypr/gen_lock_symbols.py;
         })
       ];
     };

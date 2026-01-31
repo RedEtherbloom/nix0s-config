@@ -168,6 +168,7 @@ in {
             dolphin-plugins
             baloo-widgets
             ffmpegthumbs
+            # Font selector
             kcharselect
           ]))
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
