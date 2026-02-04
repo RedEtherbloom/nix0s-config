@@ -501,7 +501,8 @@ in {
             "size 80% 70%, match:initial_title (Add Folder to Workspace)"
             "size 80% 80%, match:tag settings*"
             "size 70% 80%, match:class ^([Ff]erdium)$"
-            "opacity 0.95 0.7, match:tag browser*"
+            # TODO: Needs a rule to not match playing videos
+            # "opacity 0.95 0.7, match:tag browser*"
             "opacity 0.9 0.7, match:tag projects*"
             "opacity 0.94 0.7, match:tag im*"
             "opacity 0.9 0.7, match:tag file-manager*"
