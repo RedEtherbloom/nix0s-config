@@ -46,6 +46,8 @@
         --provider mullvad \
         --server germany \
         --protocol wireguard \
+        --allow-host-access \
+        --verbose \
         -f 8180 \
         -f 8191 \
         -f 9117 \
