@@ -83,7 +83,13 @@ in {
       samba.enable = true;
       xserver.wacom.enable = true;
       flatpak.enable = true;
-      hardware.bolt.enable = true;
+      hardware = {
+        bolt.enable = true;
+        openrgb = {
+          enable = true;
+          package = pkgs.openrgb-with-all-plugins;
+        };
+      };
       blueman.enable = true;
       # HyprDynamicMonitors dependency
       upower.enable = true;
