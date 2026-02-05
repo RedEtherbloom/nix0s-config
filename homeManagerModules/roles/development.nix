@@ -164,7 +164,7 @@ in {
           )
           # ++ lib.optionals cfg.nix self.devShells.${system}.default.buildInputs
           ++ lib.optionals cfg.electronics [
-            kicad
+            kicad-small
           ]
           ++ lib.optionals cfg.three-d-printing [
             prusa-slicer
