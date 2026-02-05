@@ -90,17 +90,15 @@ in {
     };
     displayConfigurations = lib.mkOption {
       description = "(Temporary) Switch between display configurations";
-      type = lib.types.nullOr (
-        lib.types.attrsOf (
-          lib.types.submodule {
-            options = {
-              name = lib.mkOption {type = lib.types.nullOr lib.types.str;};
-              monitors = lib.mkOption {type = lib.types.listOf lib.types.str;};
-            };
-          }
-        )
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options = {
+            name = lib.mkOption {type = lib.types.nullOr lib.types.str;};
+            monitors = lib.mkOption {type = lib.types.listOf lib.types.str;};
+          };
+        }
       );
-      default = null;
+      default = {};
     };
   };
   config = lib.mkIf cfg.enable {
