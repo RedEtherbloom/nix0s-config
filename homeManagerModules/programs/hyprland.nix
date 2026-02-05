@@ -5,7 +5,6 @@
   osConfig,
   pkgs,
   secrets,
-  self,
   ...
 }: let
   cfg = config.myOptions.roles.hyprland;
@@ -769,7 +768,7 @@ in {
     # TODO: Separate bar for work workspace
     programs.waybar = {
       enable = true;
-      style = "@import url(\"${self}/dotfiles/waybar/style.css\");";
+      style = "@import url(\"${../../dotfiles/waybar/style.css}\");";
       settings.mainBar = {
         position = "top";
         layer = "top";
