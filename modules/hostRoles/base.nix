@@ -45,6 +45,6 @@ in
       "/share/applications"
     ];
 
-    stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-storm.yaml";
+    stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
   };
 }
