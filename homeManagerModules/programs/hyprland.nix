@@ -1038,6 +1038,13 @@ in {
       key = "access_tokens/cli";
     };
 
+    home.pointerCursor = {
+      gtk.enable = true;
+      package = pkgs.lyra-cursors;
+      name = "LyraR-cursors"; # LyraQ may also be interesting
+      size = 36;
+    };
+
     #     systemd.user.services = let
     # dbus_user_services = "${config.xdg.dataHome}/dbus-1/services";
     #       kde6_blocker_unit_name = "org.kde.kded6.service";
