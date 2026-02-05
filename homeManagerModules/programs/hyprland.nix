@@ -705,15 +705,14 @@ in {
           }
           {
             label = "logout";
-            # action = "loginctl terminate-user $USER";
-            action = "hyprctl dispatch exit";
+            action = "hyprctl dispatch exit; loginctl kill-user $USER";
             text = "Logout";
             keybind = "e";
             icon = "${inputs.catppuccin-wlogout}/icons/wleave/macchiato/maroon/logout.svg";
           }
           {
             label = "hibernate";
-            action = "hyprctl dispatch exit";
+            action = "systemctl hibernate";
             text = "hibernate";
             keybind = "h";
             icon = "${inputs.catppuccin-wlogout}/icons/wleave/macchiato/maroon/hibernate.svg";
