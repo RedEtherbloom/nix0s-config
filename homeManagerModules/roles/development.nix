@@ -125,7 +125,10 @@ in {
     lib.mkMerge [
       {
         home.packages = with pkgs;
-          lib.optionals cfg.rust [
+          [
+            just
+          ]
+          ++ lib.optionals cfg.rust [
             clang
             clang-tools
             pkg-config
