@@ -1,14 +1,13 @@
 {
   config,
+  inputs,
   lib,
   secrets,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.myOptions.hostRoles.base;
-in
-{
+in {
   imports = [
     ../binary-cache
   ];
@@ -46,5 +45,6 @@ in
     ];
 
     stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+    nix.registry.nixpkgs.flake = inputs.nixpkgs;
   };
 }
