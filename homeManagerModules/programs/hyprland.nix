@@ -493,7 +493,7 @@ in {
             "float on, match:initial_title (Add Folder to Workspace)"
             "float on, match:initial_title (Open Files)"
             "float on, match:initial_title (wants to save)"
-            "float on, match:initial_title Edit Item, match:initial_class thunderbird"
+            "float off, match:initial_title Edit Item, match:initial_class thunderbird"
             "size 80% 70%, match:initial_title (Open Files)"
             "size 80% 70%, match:initial_title (Add Folder to Workspace)"
             "size 80% 80%, match:tag settings*"
@@ -682,6 +682,7 @@ in {
         (pkgs.replaceVars ../../dotfiles/hypr/hyprlock.conf {
           BACKGROUND_IMAGE = config.stylix.image;
           FONT = "CommitMono Nerd Font Mono";
+          # TODO: Reference got cleared by removing old generations. How to refer to this without performance overhead?
           SYMBOL_SCRIPT = ../../dotfiles/hypr/gen_lock_symbols.py;
         })
       ];
