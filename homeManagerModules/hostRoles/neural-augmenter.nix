@@ -176,12 +176,10 @@ in {
             yubikey-manager
           ]
         ));
-      # May not work due to https://github.com/nix-community/home-manager/issues/1011
+
       sessionVariables = {
-        # Smooth scrolling
-        MOZ_USE_XINPUT2 = "1";
-        #QT_LOGGING_RULES = "kscreenlocker.debug=true;kwin_*.debug=true;plasma*.debug=true";
-        #QT_LOGGING_RULES = "*.debug=true";
+        # MOZ_USE_XINPUT2 = "1"; # Smooth scrolling
+        # QT_LOGGING_RULES = "*.debug=true";
         PIPEWIRE_DEBUG = 2; # Print warnings and errors
       };
       extraOutputsToInstall = [
@@ -192,8 +190,7 @@ in {
     };
 
     services = {
-      # TODO: Setup options
-      syncthing.enable = true;
+      syncthing.enable = true; # TODO: Setup options
       playerctld.enable = true;
       kdeconnect = {
         enable = true;
@@ -213,12 +210,8 @@ in {
       };
       spotify-player.enable = true;
       bat.enable = true;
-      # TODO: Try out then reevaluate
-      broot.enable = true;
-      # TODO: Try out fish as comparison to zsh
-      fish = {
-        enable = true;
-      };
+      broot.enable = true; # TODO: Give a try for better comparison
+      fish.enable = true; # TODO: Try out fish as comparison to zsh
     };
 
     xdg = {
@@ -232,7 +225,6 @@ in {
         "update_interval" = "48h0m0s";
         experimental."render_docs_indexes" = {
           "nvf" = "https://notashelf.github.io/nvf/options.html";
-          "plasma_manager" = "https://nix-community.github.io/plasma-manager/options.xhtml";
         };
       };
     };

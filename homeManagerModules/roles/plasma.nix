@@ -361,6 +361,11 @@ in {
             keys = ["Meta+Y"];
             comment = "Open a reference to our current keyboard layout";
           };
+          "obsidian-pull-shortcut" = lib.mkIf (config.myOptions.obsidian.pullShortcut) {
+            command = "syncObsidianPhone";
+            key = "Meta+Shift+o";
+            comment = "Pull and rebase Obsidian vault and drop into lazygit on failure";
+          };
         };
         configFile = let
           uuid_work = "2e8abc71-743b-4183-9852-6d5e4f4d250a";

@@ -142,7 +142,6 @@
   };
 
   services = {
-    desktopManager.plasma6.enable = true;
     xserver.videoDrivers = ["nvidia"];
     avahi = {
       enable = true;

@@ -1,6 +1,13 @@
 {lib, ...}: {
   imports =
-    []
-    # I should redo this to import name.nix or name/default.nix. How though?
-    ++ (lib.flatten (lib.map (folder: lib.filesystem.listFilesRecursive folder) [./hostRoles ./programs ./roles ./services]));
+    [
+      ./roles/art.nix
+      ./roles/development.nix
+      ./roles/gamedev.nix
+      ./roles/gaming.nix
+      ./roles/nvim.nix
+      ./roles/office.nix
+      ./roles/vtubing.nix
+    ]
+    ++ (lib.flatten (lib.map (folder: lib.filesystem.listFilesRecursive folder) [./hostRoles ./programs ./services])); # TODO: Remove this for better readability
 }

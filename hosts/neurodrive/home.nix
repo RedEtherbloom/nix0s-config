@@ -6,9 +6,6 @@
   ...
 }:
 let
-  inherit (import ../../homeManagerModules/lib/plasma_lib.nix { inherit pkgs; })
-    define-kscreen-layout
-    ;
   inherit (import ../../homeManagerModules/lib/torrent_lib.nix { inherit osConfig pkgs; })
     vopono-torrent
     ;
@@ -64,7 +61,6 @@ in
         };
 
         myOptions = {
-          plasma-manager.enable = true;
           solaar = {
             enable = true;
             autostart.enable = true;
@@ -134,8 +130,6 @@ in
             ];
           };
         };
-        # 22.11.2025: Temporary until KDE issues with QT/Stylix can be resolved
-        stylix.targets.qt.enable = false;
 
         myOptions.roles.hyprland.displayConfigurations = {
           dual = {
@@ -179,38 +173,6 @@ wayland.windowManager.hyprland.settings.binddl = [
           "SUPER SHIFT, R, Reset layout to Dual even when locked, exec, hyprland-layout-Dual.sh" # Intent: 'Reset' combination to bring Hyprland(just monitors for now) back to a good state.
         ];
       }
-    )
-    (define-kscreen-layout "benq"
-      "output.DP-3.disable output.HDMI-A-1.disable output.DP-2.enable output.DP-2.rotation.normal output.DP-2.position.0,0"
-      "ctrl+shift+f1"
-    )
-    (define-kscreen-layout "dual"
-      "output.HDMI-A-1.disable output.DP-2.enable output.DP-2.position.1080,420 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.right output.DP-3.position.0,0"
-      "ctrl+shift+f2"
-    )
-    (define-kscreen-layout "aoc"
-      "output.HDMI-A-1.disable output.DP-3.enable output.DP-3.position.0,0 output.DP-3.rotation.right output.DP-2.disable"
-      "ctrl+shift+f3"
-    )
-    (define-kscreen-layout "lg"
-      "output.DP-2.disable output.DP-3.disable output.HDMI-A-1.enable output.HDMI-A-1.position.0,0"
-      "ctrl+shift+f4"
-    )
-    (define-kscreen-layout "lg-aoc"
-      "output.DP-2.disable output.HDMI-A-1.enable output.HDMI-A-1.position.1080,420 output.HDMI-A-1.priority.1 output.DP-3.enable output.DP-3.position.0,0 output.DP-3.rotation.right"
-      "ctrl+shift+f5"
-    )
-    (define-kscreen-layout "lg-benq"
-      "output.DP-2.enable output.DP-2.position.0,0 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.disable output.HDMI-A-1.enable output.HDMI-A-1.position.1920,0 output.HDMI-A-1.rotation.normal output.HDMI-A-1.priority.2"
-      "ctrl+shift+f6"
-    )
-    (define-kscreen-layout "trial"
-      "output.DP-2.enable output.DP-2.position.1080,420 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.right output.DP-3.position.0,0 output.DP-3.priority.2 output.HDMI-A-1.enable output.HDMI-A-1.position.3000,420 output.HDMI-A-1.rotation.normal output.HDMI-A-1.priority.3"
-      "ctrl+shift+f7"
-    )
-    (define-kscreen-layout "dual-both-horizontal"
-      "output.HDMI-A-1.disable output.DP-2.enable output.DP-2.position.1920,0 output.DP-2.priority.1 output.DP-2.rotation.normal output.DP-3.enable output.DP-3.rotation.normal output.DP-3.position.0,0"
-      "ctrl+shift+f8"
     )
   ];
 }

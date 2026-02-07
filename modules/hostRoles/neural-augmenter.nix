@@ -6,7 +6,7 @@
   secrets,
   ...
 }:
-with lib; let
+let
   cfg = config.myOptions.hostRoles.neural-augmenter;
 in {
   imports = [
@@ -14,9 +14,9 @@ in {
     ../binary-cache/hyprland.nix
   ];
 
-  options.myOptions.hostRoles.neural-augmenter.enable = mkEnableOption "workstation options";
+  options.myOptions.hostRoles.neural-augmenter.enable = lib.mkEnableOption "workstation options";
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     myOptions = {
       hostRoles.graphical.enable = lib.mkDefault true;
       office.enable = true;
@@ -42,7 +42,6 @@ in {
       daemonIOSchedClass = "idle";
     };
 
-    # TODO: Configure so that only e.g. grub but nothing else gets the pallet
     stylix = {
       enable = true;
       polarity = "dark";
@@ -72,15 +71,14 @@ in {
     };
 
     services = {
-      tailscale.enable = true;
+      tailscale.enable = true; # TODO: Read up on tailscale
       udev.packages = with pkgs; [
         platformio-core
         probe-rs-tools
       ];
       mullvad-vpn = {
         enable = true;
-        # GUI
-        package = pkgs.mullvad-vpn;
+        package = pkgs.mullvad-vpn; # Contains GUI
       };
       colord.enable = true;
       samba.enable = true;
@@ -94,10 +92,7 @@ in {
         };
       };
       blueman.enable = true;
-      # HyprDynamicMonitors dependency
-      upower.enable = true;
-
-      # VR experimenation
+      upower.enable = true; # HyprDynamicMonitors dependency
       wivrn = {
         enable = true;
         openFirewall = true;
@@ -113,8 +108,7 @@ in {
       };
       ollama = {
         enable = true;
-        # Fix CORS errors
-        environmentVariables.OLLAMA_ORIGINS = "*";
+        environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
         loadModels = [
           "qwen3:1.7b"
           "qwen3:4b"
@@ -122,20 +116,17 @@ in {
       };
       nextjs-ollama-llm-ui = {
         enable = true;
-        # Reasonably close to ollama
-        port = 8154;
+        port = 8154; # Reasonably close to ollama
       };
     };
 
     hardware = {
-      # Autorotation
-      sensor.iio.enable = true;
-      # May improve krita comfort
-      opentabletdriver.enable = true;
+      sensor.iio.enable = true; # Autorotation
+      opentabletdriver.enable = true; # May improve krita comfort
     };
     environment.systemPackages = with pkgs; [
       lm_sensors
-      (sddm-astronaut.override {embeddedTheme = "hyprland_kath";})
+      (sddm-astronaut.override {embeddedTheme = "black_hole";})
     ];
 
     # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
@@ -146,8 +137,7 @@ in {
       builtins.concatMap collectFlakeInputs (builtins.attrValues inputs);
 
     nixpkgs.config.permittedInsecurePackages = [
-      # Required for Nheko to work
-      "olm-3.2.16"
+      "olm-3.2.16" # Required for Nheko to work
     ];
     zramSwap.enable = true;
 
@@ -157,28 +147,24 @@ in {
         registries.search = [
           "docker.io"
           "quay.io"
-          # Google mirror
-          "mirror.gcr.io"
+          "mirror.gcr.io" # Google mirror
         ];
       };
       podman = {
-        autoPrune.enable = true;
-        dockerSocket.enable = true;
         enable = true;
-        # Create a `docker` alias for podman, to use it as a drop-in replacement
-        dockerCompat = true;
-        # Required for containers under podman-compose to be able to talk to each other.
-        defaultNetwork.settings.dns_enabled = true;
+        dockerSocket.enable = true;
+        autoPrune.enable = true;
+        dockerCompat = true; # Docker alias
+        defaultNetwork.settings.dns_enabled = true; # Required for containers under podman-compose to be able to talk to each other.
       };
       oci-containers.backend = "podman";
       waydroid.enable = true;
     };
 
     sops.secrets."registry/dockerhub/password".sopsFile = "${secrets}/secrets/services/docker.yaml";
-    # Needed for podman
     users = {
       users."inf" = {
-        autoSubUidGidRange = true;
+        autoSubUidGidRange = true; # Needed for podman
         extraGroups = [
           "plugdev"
         ];
@@ -188,7 +174,6 @@ in {
     documentation.dev.enable = true;
 
     # See: https://github.com/NixOS/nixpkgs/issues/409986
-    # environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
     environment.etc."xdg/menus/applications.menu".source = let
       applications-menu = "menu/desktop/plasma-applications.menu";
       src = pkgs.fetchFromGitHub {

@@ -217,15 +217,15 @@
 
   sddm-fallback-patched = prev.kdePackages.sddm.overrideAttrs (
     _: prevAttrs: {
-      buildCommand = (
-        prevAttrs.buildCommand
-        + ''
+      buildCommand = 
+        prevAttrs.buildCommand + ''
           ln -s $out/bin/sddm-greeter-qt6 $out/bin/sddm-greeter
         ''
-      );
+      ;
     }
   );
 
+  # WARN: BROKEN and will be removed
   flathunter-image = let 
     src = final.fetchFromGitHub {
         owner = "flathunters";
@@ -233,13 +233,13 @@
         rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
         hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
     };
-    requirements_txt = final.lib.debug.traceValSeq final.runCommand "flathunter-requirements.txt" {} ''
+    requirements_txt = final.runCommand "flathunter-requirements.txt" {} ''
       mkdir home
       export HOME=$(pwd)/home
       cd ${src}
       ${final.pipenv}/bin/pipenv requirements > $out
     '';
-    project = inputs.pyproject-nix.lib.project.loadRequirementsTxt { requirements = (builtins.readFile "${requirements_txt}"); projectRoot = src;};
+    project = inputs.pyproject-nix.lib.project.loadRequirementsTxt { requirements = builtins.readFile "${requirements_txt}"; projectRoot = src;};
     python = final.python313;
   in final.dockerTools.buildImage {
     name = "flathunter";
