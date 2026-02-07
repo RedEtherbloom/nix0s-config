@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   osConfig,
   pkgs,
@@ -190,6 +189,8 @@ in {
             # esphome
             # platformio
             esptool
+            espflash
+            probe-rs-tools
           ]
           ++ lib.optionals cfg.cursor [
             code-cursor

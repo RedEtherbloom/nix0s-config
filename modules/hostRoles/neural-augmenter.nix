@@ -73,7 +73,10 @@ in {
 
     services = {
       tailscale.enable = true;
-      udev.packages = [pkgs.platformio-core];
+      udev.packages = with pkgs; [
+        platformio-core
+        probe-rs-tools
+      ];
       mullvad-vpn = {
         enable = true;
         # GUI
@@ -173,7 +176,15 @@ in {
 
     sops.secrets."registry/dockerhub/password".sopsFile = "${secrets}/secrets/services/docker.yaml";
     # Needed for podman
-    users.users."inf".autoSubUidGidRange = true;
+    users = {
+      users."inf" = {
+        autoSubUidGidRange = true;
+        extraGroups = [
+          "plugdev"
+        ];
+      };
+      groups.plugdev = {};
+    };
     documentation.dev.enable = true;
 
     # See: https://github.com/NixOS/nixpkgs/issues/409986
