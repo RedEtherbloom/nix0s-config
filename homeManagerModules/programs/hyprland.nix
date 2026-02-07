@@ -1036,8 +1036,8 @@ in {
 
     home.pointerCursor = {
       gtk.enable = true;
-      package = pkgs.lyra-cursors;
-      name = "LyraR-cursors"; # LyraQ may also be interesting
+      package = pkgs.nightdiamond-cursors;
+      name = "NightDiamond-Red";
       size = 36;
     };
   };
