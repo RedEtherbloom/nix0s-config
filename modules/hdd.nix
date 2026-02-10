@@ -16,6 +16,6 @@
   # Taken from: https://www.reddit.com/r/NixOS/comments/751i5t/comment
   # WE really need more quiet drives
   powerManagement.powerUpCommands = with pkgs; ''
-    ${bash}/bin/bash -c '${hdparm}/bin/hdparm -S 9 -B 20 $(${util-linux}/bin/lsblk -dnp -o name,rota |${gnugrep}/bin/grep ".*\s1" |${coreutils}/bin/cut -d " " -f 1)'
+    ${bash}/bin/bash -c '${hdparm}/bin/hdparm -S 90 -B 1 $(${util-linux}/bin/lsblk -dnp -o name,rota |${gnugrep}/bin/grep ".*\s1" |${coreutils}/bin/cut -d " " -f 1)'
   '';
 }
