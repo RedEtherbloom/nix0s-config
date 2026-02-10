@@ -1030,7 +1030,7 @@ in {
     home.pointerCursor = {
       gtk.enable = true;
       package = pkgs.nightdiamond-cursors;
-      name = "NightDiamond-Red";
+      name = "NightDiamond-Blue";
       size = 36;
     };
   };
