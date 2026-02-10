@@ -532,9 +532,10 @@ in {
           wslayout = {
             default_layout = "master";
           };
-          scrolling = {
+          hyprscrolling = {
             column_width = 0.7;
             fullscreen_on_one_column = true;
+            follow_focus = true;
           };
         };
         source = [
