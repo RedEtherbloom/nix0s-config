@@ -813,16 +813,10 @@ in {
           format-muted = "󰝛";
           max-volume = "175.0";
         };
-        # "hyprland/workspaces" = {
-        #   active-only = true;
-        #   # TODO: Format with icon
-        #   workspace-taskar = {
-        #     enable = true;
-        #     # Probably optional
-        #     update-active-window = true;
-        #   };
-        #   # TODO: How to separate into e.g. work and private?
-        # };
+        "hyprland/workspaces" = {
+          show-special = true;
+          special-visible-only = true;
+        };
         "hyprland/window" = {
           icon = true;
           max-length = 80;
