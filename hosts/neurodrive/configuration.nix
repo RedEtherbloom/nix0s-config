@@ -262,6 +262,7 @@
         MusicFolder = "/mnt/cryptostorage/Music";
       };
     };
+    power-profiles-daemon.enable = true;
   };
 
   hardware = {
@@ -272,13 +273,11 @@
       settings = {
         General = {
           Experimental = true;
-          # Problems with Bose
-          ControllerMode = "bredr";
+          ControllerMode = "bredr"; # Problems with Bose
         };
       };
     };
-    # Manage logitech options via solaar
-    logitech.wireless.enable = true;
+    logitech.wireless.enable = true; # Manage logitech options via solaar
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -308,7 +307,6 @@
   virtualisation = {
     docker.daemon.settings = {
       ipv6 = true;
-      # Store containers on second harddrive to save space
       data-root = "/mnt/cryptostorage/var/lib/containers";
     };
     oci-containers = {

@@ -140,7 +140,10 @@ in {
       nssmdns6 = true;
       openFirewall = true;
     };
-    syncthing.enable = true;
+    syncthing = {
+      enable = true;
+      openDefaultPorts = true;
+    };
   };
 
   # Should probably be redone with home-manager(Clara: Learing curve, yayyy...)

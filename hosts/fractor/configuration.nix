@@ -62,13 +62,11 @@
   };
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
 
-  # Should hopefully not mess with KDE
   services = {
     avahi = {
       enable = true;
       nssmdns4 = true;
-      # Recommended against in docs
-      # nssmdns6 = true;
+      # nssmdns6 = true; # Recommended against in docs
       openFirewall = true;
     };
     # Does this have to be replaced with home-manager?
@@ -83,7 +81,15 @@
     udev.extraRules = ''
       SUBSYSTEM=="usb", ATTRS{idVendor}=="0a5c", ATTRS{idProduct}=="21e6", ATTR{authorized}="0"
     '';
-    tlp.enable = true;
+    tlp = {
+      enable = true;
+      pd.enable = true;
+      settings = {
+        CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+        CPU_SCALING_GOVERNOR_ON_AC = "performance";
+        USB_EXCLUDE_BTUSB = "1";
+      };
+    };
   };
 
   hardware = {

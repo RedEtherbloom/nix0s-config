@@ -5,8 +5,7 @@
   pkgs,
   secrets,
   ...
-}:
-let
+}: let
   cfg = config.myOptions.hostRoles.neural-augmenter;
 in {
   imports = [
@@ -184,5 +183,15 @@ in {
         sparseCheckout = ["${applications-menu}"];
       };
     in "${src}/${applications-menu}";
+
+    networking.firewall = { 
+      allowedTCPPorts = [
+        22000 # SyncThing
+      ];
+      allowedUDPPorts = [
+        21027 # SyncThing
+        22000 # SyncThing
+      ];
+    };
   };
 }

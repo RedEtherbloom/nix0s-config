@@ -807,8 +807,6 @@ in {
           format-disabled = "dis";
           format-connected = "";
           format-no-connected = "";
-          # TODO: More info on tooltip
-          # Bluetooth scanner on right click
         };
         "wireplumber" = {
           format = "󰝚 {volume}% {node_name:.8}";
