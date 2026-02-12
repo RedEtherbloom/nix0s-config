@@ -132,8 +132,7 @@ in {
             feishin
             aonsoku
 
-            # TODO: Evaluate. If useful move to dev tools.
-            nix-search-tv
+            nix-search-tv # TODO: Evaluate. If useful move to dev tools.
 
             systemctl-tui
 
@@ -156,8 +155,10 @@ in {
             easyeffects
 
             qalculate-qt
-            # gnome-calculator
+            # gnome-calculator # Broken due to gtksourceview
             nautilus
+
+            sdrpp
           ]
           ++ (with pkgs.kdePackages; [
             ark

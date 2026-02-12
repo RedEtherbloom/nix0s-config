@@ -122,6 +122,7 @@ in {
     hardware = {
       sensor.iio.enable = true; # Autorotation
       opentabletdriver.enable = true; # May improve krita comfort
+      rtl-sdr.enable = true;
     };
     environment.systemPackages = with pkgs; [
       lm_sensors
@@ -184,7 +185,7 @@ in {
       };
     in "${src}/${applications-menu}";
 
-    networking.firewall = { 
+    networking.firewall = {
       allowedTCPPorts = [
         22000 # SyncThing
       ];
