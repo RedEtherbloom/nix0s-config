@@ -142,6 +142,8 @@ in {
             # Banking
             hledger
             hledger-ui
+            hledger-web
+            hledger-fmt
             aqbanking
 
             wivrn
