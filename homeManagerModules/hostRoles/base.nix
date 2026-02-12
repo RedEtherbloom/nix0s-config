@@ -33,9 +33,9 @@ in {
     lib.mkMerge [
       {
         sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
-        # Adapted from: https://github.com/Mic92/sops-nix/issues/356#issuecomment-3701467494 
+        # Adapted from: https://github.com/Mic92/sops-nix/issues/356#issuecomment-3701467494
         # Disable gpg auto decryption as it effectively ignores an existing ssh key
-        systemd.user.services.sops-nix.Service.Environment = lib.mkForce [ "SOPS_GPG_EXEC=${pkgs.coreutils}/bin/false" ];
+        systemd.user.services.sops-nix.Service.Environment = lib.mkForce ["SOPS_GPG_EXEC=${pkgs.coreutils}/bin/false"];
 
         xdg.userDirs.createDirectories = true;
         programs.home-manager.enable = true;
@@ -46,7 +46,10 @@ in {
           inherit (osConfig.stylix) image polarity;
           base16Scheme = osConfig.stylix.base16Scheme or osConfig.stylix.generated.palette;
           # Broken targets
-          targets.nixos-icons.enable = false;
+          targets = {
+            nixos-icons.enable = false;
+            qt.enable = true;
+          };
         };
 
         news.display = "silent";
