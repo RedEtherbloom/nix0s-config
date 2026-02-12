@@ -682,8 +682,7 @@ in {
         (pkgs.replaceVars ../../dotfiles/hypr/hyprlock.conf {
           BACKGROUND_IMAGE = config.stylix.image;
           FONT = "CommitMono Nerd Font Mono";
-          # TODO: Reference got cleared by removing old generations. How to refer to this without performance overhead?
-          SYMBOL_SCRIPT = ../../dotfiles/hypr/gen_lock_symbols.py;
+          SYMBOL_SCRIPT = "gen_lock_symbols.py";
         })
       ];
     };
@@ -985,6 +984,8 @@ in {
 
       rofi-home-assistant
       rofi-tag-switcher
+
+      (pkgs.writeShellScriptBin "gen_lock_symbols.py" ../../dotfiles/hypr/gen_lock_symbols.py)
      ] ++ (lib.attrsets.mapAttrsToList (_: script: script) layoutScripts);
 
     xdg.portal = {
