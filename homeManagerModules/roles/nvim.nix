@@ -114,9 +114,9 @@ in {
 
               theme = {
                 enable = true;
-                name = "catppuccin";
-                style = "macchiato";
-                transparent = true;
+                name = "rose-pine";
+                style = "main";
+                transparent = false; # TODO: Exclude neovide from opacity in window manager
               };
 
               ui = {
@@ -834,18 +834,13 @@ in {
                       cellular-automaton.enable = true;
                     };
 
-                    statusline = {
-                      lualine = {
-                        enable = true;
-                        theme = "catppuccin";
-                      };
-                    };
-
+                    # TODO: Synced with rose-pine?
+                    statusline.lualine.enable = true;
                     theme = {
                       enable = true;
-                      name = "catppuccin";
-                      style = "mocha";
-                      transparent = false;
+                      name = "rose-pine";
+                      style = "main";
+                      transparent = false; # TODO: Exclude neovide from opacity in window manager
                     };
 
                     autopairs.nvim-autopairs.enable = true;
