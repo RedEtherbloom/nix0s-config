@@ -225,9 +225,9 @@
           legacyPackages = _module.args.pkgs;
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgs; [
+              lixPackageSets.latest.lix
               alejandra
               nh
-              nixd
               direnv
               nix-prefetch-scripts
               nix-prefetch-github
