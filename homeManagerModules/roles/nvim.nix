@@ -7,6 +7,7 @@
   lib,
   pkgs,
   secrets,
+  osConfig,
   ...
 }: let
   cfg = config.myOptions.roles.nvf;
@@ -749,6 +750,13 @@ in {
                       level = 16;
                       logFile = "/tmp/nvim.log";
                     };
+                    options = {
+                      shiftwidth = 2;
+                      tabstop = 2;
+                      expandtab = true;
+                      scrolloff = 8; # Keep cursor centered
+                    };
+                    searchCase = "smart";
 
                     spellcheck = {
                       enable = true;
@@ -757,8 +765,15 @@ in {
 
                     lsp = {
                       enable = true;
-
                       formatOnSave = true;
+                      servers.nixd.settings.nixd = {
+                        nixpkgs.expr = "import <nixpkgs> { allowUnfree = true; }";
+                        formatting.command = ["alejandra"];
+                        options = {
+                          nixos.expr = "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.${osConfig.networking.hostName}.options";
+                          home-manager.expr = ''(builtins.getFlake (builtins.toString ./.)).homeConfigurations."${config.home.username}@${osConfig.networking.hostName}".options'';
+                        };
+                      };
                       lightbulb.enable = true;
                       lspkind.enable = false;
                       lspsaga.enable = false;
@@ -769,21 +784,22 @@ in {
                       harper-ls.enable = true;
                     };
 
-                    debugger = {
-                      nvim-dap = {
-                        enable = true;
-                        ui.enable = true;
-                      };
+                    debugger.nvim-dap = {
+                      enable = true;
+                      ui.enable = true;
                     };
 
-                    # This section does not include a comprehensive list of available language modules.
-                    # To list all available language module options, please visit the nvf manual.
                     languages = {
                       enableFormat = true;
                       enableTreesitter = true;
                       enableExtraDiagnostics = true;
 
-                      nix.enable = true;
+                      nix = {
+                        enable = true;
+                        lsp.servers = ["nixd"];
+                        format.type = ["alejandra"];
+                        extraDiagnostics.enable = true;
+                      };
                       markdown.enable = true;
                       bash.enable = true;
                       clang.enable = true;
@@ -792,7 +808,6 @@ in {
                       json.enable = true;
                       sql.enable = false;
                       java.enable = true;
-                      kotlin.enable = true;
                       ts.enable = true;
                       go.enable = true;
                       lua.enable = true;
@@ -826,7 +841,6 @@ in {
                       nvim-cursorline.enable = true;
                       cinnamon-nvim.enable = true;
                       fidget-nvim.enable = true;
-
                       highlight-undo.enable = true;
                       indent-blankline.enable = true;
 
@@ -851,17 +865,8 @@ in {
                     };
 
                     snippets.luasnip.enable = true;
-
-                    filetree = {
-                      neo-tree = {
-                        enable = true;
-                      };
-                    };
-
-                    tabline = {
-                      nvimBufferline.enable = true;
-                    };
-
+                    filetree.neo-tree.enable = true;
+                    tabline.nvimBufferline.enable = true;
                     treesitter.context.enable = true;
 
                     binds = {
@@ -888,20 +893,13 @@ in {
                       alpha.enable = true;
                     };
 
-                    notify = {
-                      nvim-notify.enable = true;
-                    };
-
-                    projects = {
-                      project-nvim.enable = true;
-                    };
+                    notify.nvim-notify.enable = true;
+                    projects.project-nvim.enable = true;
 
                     utility = {
-                      ccc.enable = false;
-                      vim-wakatime.enable = false;
+                      ccc.enable = true; # color picker
                       diffview-nvim.enable = true;
                       yanky-nvim.enable = false;
-                      qmk-nvim.enable = false; # requires hardware specific options
                       icon-picker.enable = true;
                       surround.enable = true;
                       leetcode-nvim.enable = true;
@@ -921,20 +919,46 @@ in {
                       };
                     };
 
-                    # TODO: Errors with at least one workspace being required
+                    # TODO: Obsidian-app alternative
                     notes = {
-                      obsidian.enable = true;
+                      obsidian = {
+                        enable = true;
+                        setupOpts = {
+                          workspaces = [
+                            {
+                              name = "default";
+                              path = "${config.home.homeDirectory}/Documents/Obsidian/default";
+                              overrides.notes_dir = "00-Notes";
+                            }
+                          ];
+                          daily_notes = {
+                            date_format = "%Y/%m/%d-%a+W%V";
+                            folder = "01-Tracking/Daily";
+                            template = "Day.md";
+                          };
+                          templates.folder = "02-Templates";
+                          new_notes_location = "note_subdir";
+                          search = {
+                            sort_by = "modified";
+                            sort_reversed = true;
+                          };
+                          attachments.folder = "XX-Files";
+                        };
+                      };
                       neorg.enable = false;
-                      # True: Try out
-                      orgmode.enable = false;
+                      orgmode.enable = false; # Broken because nvim-treesitter.config missing
                       mind-nvim.enable = true;
                       todo-comments.enable = true;
                     };
 
-                    terminal = {
-                      toggleterm = {
-                        enable = true;
-                        lazygit.enable = true;
+                    terminal.toggleterm = {
+                      enable = true;
+                      lazygit.enable = true;
+                      setupOpts = {
+                        direction = "float";
+                      };
+                      mappings = {
+                        open = "<leader>tt";
                       };
                     };
 
@@ -965,27 +989,33 @@ in {
                     };
 
                     assistant = {
-                      chatgpt.enable = false;
-                      copilot = {
-                        enable = false;
-                        cmp.enable = true;
-                      };
+                      # Any of these compatible with local LLM?
                       codecompanion-nvim.enable = false;
-                      avante-nvim.enable = true;
+                      avante-nvim.enable = false;
                     };
-                    comments = {
-                      comment-nvim.enable = true;
-                    };
-
-                    # TODO: Evaluate if we want these
-                    session = {
-                      nvim-session-manager.enable = true;
-                    };
-                    gestures = {
-                      gesture-nvim.enable = false;
-                    };
-                    presence = {
-                      neocord.enable = false;
+                    comments.comment-nvim.enable = true;
+                    session.nvim-session-manager.enable = true;
+                    lazy.plugins = {
+                      "jj.nvim" = {
+                        package = pkgs.vimPlugins.jj-nvim;
+                        setupModule = "jj";
+                        setupOpts = {};
+                      };
+                      "lazyjj.nvim" = {
+                        package = pkgs.vimPlugins.lazyjj-nvim;
+                        setupModule = "lazyjj";
+                        setupOpts = {};
+                      };
+                      "lean.nvim" = {
+                        package = pkgs.vimPlugins.lean-nvim;
+                        setupModule = "lean";
+                        # No default mappings for now
+                        setupOpts = {};
+                        event = [
+                          "BufReadPre *.lean"
+                          "BufNewFile *.lean"
+                        ];
+                      };
                     };
                   };
                 }
@@ -1006,11 +1036,7 @@ in {
       }
       (lib.mkIf config.myOptions.roles.gamedev.enable {
         programs.nvf.settings.vim = {
-          treesitter.grammars = [
-            pkgs.vimPlugins.nvim-treesitter-parsers.godot_resource
-          ];
-          # TODO: If we use godot setup the LSP
-          # lazy.plugins.vim-godot = ;
+          treesitter.grammars = [pkgs.vimPlugins.nvim-treesitter-parsers.godot_resource];
         };
       })
     ]

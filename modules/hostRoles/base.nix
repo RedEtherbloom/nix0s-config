@@ -20,9 +20,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     myOptions.utilities.enable = lib.mkDefault true;
-    security.pki.certificateFiles = [
-      "${secrets}/secrets/root_ca/root_ca.crt"
-    ];
+    security.pki.certificateFiles = [ "${secrets}/secrets/root_ca/root_ca.crt" ];
 
     services = {
       fwupd.enable = lib.mkDefault true;
@@ -33,8 +31,8 @@ in {
       nix-index-database.comma.enable = lib.mkDefault true;
       # Fallback in case of e.g. broken system
       neovim = {
-        enable = lib.mkDefault true;
-        defaultEditor = lib.mkDefault true;
+        enable = true;
+        defaultEditor = true;
       };
     };
 
@@ -45,6 +43,9 @@ in {
     ];
 
     stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
-    nix.registry.nixpkgs.flake = inputs.nixpkgs;
+    nix = {
+      registry.nixpkgs.flake = inputs.nixpkgs;
+      nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+    };
   };
 }
