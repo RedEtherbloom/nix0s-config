@@ -33,26 +33,26 @@ in {
     lib.mkMerge [
       {
         sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
-        # Adapted from: https://github.com/Mic92/sops-nix/issues/356#issuecomment-3701467494
-        # Disable gpg auto decryption as it effectively ignores an existing ssh key
-        systemd.user.services.sops-nix.Service.Environment = lib.mkForce ["SOPS_GPG_EXEC=${pkgs.coreutils}/bin/false"];
-
+        programs = {
+          home-manager.enable = true;
+          nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
+        };
+        news.display = "silent";
+        services.home-manager.autoExpire = {
+          enable = true;
+          frequency = "daily";
+          timestamp = "-5 days";
+        };
         xdg.userDirs.createDirectories = true;
-        programs.home-manager.enable = true;
-
-        programs.nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
         stylix = {
           enable = true;
           inherit (osConfig.stylix) image polarity;
           base16Scheme = osConfig.stylix.base16Scheme or osConfig.stylix.generated.palette;
-          # Broken targets
           targets = {
-            nixos-icons.enable = false;
+            nixos-icons.enable = false; # Broken targets
             qt.enable = true;
           };
         };
-
-        news.display = "silent";
       }
       (lib.mkIf osConfig.security.ownAdditional.yubikey {
         # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)
@@ -139,6 +139,9 @@ in {
 
         systemd.user.services.gpg-agent.Service.ExecStart =
           lib.mkForce "${config.programs.gpg.package}/bin/gpg-agent --supervised --verbose --verbose --verbose";
+        # Adapted from: https://github.com/Mic92/sops-nix/issues/356#issuecomment-3701467494
+        # Disable gpg auto decryption as it effectively ignores an existing ssh key
+        systemd.user.services.sops-nix.Service.Environment = lib.mkForce ["SOPS_GPG_EXEC=${pkgs.coreutils}/bin/false"];
       })
     ]
   );
