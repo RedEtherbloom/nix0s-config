@@ -544,7 +544,7 @@ in {
           "${config.xdg.configHome}/hypr/monitors.conf"
         ];
         workspace = [
-          "special:social,layoutopt:wslayout-layout:scrolling"
+          # "special:social,layoutopt:wslayout-layout:scrolling" # Hyprscrolling combined with wslayout is broken at the moment
         ];
       };
       submaps = {
