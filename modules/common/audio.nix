@@ -40,43 +40,20 @@
     wireplumber = {
       enable = true;
       extraConfig = {
-        # "c310-sample-rate" = {
-        #   "monitor.alsa.rules" = [
-        #     {
-        #       matches = [
-        #         {
-        #           "device.product.name" = "Webcam C310";
-        #           "device.product.id" = "0x081b";
-        #           "device.vendor.id" = "0x046d";
-        #         }
-        #       ];
-        #       actions = {
-        #         update-props = {
-        #           "default.clock.rate" = 16000;
-        #         };
-        #       };
-        #     }
-        #     {
-        #       matches = [
-        #         {
-        #           "node.name" = "~alsa_input.usb-046d_081b*";
-        #         }
-        #       ];
-        #       actions = {
-        #         update-props = {
-        #           # Disable Pro Audio, it does weird things
-        #           "audio.position" = "MONO";
-        #         };
-        #       };
-        #     }
-        #   ];
-        # };
         # "log-level-debug" = {
         #   "context.properties" = {
         #     # Output Debug log messages as opposed to only the default level (Notice)
         #     "log.level" = "I";
         #   };
         # };
+        # TODO: Move to home-manager
+        "bluez-audio-quality" = {
+          "bluez_monitor.properties" = {
+            "bluez5.enable-sbc-xq" = true;
+            "bluez5.enable-msbc" = true;
+            "bluez5.enable-hw-volume" = true;
+          };
+        };
         "no-headset-autoswitch" = {
           "monitor.bluez.rules" = [
             {
@@ -95,9 +72,9 @@
           ];
         };
         "bluez-longer-pause" = {
-          # TODO: May need to be set on monitor.alsa.<etc> instead
           "monitor.bluez.rules" = [
             {
+              # TODO: May need to be set on monitor.alsa.<etc> instead
               matches = [
                 {"node.name" = "~bluez_output.*";}
                 {"node.name" = "~bluez_input.*";}

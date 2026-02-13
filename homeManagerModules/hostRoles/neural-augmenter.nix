@@ -82,7 +82,6 @@ in {
             bitwarden-cli
             restic
             autorestic
-
             krita
 
             # KDE info packages
@@ -101,6 +100,7 @@ in {
             handbrake
             imagemagick
             yt-dlp
+            bluetui
 
             vopono
             mullvad-torrent

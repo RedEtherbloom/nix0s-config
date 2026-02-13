@@ -25,10 +25,13 @@
   boot = {
     binfmt.emulatedSystems = ["aarch64-linux"];
     # Attempt to fix some intel stuttering
+    # kernelParams = [
+    #   "i915.enable_psr=0"
+    #   "i915.enable_fbc=0"
+    #   "intel_idle.max_cstate=1"
+    # ];
     kernelParams = [
-      "i915.enable_psr=0"
-      "i915.enable_fbc=0"
-      "intel_idle.max_cstate=1"
+      "iwlwifi.bt_coex_active=0" # Attempt to improve bluetooth reliability
     ];
     resumeDevice = "/dev/disk/by-uuid/6960c42d-4b92-474d-aeae-e550d670be12";
     initrd = {
@@ -78,22 +81,9 @@
   };
 
   hardware = {
-    enableAllFirmware = true;
     sane = {
       enable = true;
       drivers.scanSnap.enable = true;
-    };
-    bluetooth = {
-      enable = true;
-      powerOnBoot = true;
-      settings = {
-        General = {
-          Experimental = true;
-          # ControllerMode = "bredr";
-          # Die HFP mode, die, die, die!
-          Disable = "Headset";
-        };
-      };
     };
     graphics = {
       enable = true;
@@ -106,19 +96,7 @@
   };
 
   environment = {
-    sessionVariables = {
-      LIBVA_DRIVER_NAME = "iHD";
-    };
-    # TODO: Move to common wireplumber in Homemanager
-    etc = {
-      "wireplumber/bluetooth.lua.d/51-bluez-config.lua".text = ''
-        bluez_monitor.properties = {
-        	["bluez5.enable-sbc-xq"] = true,
-        	["bluez5.enable-msbc"] = true,
-        	["bluez5.enable-hw-volume"] = true,
-        }
-      '';
-    };
+    sessionVariables.LIBVA_DRIVER_NAME = "iHD";
   };
 
   myOptions = {

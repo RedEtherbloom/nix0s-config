@@ -254,17 +254,6 @@
   };
 
   hardware = {
-    enableAllFirmware = true;
-    bluetooth = {
-      enable = true;
-      powerOnBoot = true;
-      settings = {
-        General = {
-          Experimental = true;
-          ControllerMode = "bredr"; # Problems with Bose
-        };
-      };
-    };
     logitech.wireless.enable = true; # Manage logitech options via solaar
     graphics = {
       enable = true;

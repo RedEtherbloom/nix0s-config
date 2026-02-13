@@ -126,6 +126,21 @@ in {
     };
 
     hardware = {
+      enableAllFirmware = lib.mkDefault true;
+      bluetooth = {
+        enable = true;
+        powerOnBoot = true;
+        settings = {
+          General = {
+            Experimental = true;
+            KernelExperimental = true;
+            # ControllerMode = "bredr"; # Problems with Bose
+            FastConnectable = true;
+            Class = "0x000100"; # Generic desktop TODO: Do I need object major class as well?
+            JustWorksRepairing = true; # Security implications?
+          };
+        };
+      };
       sensor.iio.enable = true; # Autorotation
       opentabletdriver.enable = true; # May improve krita comfort
       rtl-sdr.enable = true;
