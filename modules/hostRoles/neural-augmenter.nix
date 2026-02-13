@@ -192,7 +192,13 @@ in {
       };
       groups.plugdev = {};
     };
-    documentation.dev.enable = true;
+    documentation = {
+      dev.enable = true;
+      man = {
+        mandoc.enable = true;
+        man-db.enable = false;
+      };
+    };
 
     # See: https://github.com/NixOS/nixpkgs/issues/409986
     environment.etc."xdg/menus/applications.menu".source = let
