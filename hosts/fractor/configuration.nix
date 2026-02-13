@@ -46,29 +46,14 @@
 
   networking = {
     hostName = "fractor";
-    networkmanager = {
-      enable = true;
-      wifi.powersave = false;
-    };
-    ownWireguard = {
-      enabled = true;
-      currentHost = config.networking.ownWireguard.hosts.fractor;
-    };
     # Set MTU to account for some pickier wifi's
     wireguard.interfaces = {
       "wg0".mtu = 1312;
       "wg1".mtu = 1312;
     };
   };
-  systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
 
   services = {
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      # nssmdns6 = true; # Recommended against in docs
-      openFirewall = true;
-    };
     # Does this have to be replaced with home-manager?
     printing = {
       enable = true;
@@ -139,8 +124,7 @@
   myOptions = {
     hostRoles.laptop.enable = true;
     roles.gaming.enable = true;
-    # Broken as of: 15.10.2025
-    roles.i2p.enable = lib.mkForce false;
+    roles.i2p.enable = lib.mkForce false; # Broken as of: 15.10.2025
   };
 
   users.users.inf = {

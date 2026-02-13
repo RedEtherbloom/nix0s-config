@@ -117,6 +117,12 @@ in {
         enable = true;
         port = 8154; # Reasonably close to ollama
       };
+      avahi = {
+        enable = true;
+        nssmdns4 = true;
+        # nssmdns6 = true; # Recommended against in docs
+        openFirewall = true;
+      };
     };
 
     hardware = {
@@ -185,14 +191,22 @@ in {
       };
     in "${src}/${applications-menu}";
 
-    networking.firewall = {
-      allowedTCPPorts = [
-        22000 # SyncThing
-      ];
-      allowedUDPPorts = [
-        21027 # SyncThing
-        22000 # SyncThing
-      ];
+    systemd.services.NetworkManager-wait-online.enable = lib.mkForce false; # Issues with builds randomly failing
+    networking = {
+      networkmanager = {
+        enable = true;
+        wifi.powersave = false;
+      };
+      ownWireguard.enable = true;
+      firewall = {
+        allowedTCPPorts = [
+          22000 # SyncThing
+        ];
+        allowedUDPPorts = [
+          21027 # SyncThing
+          22000 # SyncThing
+        ];
+      };
     };
   };
 }

@@ -17,7 +17,6 @@ with lib; let
         description = "IPv4 of the wireguard client";
         type = with types; str;
       };
-      # How would I detect a miss-match?
       publicKey = mkOption {
         description = "Public key of the wireguard client";
         type = with types; str;
@@ -65,10 +64,11 @@ with lib; let
 in {
   options = {
     networking.ownWireguard = {
-      enabled = mkEnableOption "Insert own standard wireguard config";
+      enable = mkEnableOption "Insert own standard wireguard config";
       currentHost = mkOption {
         description = "Current host to be configured";
         type = with types; submodule wireguardHost;
+        default = config.networking.ownWireguard.hosts."${config.networking.hostName}";
       };
       # To be referenced in other files or services
       # TODO: Rewrite with attrset(I think one can modularize)
@@ -95,7 +95,7 @@ in {
   };
 
   config = mkMerge [
-    (mkIf cfg.enabled {
+    (mkIf cfg.enable {
       environment.systemPackages = [pkgs.wireguard-tools];
 
       sops.secrets."wireguard/wg0_private" = {

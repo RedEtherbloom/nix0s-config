@@ -106,10 +106,8 @@
       ];
       serviceConfig.WorkingDirectory = lib.mkForce config.users.users.i2p.home;
     };
-    # Issues with builds randomly failing
-    NetworkManager-wait-online.enable = lib.mkForce false;
   };
-  # Networking
+
   networking = {
     hostName = "neurodrive";
     networkmanager.enable = true;
@@ -135,20 +133,10 @@
         27062 # SteamVR
       ];
     };
-    ownWireguard = {
-      enabled = true;
-      currentHost = config.networking.ownWireguard.hosts.neurodrive;
-    };
   };
 
   services = {
     xserver.videoDrivers = ["nvidia"];
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      nssmdns6 = true;
-      openFirewall = true;
-    };
     paperless = rec {
       enable = true;
       consumptionDirIsPublic = true;
@@ -488,15 +476,11 @@
       format = "yaml";
       sopsFile = "${secrets}/secrets/neurodrive/mosquitto.yaml";
     };
-    # Copied from Bitwarden
-    # TODO: Cross-sync bitwarden and secret store
+    # Copied from Bitwarden TODO: Cross-sync bitwarden and secret store
     "paperless/admin_password" = {
       owner = "paperless";
       format = "yaml";
       sopsFile = "${secrets}/secrets/services/paperless.yaml";
     };
   };
-
-  # 22.11.2025: Temporary until KDE issues with QT/Stylix can be resolved
-  stylix.targets.qt.enable = false;
 }
