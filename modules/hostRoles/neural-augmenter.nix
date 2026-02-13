@@ -91,7 +91,6 @@ in {
         };
       };
       blueman.enable = true;
-      upower.enable = true; # HyprDynamicMonitors dependency
       wivrn = {
         enable = true;
         openFirewall = true;
@@ -123,6 +122,8 @@ in {
         # nssmdns6 = true; # Recommended against in docs
         openFirewall = true;
       };
+      tuned.enable = true;
+      upower.enable = true;
     };
 
     hardware = {

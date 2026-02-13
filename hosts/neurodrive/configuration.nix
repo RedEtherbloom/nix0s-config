@@ -250,7 +250,6 @@
         MusicFolder = "/mnt/cryptostorage/Music";
       };
     };
-    power-profiles-daemon.enable = true;
   };
 
   hardware = {
