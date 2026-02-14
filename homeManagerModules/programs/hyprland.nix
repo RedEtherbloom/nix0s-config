@@ -1031,8 +1031,8 @@ in {
 
     home.pointerCursor = {
       gtk.enable = true;
-      package = pkgs.nightdiamond-cursors;
-      name = "NightDiamond-Blue";
+      package = pkgs.lyra-cursors;
+      name = "LyraG-Cursors";
       size = 36;
     };
   };
