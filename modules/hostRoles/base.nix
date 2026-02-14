@@ -42,7 +42,11 @@ in {
       "/share/applications"
     ];
 
-    stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+    stylix = {
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+      targets.gtksourceview.enable = lib.mkForce false; # See: https://github.com/nix-community/stylix/issues/1686
+    };
+
     nix = {
       registry.nixpkgs.flake = inputs.nixpkgs;
       nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];

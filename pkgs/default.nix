@@ -200,8 +200,6 @@
     };
   };
 
-  inherit (inputs.nixpkgs-prev.legacyPackages.${final.stdenv.hostPlatform.system}) sillytavern gtksourceview;
-
   hyprlock-styles.style-3 = final.stdenv.mkDerivation {
     pname = "hyprlock-styles-style-6";
     version = "0.0.1";

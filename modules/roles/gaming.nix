@@ -26,13 +26,12 @@ in {
               libpulseaudio
               libvorbis
               stdenv.cc.cc.lib
-              xorg.libXcursor
-              xorg.libxkbfile
-              xorg.libXi
-              xorg.libXinerama
-              xorg.libXrandr
-              xorg.libXxf86vm
-
+              libXcursor
+              libxkbfile
+              libXi
+              libXinerama
+              libXrandr
+              libXxf86vm
               #RimSort
               nss
             ];

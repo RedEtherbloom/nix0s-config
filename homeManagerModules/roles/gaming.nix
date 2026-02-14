@@ -42,13 +42,13 @@ in {
           at-spi2-atk
           cups
           libdrm
-          xorg.libXcomposite
-          xorg.libXdamage
-          xorg.libXfixes
-          xorg.libX11
-          xorg.libXext
-          xorg.libXrandr
-          xorg.libxcb
+          libXcomposite
+          libXdamage
+          libXfixes
+          libX11
+          libXext
+          libXrandr
+          libxcb
           expat
           libxkbcommon
           dbus

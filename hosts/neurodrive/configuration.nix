@@ -357,7 +357,6 @@
     "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = [
       "network-online.target"
     ];
-    "${config.virtualisation.oci-containers.containers.esphome.serviceName}".serviceConfig.Restart = "always";
   };
 
   myOptions = {
