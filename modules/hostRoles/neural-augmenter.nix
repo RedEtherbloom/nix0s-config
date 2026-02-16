@@ -10,6 +10,7 @@
 in {
   imports = [
     inputs.stylix.nixosModules.stylix
+    inputs.niri-flake.nixosModules.niri
     ../binary-cache/hyprland.nix
     ../binary-cache/niri-flake.nix
   ];
@@ -67,6 +68,10 @@ in {
         package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
         portalPackage =
           inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+      };
+      niri = {
+        enable = true;
+        package = pkgs.niri-unstable;
       };
     };
 
@@ -232,5 +237,7 @@ in {
         ];
       };
     };
+
+    niri-flake.cache.enable = false; # We manage it ourself for readability
   };
 }
