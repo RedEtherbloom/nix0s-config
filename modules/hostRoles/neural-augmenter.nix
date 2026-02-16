@@ -11,6 +11,7 @@ in {
   imports = [
     inputs.stylix.nixosModules.stylix
     ../binary-cache/hyprland.nix
+    ../binary-cache/niri-flake.nix
   ];
 
   options.myOptions.hostRoles.neural-augmenter.enable = lib.mkEnableOption "workstation options";
@@ -124,6 +125,7 @@ in {
       };
       tuned.enable = true;
       upower.enable = true;
+      gnome.evolution-data-server.enable = true; # Calendar support for noctalia
     };
 
     hardware = {

@@ -1071,7 +1071,7 @@
         "type": "github"
       }
     },
-    "noctallia-flake": {
+    "noctalia-shell": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -1226,7 +1226,7 @@
         "nixpkgs-nvf-working": "nixpkgs-nvf-working",
         "nixpkgs-prev": "nixpkgs-prev",
         "nixpkgs-stable": "nixpkgs-stable_2",
-        "noctallia-flake": "noctallia-flake",
+        "noctalia-shell": "noctalia-shell",
         "nvf": "nvf",
         "pyproject-nix": "pyproject-nix",
         "rofi-home-assistant": "rofi-home-assistant",

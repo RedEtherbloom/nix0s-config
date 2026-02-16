@@ -111,7 +111,7 @@
       url = "github:pyproject-nix/pyproject.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    noctallia-flake = {
+    noctalia-shell = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -136,19 +136,18 @@
           "aarch64-linux"
         ];
         # TODO: Extract common resources e.g. IPs into nixos independent wrapper or import nixos into homeManager so that homeConfigurations can be split out
-        flake = {lib, ...}: let
+        flake = let
           defaultUsername = "inf";
-          # TODO: Set system in configuration.nix instead, to lessen use of anti patterns
           mkSystem = hostName: system:
             withSystem system (
-              ctx @ {...}:
-                inputs.nixpkgs.lib.nixosSystem rec {
+              {pkgs, ...}:
+                inputs.nixpkgs.lib.nixosSystem {
                   specialArgs = {
                     inherit inputs self;
                     inherit (inputs) secrets;
                   };
                   modules = [
-                    {nixpkgs = {inherit (ctx.pkgs) config overlays;};}
+                    {nixpkgs = {inherit (pkgs) config overlays;};}
                     # TODO: Decide how to reorganize module inputs
                     inputs.sops-nix.nixosModules.sops
                     inputs.nix-index-database.nixosModules.nix-index
@@ -157,8 +156,9 @@
                   ];
                 }
             );
-          mkHmConfiguration = hostName: host: let
+          mkHmConfiguration = host: let
             osConfig = host.config;
+            inherit (osConfig.networking) hostName;
           in
             # TODO: Move backupFileExtension to HM-Modules
             inputs.home-manager.lib.homeManagerConfiguration {
@@ -170,19 +170,15 @@
                   "modulesPath"
                 ])
                 // {
-                  inherit osConfig;
-                  osFlakeSelf = host._module.specialArgs.self;
-
-                  inherit self;
+                  inherit osConfig self;
+                  osFlakeSelf = osConfig._module.specialArgs.self;
                 };
               modules = [
                 ./hosts/${hostName}/home.nix
                 {
                   nix = {
-                    package = osConfig.nix.package;
-                    settings = {
-                      inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys;
-                    };
+                    inherit (osConfig.nix) package;
+                    settings = { inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys; };
                   };
 
                   home = {
@@ -192,45 +188,40 @@
                 }
               ];
             };
-        in
-          # TODO: Remove system here. Should be set in hardware-configuration.nix
-          rec {
+          # TODO: Remove system here. Should be set in hardware-configuration.nix. Alternatively: Somehow base systems packages on perSystem packages
             nixosConfigurations = {
               fractor = mkSystem "fractor" "x86_64-linux";
               neurodrive = mkSystem "neurodrive" "x86_64-linux";
               audiosink = mkSystem "audiosink" "aarch64-linux";
             };
+        in
+          {
+            inherit nixosConfigurations;
             homeConfigurations = {
-              "inf@fractor" = mkHmConfiguration "fractor" nixosConfigurations.fractor;
-              "inf@neurodrive" = mkHmConfiguration "neurodrive" nixosConfigurations.neurodrive;
-              "inf@audiosink" = mkHmConfiguration "audiosink" nixosConfigurations.audiosink;
+              "${defaultUsername}@fractor" = mkHmConfiguration nixosConfigurations.fractor;
+              "${defaultUsername}@neurodrive" = mkHmConfiguration nixosConfigurations.neurodrive;
+              "${defaultUsername}@audiosink" = mkHmConfiguration nixosConfigurations.audiosink;
             };
           };
         perSystem = {
-          pkgs,
           system,
           ...
-        }: rec {
-          # TODO: Merge into flake-parts
-          # getPatchedNixpkgs = system:
-          #   (import nixpkgs {inherit system;}).applyPatches {
-          #     name = "nixpkgs-patched";
-          #     src = nixpkgs;
-          #     patches = [];
-          #   };
-          # TODO: Check why own packages cannot be referred to via flake syntax
-          _module.args.pkgs = import inputs.nixpkgs {
+        }: let 
+          # Initialize one central nixpkgs instance, including config and all required overlays
+          pkgs = import inputs.nixpkgs {
             inherit system;
-            config = {
-              allowUnfree = true;
-            };
+            config.allowUnfree = true;
             overlays = [
               inputs.fenix.overlays.default
+              inputs.niri-flake.overlays.niri
               (import ./pkgs {inherit inputs;})
             ];
           };
+          in {
+          _module.args.pkgs = pkgs;
+          # TODO: Check why own packages aren't exported
+          legacyPackages = pkgs; # TODO: This seems wrong
           formatter = pkgs.alejandra;
-          legacyPackages = _module.args.pkgs;
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgs; [
               lixPackageSets.latest.lix

@@ -7,7 +7,7 @@
     colmena
     ;
 
-  nix-search-tv = inputs.nix-search-tv.packages.${final.system}.default;
+  nix-search-tv = inputs.nix-search-tv.packages.${final.stdenv.hostPlatform.system}.default;
 
   thunderbird-external-editor-revived = final.rustPlatform.buildRustPackage (finalAttrs: {
     pname = "thunderbird-external-editor-revived";
@@ -35,8 +35,6 @@
   });
 
   byar-launcher = final.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
-
-  # python3 = let in final.python3.override { packageOverrides = _: pythonPrev: { }; };
 
   koboldcpp = prev.koboldcpp.overrideAttrs (
     _: pythonPrev: {
