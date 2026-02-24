@@ -270,13 +270,10 @@
       modesetting.enable = true;
       powerManagement = {
         enable = true;
-        finegrained = false;
+        finegrained = true;
       };
       nvidiaSettings = true;
       open = true;
-      # Fixes: https://github.com/NixOS/nixpkgs/issues/467814
-      # Fix from: https://github.com/NixOS/nixpkgs/issues/467814#issuecomment-3620802561
-      package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
     nvidia-container-toolkit.enable = true;
   };
