@@ -385,10 +385,6 @@ in {
           action.spawn = "${lib.getExe config.programs.kitty.package}";
         };
         "Mod+D" = {
-          hotkey-overlay.title = "Application launcher: fuzzel";
-          action.spawn = "fuzzel";
-        };
-        "Mod+Shift+D" = {
           hotkey-overlay.title = "Wlr: Various launchers and common applications";
           action.spawn = "${lib.getExe wlrLaunchers.common}";
         };
@@ -641,7 +637,6 @@ in {
     systemd.enable = true; # See doc warnings about experimental status
   };
   systemd.user.services.noctalia-shell.Unit.ConditionEnv = ["XDG_CURRENT_DESKTOP=Niri"];
-  programs.fuzzel.enable = true;
 
   home.packages = with pkgs; [
     thunarWithExtensions
