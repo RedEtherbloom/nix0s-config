@@ -213,21 +213,21 @@
 
   sddm-fallback-patched = prev.kdePackages.sddm.overrideAttrs (
     _: prevAttrs: {
-      buildCommand = 
-        prevAttrs.buildCommand + ''
+      buildCommand =
+        prevAttrs.buildCommand
+        + ''
           ln -s $out/bin/sddm-greeter-qt6 $out/bin/sddm-greeter
-        ''
-      ;
+        '';
     }
   );
 
   # WARN: BROKEN and will be removed
-  flathunter-image = let 
+  flathunter-image = let
     src = final.fetchFromGitHub {
-        owner = "flathunters";
-        repo = "flathunter";
-        rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
-        hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
+      owner = "flathunters";
+      repo = "flathunter";
+      rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
+      hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
     };
     requirements_txt = final.runCommand "flathunter-requirements.txt" {} ''
       mkdir home
@@ -235,33 +235,37 @@
       cd ${src}
       ${final.pipenv}/bin/pipenv requirements > $out
     '';
-    project = inputs.pyproject-nix.lib.project.loadRequirementsTxt { requirements = builtins.readFile "${requirements_txt}"; projectRoot = src;};
-    python = final.python313;
-  in final.dockerTools.buildImage {
-    name = "flathunter";
-    tag = "latest";
-    copyToRoot = final.buildEnv {
-      name = "image-root";
-      pathsToLink = [
-"/bin"
-      ];
-      paths = with final; [
-        undetected-chromedriver
-        coreutils
-          (python.withPackages (project.renderers.withPackages { inherit python;}))
-      ];
+    project = inputs.pyproject-nix.lib.project.loadRequirementsTxt {
+      requirements = builtins.readFile "${requirements_txt}";
+      projectRoot = src;
     };
-  };
+    python = final.python313;
+  in
+    final.dockerTools.buildImage {
+      name = "flathunter";
+      tag = "latest";
+      copyToRoot = final.buildEnv {
+        name = "image-root";
+        pathsToLink = [
+          "/bin"
+        ];
+        paths = with final; [
+          undetected-chromedriver
+          coreutils
+          (python.withPackages (project.renderers.withPackages {inherit python;}))
+        ];
+      };
+    };
 
   flathunter-docker-image = final.stdenv.mkDerivation {
     name = "flathunter-docker-image";
     src = final.fetchFromGitHub {
-        owner = "flathunters";
-        repo = "flathunter";
-        rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
-        hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
+      owner = "flathunters";
+      repo = "flathunter";
+      rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
+      hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
     };
-    
+
     nativeBuildInputs = with final; [
       podman
       openssh
@@ -286,5 +290,13 @@
       cp $src/flathunter.tar $out
       runHook postInstall
     '';
+  };
+
+  thunarWithExtensions = final.thunar.override {
+    thunarPlugins = with final; [
+      thunar-archive-plugin
+      thunar-media-tags-plugin
+      thunar-vcs-plugin
+    ];
   };
 }
