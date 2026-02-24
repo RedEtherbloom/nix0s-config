@@ -8,20 +8,34 @@
   ...
 }: let
   cfg = config.myOptions.roles.hyprland;
-    normalizedName = name: builtins.readFile (pkgs.runCommand "normalizedName" {} ''
-      echo -n "${name}" | ${pkgs.gnused}/bin/sed -E 's/[^a-zA-Z0-9-]/_/g' - | ${pkgs.coreutils}/bin/tr -d '\n' > $out
-    '');
-    genMonitorLayoutScript = layout: pkgs.writeShellScriptBin "hyprland-layout-${normalizedName layout.name}.sh" ''
-    set -e
+  normalizedName = name:
+    builtins.readFile (
+      pkgs.runCommand "normalizedName" {} ''
+        echo -n "${name}" | ${pkgs.gnused}/bin/sed -E 's/[^a-zA-Z0-9-]/_/g' - | ${pkgs.coreutils}/bin/tr -d '\n' > $out
+      ''
+    );
+  genMonitorLayoutScript = layout:
+    pkgs.writeShellScriptBin "hyprland-layout-${normalizedName layout.name}.sh" ''
+          set -e
 
-    ${lib.strings.concatLines (lib.lists.forEach layout.monitors (monitorLine: "hyprctl keyword ${lib.replaceStrings ["="] [" "] monitorLine}"))}
+          ${lib.strings.concatLines (
+        lib.lists.forEach layout.monitors (
+          monitorLine: "hyprctl keyword ${lib.replaceStrings ["="] [" "] monitorLine}"
+        )
+      )}
 
-      # Remove duplicated waybars
-sleep 1
-    ${pkgs.systemd}/bin/systemctl restart --user waybar.service
-    '' ;
-    layoutScripts = lib.attrsets.mapAttrs' (_: layout: (lib.attrsets.nameValuePair "${normalizedName layout.name}" (genMonitorLayoutScript layout))) config.myOptions.roles.hyprland.displayConfigurations;
-  rofiDisplayLayout = let layouts = lib.attrsets.mapAttrsToList (name: script: "${name}: ${lib.getExe script}") layoutScripts; in
+            # Remove duplicated waybars
+      sleep 1
+          ${pkgs.systemd}/bin/systemctl restart --user waybar.service
+    '';
+  layoutScripts =
+    lib.attrsets.mapAttrs' (
+      _: layout: (lib.attrsets.nameValuePair "${normalizedName layout.name}" (genMonitorLayoutScript layout))
+    )
+    config.myOptions.roles.hyprland.displayConfigurations;
+  rofiDisplayLayout = let
+    layouts = lib.attrsets.mapAttrsToList (name: script: "${name}: ${lib.getExe script}") layoutScripts;
+  in
     pkgs.writeShellScriptBin "rofiLayoutSelector.sh" ''
       set -e
 
@@ -309,7 +323,7 @@ in {
             "SUPER_SHIFT, W, exec, firefox -P work"
             # TODO: Work mode shortcut with: Work firefox, youtube music, obsidian
             # Could be done via e.g. tags
-            ''SUPER, N, exec, ${focusOrStart "class" "obsidian" "obsidian"}''
+            "SUPER, N, exec, ${focusOrStart "class" "obsidian" "obsidian"}"
             "SUPER_SHIFT, N, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim"
           ]
           ++ (
@@ -654,7 +668,6 @@ in {
         };
       };
       swaync.enable = true;
-      hyprpolkitagent.enable = true;
       hyprshell = {
         enable = false;
         settings = {
@@ -936,58 +949,60 @@ in {
     };
 
     # TODO: Remove unneedded
-    home.packages = with pkgs; [
-      swww
-      grim
-      slurp
-      wl-clipboard
-      swappy
-      ydotool
-      hyprpolkitagent
-      hyprland-qtutils # needed for banners and ANR messages
-      brightnessctl
-      swaynotificationcenter
+    home.packages = with pkgs;
+      [
+        swww
+        grim
+        slurp
+        wl-clipboard
+        swappy
+        ydotool
+        hyprpolkitagent
+        hyprland-qtutils # needed for banners and ANR messages
+        brightnessctl
+        swaynotificationcenter
 
-      # Own
-      networkmanagerapplet
-      # TODO: Try networkmanager_dmenu?
-      clipvault
-      emojipick
-      hyprpicker
-      rofi-bluetooth
-      rofi-calc
-      rofi-emoji
-      rofi-nerdy
-      rofi-power-menu
-      # TODO: Implement bitwarden
-      rofi-rbw
-      rofi-file-browser
-      rofi-screenshot
-      rofi-menugen
-      rofi-pulse-select
-      rofi-network-manager
+        # Own
+        networkmanagerapplet
+        # TODO: Try networkmanager_dmenu?
+        clipvault
+        emojipick
+        hyprpicker
+        rofi-bluetooth
+        rofi-calc
+        rofi-emoji
+        rofi-nerdy
+        rofi-power-menu
+        # TODO: Implement bitwarden
+        rofi-rbw
+        rofi-file-browser
+        rofi-screenshot
+        rofi-menugen
+        rofi-pulse-select
+        rofi-network-manager
 
-      gnome-keyring
-      seahorse
-      gcr
+        gnome-keyring
+        seahorse
+        gcr
 
-      wdisplays
-      wev
+        wdisplays
+        wev
 
-      waystt
-      config.home.hyprdynamicmonitors.package
-      rofiDisplayLayout
+        waystt
+        config.home.hyprdynamicmonitors.package
+        rofiDisplayLayout
 
-      # Fonts
-      nerd-fonts.commit-mono
-      powerline-symbols
-      powerline-fonts
+        # Fonts
+        nerd-fonts.commit-mono
+        powerline-symbols
+        powerline-fonts
 
-      rofi-home-assistant
-      rofi-tag-switcher
+        rofi-home-assistant
+        rofi-tag-switcher
 
-      (pkgs.writeShellScriptBin "gen_lock_symbols.py" ../../dotfiles/hypr/gen_lock_symbols.py)
-     ] ++ (lib.attrsets.mapAttrsToList (_: script: script) layoutScripts);
+        (pkgs.writeShellScriptBin "gen_lock_symbols.py" ../../dotfiles/hypr/gen_lock_symbols.py)
+      ]
+      ++ (lib.attrsets.mapAttrsToList (_: script: script) layoutScripts);
 
     xdg.portal = {
       enable = lib.mkForce true;
@@ -1022,7 +1037,9 @@ in {
       installExamples = false;
       installThemes = true;
     };
-    home.activation.rebuild-kde-xdg-cache = lib.hm.dag.entryAfter ["writeBoundary"] "run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6"; # Rebuild cache for dolphin
+    home.activation.rebuild-kde-xdg-cache = lib.hm.dag.entryAfter [
+      "writeBoundary"
+    ] "run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6"; # Rebuild cache for dolphin
 
     sops.secrets."hass_cli_token" = {
       sopsFile = "${secrets}/secrets/services/home-assistant.yaml";
@@ -1034,6 +1051,23 @@ in {
       package = pkgs.lyra-cursors;
       name = "LyraG-Cursors";
       size = 36;
+    };
+    # Manually set. By default hyprpolkitagent starts in all graphical targets
+    systemd.user.services = {
+      hyprpolkitagent = let
+        hyprlandTarget = "hyprland-session.target";
+      in {
+        Unit = {
+          PartOf = [hyprlandTarget];
+          After = [hyprlandTarget];
+        };
+        Install.WantedBy = [hyprlandTarget];
+        Service.ExecStart = "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent";
+      };
+      waybar.Unit.ConditionEnvironment = lib.mkForce [
+        "WAYLAND_DISPLAY"
+        "XDG_CURRENT_DESKTOP=Hyprland"
+      ];
     };
   };
 }
