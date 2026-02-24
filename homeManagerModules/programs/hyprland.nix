@@ -442,6 +442,8 @@ in {
               ",XF86MonBrightnessUp,exec,brightnessctl set +5%"
               ",XF86Display,exec,wdisplays"
 
+              "SUPER, comma, exec, whisp-away start"
+
               # Submaps
               "SUPER, M, submap, player"
               "SUPER CONTROL, L, submap, neovim"
@@ -457,6 +459,9 @@ in {
           "SUPER, mouse:272, movewindow"
           # Right mouse button
           "SUPER, mouse:273, resizewindow"
+        ];
+        bindr = [
+          "SUPER, comma, exec, whisp-away stop"
         ];
         # Shortcuts that also function on lockscreen
         windowrule =

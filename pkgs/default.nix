@@ -299,4 +299,6 @@
       thunar-vcs-plugin
     ];
   };
+
+  jambi = inputs.jambi-transcript.packages.${final.stdenv.hostPlatform.system}.default;
 }

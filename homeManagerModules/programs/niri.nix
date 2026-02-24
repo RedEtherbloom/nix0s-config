@@ -108,6 +108,7 @@
         ];
       }
       {
+        # TODO: Clipboard manager
         key = "c";
         desc = "Clipboard";
         cmd = noctaliaIpcCommand "launcher clipboard";
@@ -128,6 +129,7 @@
         cmd = "thunar";
       }
       {
+        # TODO: Get a better tui
         key = "m";
         desc = "YouTube Music";
         cmd = "${lib.getExe pkgs.ytui-music}";
@@ -138,55 +140,54 @@
         key = "Space";
         desc = "Toggle playback status";
         cmd = noctaliaIpcCommand "media playPause";
-        keepOpen = true;
+        keep_open = true;
       }
-      # TODO: Force kill command for unresponsive playback using e.g. muting pipewire outputs
       {
         key = "n";
         desc = "Next track";
         cmd = noctaliaIpcCommand "media next";
-        keepOpen = true;
+        keep_open = true;
       }
       {
         key = "Shift+n";
         desc = "Previous track";
         cmd = noctaliaIpcCommand "media previous";
-        keepOpen = true;
+        keep_open = true;
       }
       {
         key = "j";
         desc = "Lower volume";
         cmd = noctaliaIpcCommand "volume decrease";
-        keepOpen = true;
+        keep_open = true;
       }
       {
         key = "k";
         desc = "Raise volume";
         cmd = noctaliaIpcCommand "volume increase";
-        keepOpen = true;
+        keep_open = true;
       }
       {
         desc = "Seek back 5s";
         cmd = noctaliaIpcCommand "media seekRelative -5";
-        keepOpen = true;
+        keep_open = true;
       }
       {
         key = "l";
         desc = "Seek forward 5s";
         cmd = noctaliaIpcCommand "media seekRelative +5";
-        keepOpen = true;
+        keep_open = true;
       }
       {
         key = "m";
         desc = "Mute";
         cmd = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-        keepOpen = true;
+        keep_open = true;
       }
       {
         key = "Shift+m";
         desc = "Mute microphone";
         cmd = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
-        keepOpen = true;
+        keep_open = true;
       }
       {
         key = "p";
@@ -232,6 +233,24 @@
           key = "o";
           desc = "Obsidian";
           cmd = "obsidian";
+        }
+        {
+          key = "w";
+          desc = "Speech to text";
+          submenu = [
+            {
+              key = "s";
+              desc = "Listen to speech";
+              cmd = "whisp-away start";
+              keep_open = true;
+            }
+            {
+              key = "Shift+s";
+              desc = "Stop listening to speech";
+              cmd = "whisp-away stop";
+              keep_open = true;
+            }
+          ];
         }
       ];
   };
@@ -391,6 +410,7 @@ in {
           allow-when-locked = true;
           action.spawn = splitSpace "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
         };
+        # TODO: Force kill command for unresponsive playback using e.g. muting pipewire outputs that works on lockscreen
         "XF86AudioMicMute" = {
           allow-when-locked = true;
           action.spawn = splitSpace "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
@@ -426,7 +446,6 @@ in {
           repeat = false;
           action.toggle-overview = [];
         };
-        # TODO: How to force kill?
         "Mod+Q" = {
           repeat = false;
           action.close-window = [];

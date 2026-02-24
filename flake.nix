@@ -119,6 +119,17 @@
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    whisp-away = {
+      url = "github:madjinn/whisp-away";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    jambi-transcript = {
+      url = "github:guttermonk/jambi";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs = {

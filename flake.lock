@@ -117,6 +117,21 @@
         "type": "github"
       }
     },
+    "crane": {
+      "locked": {
+        "lastModified": 1771121070,
+        "narHash": "sha256-aIlv7FRXF9q70DNJPI237dEDAznSKaXmL5lfK/Id/bI=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "a2812c19f1ed2e5ed5ce2ef7109798b575c180e1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -774,6 +789,30 @@
         "type": "github"
       }
     },
+    "jambi-transcript": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1759373943,
+        "narHash": "sha256-8zjILgCRL6uNeTgzR7DQ0pLpY2tFHw61w6XOa8hMQyA=",
+        "owner": "guttermonk",
+        "repo": "jambi",
+        "rev": "13f93f36171f9f12b914e69e0c1c4761b167bc9a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "guttermonk",
+        "repo": "jambi",
+        "type": "github"
+      }
+    },
     "mechabar": {
       "flake": false,
       "locked": {
@@ -1057,6 +1096,22 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1744536153,
+        "narHash": "sha256-awS2zRgF4uTwrOKwwiJcByDzDOdo3Q1rPZbiHQg/N38=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "18dd725c29603f582cf1900e0d25f9f1063dbf11",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1771008912,
         "narHash": "sha256-gf2AmWVTs8lEq7z/3ZAsgnZDhWIckkb+ZnAo5RzSxJg=",
         "owner": "NixOS",
@@ -1216,12 +1271,13 @@
         "hyprland": "hyprland",
         "hyprland-plugins": "hyprland-plugins",
         "hyprland-zaneyos": "hyprland-zaneyos",
+        "jambi-transcript": "jambi-transcript",
         "mechabar": "mechabar",
         "niri-flake": "niri-flake",
         "nix-index-database": "nix-index-database",
         "nix-search-tv": "nix-search-tv",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs_3",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-nvf-working": "nixpkgs-nvf-working",
         "nixpkgs-prev": "nixpkgs-prev",
@@ -1235,7 +1291,8 @@
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "systems": "systems_3",
-        "tokyonight": "tokyonight"
+        "tokyonight": "tokyonight",
+        "whisp-away": "whisp-away"
       }
     },
     "rust-analyzer-src": {
@@ -1252,6 +1309,24 @@
         "owner": "rust-lang",
         "ref": "nightly",
         "repo": "rust-analyzer",
+        "type": "github"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1756089517,
+        "narHash": "sha256-KGinVKturJFPrRebgvyUB1BUNqf1y9FN+tSJaTPlnFE=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "44774c8c83cd392c50914f86e1ff75ef8619f1cd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
         "type": "github"
       }
     },
@@ -1483,6 +1558,27 @@
       "original": {
         "owner": "stronk-dev",
         "repo": "Tokyo-Night-Linux",
+        "type": "github"
+      }
+    },
+    "whisp-away": {
+      "inputs": {
+        "crane": "crane",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1768913025,
+        "narHash": "sha256-nL4A3iKmhUmORgVem3gGcGP8fwAzvV4PsgfjJgVw/TA=",
+        "owner": "madjinn",
+        "repo": "whisp-away",
+        "rev": "c1561e2418ee13e98a43c276165fc783b34eaede",
+        "type": "github"
+      },
+      "original": {
+        "owner": "madjinn",
+        "repo": "whisp-away",
         "type": "github"
       }
     },

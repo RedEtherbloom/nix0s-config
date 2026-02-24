@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   osConfig,
   pkgs,
@@ -12,6 +13,10 @@
     vopono-torrent
     ;
 in {
+  imports = [
+    inputs.whisp-away.nixosModules.home-manager
+  ];
+
   options.myOptions.hostRoles.neural-augmenter = {
     enable = lib.mkOption {
       description = "workstation hm settings";
@@ -162,6 +167,9 @@ in {
             nautilus
 
             sdrpp
+
+            # jambi TODO: Broken build
+
           ]
           ++ (with pkgs.kdePackages; [
             ark
@@ -202,6 +210,14 @@ in {
         enable = true;
         indicator = false;
         package = pkgs.kdePackages.kdeconnect-kde;
+      };
+      whisp-away = {
+        enable = true;
+        defaultModel = lib.mkDefault "small.en";
+        defaultBackend = lib.mkDefault "whisper-cpp"; # whisper.cpp seems more performant for our use cases
+        accelerationType = lib.mkDefault "vulkan";
+        useClipboard = lib.mkDefault false; # Typing at cursor position
+        useCrane = false; # Broken, as craneLib missing?
       };
     };
     programs = {
