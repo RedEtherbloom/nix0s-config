@@ -129,6 +129,7 @@ in {
         openFirewall = true;
       };
       tuned.enable = true;
+      tlp.enable = lib.mkForce false; # Conflicts with tuned
       upower.enable = true;
       gnome.evolution-data-server.enable = true; # Calendar support for noctalia
     };
