@@ -41,7 +41,10 @@ in {
       firefox.enable = lib.mkDefault true;
       socials.enable = lib.mkDefault true;
 
-      obsidian.enable = lib.mkDefault true;
+      obsidian = {
+        enable = lib.mkDefault true;
+        jjAutosync = lib.mkDefault true;
+      };
       taskwarrior = {
         enable = lib.mkDefault true;
         enableSync = lib.mkDefault true;

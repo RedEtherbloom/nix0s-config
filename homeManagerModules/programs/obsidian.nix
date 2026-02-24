@@ -39,7 +39,12 @@ in {
     pullShortcut = lib.mkOption {
       description = "Shortcut to pull and rebase remote changes";
       type = lib.types.bool;
-      default = true;
+      default = false;
+    };
+    jjAutosync = lib.mkOption {
+      description = "Automatically sync obsidian vaults using jujutsu.";
+      type = lib.types.bool;
+      default = false;
     };
   };
 
@@ -52,6 +57,27 @@ in {
         lazygitSyncVaultDefault
         syncObsidianPhone
       ];
+    })
+    (lib.mkIf cfg.jjAutosync {
+      systemd.user = {
+          services."jj-obsidian-autosync" =
+            {
+              Unit.Description = "Automatically sync default obsidian vault.";
+              Service = {
+                Type = "oneshot";
+                ExecStart = "${lib.getExe pkgs.bash} ${config.xdg.userDirs.documents}/Obsidian/default/0B-Scripts/jj-sync.sh"; # Bash required, as android keeps popping the exectuable flag of the script
+                WorkingDirectory = "${config.xdg.userDirs.documents}/Obsidian/default/";
+              };
+            };
+          timers."jj-obsidian-autosync" = {
+            Unit.Description = "Automatically sync default obsidian vault.";
+            Timer = {
+              Unit = "jj-obsidian-autosync";
+              OnCalendar = "*:0/2"; # Trigger every 2 minutes
+            };
+            Install.WantedBy = [ "timers.target" ];
+          };
+      };
     })
   ]);
 }
