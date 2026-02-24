@@ -170,6 +170,7 @@ in {
 
             # jambi TODO: Broken build
 
+            camset # Webcam image settings gui
           ]
           ++ (with pkgs.kdePackages; [
             ark
