@@ -245,7 +245,7 @@
               keep_open = true;
             }
             {
-              key = "Shift+s";
+              key = "S";
               desc = "Stop listening to speech";
               cmd = "whisp-away stop";
               keep_open = true;
