@@ -297,7 +297,6 @@ in {
       layout = {
         background-color = "transparent";
         gaps = 16;
-        center-focused-column = "on-overflow";
 
         preset-column-widths = [
           {proportion = 1.0 / 3.0;} # Default
