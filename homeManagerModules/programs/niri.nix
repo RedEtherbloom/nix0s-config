@@ -270,26 +270,21 @@
           submenu = [
             {
               key = "n";
-              desc = "Standard nvf";
-              cmd = "neovide";
+              desc = "New/standard nvf";
+              cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim";
             }
             {
               key = "1";
-              desc = "Standard nvf";
-              cmd = "neovide";
-            }
-            {
-              key = "2";
               desc = "New nvf";
               cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim";
             }
             {
-              key = "3";
-              desc = "Frankestein merge of new and current nvf";
-              cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.frankenPackage}/bin/nvim";
+              key = "2";
+              desc = "Legacy nvf";
+              cmd = "neovide";
             }
             {
-              key = "4";
+              key = "3";
               desc = "Nvf stock maximal configuration(with patches)";
               cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim";
             }

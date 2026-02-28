@@ -27,10 +27,6 @@ in {
       type = lib.types.bool;
       default = false;
     };
-    frankenPackage = lib.mkOption {
-      description = "Badly merged upstream and local config used for refactoring";
-      type = lib.types.package;
-    };
     newPackage = lib.mkOption {
       description = "Redone nvf config";
       type = lib.types.package;
@@ -723,19 +719,7 @@ in {
             };
           };
         in {
-          frankenPackage =
-            (neovimConfiguration {
-              pkgs = nixpkgs-nvf-working;
-              modules = [
-                nvfMaximalFixes
-                (
-                  lib.attrsets.recursiveUpdate {config = {inherit (programs.nvf.settings) vim;};}
-                  # Maximal configuration should take precedence
-                  (import "${inputs.nvf}/configuration.nix" true)
-                )
-              ];
-            }).neovim;
-          # TODO: Trash and fill in both, then merge until no more conflicts
+          # TODO: Setup. Also: Set as new default
           newPackage =
             (neovimConfiguration {
               pkgs = nixpkgs-nvf-working;

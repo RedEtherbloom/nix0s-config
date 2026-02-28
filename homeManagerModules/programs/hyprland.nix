@@ -561,8 +561,7 @@ in {
           bind = [
             ", 1, exec, neovide"
             ", 2, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim"
-            ", 3, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.frankenPackage}/bin/nvim"
-            ", 4, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim"
+            ", 3, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim"
             ", escape, submap, reset"
           ];
         };
@@ -936,12 +935,10 @@ in {
         swww
         grim
         slurp
-        wl-clipboard
         swappy
         ydotool
         hyprpolkitagent
         hyprland-qtutils # needed for banners and ANR messages
-        brightnessctl
         swaynotificationcenter
 
         # Own
@@ -950,7 +947,6 @@ in {
         clipvault
         emojipick
         hyprpicker
-        rofi-bluetooth
         rofi-calc
         rofi-emoji
         rofi-nerdy
@@ -978,8 +974,6 @@ in {
         nerd-fonts.commit-mono
         powerline-symbols
         powerline-fonts
-
-        rofi-home-assistant
         rofi-tag-switcher
 
         (pkgs.writeShellScriptBin "gen_lock_symbols.py" ../../dotfiles/hypr/gen_lock_symbols.py)
