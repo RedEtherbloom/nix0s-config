@@ -301,4 +301,46 @@
   };
 
   jambi = inputs.jambi-transcript.packages.${final.stdenv.hostPlatform.system}.default;
+
+  rofi-home-assistant = final.stdenvNoCC.mkDerivation {
+    pname = "rofi-home-assistant";
+    version = "0-unstable-2021-07-29";
+
+    src = final.fetchFromGitHub {
+      owner = "flxai";
+      repo = "rofi-home-assistant";
+      rev = "aa348dee26763e1c8c394c55788d84b83aff4c73";
+      hash = "sha256-2kZgMYZ1GR7fwEnXXg4vn5b6xwxjCoPYI/YENbrea2Q=";
+    };
+
+    dontBuild = true;
+
+    buildInputs = with final; [
+      rofi
+      jq
+      home-assistant-cli
+      libnotify
+    ];
+
+    installPhase = ''
+      mkdir -p $out/bin
+      cp bin/rofi-hass $out/bin/rofi-home-assistant
+    '';
+
+    postFixup = ''
+      substituteInPlace $out/bin/rofi-home-assistant \
+        --replace "light)" "light|switch|automation)"
+    '';
+
+    meta.mainProgram = "rofi-home-assistant";
+  };
+
+  rofi-home-assistant-verbose = final.rofi-home-assistant.overrideAttrs (_: prevAttrs: {
+    postFixup =
+      prevAttrs.postFixup or ""
+      + ''
+        substituteInPlace $out/bin/rofi-home-assistant \
+          --replace " &>/dev/null" ""
+      '';
+  });
 }

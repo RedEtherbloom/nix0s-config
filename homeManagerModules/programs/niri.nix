@@ -133,6 +133,11 @@
         key = "m";
         desc = "YouTube Music";
         cmd = "${lib.getExe pkgs.ytui-music}";
+      {
+        key = "H";
+        desc = "Home assistant via rofi";
+        cmd = "rofi-home-assistant-sops.sh";
+      }
       }
     ];
     media-control = mkWlrMenu "noctalia-media-control" [

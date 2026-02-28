@@ -55,23 +55,6 @@
 
     # Next: Feed the windows to rofi for choice
   '';
-  rofi-home-assistant = pkgs.writeShellApplication {
-    name = "rofi-home-assistant";
-    runtimeInputs = with pkgs; [
-      rofi
-      jq
-      home-assistant-cli
-    ];
-    text = ''
-      set -e
-
-      export HASS_SERVER="http://${osConfig.networking.ownWireguard.hosts.neurodrive.mainIP}:8123"
-      HASS_TOKEN="$(cat ${config.sops.secrets.hass_cli_token.path})"
-      export HASS_TOKEN
-
-      ${inputs.rofi-home-assistant}/bin/rofi-hass
-    '';
-  };
   # TODO: Live output updated with filter?
   rofi-tag-switcher = pkgs.writeShellApplication {
     name = "rofi-tag-switcher";

@@ -1241,22 +1241,6 @@
         "type": "github"
       }
     },
-    "rofi-home-assistant": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1627519637,
-        "narHash": "sha256-2kZgMYZ1GR7fwEnXXg4vn5b6xwxjCoPYI/YENbrea2Q=",
-        "owner": "flxai",
-        "repo": "rofi-home-assistant",
-        "rev": "aa348dee26763e1c8c394c55788d84b83aff4c73",
-        "type": "github"
-      },
-      "original": {
-        "owner": "flxai",
-        "repo": "rofi-home-assistant",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "catppuccin-wlogout": "catppuccin-wlogout",
@@ -1285,7 +1269,6 @@
         "noctalia-shell": "noctalia-shell",
         "nvf": "nvf",
         "pyproject-nix": "pyproject-nix",
-        "rofi-home-assistant": "rofi-home-assistant",
         "secrets": "secrets",
         "sergv-nixos-config": "sergv-nixos-config",
         "sops-nix": "sops-nix",

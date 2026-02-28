@@ -99,10 +99,6 @@
       url = "github:stronk-dev/Tokyo-Night-Linux";
       flake = false;
     };
-    rofi-home-assistant = {
-      url = "github:flxai/rofi-home-assistant";
-      flake = false;
-    };
     catppuccin-wlogout = {
       url = "github:catppuccin/wlogout";
       flake = false;
