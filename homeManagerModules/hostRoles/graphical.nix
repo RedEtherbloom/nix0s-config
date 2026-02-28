@@ -23,9 +23,9 @@ in {
 
     home = {
       packages = with pkgs; [
-        helvum
         pavucontrol
         wl-clipboard
+        brightnessctl
         hyfetch
 
         # Attempts at notifications
@@ -36,8 +36,7 @@ in {
         # TODO: Recreate old shortcuts and configure via options instead
         feh
 
-        # Piper-tts voice management
-        pied
+        pied # Piper-tts voice management
       ];
       sessionVariables = {
         # Native Wayland for Chromium apps

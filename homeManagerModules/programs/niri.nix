@@ -149,6 +149,37 @@
         cmd = "${lib.getExe shikaneProfileSelector}";
       }
       {
+        key = "D";
+        desc = "Display configuration";
+        cmd = "${lib.getExe pkgs.wdisplays}";
+      }
+      {
+        key = "n";
+        desc = "Notifications";
+        submenu = [
+          {
+            key = "d";
+            desc = "Toggle do not disturb";
+            cmd = noctaliaIpcCommand "notifications toggleDND";
+          }
+          {
+            key = "D";
+            desc = "Turn on do not disturb";
+            cmd = noctaliaIpcCommand "notifications enableDND";
+          }
+          {
+            key = "t";
+            desc = "Toggle notification display";
+            cmd = noctaliaIpcCommand "notifications toggleHistory";
+          }
+          {
+            key = "x";
+            desc = "Dismiss all notifications";
+            cmd = noctaliaIpcCommand "notifications dismissAll";
+          }
+        ];
+      }
+      {
         key = "H";
         desc = "Home assistant via rofi";
         cmd = "rofi-home-assistant-sops.sh";
@@ -281,7 +312,6 @@ in {
     inputs.noctalia-shell.homeModules.default
   ];
 
-  # TODO: Read through niri-flake stylix module
   programs.niri = {
     enable = true;
     inherit (osConfig.programs.niri) package;
@@ -312,7 +342,6 @@ in {
         };
         warp-mouse-to-focus.enable = true;
       };
-      # TODO: Fill in outputs
 
       layout = {
         background-color = "transparent";
@@ -350,13 +379,6 @@ in {
         };
         struts = {}; # Sort of outer gaps
       };
-
-      # TODO: Setup waybar start
-      # Add lines like this to spawn processes at startup.
-      # Note that running niri as a session supports xdg-desktop-autostart,
-      # which may be more convenient to use.
-      # See the binds section below for more spawn examples.
-      # spawn-at-startup "waybar"
 
       prefer-no-csd = true;
 
@@ -397,7 +419,7 @@ in {
       xwayland-satellite.enable = true;
       hotkey-overlay.hide-not-bound = true;
       binds = {
-        "Mod+Shift+Slash".action.show-hotkey-overlay = []; # Show important hotkeys. Should be Mod+?
+        "Mod+Shift+Slash".action.show-hotkey-overlay = [];
 
         "Mod+T" = {
           hotkey-overlay.title = "Spawn terminal";
@@ -513,10 +535,6 @@ in {
 
         # Mod+Shift+Ctrl+Left  = { move-workspace-to-monitor-left; }; # You can also move a whole workspace to another monitor:
 
-        # You can bind mouse wheel scroll ticks using the following syntax.
-        # Binds will change direction based on the natural-scroll setting.
-        # To avoid scrolling through workspaces really fast, you can use
-        # the cooldown-ms property.
         "Mod+WheelScrollDown" = {
           cooldown-ms = 150;
           action.focus-workspace-down = [];
@@ -582,8 +600,6 @@ in {
         "Mod+Ctrl+F".action.expand-column-to-available-width = []; # Expand the focused column to space not taken up by other fully visible columns.
 
         "Mod+C".action.center-column = [];
-
-        # Center all fully visible columns on screen.
         "Mod+Ctrl+C".action.center-visible-columns = [];
 
         "Mod+Minus".action.set-column-width = "-10%";
@@ -595,10 +611,10 @@ in {
         "Mod+V".action.toggle-window-floating = [];
         "Mod+Shift+V".action.switch-focus-between-floating-and-tiling = [];
 
-        # Toggle tabbed column display mode.
-        # Windows in this column will appear as vertical tabs,
-        # rather than stacked on top of each other.
-        "Mod+W".action.toggle-column-tabbed-display = [];
+        "Mod+W" = {
+          hotkey-overlay.title = "Toggle tabbed column";
+          action.toggle-column-tabbed-display = [];
+        };
 
         "Print".action.screenshot = [];
         "Ctrl+Print".action.screenshot-screen = [];
@@ -618,6 +634,8 @@ in {
           action.spawn-sh = noctaliaIpcCommand "systemMonitor toggle";
         };
 
+        # TODO: Change to lock, then power off monitors
+        # TODO: The add one with Ctrl to only power off the monitors
         "Mod+Shift+P".action.power-off-monitors = [];
 
         "Mod+Space" = {
@@ -644,8 +662,6 @@ in {
           hotkey-overlay.title = "Dev tools and note taking";
           action.spawn-sh = "${lib.getExe wlrLaunchers.dev-tools}";
         };
-        # TODO: Notification bindings
-        # TODO: Swayidle
       };
     };
   };
@@ -658,10 +674,19 @@ in {
   systemd.user.services.noctalia-shell.Unit.ConditionEnv = ["XDG_CURRENT_DESKTOP=Niri"];
 
   home.packages = with pkgs; [
+    # Optional noctallia dependencies
+    cliphist
+    cava
+    ddcutil
+    nautilus
+
+    # Helper script block
+    shikaneProfileSelector
+
+    # Own
     thunarWithExtensions
     ytui-music
-    nautilus
-    # TODO: Find a file manager with vim keybinds
+    gnome-calendar
   ];
   # TODO: Check if polkit kde something is fixed
 }
