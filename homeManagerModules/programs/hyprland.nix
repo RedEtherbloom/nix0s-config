@@ -341,8 +341,6 @@ in {
             )
             ++ [
               "SUPER,Return,exec,kitty"
-              # TODO: Needs own implementation. Maybe a rendered version of this file?
-              # "SUPER,K,exec,list-keybinds"
               "SUPER,Y,exec,rofi -matching fuzzy -combi-modi 'window,drun,run,ssh' -modes combi,window,drun,run,ssh -show combi"
               "SUPER SHIFT,Return,exec,rofi -matching fuzzy -combi-modi 'window,drun,run,ssh' -modes combi,window,drun,run,ssh -show combi"
               "SUPER,TAB,exec,rofi -matching fuzzy -modes window -show window"
@@ -352,16 +350,12 @@ in {
               "SUPER SHIFT, S, movetoworkspacesilent, special:social"
               "SUPER, T, exec, rofi-tag-switcher current"
               "SUPER SHIFT, T, tagwindow, current"
-              # TODO: I want a social media scratchpad on that combo
-              # Show notification panel
-              "SUPER,D,exec,swaync-client -t"
-              # Toggle do not disturb
-              "SUPER SHIFT,D,exec,swaync-client -d"
+              "SUPER,D,exec,swaync-client -t" # Show notification panel
+              "SUPER SHIFT,D,exec,swaync-client -d" # Toggle do not disturb
               # TODO: Replace with a rofi
               "SUPER SHIFT,Y,exec,emojipick"
               "SUPER,E,exec,dolphin"
               "SUPER SHIFT,E,exec,kitty -e yazi"
-              # Check if xdg screenshot gets respected
               ",PRINT&A,exec,hyprshot -m output"
               ",PRINT&S,exec,hyprshot -m window"
               ",PRINT&R,exec,hyprshot -m region"
@@ -1070,6 +1064,10 @@ in {
         Service.ExecStart = "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent";
       };
       waybar.Unit.ConditionEnvironment = lib.mkForce [
+        "WAYLAND_DISPLAY"
+        "XDG_CURRENT_DESKTOP=Hyprland"
+      ];
+      swaync.Unit.ConditionEnvironment = lib.mkForce [
         "WAYLAND_DISPLAY"
         "XDG_CURRENT_DESKTOP=Hyprland"
       ];
