@@ -54,6 +54,9 @@ in {
           profile = "gpu-hq";
           gpu-context = "wayland";
         };
+        scripts = with pkgs.mpvScripts; [
+          mpris
+        ];
       };
       kitty = {
         enable = true;
