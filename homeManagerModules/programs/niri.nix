@@ -184,11 +184,25 @@
         desc = "Home assistant via rofi";
         cmd = "rofi-home-assistant-sops.sh";
       }
+      {
+        key = "b";
+        desc = "Rofi bluetooth switcher";
+        cmd = "${lib.getExe pkgs.rofi-bluetooth}";
       }
     ];
     media-control = mkWlrMenu "noctalia-media-control" [
       {
-        key = "Space";
+        key = "c";
+        desc = "Configure pipewire volumes";
+        cmd = "${lib.getExe pkgs.pwvucontrol}";
+      }
+      {
+        key = "C";
+        desc = "Pipewire patchbay";
+        cmd = "${pkgs.raysession}/bin/raysession";
+      }
+      {
+        key = "space";
         desc = "Toggle playback status";
         cmd = noctaliaIpcCommand "media playPause";
         keep_open = true;
@@ -200,7 +214,7 @@
         keep_open = true;
       }
       {
-        key = "Shift+n";
+        key = "N";
         desc = "Previous track";
         cmd = noctaliaIpcCommand "media previous";
         keep_open = true;
@@ -218,6 +232,7 @@
         keep_open = true;
       }
       {
+        key = "h";
         desc = "Seek back 5s";
         cmd = noctaliaIpcCommand "media seekRelative -5";
         keep_open = true;
@@ -235,7 +250,7 @@
         keep_open = true;
       }
       {
-        key = "Shift+m";
+        key = "M";
         desc = "Mute microphone";
         cmd = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
         keep_open = true;
