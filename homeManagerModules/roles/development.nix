@@ -211,7 +211,10 @@ in {
               push.autoSetupRemote = true;
             };
           };
-          lazygit.enable = true;
+          lazygit = {
+            enable = true;
+            settings.git.overrideGpg = true;
+          };
         };
       })
       (lib.mkIf cfg.github {
