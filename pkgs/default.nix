@@ -302,6 +302,42 @@
 
   jambi = inputs.jambi-transcript.packages.${final.stdenv.hostPlatform.system}.default;
 
+  # TODO: nix-update-script
+  shellbeats = final.stdenv.mkDerivation {
+    pname = "shellbeats";
+    version = "0-unstable-2026-02-11";
+
+    src = final.fetchFromGitHub {
+      owner = "lalo-space";
+      repo = "shellbeats";
+      rev = "280e5cabcc2e84a6a5f4b91c70c99f7b094a0c3f";
+      hash = "sha256-fqqqa8cCWo0uAi6cWCaLDl9UKN81HH4JOqko5mYEn+o=";
+    };
+
+    nativeBuildInputs = with final; [
+      makeWrapper
+      pkg-config
+      ncurses.dev
+    ];
+
+    buildInputs = with final; [
+      yt-dlp
+      mpv
+    ];
+
+    installPhase = ''
+      mkdir -p $out/bin
+      cp shellbeats $out/bin
+    '';
+
+    meta = {
+      homepage = "https://github.com/lalo-space/shellbeats";
+      description = "CLI music player for Linux/Mac. Stream YouTube audio and mp3 download. Minimal, fast, keyboard driven.";
+      license = final.lib.licenses.gpl3;
+      mainProgram = "shellbeats";
+    };
+  };
+
   rofi-home-assistant = final.stdenvNoCC.mkDerivation {
     pname = "rofi-home-assistant";
     version = "0-unstable-2021-07-29";

@@ -6,10 +6,10 @@
   osConfig,
   ...
 }: let
+  # TODO: Move to own file, then upstream as home-manager option
   mkWlrConfig = menuName: menu:
     pkgs.writeText "${menuName}-config.yaml" (pkgs.lib.generators.toYAML {} {
       anchor = "center";
-      # TODO: Fill in options
       inherit menu;
     });
   mkWlrMenu = menuName: menu:
@@ -133,10 +133,16 @@
         cmd = "thunar";
       }
       {
-        # TODO: Get a better tui
         key = "m";
         desc = "YouTube Music";
-        cmd = "${lib.getExe pkgs.ytui-music}";
+        cmd = "${lib.getExe config.programs.kitty.package} -e${lib.getExe pkgs.ytui-music}";
+      }
+      # TODO: Check if shellbeats is usable
+      {
+        key = "M";
+        desc = "ShellBeats!";
+        cmd = "${lib.getExe config.programs.kitty.package} -e ${lib.getExe pkgs.shellbeats}";
+      }
       {
         key = "d";
         desc = "Select display configuration via shikane";
