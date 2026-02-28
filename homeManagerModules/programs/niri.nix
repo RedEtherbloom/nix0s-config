@@ -18,6 +18,11 @@
     '';
   noctaliaPackage = config.programs.noctalia-shell.package;
   noctaliaIpcCommand = command: "${noctaliaPackage}/bin/noctalia-shell ipc call ${command}";
+  shikaneProfileSelector = let 
+  rofiSep = "|";
+      in pkgs.writeShellScriptBin "shikaneProfileSelector.sh" ''
+    ${pkgs.toml-cli}/bin/toml get ${config.xdg.configHome}/shikane/config.toml . | ${lib.getExe pkgs.jq} -r '.profile | map(.name) | join("${rofiSep}")' | ${lib.getExe pkgs.rofi} -dmenu -sep '${rofiSep}' | ${pkgs.findutils}/bin/xargs ${pkgs.shikane}/bin/shikanectl switch 
+  '';
   wlrLaunchers = {
     common = mkWlrMenu "noctalia-common" [
       {
@@ -108,7 +113,6 @@
         ];
       }
       {
-        # TODO: Clipboard manager
         key = "c";
         desc = "Clipboard";
         cmd = noctaliaIpcCommand "launcher clipboard";
@@ -133,6 +137,11 @@
         key = "m";
         desc = "YouTube Music";
         cmd = "${lib.getExe pkgs.ytui-music}";
+      {
+        key = "d";
+        desc = "Select display configuration via shikane";
+        cmd = "${lib.getExe shikaneProfileSelector}";
+      }
       {
         key = "H";
         desc = "Home assistant via rofi";
