@@ -157,6 +157,7 @@ in {
     environment.systemPackages = with pkgs; [
       lm_sensors
       (sddm-astronaut.override {embeddedTheme = "black_hole";})
+      nftables # vopono daemon
     ];
 
     # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
@@ -221,7 +222,23 @@ in {
       };
     in "${src}/${applications-menu}";
 
-    systemd.services.NetworkManager-wait-online.enable = lib.mkForce false; # Issues with builds randomly failing
+    systemd.services = {
+      NetworkManager-wait-online.enable = lib.mkForce false; # Issues with builds randomly failing
+      vopono = {
+        description = "Vopono VPN";
+        after = ["network.target"];
+        requires = ["network.target"];
+        wantedBy = ["multi-user.target"];
+        serviceConfig = {
+          # TODO: Setup separate user
+          Type = "simple";
+          ExecStart = "${lib.getExe pkgs.vopono} daemon";
+          Restart = "on-failure";
+          RestartSec = "2s";
+          Environment=["RUST_LOG=info"]; # Structured logging
+        };
+      };
+    };
     networking = {
       networkmanager = {
         enable = true;

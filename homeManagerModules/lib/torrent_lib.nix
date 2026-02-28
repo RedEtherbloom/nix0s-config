@@ -9,8 +9,6 @@
       curl
       jq
       qbittorrent
-      flaresolverr
-      jackett
       prowlarr
     ];
     text = ''
@@ -25,8 +23,6 @@
          exit "$MULLVAD_CONNECTED"
        fi
 
-      HOST="127.0.0.1" TZ="${osConfig.time.timeZone}" LANG="en_US" flaresolverr &
-      jackett &
       Prowlarr -nobrowser &
       qbittorrent
     '';
@@ -39,8 +35,6 @@
     ];
     text = ''
       # qbittorrent is 8180
-      # flaresolverr is 8191
-      # jacket is 9117
       # prowlarr is 9696
       vopono exec \
         --provider mullvad \
@@ -49,8 +43,6 @@
         --allow-host-access \
         --verbose \
         -f 8180 \
-        -f 8191 \
-        -f 9117 \
         -f 9696 \
         mullvad-torrent
     '';
