@@ -1048,6 +1048,14 @@ in {
         "WAYLAND_DISPLAY"
         "XDG_CURRENT_DESKTOP=Hyprland"
       ];
+      hypridle.Unit.ConditionEnvironment = lib.mkForce [
+        "WAYLAND_DISPLAY"
+        "XDG_CURRENT_DESKTOP=Hyprland"
+      ];
+      hyprdynamicmonitors.Unit.ConditionEnvironment = lib.mkForce [
+        "WAYLAND_DISPLAY"
+        "XDG_CURRENT_DESKTOP=Hyprland"
+      ];
     };
   };
 }
