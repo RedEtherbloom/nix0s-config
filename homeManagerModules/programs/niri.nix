@@ -18,11 +18,12 @@
     '';
   noctaliaPackage = config.programs.noctalia-shell.package;
   noctaliaIpcCommand = command: "${noctaliaPackage}/bin/noctalia-shell ipc call ${command}";
-  shikaneProfileSelector = let 
-  rofiSep = "|";
-      in pkgs.writeShellScriptBin "shikaneProfileSelector.sh" ''
-    ${pkgs.toml-cli}/bin/toml get ${config.xdg.configHome}/shikane/config.toml . | ${lib.getExe pkgs.jq} -r '.profile | map(.name) | join("${rofiSep}")' | ${lib.getExe pkgs.rofi} -dmenu -sep '${rofiSep}' | ${pkgs.findutils}/bin/xargs ${pkgs.shikane}/bin/shikanectl switch 
-  '';
+  shikaneProfileSelector = let
+    rofiSep = "|";
+  in
+    pkgs.writeShellScriptBin "shikaneProfileSelector.sh" ''
+      ${pkgs.toml-cli}/bin/toml get ${config.xdg.configHome}/shikane/config.toml . | ${lib.getExe pkgs.jq} -r '.profile | map(.name) | join("${rofiSep}")' | ${lib.getExe pkgs.rofi} -dmenu -sep '${rofiSep}' | ${pkgs.findutils}/bin/xargs ${pkgs.shikane}/bin/shikanectl switch
+    '';
   wlrLaunchers = {
     common = mkWlrMenu "noctalia-common" [
       {
@@ -351,6 +352,10 @@ in {
           # scroll-button 273
         };
         warp-mouse-to-focus.enable = true;
+        focus-follows-mouse = {
+          enable = true;
+          max-scroll-amount = "0%";
+        };
       };
 
       layout = {
@@ -369,7 +374,7 @@ in {
         #   {proportion = 2.0 / 3.0;} # Default
         # ];
         focus-ring = {
-          width = 4;
+          width = 2;
           # active-color "#7fc8ff" # Hope that noctalia takes care of this
           # inactive-color "#505050" # Hope that noctalia takes care of this
           # You can also use gradients. They take precedence over solid colors.
@@ -387,7 +392,12 @@ in {
             y = 5;
           };
         };
-        struts = {}; # Sort of outer gaps
+        struts = {
+          top = 8;
+          right = 8;
+          bottom = 8;
+          left = 8;
+        };
       };
 
       prefer-no-csd = true;
@@ -400,10 +410,10 @@ in {
         {
           # Noctalia requirement
           geometry-corner-radius = {
-            top-left = 20.0;
-            top-right = 20.0;
-            bottom-left = 20.0;
-            bottom-right = 20.0;
+            top-left = 5.0;
+            top-right = 5.0;
+            bottom-left = 5.0;
+            bottom-right = 5.0;
           };
           clip-to-geometry = true;
         }
@@ -543,7 +553,19 @@ in {
         "Mod+Shift+Ctrl+K".action.move-column-to-monitor-up = [];
         "Mod+Shift+Ctrl+L".action.move-column-to-monitor-right = [];
 
-        # Mod+Shift+Ctrl+Left  = { move-workspace-to-monitor-left; }; # You can also move a whole workspace to another monitor:
+        "Mod+Page_Down".action.focus-workspace-down = [];
+        "Mod+Page_Up".action.focus-workspace-up = [];
+        "Mod+U".action.focus-workspace-down = [];
+        "Mod+I".action.focus-workspace-up = [];
+        "Mod+Ctrl+Page_Down".action.move-column-to-workspace-down = [];
+        "Mod+Ctrl+Page_Up".action.move-column-to-workspace-up = [];
+        "Mod+Ctrl+U".action.move-column-to-workspace-down = [];
+        "Mod+Ctrl+I".action.move-column-to-workspace-up = [];
+
+        "Mod+Shift+Page_Down".action.move-workspace-down = [];
+        "Mod+Shift+Page_Up".action.move-workspace-up = [];
+        "Mod+Shift+U".action.move-workspace-down = [];
+        "Mod+Shift+I".action.move-workspace-up = [];
 
         "Mod+WheelScrollDown" = {
           cooldown-ms = 150;
@@ -681,7 +703,14 @@ in {
     package = inputs.noctalia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default.override {calendarSupport = true;};
     systemd.enable = true; # See doc warnings about experimental status
   };
-  systemd.user.services.noctalia-shell.Unit.ConditionEnv = ["XDG_CURRENT_DESKTOP=Niri"];
+  systemd.user.services = {
+    noctalia-shell.Unit.ConditionEnv = ["XDG_CURRENT_DESKTOP=niri"];
+    swayidle.Unit.ConditionEnvironment = lib.mkForce [
+      "WAYLAND_DISPLAY"
+      "XDG_CURRENT_DESKTOP=niri"
+    ];
+  };
+  stylix.targets.noctalia-shell.enable = false;
 
   home.packages = with pkgs; [
     # Optional noctallia dependencies
@@ -699,4 +728,45 @@ in {
     gnome-calendar
   ];
   # TODO: Check if polkit kde something is fixed
+
+  services = {
+    swayidle = let
+      lock_cmd = noctaliaIpcCommand "lockScreen lock";
+    in {
+      enable = true;
+      events = {
+        lock = lock_cmd;
+        before-sleep = "${noctaliaIpcCommand "media pause"}; ${lock_cmd}";
+        after-resume = "${lock_cmd}";
+      };
+      timeouts = [
+        {
+          timeout = 300;
+          command = "${lib.getExe config.programs.niri.package} msg action power-off-monitors";
+        }
+        {
+          # Longer default
+          timeout = 900;
+          command = "${lock_cmd}";
+        }
+        {
+          timeout = 930;
+          command = "${lib.getExe config.programs.niri.package} msg action power-off-monitors";
+        }
+      ];
+    };
+    gnome-keyring = {
+      enable = true;
+      # Exclude ssh component
+      components = [
+        "pkcs11"
+        "secrets"
+      ];
+    };
+    udiskie = {
+      enable = true;
+      automount = false;
+    };
+    shikane.enable = true;
+  };
 }
