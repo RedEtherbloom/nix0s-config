@@ -969,11 +969,6 @@ in {
         waystt
         config.home.hyprdynamicmonitors.package
         rofiDisplayLayout
-
-        # Fonts
-        nerd-fonts.commit-mono
-        powerline-symbols
-        powerline-fonts
         rofi-tag-switcher
 
         (pkgs.writeShellScriptBin "gen_lock_symbols.py" ../../dotfiles/hypr/gen_lock_symbols.py)

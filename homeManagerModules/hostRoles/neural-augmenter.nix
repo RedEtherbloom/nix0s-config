@@ -83,108 +83,133 @@ in {
 
     home = {
       packages =
-        (with pkgs;
-          [
-            tor-browser
-            bitwarden-desktop
-            bitwarden-cli
-            restic
-            autorestic
-            krita
+        (
+          with pkgs;
+            [
+              tor-browser
+              bitwarden-desktop
+              bitwarden-cli
+              restic
+              autorestic
+              krita
 
-            # KDE info packages
-            clinfo
-            mesa-demos
-            vulkan-tools
-            wayland-utils
-            pciutils
-            aha
-            ddcutil
-            usbutils
+              # KDE info packages
+              clinfo
+              mesa-demos
+              vulkan-tools
+              wayland-utils
+              pciutils
+              aha
+              ddcutil
+              usbutils
 
-            ffmpeg-full
-            gst_all_1.gst-plugins-good
-            gst_all_1.gst-plugins-bad
-            handbrake
-            imagemagick
-            yt-dlp
-            bluetui
+              ffmpeg-full
+              gst_all_1.gst-plugins-good
+              gst_all_1.gst-plugins-bad
+              handbrake
+              imagemagick
+              yt-dlp
+              bluetui
 
-            vopono
-            mullvad-torrent
-            vopono-torrent
-            tailscale
-            # Certificate creation
-            xca
-            dumbpipe
+              vopono
+              mullvad-torrent
+              vopono-torrent
+              tailscale
+              # Certificate creation
+              xca
+              dumbpipe
 
-            calibre
-            speedread
+              calibre
+              speedread
 
-            scrcpy
-            android-tools
+              scrcpy
+              android-tools
 
-            podman
-            dive
-            podman-tui
-            podman-compose
-            docker-compose
-            distrobox
+              podman
+              dive
+              podman-tui
+              podman-compose
+              docker-compose
+              distrobox
 
-            sonic-pi
-            reaper
-            # mpd players to compare
-            cantata
-            plattenalbum
-            # Subsonic clients
-            feishin
-            aonsoku
+              sonic-pi
+              reaper
+              # mpd players to compare
+              cantata
+              plattenalbum
+              # Subsonic clients
+              feishin
+              aonsoku
 
-            nix-search-tv # TODO: Evaluate. If useful move to dev tools.
+              nix-search-tv # TODO: Evaluate. If useful move to dev tools.
 
-            systemctl-tui
+              systemctl-tui
 
-            renderdoc # Debugging render scenes for Minecraft
+              renderdoc # Debugging render scenes for Minecraft
 
-            # Banking
-            hledger
-            hledger-ui
-            hledger-web
-            hledger-fmt
-            aqbanking
+              # Banking
+              hledger
+              hledger-ui
+              hledger-web
+              hledger-fmt
+              aqbanking
 
-            wivrn
-            wayvr
+              wivrn
+              wayvr
 
-            # dbus debugging
-            bustle
-            d-spy
+              # dbus debugging
+              bustle
+              d-spy
 
-            easyeffects
+              easyeffects
 
-            qalculate-qt
-            # gnome-calculator # Broken due to gtksourceview
-            nautilus
+              qalculate-qt
+              nautilus
 
-            sdrpp
+              sdrpp
 
-            # jambi TODO: Broken build
+              # jambi TODO: Broken build
 
-            camset # Webcam image settings gui
-          ]
-          ++ (with pkgs.kdePackages; [
-            ark
-            gwenview
-            okular
-            kate
-            ktexteditor
-            dolphin
-            dolphin-plugins
-            baloo-widgets
-            ffmpegthumbs
-            # Font selector
-            kcharselect
-          ]))
+              camset # Webcam image settings gui
+
+              pwvucontrol
+              coppwr # Debugging and low-level configuring of pipewire
+              raysession # Patchbay
+              rofi-bluetooth
+
+              # Fonts
+              nerd-fonts.commit-mono
+              powerline-symbols
+              powerline-fonts
+
+              # TODO: Find a file manager with vim keybinds
+
+              (
+                pkgs.writeShellScriptBin "rofi-home-assistant-sops.sh" ''
+                  set -e
+
+                  export HASS_SERVER="http://${osConfig.networking.ownWireguard.hosts.neurodrive.mainIP}:8123"
+                  HASS_TOKEN="$(cat ${config.sops.secrets.hass_cli_token.path})"
+                  export HASS_TOKEN
+
+                  ${lib.getExe pkgs.rofi-home-assistant-verbose}
+                ''
+              )
+            ]
+            ++ (with pkgs.kdePackages; [
+              ark
+              gwenview
+              okular
+              kate
+              ktexteditor
+              dolphin
+              dolphin-plugins
+              baloo-widgets
+              ffmpegthumbs
+              # Font selector
+              kcharselect
+            ])
+        )
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
           with pkgs; [
             yubioath-flutter
