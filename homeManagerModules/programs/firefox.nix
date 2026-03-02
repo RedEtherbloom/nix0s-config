@@ -464,11 +464,32 @@ in {
                   }
                 ];
               };
+              # TODO: Need kagi definition with search suggestion url
+              "kagi" = {
+                definedAliases = defineAliasVariants [
+                  "k"
+                  "kagi"
+                ];
+                icon = "https://kagi.com/favicon-16x16.png?v=2";
+                updateInterval = iconRefreshInterval;
+                urls = [
+                  {
+                    template = "https://kagi.com/search";
+                    params = [
+                      {
+                        name = "q";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+              };
               "bing".metaData.alias = "@bing";
               "google".metaData.alias = "@g";
             };
-            default = "google";
+            default = "kagi";
             order = [
+              "kagi"
               "google"
               "perplexityai"
               "github"
