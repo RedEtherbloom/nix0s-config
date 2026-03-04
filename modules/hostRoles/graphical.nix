@@ -27,8 +27,8 @@ in {
       package = appimage-run;
     };
     environment = let
-        askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
-      in {
+      askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+    in {
       systemPackages = with pkgs; [
         appimage-run
         piper-tts

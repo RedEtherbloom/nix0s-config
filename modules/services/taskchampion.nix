@@ -2,8 +2,7 @@
   lib,
   config,
   ...
-}:
- let
+}: let
   cfg = config.myOptions.services.taskchampion;
 in {
   options.myOptions.services.taskchampion = {

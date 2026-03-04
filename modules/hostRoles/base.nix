@@ -20,7 +20,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     myOptions.utilities.enable = lib.mkDefault true;
-    security.pki.certificateFiles = [ "${secrets}/secrets/root_ca/root_ca.crt" ];
+    security.pki.certificateFiles = ["${secrets}/secrets/root_ca/root_ca.crt"];
 
     services = {
       fwupd.enable = lib.mkDefault true;
@@ -49,7 +49,7 @@ in {
 
     nix = {
       registry.nixpkgs.flake = inputs.nixpkgs;
-      nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+      nixPath = ["nixpkgs=${inputs.nixpkgs}"];
     };
   };
 }
