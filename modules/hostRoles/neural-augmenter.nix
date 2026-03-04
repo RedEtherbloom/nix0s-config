@@ -235,7 +235,7 @@ in {
           ExecStart = "${lib.getExe pkgs.vopono} daemon";
           Restart = "on-failure";
           RestartSec = "2s";
-          Environment=["RUST_LOG=info"]; # Structured logging
+          Environment = ["RUST_LOG=info"]; # Structured logging
         };
       };
     };
@@ -255,7 +255,11 @@ in {
         ];
       };
     };
-
     niri-flake.cache.enable = false; # We manage it ourself for readability
+    i18n.inputMethod = {
+      enable = true;
+      type = "fcitx5";
+    };
+    fonts.packages = [pkgs.noto-fonts-color-emoji]; # fcitx5
   };
 }
