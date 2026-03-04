@@ -2,19 +2,18 @@
   config,
   lib,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.zsh;
 in {
   options.myOptions.zsh = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable ZSH and Oh-My-Zsh";
-      type = with types; bool;
+      type = lib.types.bool;
       default = true;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     programs = {
       zsh = {
         enable = true;

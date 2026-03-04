@@ -5,8 +5,7 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.obsidian;
   vars = import ../variables.nix {inherit config osConfig pkgs;};
 
@@ -21,7 +20,7 @@ with lib; let
     uri = "ssh://${config.home.username}@${vars.data-server-ip}${vars.own-hm-data-directory}/obsidian-vaults/${vault-name}";
   };
 in {
-  config = mkIf cfg.enableSync {
+  config = lib.mkIf cfg.enableSync {
     # TODO: Needs to be reloaded after config changes
     services.git-sync = {
       enable = true;

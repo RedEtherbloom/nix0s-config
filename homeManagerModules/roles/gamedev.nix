@@ -4,17 +4,16 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.roles.gamedev;
 in {
-  options.myOptions.roles.gamedev.enable = mkOption {
+  options.myOptions.roles.gamedev.enable = lib.mkOption {
     description = "Install tooling for game development.";
     type = lib.types.bool;
     default = osConfig.myOptions.roles.gamedev.enable;
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       godot
     ];

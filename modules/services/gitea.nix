@@ -4,8 +4,7 @@
   pkgs,
   secrets,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.services.gitea;
 
   # DEFAULT Port, reexported
@@ -15,14 +14,14 @@ with lib; let
   GITEA_SECRET_FILE = "${GITEA_SECRET_DIRECTORY}/gitea.yaml";
 in {
   options.myOptions.services.gitea = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable gitea";
-      type = with types; bool;
+      type = lib.types.bool;
       default = false;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     sops.secrets."gitea/database_password" = {
       sopsFile = GITEA_SECRET_FILE;
       owner = config.services.gitea.user;

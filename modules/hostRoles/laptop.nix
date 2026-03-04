@@ -2,13 +2,12 @@
   config,
   lib,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.hostRoles.laptop;
 in {
-  options.myOptions.hostRoles.laptop.enable = mkEnableOption "laptop options";
+  options.myOptions.hostRoles.laptop.enable = lib.mkEnableOption "laptop options";
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     myOptions.hostRoles.neural-augmenter.enable = lib.mkDefault true;
   };
 }

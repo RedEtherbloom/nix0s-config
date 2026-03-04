@@ -3,41 +3,40 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.event-setup;
 in {
   options.myOptions.event-setup = {
-    enable = mkEnableOption "System options for chaos events";
+    enable = lib.mkEnableOption "System options for chaos events";
     # TODO: Implement
-    hardenSystem = mkOption {
+    hardenSystem = lib.mkOption {
       description = "STUB: Enable some extra hardening options";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
     # TODO: Implement
-    closeUnnecessaryPorts = mkOption {
+    closeUnnecessaryPorts = lib.mkOption {
       description = "STUB: Enable some extra hardening options";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
-    enablePixelflutClient = mkOption {
+    enablePixelflutClient = lib.mkOption {
       description = "Install pixelflut clients";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
     # TODO: Implement
-    enablePixelflutServer = mkOption {
+    enablePixelflutServer = lib.mkOption {
       description = "STUB: Install and enable a pixelflut server";
-      type = types.bool;
+      type = lib.types.bool;
       default = false;
     };
   };
   # TODO: Harden system
   # TODO: Disable open ports
 
-  config = mkIf cfg.enable (mkMerge [
-    (mkIf cfg.enablePixelflutClient {
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    (lib.mkIf cfg.enablePixelflutClient {
       environment.systemPackages = with pkgs; [
         sturmflut
       ];

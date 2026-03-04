@@ -2,32 +2,31 @@
   config,
   lib,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.office;
 in {
   options.myOptions.office = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable office";
-      type = with types; bool;
+      type = lib.types.bool;
       default = false;
     };
-    printing = mkOption {
+    printing = lib.mkOption {
       description = "Enable printing";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
-    scanning = mkOption {
+    scanning = lib.mkOption {
       description = "Enable scanning";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     services.printing.enable = cfg.printing;
 
-    hardware.sane = mkIf cfg.scanning {
+    hardware.sane = lib.mkIf cfg.scanning {
       enable = true;
       drivers.scanSnap.enable = true;
     };

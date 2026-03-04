@@ -3,25 +3,24 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.vscode;
   cfg_development = config.myOptions.roles.development;
 in {
   options.myOptions.vscode = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable vscode";
-      type = with types; bool;
+      type = lib.types.bool;
       default = false;
     };
-    vimMode = mkOption {
+    vimMode = lib.mkOption {
       description = "Enable Vim mode plugin";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     programs.vscode = {
       enable = true;
       profiles.default = {

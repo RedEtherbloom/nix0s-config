@@ -4,17 +4,16 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.roles.gaming;
 in {
-  options.myOptions.roles.gaming.enable = mkOption {
+  options.myOptions.roles.gaming.enable = lib.mkOption {
     description = "Install games";
-    type = with types; bool;
+    type = lib.types.bool;
     default = osConfig.myOptions.roles.gaming.enable;
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       steam
       steam-tui

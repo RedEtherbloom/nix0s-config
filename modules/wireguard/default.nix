@@ -4,8 +4,7 @@
   pkgs,
   secrets,
   ...
-}:
-with lib; let
+}: let
   cfg = config.networking.ownWireguard;
 
   mainPrefix = "10.69.0.";
@@ -13,30 +12,30 @@ with lib; let
 
   wireguardPeer = _: {
     options = {
-      IP = mkOption {
+      IP = lib.mkOption {
         description = "IPv4 of the wireguard client";
-        type = with types; str;
+        type = lib.types.str;
       };
-      publicKey = mkOption {
+      publicKey = lib.mkOption {
         description = "Public key of the wireguard client";
-        type = with types; str;
+        type = lib.types.str;
       };
     };
   };
   wireguardHost = _: {
     options = {
       # For easier access
-      mainIP = mkOption {
+      mainIP = lib.mkOption {
         description = "Main IPv4 without suffix";
-        type = with types; str;
+        type = lib.types.str;
       };
-      main = mkOption {
+      main = lib.mkOption {
         description = "Main wireguard network";
-        type = with types; (submodule wireguardPeer);
+        type = lib.types.submodule wireguardPeer;
       };
-      unlock = mkOption {
+      unlock = lib.mkOption {
         description = "Network for unlocking wireguard devices on boot";
-        type = with types; (submodule wireguardPeer);
+        type = lib.types.submodule wireguardPeer;
       };
     };
   };
@@ -64,17 +63,17 @@ with lib; let
 in {
   options = {
     networking.ownWireguard = {
-      enable = mkEnableOption "Insert own standard wireguard config";
-      currentHost = mkOption {
+      enable = lib.mkEnableOption "Insert own standard wireguard config";
+      currentHost = lib.mkOption {
         description = "Current host to be configured";
-        type = with types; submodule wireguardHost;
+        type = lib.types.submodule wireguardHost;
         default = config.networking.ownWireguard.hosts."${config.networking.hostName}";
       };
       # To be referenced in other files or services
       # TODO: Rewrite with attrset(I think one can modularize)
-      hosts = mkOption {
+      hosts = lib.mkOption {
         description = "Listing of our wireguard hosts for easy cross-reference";
-        type = with types; attrsOf (submodule wireguardHost);
+        type = lib.types.attrsOf (lib.types.submodule wireguardHost);
         # TODO: Check if it still crashes if I move this back into the config block
         default = {
           wireguardController =
@@ -94,8 +93,8 @@ in {
     };
   };
 
-  config = mkMerge [
-    (mkIf cfg.enable {
+  config = lib.mkMerge [
+    (lib.mkIf cfg.enable {
       environment.systemPackages = [pkgs.wireguard-tools];
 
       sops.secrets."wireguard/wg0_private" = {

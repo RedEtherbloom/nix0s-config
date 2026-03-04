@@ -4,19 +4,18 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.warp;
 in {
   options.myOptions.warp = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable warp";
-      type = with types; bool;
+      type = lib.types.bool;
       default = osConfig.myOptions.utilities.wormhole && config.myOptions.hostRoles.graphical.enable;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [
       pkgs.warp
     ];

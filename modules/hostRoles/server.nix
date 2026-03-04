@@ -2,13 +2,12 @@
   config,
   lib,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.hostRoles.server;
 in {
-  options.myOptions.hostRoles.server.enable = mkEnableOption "server options";
+  options.myOptions.hostRoles.server.enable = lib.mkEnableOption "server options";
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     myOptions.hostRoles.base.enable = lib.mkDefault true;
   };
 }

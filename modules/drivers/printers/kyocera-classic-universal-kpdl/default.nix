@@ -18,11 +18,11 @@ stdenv.mkDerivation rec {
     cp KyoClassicUniversalKPDL_v${version}/${locality}/KyUniL.PPD $out/share/cups/model/Kyocera/Kyocera_Classic_Universal_KPDL.ppd
   '';
 
-  meta = with lib; {
+  meta = {
     description = "PPD file for generic classic Kyocera drivers(KPDL)";
     homepage = "https://www.kyoceradocumentsolutions.com";
-    license = licenses.unfree;
-    maintainers = with maintainers; [RedEtherbloom];
-    platforms = platforms.linux;
+    license = lib.licenses.unfree;
+    maintainers = with lib.maintainers; [RedEtherbloom];
+    platforms = lib.platforms.linux;
   };
 }

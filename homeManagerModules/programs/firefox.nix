@@ -3,8 +3,7 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.firefox;
   commonConfig = {
     # middle-click behavior
@@ -14,7 +13,7 @@ with lib; let
     "browser.uidensity" = "1";
   };
   # Map each alias to a version with @ prepended and : appended
-  defineAliasVariants = baseAlias: (lists.concatMap (x: [
+  defineAliasVariants = baseAlias: (lib.lists.concatMap (x: [
       ("@" + x)
       (x + ":")
     ])
@@ -22,14 +21,14 @@ with lib; let
   iconRefreshInterval = 24 * 60 * 60 * 1000;
 in {
   options.myOptions.firefox = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable firefox";
-      type = with types; bool;
+      type = lib.types.bool;
       default = false;
     };
   };
 
-  config = mkIf cfg.enable rec {
+  config = lib.mkIf cfg.enable rec {
     programs.firefox = {
       enable = true;
       package = pkgs.firefox-bin;

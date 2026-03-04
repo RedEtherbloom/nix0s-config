@@ -4,30 +4,29 @@
   pkgs,
   secrets,
   ...
-}:
-with lib; let
+}: let
   cfg = config.security.ownAdditional;
 in {
   options.security.ownAdditional = {
-    enabled = mkOption {
-      type = types.bool;
+    enabled = lib.mkOption {
+      type = lib.types.bool;
       default = true;
       description = "Own additional security settings";
     };
-    normalUserHibernate = mkOption {
-      type = types.bool;
+    normalUserHibernate = lib.mkOption {
+      type = lib.types.bool;
       default = true;
       description = "Allow normal users to hibernate as well";
     };
-    yubikey = mkOption {
-      type = types.bool;
+    yubikey = lib.mkOption {
+      type = lib.types.bool;
       default = false;
       description = "Yubikey support";
     };
   };
 
-  config = mkMerge [
-    (mkIf cfg.enabled {
+  config = lib.mkMerge [
+    (lib.mkIf cfg.enabled {
       sops.secrets."sudoers/optional" = {
         format = "binary";
         sopsFile = "${secrets}/secrets/common/sudoers";
@@ -58,7 +57,7 @@ in {
     })
 
     # Allow hibernation for regular users
-    (mkIf cfg.normalUserHibernate {
+    (lib.mkIf cfg.normalUserHibernate {
       security.polkit = {
         enable = true;
         extraConfig = ''
@@ -72,7 +71,7 @@ in {
       };
     })
 
-    (mkIf cfg.yubikey {
+    (lib.mkIf cfg.yubikey {
       services = {
         udev.packages = [pkgs.yubikey-personalization];
         pcscd.enable = true;

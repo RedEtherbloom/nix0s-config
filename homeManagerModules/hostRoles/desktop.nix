@@ -3,19 +3,18 @@
   lib,
   osConfig,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.hostRoles.desktop;
 in {
   options.myOptions.hostRoles.desktop = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable desktop";
-      type = with types; bool;
+      type = lib.types.bool;
       default = osConfig.myOptions.hostRoles.desktop.enable;
     };
   };
 
-  config = mkIf cfg.enable {
-    myOptions.hostRoles.neural-augmenter.enable = mkDefault true;
+  config = lib.mkIf cfg.enable {
+    myOptions.hostRoles.neural-augmenter.enable = lib.mkDefault true;
   };
 }

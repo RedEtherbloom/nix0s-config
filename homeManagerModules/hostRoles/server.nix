@@ -3,19 +3,18 @@
   lib,
   osConfig,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.hostRoles.server;
 in {
   options.myOptions.hostRoles.server = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable server";
-      type = with types; bool;
+      type = lib.types.bool;
       default = osConfig.myOptions.hostRoles.server.enable;
     };
   };
 
-  config = mkIf cfg.enable {
-    myOptions.hostRoles.base.enable = mkDefault true;
+  config = lib.mkIf cfg.enable {
+    myOptions.hostRoles.base.enable = lib.mkDefault true;
   };
 }

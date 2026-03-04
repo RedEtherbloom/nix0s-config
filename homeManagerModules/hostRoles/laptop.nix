@@ -4,20 +4,19 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.hostRoles.laptop;
 in {
   options.myOptions.hostRoles.laptop = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable laptop";
-      type = with types; bool;
+      type = lib.types.bool;
       default = osConfig.myOptions.hostRoles.laptop.enable;
     };
   };
 
-  config = mkIf cfg.enable {
-    myOptions.hostRoles.neural-augmenter.enable = mkDefault true;
+  config = lib.mkIf cfg.enable {
+    myOptions.hostRoles.neural-augmenter.enable = lib.mkDefault true;
 
     home.packages = with pkgs; [
       intel-gpu-tools

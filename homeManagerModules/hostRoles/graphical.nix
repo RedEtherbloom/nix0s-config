@@ -4,22 +4,21 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.hostRoles.graphical;
 in {
   imports = [
     ../services/piper-web-tts.nix
   ];
 
-  options.myOptions.hostRoles.graphical.enable = mkOption {
+  options.myOptions.hostRoles.graphical.enable = lib.mkOption {
     description = "graphical hostRole hm settings";
-    type = with types; bool;
+    type = lib.types.bool;
     default = osConfig.myOptions.hostRoles.graphical.enable;
   };
 
-  config = mkIf cfg.enable {
-    myOptions.hostRoles.base.enable = mkDefault true;
+  config = lib.mkIf cfg.enable {
+    myOptions.hostRoles.base.enable = lib.mkDefault true;
 
     home = {
       packages = with pkgs; [

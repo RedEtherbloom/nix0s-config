@@ -4,17 +4,16 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.roles.vtubing;
 in {
-  options.myOptions.roles.vtubing.enable = mkOption {
+  options.myOptions.roles.vtubing.enable = lib.mkOption {
     description = "Various vtubing software and utilities.";
-    type = with types; bool;
+    type = lib.types.bool;
     default = osConfig.myOptions.roles.vtubing.enable;
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       openseeface
     ];

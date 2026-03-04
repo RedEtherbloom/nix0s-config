@@ -2,19 +2,18 @@
   config,
   lib,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.roles.i2p;
 in {
   options.myOptions.roles.i2p = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable i2p";
-      type = with types; bool;
+      type = lib.types.bool;
       default = false;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     services.i2p.enable = true;
     networking.firewall.interfaces."wg0".allowedTCPPorts = [
       # Router console
