@@ -57,24 +57,8 @@ in {
       };
       taskwarrior-tui = {
         enable = lib.mkDefault true;
-        # TODO: Update and/or move to overlay
-        package = with pkgs; (taskwarrior-tui.overrideAttrs (
-          _: oldAttrs: rec {
-            version = oldAttrs.version + "-fix";
-            src = pkgs.fetchFromGitHub {
-              owner = "RedEtherbloom";
-              repo = "taskwarrior-tui";
-              hash = "sha256-YNd4vtaWm+1fsB8ly3toq2u74Nicmhx2ey1m557q4K8=";
-              rev = "ee24bfb4a36f246933e6d2502ab85d3fc6abb85b";
-            };
-            cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-              inherit src;
-              hash = "sha256-7q85YszWmetjWry9nvc2irQeLFCWHwOAkEUHtc9CK/c=";
-            };
-          }
-        ));
+        package = pkgs.taskwarrior-tui;
       };
-
       services.piper-web-tts = {
         enable = true;
         model = "en_US-libritts_r-medium";
