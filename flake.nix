@@ -8,7 +8,7 @@
     # nixkpgs-next.url = "";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
-    nixpkgs-nvf-working.url = "github:NixOS/nixpkgs/cad22e7d996aea55ecab064e84834289143e44a0"; 
+    nixpkgs-nvf-working.url = "github:NixOS/nixpkgs/cad22e7d996aea55ecab064e84834289143e44a0";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     secrets = {
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
@@ -73,17 +73,6 @@
       flake = false;
     };
     hyprland.url = "github:hyprwm/Hyprland";
-    hyprWorkspaceLayouts = {
-      url = "github:zakk4223/hyprWorkspaceLayouts";
-      inputs = {
-        hyprland.follows = "hyprland";
-        nixpkgs.follows = "hyprland/nixpkgs";
-      };
-    };
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
     hyprDynamicMonitors = {
       url = "github:fiffeek/hyprdynamicmonitors";
       inputs = {
@@ -185,7 +174,7 @@
                 {
                   nix = {
                     inherit (osConfig.nix) package;
-                    settings = { inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys; };
+                    settings = {inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys;};
                   };
 
                   home = {
@@ -196,24 +185,20 @@
               ];
             };
           # TODO: Remove system here. Should be set in hardware-configuration.nix. Alternatively: Somehow base systems packages on perSystem packages
-            nixosConfigurations = {
-              fractor = mkSystem "fractor" "x86_64-linux";
-              neurodrive = mkSystem "neurodrive" "x86_64-linux";
-              audiosink = mkSystem "audiosink" "aarch64-linux";
-            };
-        in
-          {
-            inherit nixosConfigurations;
-            homeConfigurations = {
-              "${defaultUsername}@fractor" = mkHmConfiguration nixosConfigurations.fractor;
-              "${defaultUsername}@neurodrive" = mkHmConfiguration nixosConfigurations.neurodrive;
-              "${defaultUsername}@audiosink" = mkHmConfiguration nixosConfigurations.audiosink;
-            };
+          nixosConfigurations = {
+            fractor = mkSystem "fractor" "x86_64-linux";
+            neurodrive = mkSystem "neurodrive" "x86_64-linux";
+            audiosink = mkSystem "audiosink" "aarch64-linux";
           };
-        perSystem = {
-          system,
-          ...
-        }: let 
+        in {
+          inherit nixosConfigurations;
+          homeConfigurations = {
+            "${defaultUsername}@fractor" = mkHmConfiguration nixosConfigurations.fractor;
+            "${defaultUsername}@neurodrive" = mkHmConfiguration nixosConfigurations.neurodrive;
+            "${defaultUsername}@audiosink" = mkHmConfiguration nixosConfigurations.audiosink;
+          };
+        };
+        perSystem = {system, ...}: let
           # Initialize one central nixpkgs instance, including config and all required overlays
           pkgs = import inputs.nixpkgs {
             inherit system;
@@ -224,7 +209,7 @@
               (import ./pkgs {inherit inputs;})
             ];
           };
-          in {
+        in {
           _module.args.pkgs = pkgs;
           # TODO: Check why own packages aren't exported
           legacyPackages = pkgs; # TODO: This seems wrong

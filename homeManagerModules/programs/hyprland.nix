@@ -112,14 +112,6 @@ in {
         variables = ["--all"];
       };
       xwayland.enable = true;
-      plugins =
-        [
-          inputs.hyprWorkspaceLayouts.packages.${pkgs.stdenv.hostPlatform.system}.default
-        ]
-        ++ (with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}; [
-          hyprscrolling
-          hyprwinwrap
-        ]);
       settings = {
         input = {
           kb_layout = "us,de";
@@ -169,7 +161,7 @@ in {
           "2, pinchout, special, scratchpad"
         ];
         general = {
-          layout = "workspacelayout";
+          layout = "master";
           gaps_in = 6;
           gaps_out = 8;
           border_size = 2;
@@ -522,25 +514,10 @@ in {
             "no_blur on, match:class ^(\bresolve\b)$, match:xwayland on" # Window rule for just resolve
           ]
           ++ [
-            # TODO: All float, allow resize and maybe use a scrolling layout
-            "workspace special:social, match:tag social"
+            "workspace special:social, match:tag social" # TODO: All float, allow resize and maybe use a scrolling layout
           ];
-        plugin = {
-          wslayout = {
-            default_layout = "master";
-          };
-          hyprscrolling = {
-            column_width = 0.7;
-            fullscreen_on_one_column = true;
-            follow_focus = true;
-          };
-        };
         source = [
-          # Required by hyprDynamicMonitors?
-          "${config.xdg.configHome}/hypr/monitors.conf"
-        ];
-        workspace = [
-          # "special:social,layoutopt:wslayout-layout:scrolling" # Hyprscrolling combined with wslayout is broken at the moment
+          "${config.xdg.configHome}/hypr/monitors.conf" # Required by hyprDynamicMonitors?
         ];
       };
       submaps = {
@@ -569,7 +546,6 @@ in {
         hyprctl-layout.settings = {
           binde = [
             ", d, exec, hyprctl dispatch layoutmsg setlayout dwindle"
-            ", s, exec, hyprctl dispatch layoutmsg setlayout scrolling"
             ", m, exec, hyprctl dispatch layoutmsg setlayout master"
           ];
           bind = [
@@ -1020,7 +996,7 @@ in {
     home.pointerCursor = {
       gtk.enable = true;
       package = pkgs.lyra-cursors;
-      name = "LyraG-Cursors";
+      name = "LyraG-cursors";
       size = 36;
     };
     # Manually set. By default hyprpolkitagent starts in all graphical targets
