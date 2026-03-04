@@ -39,7 +39,7 @@ in {
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
-      rec {
+      {
         sops.secrets."ai_keys/anthropic" = {
           sopsFile = "${secrets}/secrets/services/ai_keys.yaml";
           key = "anthropic";

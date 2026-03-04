@@ -94,13 +94,13 @@ in {
           }
         ''
         (lib.strings.optionalString cfg.ipv4.enable ''
-          ipset list upnp >/dev/null 2>&1 || ipset create upnp hash:ip,port timeout ${builtins.toString cfg.timeout}
-          apply_if_not_yet iptables -A OUTPUT -p udp -m udp --dport ${builtins.toString cfg.ssdpPort} -j SET --add-set upnp src,src --exist
+          ipset list upnp >/dev/null 2>&1 || ipset create upnp hash:ip,port timeout ${toString cfg.timeout}
+          apply_if_not_yet iptables -A OUTPUT -p udp -m udp --dport ${toString cfg.ssdpPort} -j SET --add-set upnp src,src --exist
           apply_if_not_yet iptables -A INPUT -p udp -m set --match-set upnp dst,dst -j ACCEPT
         '')
         (lib.strings.optionalString cfg.ipv6.enable ''
-          ipset list upnp6 >/dev/null 2>&1 || ipset create upnp6 hash:ip,port family inet6 timeout ${builtins.toString cfg.timeout}
-          apply_if_not_yet ip6tables -A OUTPUT -p udp -m udp --dport ${builtins.toString cfg.ssdpPort} -j SET --add-set upnp6 src,src --exist
+          ipset list upnp6 >/dev/null 2>&1 || ipset create upnp6 hash:ip,port family inet6 timeout ${toString cfg.timeout}
+          apply_if_not_yet ip6tables -A OUTPUT -p udp -m udp --dport ${toString cfg.ssdpPort} -j SET --add-set upnp6 src,src --exist
           apply_if_not_yet ip6tables -A INPUT -p udp -m set --match-set upnp6 dst,dst -j ACCEPT
         '')
       ];

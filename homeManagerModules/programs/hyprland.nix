@@ -45,16 +45,16 @@
   terminalClassRegex = "^(com.mitchellh.ghostty|org.wezfurlong.wezterm|Alacritty|kitty|kitty-dropterm)$";
   # TODO: Write variation that waits for program to start(via socket) and then focuses or moves it to current ws
   focusOrStart = selector: selectorValue: program: ''hyprctl clients -j | ${pkgs.jq}/bin/jq -e '[.[] | select(.${selector} == "${selectorValue}")] | length > 0' && hyprctl dispatch focuswindow '${selector}:${selectorValue}' || hyprctl dispatch exec ${program}'';
-  getWindowsOnActiveWorkspaces = pkgs.writeShellScriptBin "getWindowsOnActiveWorkspaces.sh" ''
-    # Debugging
-    set -x
-
-    set -e
-    activeWorkspaces="$(hyprctl -j monitors | jq 'map(.activeWorkspace.id) | sort')"
-    windows="$(hyprctl -j clients | jq --argjson activeWorkspaces \"$activeWorkspaces\" 'map(select(.workspace.id as $id | $activeWorkspaces | indices($id) | length > 0))'"
-
-    # Next: Feed the windows to rofi for choice
-  '';
+  # getWindowsOnActiveWorkspaces = pkgs.writeShellScriptBin "getWindowsOnActiveWorkspaces.sh" ''
+  #   # Debugging
+  #   set -x
+  #
+  #   set -e
+  #   activeWorkspaces="$(hyprctl -j monitors | jq 'map(.activeWorkspace.id) | sort')"
+  #   windows="$(hyprctl -j clients | jq --argjson activeWorkspaces \"$activeWorkspaces\" 'map(select(.workspace.id as $id | $activeWorkspaces | indices($id) | length > 0))'"
+  #
+  #   # Next: Feed the windows to rofi for choice
+  # '';
   # TODO: Live output updated with filter?
   rofi-tag-switcher = pkgs.writeShellApplication {
     name = "rofi-tag-switcher";

@@ -191,7 +191,7 @@ in {
             pkgs.writeShellApplication {
               name = "openNetworkSinkPort";
               text = ''
-                nixos-firewall-tool open tcp ${builtins.toString networkSinkPort}
+                nixos-firewall-tool open tcp ${toString networkSinkPort}
               '';
               runtimeInputs = with pkgs; [
                 iptables

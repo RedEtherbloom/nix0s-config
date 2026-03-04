@@ -161,7 +161,7 @@
               inherit (host) pkgs;
               # Remove potentially interferring attrs
               extraSpecialArgs =
-                (builtins.removeAttrs host._module.specialArgs [
+                (removeAttrs host._module.specialArgs [
                   "self"
                   "modulesPath"
                 ])

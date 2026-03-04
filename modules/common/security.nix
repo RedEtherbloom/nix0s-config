@@ -34,7 +34,7 @@ in {
       security.sudo = {
         enable = true;
         extraConfig = ''
-          @includedir ${builtins.dirOf config.sops.secrets."sudoers/optional".path}
+          @includedir ${dirOf config.sops.secrets."sudoers/optional".path}
         '';
       };
 
