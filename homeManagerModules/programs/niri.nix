@@ -55,6 +55,11 @@
             desc = "Settings search";
             cmd = noctaliaIpcCommand "launcher settings";
           }
+          {
+            key = "c";
+            desc = "Start calculator";
+            cmd = "${lib.getExe pkgs.qalculate-qt}";
+          }
         ];
       }
       {
@@ -82,6 +87,16 @@
                 desc = "Toggle eye strain dimmer(nightlight)";
                 cmd = noctaliaIpcCommand "nightLight toggle";
                 keep_open = true;
+              }
+              {
+                key = "p";
+                desc = "Lock screen and power off monitors";
+                cmd = "${noctaliaIpcCommand "lockScreen lock"} && ${lib.getExe config.programs.niri.package} msg action power-off-monitors";
+              }
+              {
+                key = "P";
+                desc = "Power off monitors";
+                cmd = "${lib.getExe config.programs.niri.package} msg action power-off-monitors";
               }
             ];
           }
@@ -297,6 +312,11 @@
           cmd = "obsidian";
         }
         {
+          key = "O";
+          desc = "Switch to obsidian or start obsidian";
+          cmd = "${lib.getExe niriSwitchToWindow} app_id obsidian || obsidian";
+        }
+        {
           key = "w";
           desc = "Speech to text";
           submenu = [
@@ -317,6 +337,16 @@
       ];
   };
   splitSpace = string: lib.strings.splitString " " string;
+  niriSwitchToWindow = pkgs.writeShellScriptBin "niriSwitchToWindow.sh" ''
+    set -e
+
+    raw_json="$(${lib.getExe config.programs.niri.package} msg -j windows)"
+    filtered="$(${lib.getExe pkgs.jq} --arg filterField "$1" --arg filterValue "$2" 'map(select(.[$filterField] == $filterValue))' <<< "$raw_json")"
+    echo "Found $(${lib.getExe pkgs.jq} 'length' <<< "$filtered") windows matching criteria"
+    id="$(${lib.getExe pkgs.jq} 'first | .id' <<< "$filtered")"
+    echo "Switching to window with ID $id"
+    ${lib.getExe config.programs.niri.package} msg action focus-window --id "$id"
+  '';
 in {
   imports = [
     inputs.niri-flake.homeModules.niri
@@ -438,6 +468,12 @@ in {
       debug.honor-xdg-activation-with-invalid-serial = true; # Required by noctalia
       xwayland-satellite.enable = true;
       hotkey-overlay.hide-not-bound = true;
+      cursor = {
+        theme = "LyraG-cursors";
+        size = 36;
+        hide-after-inactive-ms = 15 * 1000;
+        hide-when-typing = true;
+      };
       binds = {
         "Mod+Shift+Slash".action.show-hotkey-overlay = [];
 
@@ -527,8 +563,8 @@ in {
         "Mod+Shift+L".action.move-column-right = [];
 
         # TODO: Try alternative commands that move across workspaces when reaching the first or last window in a column.
-        # Mod+J     = { focus-window-or-workspace-down; };
-        # Mod+Ctrl+J     = { move-window-down-or-to-workspace-down; };
+        # "Mod+J" = { focus-window-or-workspace-down; };
+        # "Mod+Ctrl+J" = { move-window-down-or-to-workspace-down; };
 
         "Mod+Home".action.focus-column-first = [];
         "Mod+End".action.focus-column-last = [];
@@ -666,9 +702,14 @@ in {
           action.spawn-sh = noctaliaIpcCommand "systemMonitor toggle";
         };
 
-        # TODO: Change to lock, then power off monitors
-        # TODO: The add one with Ctrl to only power off the monitors
-        "Mod+Shift+P".action.power-off-monitors = [];
+        "Mod+Shift+P" = {
+          hotkey-overlay.title = "Lock the screen and power it off";
+          action.spawn-sh = "${noctaliaIpcCommand "lockScreen lock"} && ${lib.getExe config.programs.niri.package} msg action power-off-monitors";
+        };
+        "Mod+Shift+Ctrl+P" = {
+          hotkey-overlay.title = "Power off the screens";
+          action.power-off-monitors = [];
+        };
 
         "Mod+Space" = {
           hotkey-overlay.title = "Show launcher";
@@ -1332,6 +1373,7 @@ in {
 
     # Helper script block
     shikaneProfileSelector
+    niriSwitchToWindow
 
     # Own
     thunarWithExtensions
