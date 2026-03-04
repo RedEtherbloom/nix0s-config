@@ -30,14 +30,12 @@ in {
           experimental-features = [
             "nix-command"
             "flakes"
-            # Not yet supported by Lix
-            #"pipe-operators"
+            "pipe-operator"
           ];
           trusted-users = ["root" "@wheel" "inf"];
           keep-outputs = true;
           keep-derivations = true;
-          # Cache tars for seven days to improve dev experience
-          tarball-ttl = 7 * 24 * 3600;
+          tarball-ttl = 7 * 24 * 3600; # Cache tars for seven days to improve dev experience
         };
         gc = {
           automatic = true;

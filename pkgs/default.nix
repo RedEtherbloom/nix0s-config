@@ -1,6 +1,6 @@
 {inputs, ...}: final: prev: {
   inherit
-    (final.lixPackages.stable)
+    (final.lixPackages.latest)
     nixpkgs-review
     nix-eval-jobs
     nix-fast-build
@@ -379,4 +379,33 @@
           --replace " &>/dev/null" ""
       '';
   });
+
+  rofi-home-assistant-changed = let
+    desiredTypes = [
+      "light"
+      "switch"
+    ];
+    extraTypes = [
+      "scene"
+    ];
+  in
+    final.writeShellScriptBin "rofi-home-assistant-changed.sh" ''
+      raw_json=$(${final.lib.getExe final.home-assistant-cli} -o json state list 2>/dev/null)
+      json=$(${final.lib.getExe final.jq} --argjson types '${builtins.toJSON (desiredTypes ++ extraTypes)}' -r 'map(.entity_id as $id | select(any($types[]; . as $el | $id | startswith($el))))' <<< "$raw_json")
+      idx=$(${final.lib.getExe final.jq} -r '.[] | [.entity_id, .state] | join(" ")' <<< "$json" | ${final.util-linux}/bin/column -t | ${final.lib.getExe final.rofi} -dmenu -i -markup-rows -format d)
+      item=$(${final.lib.getExe final.jq} -r '.[].entity_id' <<< "$json" | ${final.lib.getExe final.gnused} "''${idx}q;d")
+      itype=$(${final.lib.getExe final.gnused} -r 's/\..+$//' <<< "$item")
+
+      case "$itype" in
+          ${final.lib.strings.concatStringsSep "|" desiredTypes})
+              ${final.lib.getExe final.home-assistant-cli} state toggle "$item"
+              ;;
+          ${final.lib.strings.concatStringsSep "|" extraTypes})
+              ${final.lib.getExe final.home-assistant-cli} service call --arguments entity_id="$item" scene.turn_on
+              ;;
+          *)
+              ${final.libnotify}/bin/notify-send "Error" "Event type '$itype' not implemented yet. Do you have time to file an issue or write a PR?"
+              ;;
+      esac
+    '';
 }

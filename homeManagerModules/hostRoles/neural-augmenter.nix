@@ -119,7 +119,6 @@ in {
               xca
               dumbpipe
 
-              calibre
               speedread
 
               scrcpy
@@ -132,7 +131,7 @@ in {
               docker-compose
               distrobox
 
-              sonic-pi
+              # sonic-pi Broken as of: 04-03-2026
               reaper
               # mpd players to compare
               cantata
@@ -192,7 +191,7 @@ in {
                   HASS_TOKEN="$(cat ${config.sops.secrets.hass_cli_token.path})"
                   export HASS_TOKEN
 
-                  ${lib.getExe pkgs.rofi-home-assistant-verbose}
+                  ${lib.getExe pkgs.rofi-home-assistant-changed}
                 ''
               )
             ]
