@@ -38,9 +38,13 @@ in {
 
         pied # Piper-tts voice management
       ];
-      sessionVariables = {
+      sessionVariables = let 
+        askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+      in {
         # Native Wayland for Chromium apps
         NIXOS_OZONE_WL = "1";
+        SUDO_ASKPASS = askpass_helper;
+        SSH_ASKPASS = askpass_helper;
       };
     };
 
