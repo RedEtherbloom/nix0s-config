@@ -456,7 +456,10 @@ in {
       overview.workspace-shadow.enable = false;
       # TODO: Disable overview wallpaper in noctalia for niri overview background
       debug.honor-xdg-activation-with-invalid-serial = true; # Required by noctalia
-      xwayland-satellite.enable = true;
+      xwayland-satellite = {
+        enable = true;
+        path = "${lib.getExe pkgs.xwayland-satellite-unstable}";
+      };
       hotkey-overlay.hide-not-bound = true;
       cursor = {
         theme = "LyraG-cursors";
