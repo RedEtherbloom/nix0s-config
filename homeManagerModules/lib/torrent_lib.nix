@@ -1,8 +1,4 @@
-{
-  pkgs,
-  osConfig,
-  ...
-}: let
+{pkgs, ...}: let
   mullvad-torrent = pkgs.writeShellApplication {
     name = "mullvad-torrent";
     runtimeInputs = with pkgs; [
