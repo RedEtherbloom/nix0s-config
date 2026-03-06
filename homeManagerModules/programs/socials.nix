@@ -21,8 +21,6 @@ in {
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
-      element-desktop
-      fluffychat
       telegram-desktop
       signal-desktop
       threema-desktop

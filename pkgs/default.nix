@@ -7,8 +7,6 @@
     colmena
     ;
 
-  nix-search-tv = inputs.nix-search-tv.packages.${final.stdenv.hostPlatform.system}.default;
-
   thunderbird-external-editor-revived = final.rustPlatform.buildRustPackage (finalAttrs: {
     pname = "thunderbird-external-editor-revived";
     version = "1.2.0";

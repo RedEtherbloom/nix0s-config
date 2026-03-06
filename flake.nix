@@ -3,12 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # Last working nixos-unstable. Thought of doing this again.
-    nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=c6245e83d836d0433170a16eb185cefe0572f8b8";
-    # nixkpgs-next.url = "";
+    nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=c6245e83d836d0433170a16eb185cefe0572f8b8"; # Last working nixpkgs-unstable. Sporadically updated. Thought of doing this again.
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
-    nixpkgs-master.url = "github:nixos/nixpkgs/master";
-    nixpkgs-nvf-working.url = "github:NixOS/nixpkgs/cad22e7d996aea55ecab064e84834289143e44a0";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     secrets = {
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
@@ -53,20 +49,13 @@
     nvf = {
       url = "github:NotAShelf/nvf";
       inputs = {
-        nixpkgs.follows = "nixpkgs-nvf-working";
+        nixpkgs.follows = "nixpkgs";
         flake-compat.follows = "flake-compat";
       };
     };
     sergv-nixos-config = {
       url = "github:sergv/nixos-config?rev=9c6306c86af6130f76d277e382c346360ec124dd";
       flake = false;
-    };
-    nix-search-tv = {
-      url = "github:3timeslazy/nix-search-tv";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
     };
     hyprland-zaneyos = {
       url = "gitlab:Zaney/zaneyos";

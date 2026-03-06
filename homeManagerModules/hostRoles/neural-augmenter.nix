@@ -90,7 +90,6 @@ in {
               ffmpeg-full
               gst_all_1.gst-plugins-good
               gst_all_1.gst-plugins-bad
-              handbrake
               imagemagick
               yt-dlp
               bluetui
@@ -123,8 +122,6 @@ in {
               # Subsonic clients
               feishin
               aonsoku
-
-              nix-search-tv # TODO: Evaluate. If useful move to dev tools.
 
               systemctl-tui
 
@@ -189,8 +186,7 @@ in {
               dolphin-plugins
               baloo-widgets
               ffmpegthumbs
-              # Font selector
-              kcharselect
+              kcharselect # Font selector
             ])
         )
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
@@ -205,11 +201,6 @@ in {
         # QT_LOGGING_RULES = "*.debug=true";
         PIPEWIRE_DEBUG = 2; # Print warnings and errors
       };
-      extraOutputsToInstall = [
-        "doc"
-        "info"
-        "devdoc"
-      ];
     };
 
     services = {
@@ -248,15 +239,7 @@ in {
     xdg = {
       autostart = {
         enable = true;
-        entries = [
-          "${pkgs.bitwarden-desktop}/share/applications/bitwarden.desktop"
-        ];
-      };
-      configFile."nix-search-tv/config.json".source = pkgs.writers.writeJSON "nstw-config.json" {
-        "update_interval" = "48h0m0s";
-        experimental."render_docs_indexes" = {
-          "nvf" = "https://notashelf.github.io/nvf/options.html";
-        };
+        entries = ["${pkgs.bitwarden-desktop}/share/applications/bitwarden.desktop"];
       };
     };
 
