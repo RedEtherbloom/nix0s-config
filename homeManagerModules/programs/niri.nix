@@ -282,25 +282,20 @@
       [
         {
           key = "n";
+          desc = "New/standard nvf";
+          cmd = "neovide";
+        }
+        {
+          key = "N";
           desc = "Neovide";
           submenu = [
             {
-              key = "n";
-              desc = "New/standard nvf";
-              cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim";
-            }
-            {
               key = "1";
-              desc = "New nvf";
-              cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim";
-            }
-            {
-              key = "2";
-              desc = "Legacy nvf";
+              desc = "New/standard nvf";
               cmd = "neovide";
             }
             {
-              key = "3";
+              key = "2";
               desc = "Nvf stock maximal configuration(with patches)";
               cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim";
             }
@@ -308,12 +303,7 @@
         }
         {
           key = "o";
-          desc = "Obsidian";
-          cmd = "obsidian";
-        }
-        {
-          key = "O";
-          desc = "Switch to obsidian or start obsidian";
+          desc = "Switch to or start Obsidian";
           cmd = "${lib.getExe niriSwitchToWindow} app_id obsidian || obsidian";
         }
         {
@@ -434,7 +424,7 @@ in {
 
       screenshot-path = "${config.xdg.userDirs.pictures}/Screenshots/%Y-%m-%d_%H-%M-%S.png";
 
-      # TODO: Setup workspace switch animations
+      # TODO: Set up workspace switch animations
 
       window-rules = [
         {
@@ -1381,7 +1371,7 @@ in {
     gnome-calendar
     geary
   ];
-  # TODO: Check if polkit kde somehow is fixed
+  # TODO: Check if polkit KDE somehow is fixed
 
   services = {
     swayidle = let
@@ -1423,5 +1413,5 @@ in {
     };
     shikane.enable = true;
   };
-  # TODO: Setup fcitx5
+  # TODO: Set up fcitx5
 }

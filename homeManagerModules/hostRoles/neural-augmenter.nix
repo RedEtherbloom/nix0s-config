@@ -246,7 +246,7 @@ in {
     stylix = {
       targets.kde.enable = false;
       enable = true;
-      opacity.terminal = 0.85;
+      opacity.terminal = 0.8;
     };
   };
 }

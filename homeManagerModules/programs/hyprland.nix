@@ -299,7 +299,7 @@ in {
             # TODO: Work mode shortcut with: Work firefox, youtube music, obsidian
             # Could be done via e.g. tags
             "SUPER, N, exec, ${focusOrStart "class" "obsidian" "obsidian"}"
-            "SUPER_SHIFT, N, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim"
+            "SUPER_SHIFT, N, exec, neovide"
           ]
           ++ (
             builtins.concatLists (
@@ -537,8 +537,7 @@ in {
         neovim.settings = {
           bind = [
             ", 1, exec, neovide"
-            ", 2, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.newPackage}/bin/nvim"
-            ", 3, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim"
+            ", 2, exec, neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim"
             ", escape, submap, reset"
           ];
         };
