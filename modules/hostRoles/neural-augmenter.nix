@@ -103,13 +103,17 @@ in {
         defaultRuntime = true;
         steam.importOXRRuntimes = true;
       };
-      displayManager.sddm = {
-        wayland.enable = true;
+      displayManager.gdm = {
         enable = true;
-        theme = "sddm-astronaut-theme";
-        package = lib.mkForce pkgs.sddm-fallback-patched;
-        extraPackages = [pkgs.kdePackages.qtmultimedia];
+        wayland = true;
       };
+      # displayManager.sddm = {
+      #   wayland.enable = true;
+      #   enable = true;
+      #   # theme = "sddm-astronaut-theme";
+      #   package = lib.mkForce pkgs.sddm-fallback-patched;
+      #   extraPackages = [pkgs.kdePackages.qtmultimedia];
+      # };
       ollama = {
         enable = true;
         environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
@@ -156,7 +160,7 @@ in {
     };
     environment.systemPackages = with pkgs; [
       lm_sensors
-      (sddm-astronaut.override {embeddedTheme = "black_hole";})
+      # (sddm-astronaut.override {embeddedTheme = "black_hole";})
       nftables # vopono daemon
     ];
 
