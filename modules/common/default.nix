@@ -1,6 +1,7 @@
 # TODO: Redundant with base role. Merge or drop.
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -56,6 +57,9 @@ in {
       };
       environment = {
         pathsToLink = ["/share/zsh"]; # See: Required for home-manager and zsh to play together nicely
+        systemPackages = [
+          inputs.nix-alien.packages.${pkgs.stdenv.hostPlatform.system}.nix-alien
+        ];
       };
       users.defaultUserShell = pkgs.fish;
     }
