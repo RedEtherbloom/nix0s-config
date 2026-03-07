@@ -30,9 +30,7 @@
         }
       ];
     };
-  });
-
-  byar-launcher = final.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
+  }); # TODO: Fix
 
   koboldcpp = prev.koboldcpp.overrideAttrs (
     _: pythonPrev: {
@@ -67,29 +65,6 @@
               ]);
           }
         );
-      surround-ui-nvim = final.vimUtils.buildVimPlugin {
-        name = "surround-ui.nvim";
-        version = "2024-07-16";
-        src = final.fetchFromGitHub {
-          owner = "roobert";
-          repo = "surround-ui.nvim";
-          rev = "40abcba017a943d6d3dd304e523f34a43d80405b";
-          hash = "sha256-sUtu+Z20rDh9mefTwvEJVI4g7oL+FuYdY9bmGrWcrM0=";
-        };
-        meta.homepage = "https://github.com/roobert/surround-ui.nvim";
-      };
-      vim-coach-nvim = final.vimUtils.buildVimPlugin {
-        name = "vim-coach.nvim";
-        version = "v2.0.0";
-        buildInputs = [final.vimPlugins.snacks-nvim];
-        src = final.fetchFromGitHub {
-          owner = "shahshlok";
-          repo = "vim-coach.nvim";
-          rev = "ed31e7b9450691199288180a922d8166ae11a0b9";
-          hash = "sha256-9Nnlghnor8wKKY4ETwNtGFjv1BUW64EWDKhRJJSj0pk=";
-        };
-        meta.homepage = "https://github.com/shahshlok/vim-coach.nvim";
-      };
       jj-nvim = final.vimUtils.buildVimPlugin {
         pname = "jj.nvim";
         version = "0.3.0-unstable-2026-01-06";
@@ -103,18 +78,6 @@
         meta.hydraPlatforms = [];
       };
     };
-
-  kdePackages = prev.kdePackages.overrideScope (
-    _: kdePrev: {
-      kscreenlocker-patched = kdePrev.kscreenlocker.overrideAttrs (
-        _: prevAttrs: {
-          version = prevAttrs.version + "-pmanager-patched";
-          __intentionallyOverridingVersion = true;
-          patches = (prevAttrs.patches or []) ++ [./kscreenlocker-allow-screen-shortcuts.patch];
-        }
-      );
-    }
-  );
 
   gnupg-with-pin-caching = prev.gnupg.overrideAttrs (
     _: prevAttrs: {
@@ -145,32 +108,6 @@
     }
   );
 
-  clipvault = final.rustPlatform.buildRustPackage rec {
-    pname = "clipvault";
-    version = "1.1.0";
-    src = final.fetchFromGitHub {
-      owner = "rolv-apneseth";
-      repo = "clipvault";
-      rev = "v${version}";
-      hash = "sha256-ahhbUGijNZOjZ/egjdecn/4M6Nicq7PDDac09FNZz/Y=";
-    };
-    cargoHash = "sha256-Mm0att6zu9Yknoa9NBsdrA8lz1o0Q6FzWS0UU+1f/f0=";
-    # Tests fail to due logs dir location not being creatable
-    doCheck = false;
-    meta = {
-      description = "Clipboard history manager for Wayland, inspired by cliphist.";
-      homepage = "https://github.com/rolv-apneseth/clipvault";
-      license = final.lib.licenses.gpl3Only;
-      maintainers = [
-        {
-          email = "etherbloom@mailbox.org";
-          github = "RedEtherbloom";
-          githubId = "16244495";
-          name = "Etherbloom";
-        }
-      ];
-    };
-  };
   waystt = final.rustPlatform.buildRustPackage rec {
     pname = "waystt";
     version = "0.3.0";
@@ -194,19 +131,6 @@
     env = {
       LIBCLANG_PATH = "${final.llvmPackages.libclang.lib}/lib";
     };
-  };
-
-  hyprlock-styles.style-3 = final.stdenv.mkDerivation {
-    pname = "hyprlock-styles-style-6";
-    version = "0.0.1";
-    src = final.fetchzip {
-      url = "https://github.com/MrVivekRajan/Hyprlock-Styles/releases/download/style3/Style-3.tar.gz";
-      hash = "sha256-A9fq1fDn86v6uORKAI8QviAeJzDip6PCije9Ml2s9Lk=";
-    };
-
-    installPhase = ''
-      cp -r $src/ $out/
-    '';
   };
 
   sddm-fallback-patched = prev.kdePackages.sddm.overrideAttrs (

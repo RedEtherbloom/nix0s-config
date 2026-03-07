@@ -11,7 +11,6 @@ in {
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.niri-flake.nixosModules.niri
-    ../binary-cache/hyprland.nix
     ../binary-cache/niri-flake.nix
   ];
 
@@ -63,12 +62,6 @@ in {
         openFirewall = true;
       };
       extra-container.enable = true;
-      hyprland = {
-        enable = true;
-        package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-        portalPackage =
-          inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-      };
       niri = {
         enable = true;
         package = pkgs.niri-unstable;
@@ -76,7 +69,6 @@ in {
     };
 
     services = {
-      tailscale.enable = true; # TODO: Read up on tailscale
       udev.packages = with pkgs; [
         platformio-core
         probe-rs-tools

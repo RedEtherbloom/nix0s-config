@@ -53,34 +53,6 @@
         flake-compat.follows = "flake-compat";
       };
     };
-    sergv-nixos-config = {
-      url = "github:sergv/nixos-config?rev=9c6306c86af6130f76d277e382c346360ec124dd";
-      flake = false;
-    };
-    hyprland-zaneyos = {
-      url = "gitlab:Zaney/zaneyos";
-      flake = false;
-    };
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprDynamicMonitors = {
-      url = "github:fiffeek/hyprdynamicmonitors";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
-    mechabar = {
-      url = "github:sejjy/mechabar";
-      flake = false;
-    };
-    tokyonight = {
-      url = "github:stronk-dev/Tokyo-Night-Linux";
-      flake = false;
-    };
-    catppuccin-wlogout = {
-      url = "github:catppuccin/wlogout";
-      flake = false;
-    };
     pyproject-nix = {
       url = "github:pyproject-nix/pyproject.nix";
       inputs.nixpkgs.follows = "nixpkgs";

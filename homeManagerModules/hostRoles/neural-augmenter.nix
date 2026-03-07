@@ -4,6 +4,7 @@
   lib,
   osConfig,
   pkgs,
+  secrets,
   ...
 }: let
   cfg = config.myOptions.hostRoles.neural-augmenter;
@@ -19,7 +20,7 @@ in {
 
   options.myOptions.hostRoles.neural-augmenter = {
     enable = lib.mkOption {
-      description = "workstation hm settings";
+      description = "Workstation hm settings";
       type = lib.types.bool;
       default = osConfig.myOptions.hostRoles.neural-augmenter.enable;
     };
@@ -40,24 +41,12 @@ in {
           enable = lib.mkDefault true;
           stitching = lib.mkDefault true;
         };
-        hyprland.enable = lib.mkDefault true;
       };
-
       firefox.enable = lib.mkDefault true;
       socials.enable = lib.mkDefault true;
-
       obsidian = {
         enable = lib.mkDefault true;
         jjAutosync = lib.mkDefault true;
-      };
-      taskwarrior = {
-        enable = lib.mkDefault true;
-        enableSync = lib.mkDefault true;
-        taskopen = lib.mkDefault true;
-      };
-      taskwarrior-tui = {
-        enable = lib.mkDefault true;
-        package = pkgs.taskwarrior-tui;
       };
       services.piper-web-tts = {
         enable = true;
@@ -73,6 +62,7 @@ in {
               tor-browser
               bitwarden-desktop
               bitwarden-cli
+              rofi-rbw
               restic
               autorestic
               krita
@@ -92,12 +82,14 @@ in {
               gst_all_1.gst-plugins-bad
               imagemagick
               yt-dlp
-              bluetui
+
+              gnome-keyring
+              seahorse
+              gcr
 
               vopono
               mullvad-torrent
               vopono-torrent
-              tailscale
               # Certificate creation
               xca
               dumbpipe
@@ -149,6 +141,7 @@ in {
               sdrpp
 
               # jambi TODO: Broken build
+              waystt
 
               camset # Webcam image settings gui
 
@@ -175,6 +168,8 @@ in {
                   ${lib.getExe pkgs.rofi-home-assistant-changed}
                 ''
               )
+              wdisplays
+              wev
             ]
             ++ (with pkgs.kdePackages; [
               ark
@@ -201,10 +196,17 @@ in {
         # QT_LOGGING_RULES = "*.debug=true";
         PIPEWIRE_DEBUG = 2; # Print warnings and errors
       };
+      pointerCursor = {
+        gtk.enable = true;
+        package = pkgs.lyra-cursors;
+        name = "LyraG-cursors";
+        size = 36;
+      };
+      activation.rebuildKdeXdgCache = lib.hm.dag.entryAfter ["writeBoundary"] "run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6"; # Rebuild cache for dolphin
     };
 
     services = {
-      syncthing.enable = true; # TODO: Setup options
+      syncthing.enable = true;
       playerctld.enable = true;
       kdeconnect = {
         enable = true;
@@ -229,6 +231,8 @@ in {
       rofi = {
         enable = lib.mkDefault false;
         terminal = "${config.programs.kitty.package}";
+        extraConfig.show-icons = true;
+        theme = ../../dotfiles/rofi/launcher.rasi;
       };
       spotify-player.enable = true;
       bat.enable = true;
@@ -241,12 +245,42 @@ in {
         enable = true;
         entries = ["${pkgs.bitwarden-desktop}/share/applications/bitwarden.desktop"];
       };
+      portal = {
+        enable = lib.mkForce true;
+        xdgOpenUsePortal = true;
+        extraPortals = with pkgs; [
+          gnome-keyring
+          xdg-desktop-portal-gtk
+        ];
+      };
+      stateFile."piper-models/.keep".text = "";
     };
 
     stylix = {
-      targets.kde.enable = false;
       enable = true;
+      targets = {
+        kde.enable = true;
+        rofi.enable = false;
+      };
       opacity.terminal = 0.8;
+    };
+
+    # Required for waybar and some other animations to properly function
+    gtk = {
+      gtk2.extraConfig = ''
+        gtk-enable-animations = true;
+      '';
+      gtk3.extraConfig.gtk-enable-animations = true;
+      gtk4.extraConfig.gtk-enable-animations = true;
+    };
+    dconf.settings = {
+      "org/gnome/desktop/interface" = {
+        enable-animations = true;
+      };
+    };
+    sops.secrets."hass_cli_token" = {
+      sopsFile = "${secrets}/secrets/services/home-assistant.yaml";
+      key = "access_tokens/cli";
     };
   };
 }

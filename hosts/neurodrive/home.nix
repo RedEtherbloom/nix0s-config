@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   osConfig,
   pkgs,
@@ -124,80 +123,31 @@ in {
         ];
       };
     };
-
-    myOptions.roles.hyprland.displayConfigurations = {
-      dual = {
-        name = "Dual";
-        monitors = [
-          "monitor=desc:BNQ BenQ xl2411t,1920x1080@60.00000,1920x0,1.00000000,transform,0,vrr,0"
-          "monitor=desc:AOC 2369M,1920x1080@60.00000,0x0,1.00000000,transform,0,vrr,0"
-          "monitor=desc:LG Electronics LG TV,disable"
-        ];
-      };
-      tv = {
-        name = "It's TV-Time!";
-        monitors = [
-          "monitor=desc:LG Electronics LG TV,1920x1080@60.00000,0x0,1.00000000,transform,0,vrr,0"
-          "monitor=desc:BNQ BenQ xl2411t,disable"
-          "monitor=desc:AOC 2369M,disable"
-        ];
-      };
-    };
     systemd.user = {
-      services = {
-        "morning-layout-hyprland" = {
-          Unit = {
-            Description = "Switch back to a defined easy layout in the morning, for a blank slate.";
-            ConditionEnvironment = lib.mkForce [
-              "WAYLAND_DISPLAY"
-              "XDG_CURRENT_DESKTOP=Hyprland"
-            ];
-          };
-          Service = {
-            Type = "oneshot";
-            ExecStart = "${config.home.homeDirectory}/.nix-profile/bin/hyprland-layout-Dual.sh";
-          };
+      services."morning-layout-niri" = {
+        Unit = {
+          Description = "Switch back to a defined easy layout in the morning, for a blank slate.";
+          ConditionEnvironment = lib.mkForce [
+            "WAYLAND_DISPLAY"
+            "XDG_CURRENT_DESKTOP=niri"
+          ];
         };
-        "morning-layout-niri" = {
-          Unit = {
-            Description = "Switch back to a defined easy layout in the morning, for a blank slate.";
-            ConditionEnvironment = lib.mkForce [
-              "WAYLAND_DISPLAY"
-              "XDG_CURRENT_DESKTOP=niri"
-            ];
-          };
-          Service = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.shikane}/bin/shikanectl switch dual";
-          };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.shikane}/bin/shikanectl switch dual";
         };
       };
-      timers = {
-        "morning-layout-hyprland" = {
-          Unit.Description = "Switch back to a defined easy layout in the morning, for a blank slate.";
-          Timer = {
-            Unit = "morning-layout-hyprland.service";
-            OnCalendar = "07:00:00";
-            Persistent = true;
-          };
-          Install.WantedBy = ["timers.target"];
+      timers."morning-layout-niri" = {
+        Unit.Description = "Switch back to a defined easy layout in the morning, for a blank slate.";
+        Timer = {
+          Unit = "morning-layout-niri.service";
+          OnCalendar = "07:00:00";
+          Persistent = true;
         };
-        "morning-layout-niri" = {
-          Unit.Description = "Switch back to a defined easy layout in the morning, for a blank slate.";
-          Timer = {
-            Unit = "morning-layout-niri.service";
-            OnCalendar = "07:00:00";
-            Persistent = true;
-          };
-          Install.WantedBy = ["timers.target"];
-        };
+        Install.WantedBy = ["timers.target"];
       };
     };
-    # Bind with description on lock screen.
-    wayland.windowManager.hyprland.settings.binddl = [
-      "SUPER SHIFT, R, Reset layout to Dual even when locked, exec, hyprland-layout-Dual.sh" # Intent: 'Reset' combination to bring Hyprland(just monitors for now) back to a good state.
-    ];
-    # Go pack to a normal layout after long inactivity. Hoping for this to be especially useful in the morning
+    # Go back to a normal layout after long inactivity. Hoping for this to be especially useful in the morning
     services.swayidle.timeouts = [
       {
         timeout = 2 * 60 * 60;
