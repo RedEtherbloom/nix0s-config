@@ -163,7 +163,7 @@ in {
           # Visual section
           theme = {
             enable = true;
-            name = "oxocarbon";
+            name = "solarized-osaka";
             style = "dark";
             transparent = true;
           };
