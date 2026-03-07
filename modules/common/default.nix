@@ -1,6 +1,7 @@
+# TODO: Redundant with base role. Merge or drop.
 {
-  lib,
   config,
+  lib,
   pkgs,
   ...
 }: let
@@ -11,7 +12,6 @@ in {
     ./localisation.nix
     ./security.nix
     ./shared_secrets.nix
-    ./zsh.nix
   ];
 
   options.myOptions.common = {
@@ -33,8 +33,8 @@ in {
             "pipe-operator"
           ];
           trusted-users = ["root" "@wheel" "inf"];
-          keep-outputs = true;
-          keep-derivations = true;
+          keep-outputs = true; # TODO: Needed?
+          keep-derivations = true; # TODO: Needed?
           tarball-ttl = 7 * 24 * 3600; # Cache tars for seven days to improve dev experience
         };
         gc = {
@@ -47,9 +47,17 @@ in {
           dates = ["15:00"];
         };
       };
-      programs.nix-ld.enable = true;
       hardware.i2c.enable = true;
       sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+      programs = {
+        zsh.enable = true;
+        fish.enable = true;
+        nix-ld.enable = true;
+      };
+      environment = {
+        pathsToLink = ["/share/zsh"]; # See: Required for home-manager and zsh to play together nicely
+      };
+      users.defaultUserShell = pkgs.fish;
     }
     (lib.mkIf cfg.enableBoot {
       boot = {
