@@ -205,6 +205,11 @@
         desc = "Rofi bluetooth switcher";
         cmd = "${lib.getExe pkgs.rofi-bluetooth}";
       }
+      {
+        key = "C";
+        desc = "Configure pipewire volumes";
+        cmd = "${lib.getExe pkgs.pwvucontrol}";
+      }
     ];
     media-control = mkWlrMenu "noctalia-media-control" [
       {
