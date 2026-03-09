@@ -81,7 +81,7 @@
 
   gnupg-with-pin-caching = prev.gnupg.overrideAttrs (
     _: prevAttrs: {
-      # Address missing PIn caching https://dev.gnupg.org/T7041
+      # Address missing pin caching https://dev.gnupg.org/T7041
       patches = (prevAttrs.patches or []) ++ [./0001-allow-shared-pin-cache.patch];
     }
   );
@@ -346,4 +346,19 @@
       };
     }
   );
+
+  wlr-which-key-fork = final.wlr-which-key.overrideAttrs (finalAttrs: _: {
+    version = "1.3.0-pr-46-2026-02-26";
+
+    src = final.fetchFromGitHub {
+      owner = "RedEtherbloom";
+      repo = "wlr-which-key";
+      hash = "sha256-N8iueJT8H77AuhuE5B1jF6JiSGZeQrUnnIEB5DtGMxc=";
+      rev = "207039df24dfcbe9dcc6bc14d17a77d530f38f52";
+    };
+    cargoDeps = final.rustPlatform.fetchCargoVendor {
+      inherit (finalAttrs) src;
+      hash = "sha256-v+4/lD00rjJvrQ2NQqFusZc0zQbM9mBG5T9bNioNGKQ=";
+    };
+  });
 }

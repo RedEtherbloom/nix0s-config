@@ -7,14 +7,24 @@
   ...
 }: let
   # TODO: Move to own file, then upstream as home-manager option
-  mkWlrConfig = menuName: menu:
-    pkgs.writeText "${menuName}-config.yaml" (pkgs.lib.generators.toYAML {} {
-      anchor = "center";
-      inherit menu;
-    });
-  mkWlrMenu = menuName: menu:
-    pkgs.writeShellScriptBin "wlr-menu-${menuName}.sh" ''
-      exec ${lib.getExe pkgs.wlr-which-key} ${mkWlrConfig menuName menu}
+  mkWlrConfig = name: menu:
+    pkgs.writeTextFile {
+      name = "${name}-config.yaml";
+      text = pkgs.lib.generators.toYAML {} {
+        anchor = "bottom-right";
+        font = "CommitMono Nerd Font Mono 14";
+        margin_bottom = 20;
+        margin_right = 20;
+
+        inherit menu;
+      };
+      checkPhase = ''
+        ${lib.getExe pkgs.wlr-which-key-fork} --only-validate-config $out
+      '';
+    };
+  mkWlrMenu = name: menu:
+    pkgs.writeShellScriptBin "wlr-menu-${name}.sh" ''
+      exec ${lib.getExe pkgs.wlr-which-key} ${mkWlrConfig name menu}
     '';
   noctaliaPackage = config.programs.noctalia-shell.package;
   noctaliaIpcCommand = command: "${noctaliaPackage}/bin/noctalia-shell ipc call ${command}";
@@ -1372,6 +1382,9 @@ in {
     # Helper script block
     shikaneProfileSelector
     niriSwitchToWindow
+    wlrLaunchers.common
+    wlrLaunchers.media-control
+    wlrLaunchers.dev-tools
 
     # Own
     thunarWithExtensions
