@@ -229,7 +229,7 @@ in {
       };
       nushell.enable = true;
       rofi = {
-        enable = lib.mkDefault false;
+        enable = lib.mkDefault true;
         terminal = "${config.programs.kitty.package}";
         extraConfig.show-icons = true;
         theme = ../../dotfiles/rofi/launcher.rasi;

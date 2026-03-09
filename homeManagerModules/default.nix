@@ -1,13 +1,25 @@
-{lib, ...}: {
-  imports =
-    [
-      ./roles/art.nix
-      ./roles/development.nix
-      ./roles/gamedev.nix
-      ./roles/gaming.nix
-      ./roles/nvim.nix
-      ./roles/office.nix
-      ./roles/vtubing.nix
-    ]
-    ++ (lib.flatten (lib.map (folder: lib.filesystem.listFilesRecursive folder) [./hostRoles ./programs ./services])); # TODO: Remove this for better readability
+{
+  imports = [
+    ./hostRoles/base.nix
+    ./hostRoles/graphical.nix
+    ./hostRoles/neural-augmenter.nix
+    ./programs/firefox.nix
+    ./programs/niri.nix
+    ./programs/obsidian.nix
+    ./programs/socials.nix
+    ./programs/taskwarrior-tui.nix
+    ./programs/taskwarrior.nix
+    ./programs/vscode.nix
+    ./programs/zsh.nix
+    ./roles/art.nix
+    ./roles/development.nix
+    ./roles/gamedev.nix
+    ./roles/gaming.nix
+    ./roles/nvim.nix
+    ./roles/office.nix
+    ./roles/vtubing.nix
+    ./services/obsidian-git.nix
+    ./services/piper-web-tts.nix
+    ./services/solaar.nix
+  ];
 }

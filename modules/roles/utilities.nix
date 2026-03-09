@@ -137,6 +137,7 @@ in {
         ++ lib.optionals cfg.wormhole [
           magic-wormhole
           magic-wormhole-rs
+          warp
         ]
         ++ lib.optionals cfg.tmux [
           tmux
@@ -147,14 +148,12 @@ in {
         ]
         ++ lib.optionals cfg.pdfUtils [
           poppler-utils
-          # pdfs
           ripgrep-all
         ]
         ++ lib.optionals cfg.diskUtilities [
           parted
           gparted
-          # For losetup and fdisk
-          util-linux
+          util-linux # For losetup and fdisk
         ];
     }
   ]);

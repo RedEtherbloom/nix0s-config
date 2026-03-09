@@ -9,11 +9,10 @@
   imports =
     [
       ../../modules
-      ../../modules/common/ssh.nix
+      ../../modules/ssh.nix
       ../../modules/hdd.nix
-      # TODO: Remove once hm sops-nix supports secrets
-      ../../modules/common/taskwarrior-secrets.nix
-      ../../modules/binary-cache/cuda-maintainers.nix
+      ../../modules/common/taskwarrior-secrets.nix # TODO: Remove once hm sops-nix supports secrets
+      ../../modules/cachix/cuda-maintainers.nix
 
       ./hardware-configuration.nix
     ]
@@ -49,7 +48,7 @@
     ];
     initrd = {
       availableKernelModules = [
-        # TODO: Lookup remainng crypto models
+        # TODO: Lookup remaining crypto kernel drivers for our CPU
         "aesni_intel"
       ];
       systemd.enable = true;
@@ -253,7 +252,7 @@
   };
 
   hardware = {
-    logitech.wireless.enable = true; # Manage logitech options via solaar
+    logitech.wireless.enable = true;
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -357,12 +356,9 @@
   };
 
   myOptions = {
-    hostRoles.desktop.enable = true;
+    hostRoles.neural-augmenter.enable = true;
     roles.gaming.enable = true;
-    services = {
-      taskchampion.enable = true;
-      gitea.enable = true;
-    };
+    services.gitea.enable = true;
   };
   users.users = {
     inf = {

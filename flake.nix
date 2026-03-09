@@ -109,7 +109,6 @@
                     # TODO: Decide how to reorganize module inputs
                     inputs.sops-nix.nixosModules.sops
                     inputs.nix-index-database.nixosModules.nix-index
-                    ./modules/binary-cache/default.nix
                     ./hosts/${hostName}/configuration.nix
                   ];
                 }

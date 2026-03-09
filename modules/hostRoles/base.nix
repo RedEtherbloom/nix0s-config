@@ -9,7 +9,8 @@
   cfg = config.myOptions.hostRoles.base;
 in {
   imports = [
-    ../binary-cache
+    # cache.nixos.org is implicitly imported
+    ../cachix/nix-community.nix
   ];
 
   options.myOptions.hostRoles.base.enable = lib.mkOption {

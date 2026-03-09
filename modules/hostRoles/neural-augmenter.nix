@@ -11,7 +11,7 @@ in {
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.niri-flake.nixosModules.niri
-    ../binary-cache/niri-flake.nix
+    ../cachix/niri-flake.nix
   ];
 
   options.myOptions.hostRoles.neural-augmenter.enable = lib.mkEnableOption "workstation options";
@@ -99,13 +99,6 @@ in {
         enable = true;
         wayland = true;
       };
-      # displayManager.sddm = {
-      #   wayland.enable = true;
-      #   enable = true;
-      #   # theme = "sddm-astronaut-theme";
-      #   package = lib.mkForce pkgs.sddm-fallback-patched;
-      #   extraPackages = [pkgs.kdePackages.qtmultimedia];
-      # };
       ollama = {
         enable = true;
         environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
@@ -121,13 +114,12 @@ in {
       avahi = {
         enable = true;
         nssmdns4 = true;
-        # nssmdns6 = true; # Recommended against in docs
         openFirewall = true;
       };
       tuned.enable = true;
       tlp.enable = lib.mkForce false; # Conflicts with tuned
       upower.enable = true;
-      gnome.evolution-data-server.enable = true; # Calendar support for noctalia
+      gnome.evolution-data-server.enable = true; # Noctalia calendar support
     };
 
     hardware = {
@@ -139,7 +131,7 @@ in {
           General = {
             Experimental = true;
             KernelExperimental = true;
-            # ControllerMode = "bredr"; # Problems with Bose
+            ControllerMode = "bredr"; # Problems with Bose
             FastConnectable = true;
             Class = "0x000100"; # Generic desktop TODO: Do I need object major class as well?
             JustWorksRepairing = true; # Security implications?
@@ -152,7 +144,6 @@ in {
     };
     environment.systemPackages = with pkgs; [
       lm_sensors
-      # (sddm-astronaut.override {embeddedTheme = "black_hole";})
       nftables # vopono daemon
     ];
 
@@ -167,7 +158,6 @@ in {
       "olm-3.2.16" # Required for Nheko to work
     ];
     zramSwap.enable = true;
-
     virtualisation = {
       containers = {
         enable = true;

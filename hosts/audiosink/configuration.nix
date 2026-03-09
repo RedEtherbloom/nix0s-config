@@ -13,7 +13,7 @@ in {
     inputs.sops-nix.nixosModules.sops
     ./hardware-configuration.nix
 
-    ../../modules/common/ssh.nix
+    ../../modules/ssh.nix
     ../../modules/roles/ssdp.nix
     # TODO: Try to insert normal modules again
   ];

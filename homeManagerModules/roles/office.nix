@@ -83,7 +83,7 @@ in {
       programs.thunderbird = {
         enable = true;
         package = pkgs.thunderbird-bin;
-        nativeMessagingHosts = [pkgs.thunderbird-external-editor-revived];
+        # nativeMessagingHosts = [pkgs.thunderbird-external-editor-revived]; # TODO: Not setup properly
         profiles.personal = {
           isDefault = true;
           withExternalGnupg = true;

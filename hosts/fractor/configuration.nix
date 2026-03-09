@@ -8,7 +8,7 @@
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
     ../../modules
-    ../../modules/common/ssh.nix
+    ../../modules/ssh.nix
     # TODO: Remove once hm sops-nix supports secrets
     ../../modules/common/taskwarrior-secrets.nix
     ./restic.nix
@@ -90,7 +90,7 @@
   };
 
   myOptions = {
-    hostRoles.laptop.enable = true;
+    hostRoles.neural-augmenter.enable = true;
     roles.gaming.enable = true;
     roles.i2p.enable = lib.mkForce false; # Broken as of: 15.10.2025
   };

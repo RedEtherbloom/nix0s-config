@@ -1,11 +1,18 @@
-{lib, ...}: {
-  imports =
-    [
-      ./common
-      ./event-setup.nix
-      ./hostRoles
-      ./services
-      ./wireguard
-    ]
-    ++ (lib.flatten (lib.map (folder: lib.filesystem.listFilesRecursive folder) [./roles]));
+{
+  imports = [
+    ./common
+    ./hostRoles/base.nix
+    ./hostRoles/graphical.nix
+    ./hostRoles/neural-augmenter.nix
+    ./roles/gamedev.nix
+    ./roles/gaming.nix
+    ./roles/i2p.nix
+    ./roles/office.nix
+    ./roles/ssdp.nix
+    ./roles/utilities.nix
+    ./roles/vtubing.nix
+    ./services/gitea.nix
+    ./services/taskchampion.nix
+    ./wireguard.nix
+  ];
 }
