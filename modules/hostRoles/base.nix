@@ -35,7 +35,9 @@ in {
         enable = true;
         defaultEditor = true;
       };
+      fish.enable = true;
     };
+    users.defaultUserShell = pkgs.fish;
 
     # See: https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix
     environment.pathsToLink = [
@@ -51,6 +53,27 @@ in {
     nix = {
       registry.nixpkgs.flake = inputs.nixpkgs;
       nixPath = ["nixpkgs=${inputs.nixpkgs}"];
+      package = pkgs.lixPackageSets.latest.lix;
+      settings = {
+        experimental-features = [
+          "nix-command"
+          "flakes"
+          "pipe-operator"
+        ];
+        trusted-users = ["root" "@wheel" "inf"];
+      };
+      gc = {
+        automatic = true;
+        dates = "daily";
+        options = "--delete-older-than 5d";
+      };
+      optimise = {
+        automatic = true;
+        dates = ["15:00"];
+      };
     };
+
+    boot.tmp.cleanOnBoot = true;
+    sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
   };
 }
