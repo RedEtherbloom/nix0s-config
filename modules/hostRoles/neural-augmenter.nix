@@ -209,7 +209,7 @@ in {
       documentation = {
         dev.enable = true;
         man = {
-          mandoc.enable = true;
+          mandoc.enable = true; # For some reason search is broken. Also in less.
           man-db.enable = false;
         };
       };
@@ -263,12 +263,6 @@ in {
         };
       };
       niri-flake.cache.enable = false; # We manage it ourself for readability
-      i18n.inputMethod = {
-        enable = true;
-        type = "fcitx5";
-      };
-      fonts.packages = [pkgs.noto-fonts-color-emoji]; # fcitx5
-
       boot.kernelPackages = lib.mkOverride 1001 pkgs.linuxPackages-rt_latest;
 
       # Generate a second, much more verbose boot entry

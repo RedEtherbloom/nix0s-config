@@ -62,7 +62,7 @@ in {
               tor-browser
               bitwarden-desktop
               bitwarden-cli
-              rofi-rbw
+              rofi-rbw # rofi-bitwarden
               restic
               autorestic
               krita
@@ -154,6 +154,7 @@ in {
               nerd-fonts.commit-mono
               powerline-symbols
               powerline-fonts
+              noto-fonts-color-emoji # fcitx5
 
               # TODO: Find a file manager with vim keybinds
 
@@ -170,6 +171,8 @@ in {
               )
               wdisplays
               wev
+
+              fcitx5-configtool
             ]
             ++ (with pkgs.kdePackages; [
               ark
@@ -181,7 +184,7 @@ in {
               dolphin-plugins
               baloo-widgets
               ffmpegthumbs
-              kcharselect # Font selector
+              kcharselect # Font explorer
             ])
         )
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
@@ -196,12 +199,7 @@ in {
         # QT_LOGGING_RULES = "*.debug=true";
         PIPEWIRE_DEBUG = 2; # Print warnings and errors
       };
-      pointerCursor = {
-        gtk.enable = true;
-        package = pkgs.lyra-cursors;
-        name = "LyraG-cursors";
-        size = 36;
-      };
+      pointerCursor.gtk.enable = true;
       activation.rebuildKdeXdgCache = lib.hm.dag.entryAfter ["writeBoundary"] "run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6"; # Rebuild cache for dolphin
     };
 
@@ -210,7 +208,7 @@ in {
       playerctld.enable = true;
       kdeconnect = {
         enable = true;
-        indicator = false;
+        indicator = true;
         package = pkgs.kdePackages.kdeconnect-kde;
       };
       whisp-away = {
@@ -219,8 +217,9 @@ in {
         defaultBackend = lib.mkDefault "whisper-cpp"; # whisper.cpp seems more performant for our use cases
         accelerationType = lib.mkDefault "vulkan";
         useClipboard = lib.mkDefault false; # Typing at cursor position
-        useCrane = false; # Broken, as craneLib missing?
+        useCrane = false; # Broken, as craneLib missing
       };
+      
     };
     programs = {
       chromium = {
@@ -230,14 +229,13 @@ in {
       nushell.enable = true;
       rofi = {
         enable = lib.mkDefault true;
-        terminal = "${config.programs.kitty.package}";
+        terminal = "${lib.getExe pkgs.kitty}";
         extraConfig.show-icons = true;
         theme = ../../dotfiles/rofi/launcher.rasi;
       };
-      spotify-player.enable = true;
       bat.enable = true;
       broot.enable = true; # TODO: Give a try for better comparison
-      fish.enable = true; # TODO: Try out fish as comparison to zsh
+      fish.enable = true;
     };
 
     xdg = {
@@ -281,6 +279,17 @@ in {
     sops.secrets."hass_cli_token" = {
       sopsFile = "${secrets}/secrets/services/home-assistant.yaml";
       key = "access_tokens/cli";
+    };
+    i18n.inputMethod = {
+      enable = true;
+      type = "fcitx5";
+      fcitx5 = {
+        waylandFrontend = true;
+        addons = with pkgs; [
+          fcitx5-gtk
+          fcitx5-rose-pine
+        ];
+      };
     };
   };
 }
