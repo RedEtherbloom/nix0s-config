@@ -13,6 +13,11 @@ in {
       type = lib.types.bool;
       default = false;
     };
+    extraExtensions = lib.mkOption {
+      description = "Enable extra extensions to turn VS-Code into an actual IDE.";
+      type = lib.types.bool;
+      default = false;
+    };
     vimMode = lib.mkOption {
       description = "Enable Vim mode plugin";
       type = lib.types.bool;
@@ -26,7 +31,7 @@ in {
       profiles.default = {
         enableUpdateCheck = false;
         enableExtensionUpdateCheck = false;
-        extensions = with pkgs.vscode-extensions;
+        extensions = lib.optionals cfg.extraExtensions (with pkgs.vscode-extensions;
           [
             mhutchie.git-graph
             donjayamanne.githistory
@@ -83,7 +88,7 @@ in {
             # platformio.platformio-vscode-ide
             # Dependency of platformio
             ms-vscode.cpptools
-          ];
+          ]);
         userSettings = lib.mkMerge [
           {
             nix = {
