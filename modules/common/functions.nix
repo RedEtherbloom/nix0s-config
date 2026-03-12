@@ -1,5 +1,5 @@
-# Duplicated from variables.nix
-# TODO: Merge those two
+# TODO: Remove config from arguments
+# TODO: Duplicated from variables.nix. Merge those two
 {config}: let
   data-server-ip = wgIpOrLocalhost config.networking.ownWireguard.hosts.neurodrive;
   wgIpOrLocalhost = wireguardHost:

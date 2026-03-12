@@ -10,7 +10,6 @@
     ./programs/taskwarrior-tui.nix
     ./programs/taskwarrior.nix
     ./programs/vscode.nix
-    ./programs/zsh.nix
     ./roles/art.nix
     ./roles/development.nix
     ./roles/gamedev.nix
