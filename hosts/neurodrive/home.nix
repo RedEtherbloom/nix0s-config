@@ -45,12 +45,11 @@ in {
         vrcadvert
         vrcx
         sidequest
-        # ALVR alternative while nvenc is broken
         wivrn
 
         vopono-torrent-desktop
 
-        byar-launcher
+        beyond-all-reason
         starsector-gl-fix
       ];
     };
