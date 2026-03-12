@@ -11,10 +11,9 @@
     pkgs.writeTextFile {
       name = "${name}-config.yaml";
       text = pkgs.lib.generators.toYAML {} {
-        anchor = "bottom-right";
+        anchor = "right";
         font = "CommitMono Nerd Font Mono 14";
-        margin_bottom = 20;
-        margin_right = 20;
+        margin_right = 12;
 
         inherit menu;
       };
@@ -163,7 +162,6 @@
         desc = "YouTube Music";
         cmd = "${lib.getExe config.programs.kitty.package} -e${lib.getExe pkgs.ytui-music}";
       }
-      # TODO: Check if shellbeats is usable
       {
         key = "M";
         desc = "ShellBeats!";
@@ -216,19 +214,19 @@
         cmd = "${lib.getExe pkgs.rofi-bluetooth}";
       }
       {
-        key = "C";
-        desc = "Configure pipewire volumes";
-        cmd = "${lib.getExe pkgs.pwvucontrol}";
+        key = "o";
+        desc = "Switch to or start Obsidian";
+        cmd = "${lib.getExe niriSwitchToWindow} app_id obsidian || obsidian";
       }
     ];
     media-control = mkWlrMenu "noctalia-media-control" [
       {
-        key = "c";
+        key = "w";
         desc = "Configure pipewire volumes";
         cmd = "${lib.getExe pkgs.pwvucontrol}";
       }
       {
-        key = "C";
+        key = "W";
         desc = "Pipewire patchbay";
         cmd = "${pkgs.raysession}/bin/raysession";
       }
@@ -297,29 +295,13 @@
       [
         {
           key = "n";
-          desc = "New/standard nvf";
+          desc = "Neovide";
           cmd = "neovide";
         }
         {
           key = "N";
-          desc = "Neovide";
-          submenu = [
-            {
-              key = "1";
-              desc = "New/standard nvf";
-              cmd = "neovide";
-            }
-            {
-              key = "2";
-              desc = "Nvf stock maximal configuration(with patches)";
-              cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim";
-            }
-          ];
-        }
-        {
-          key = "o";
-          desc = "Switch to or start Obsidian";
-          cmd = "${lib.getExe niriSwitchToWindow} app_id obsidian || obsidian";
+          desc = "Nvf stock maximal configuration as fallback";
+          cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim";
         }
         {
           key = "w";
@@ -434,13 +416,8 @@ in {
           left = 8;
         };
       };
-
       prefer-no-csd = true;
-
       screenshot-path = "${config.xdg.userDirs.pictures}/Screenshots/%Y-%m-%d_%H-%M-%S.png";
-
-      # TODO: Set up workspace switch animations
-
       window-rules = [
         {
           # Noctalia requirement
@@ -477,7 +454,7 @@ in {
       };
       hotkey-overlay.hide-not-bound = true;
       cursor = {
-        theme = "LyraG-cursors";
+        theme = "LyraQ-cursors";
         size = 36;
         hide-after-inactive-ms = 15 * 1000;
         hide-when-typing = true;
@@ -750,7 +727,7 @@ in {
   programs.noctalia-shell = {
     enable = true;
     package = inputs.noctalia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default.override {calendarSupport = true;};
-    systemd.enable = true; # See doc warnings about experimental status
+    systemd.enable = true; # TODO: Replace with uwsm asap. Unsupported and begins to cause issues(e.g. the sporadic qs crashes).
     plugins = {
       sources = [
         {
@@ -1392,7 +1369,7 @@ in {
     gnome-calendar
     geary
   ];
-  # TODO: Check if polkit KDE somehow is fixed
+  # TODO: Debug and redo polkit. KDE polkit still seems broken.
 
   services = {
     swayidle = let
