@@ -10,8 +10,7 @@
     [
       ../../modules
       ../../modules/ssh.nix
-      ../../modules/hdd.nix
-      ../../modules/common/taskwarrior-secrets.nix # TODO: Remove once hm sops-nix supports secrets
+      ../../modules/taskwarrior-secrets.nix # TODO: Remove once hm sops-nix supports secrets
       ../../modules/cachix/cuda-maintainers.nix
 
       ./hardware-configuration.nix
@@ -276,6 +275,10 @@
       package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
     nvidia-container-toolkit.enable = true;
+    sensor.hddtemp = {
+      enable = true;
+      drives = ["/dev/disk/by-path/*"];
+    };
   };
   virtualisation = {
     docker.daemon.settings = {
@@ -464,4 +467,8 @@
       sopsFile = "${secrets}/secrets/services/paperless.yaml";
     };
   };
+
+  powerManagement.powerUpCommands = ''
+    ${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.hdparm} -S 90 -B 1 $(${pkgs.util-linux}/bin/lsblk -dnp -o name,rota | ${lib.getExe pkgs.gnugrep} ".*\s1" | ${pkgs.coreutils}/bin/cut -d " " -f 1)'
+  ''; # Spin HDDs down when inactive. Taken from: https://www.reddit.com/r/NixOS/comments/751i5t/comment
 }
