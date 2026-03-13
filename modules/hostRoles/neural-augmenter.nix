@@ -21,6 +21,11 @@ in {
       type = lib.types.bool;
       default = true;
     };
+    verboseSpecialisation = lib.mkOption {
+      description = "Generate a second specialisation printing much more verbose boot logs.";
+      type = lib.types.bool;
+      default = false;
+    };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -172,9 +177,7 @@ in {
       in
         builtins.concatMap collectFlakeInputs (builtins.attrValues inputs);
 
-      nixpkgs.config.permittedInsecurePackages = [
-        "olm-3.2.16" # Required for Nheko to work
-      ];
+      nixpkgs.config.permittedInsecurePackages = ["olm-3.2.16"]; # Required by Nheko to work
       zramSwap.enable = true;
       virtualisation = {
         containers = {
@@ -264,12 +267,6 @@ in {
       };
       niri-flake.cache.enable = false; # We manage it ourself for readability
       boot.kernelPackages = lib.mkOverride 1001 pkgs.linuxPackages-rt_latest;
-
-      # Generate a second, much more verbose boot entry
-      # specialisation.verbose-boot.configuration = {
-      #   boot.consoleLogLevel = 7;
-      #   boot.plymouth.enable = false;
-      # };
     }
     (lib.mkIf cfg.setupGrubOptions {
       boot = {
@@ -298,9 +295,16 @@ in {
             '';
           };
         };
-        # Required for plymouth to work in luks
-        initrd.systemd.enable = true;
+        initrd.systemd.enable = true; # Required for plymouth to work in luks
         plymouth.enable = lib.mkDefault true; # Prettier boot screen. TODO: Tends to crash after idling for a few minutes
+      };
+    })
+    (lib.mkIf cfg.verboseSpecialisation {
+      specialisation.verbose-boot.configuration = {
+        boot = {
+          consoleLogLevel = 7;
+          plymouth.enable = false;
+        };
       };
     })
   ]);
