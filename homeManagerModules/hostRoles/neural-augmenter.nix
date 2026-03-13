@@ -199,7 +199,12 @@ in {
         # QT_LOGGING_RULES = "*.debug=true";
         PIPEWIRE_DEBUG = 2; # Print warnings and errors
       };
-      pointerCursor.gtk.enable = true;
+      pointerCursor = {
+        gtk.enable = true;
+        package = pkgs.lyra-cursors;
+        name = "LyraQ-cursors";
+        size = 36;
+      };
       activation.rebuildKdeXdgCache = lib.hm.dag.entryAfter ["writeBoundary"] "run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6"; # Rebuild cache for dolphin
     };
 

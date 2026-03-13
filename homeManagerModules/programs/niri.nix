@@ -454,8 +454,8 @@ in {
       };
       hotkey-overlay.hide-not-bound = true;
       cursor = {
-        theme = "LyraQ-cursors";
-        size = 36;
+        inherit (config.home.pointerCursor.size);
+        theme = config.home.pointerCursor.name;
         hide-after-inactive-ms = 15 * 1000;
         hide-when-typing = true;
       };
