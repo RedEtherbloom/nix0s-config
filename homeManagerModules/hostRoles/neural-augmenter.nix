@@ -171,8 +171,6 @@ in {
               )
               wdisplays
               wev
-
-              fcitx5-configtool
             ]
             ++ (with pkgs.kdePackages; [
               ark
