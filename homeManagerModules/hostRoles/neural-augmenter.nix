@@ -219,7 +219,6 @@ in {
         useClipboard = lib.mkDefault false; # Typing at cursor position
         useCrane = false; # Broken, as craneLib missing
       };
-      
     };
     programs = {
       chromium = {
@@ -246,10 +245,12 @@ in {
       portal = {
         enable = lib.mkForce true;
         xdgOpenUsePortal = true;
-        extraPortals = with pkgs; [
-          gnome-keyring
-          xdg-desktop-portal-gtk
-        ];
+        extraPortals = with pkgs;
+          [
+            gnome-keyring
+            xdg-desktop-portal-gtk
+          ]
+          ++ osConfig.xdg.portal.extraPortals; # See github.com/nix-community/home-manager/issues/7124
       };
       stateFile."piper-models/.keep".text = "";
     };
