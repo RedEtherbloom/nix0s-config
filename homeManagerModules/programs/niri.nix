@@ -4,6 +4,7 @@
   inputs,
   pkgs,
   osConfig,
+  secrets,
   ...
 }: let
   # TODO: Move to own file, then upstream as home-manager option
@@ -347,7 +348,7 @@ in {
       input = {
         keyboard = {
           xkb = {inherit (osConfig.services.xserver.xkb) model layout variant options;};
-          numlock = true; # Numlock on startup
+          numlock = true;
         };
         touchpad = {
           accel-profile = "flat";
@@ -446,7 +447,6 @@ in {
         }
       ];
       overview.workspace-shadow.enable = false;
-      # TODO: Disable overview wallpaper in noctalia for niri overview background
       debug.honor-xdg-activation-with-invalid-serial = true; # Required by noctalia
       xwayland-satellite = {
         enable = true;
@@ -459,6 +459,9 @@ in {
         hide-after-inactive-ms = 15 * 1000;
         hide-when-typing = true;
       };
+      spawn-at-startup = [
+        {command = ["noctalia-shell"];}
+      ];
       binds = {
         "Mod+Shift+Slash".action.show-hotkey-overlay = [];
 
@@ -727,7 +730,6 @@ in {
   programs.noctalia-shell = {
     enable = true;
     package = inputs.noctalia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default.override {calendarSupport = true;};
-    systemd.enable = true; # TODO: Replace with uwsm asap. Unsupported and begins to cause issues(e.g. the sporadic qs crashes).
     plugins = {
       sources = [
         {
@@ -1072,7 +1074,7 @@ in {
         animationDisabled = false;
         animationSpeed = 1;
         autoStartAuth = false;
-        avatarImage = "${config.home.homeDirectory}/.face"; # TODO: Source from dotfiles
+        avatarImage = "${secrets}/dotfiles/pfp/cute_blushing_growth.jpg";
         boxRadiusRatio = 1;
         clockFormat = "hh\\nmm";
         clockStyle = "custom";
@@ -1412,4 +1414,7 @@ in {
     shikane.enable = true;
   };
   # TODO: Set up fcitx5
+  xdg.cacheFile."noctalia/wallpaper.json".text = builtins.toJSON {
+    defaultWallpaper = config.stylix.image;
+  };
 }
