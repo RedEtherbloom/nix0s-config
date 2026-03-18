@@ -723,6 +723,10 @@ in {
           hotkey-overlay.title = "Dev tools and note taking";
           action.spawn-sh = "${lib.getExe wlrLaunchers.dev-tools}";
         };
+        "Mod+Shift+O" = {
+          hotkey-overlay.title = "Switch to Obsidian";
+          action.spawn-sh = "${lib.getExe niriSwitchToWindow} app_id obsidian || obsidian";
+        };
       };
     };
   };
