@@ -351,14 +351,14 @@ in {
           numlock = true;
         };
         touchpad = {
-          accel-profile = "flat";
+          accel-profile = "adaptive";
           tap = true;
           drag-lock = true;
           natural-scroll = true;
           scroll-method = "two-finger";
         };
         mouse = {
-          accel-profile = "flat";
+          accel-profile = "adaptive";
           natural-scroll = true;
         };
         trackpoint = {
