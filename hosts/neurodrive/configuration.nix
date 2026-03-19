@@ -95,17 +95,6 @@
       options = ["nofail"];
     };
   };
-
-  systemd.services = {
-    i2p = {
-      after = [
-        "local-fs.target"
-        "cryptsetup.target"
-      ];
-      serviceConfig.WorkingDirectory = lib.mkForce config.users.users.i2p.home;
-    };
-  };
-
   networking = {
     hostName = "neurodrive";
     networkmanager.enable = true;
@@ -349,13 +338,40 @@
       };
     };
   };
-  systemd.services = {
+  systemd.services = let
+    hddSleepCommand = ''${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.hdparm} -S 90 -B 1 $(${pkgs.util-linux}/bin/lsblk -dnp -o name,rota | ${lib.getExe pkgs.gnugrep} ".*\s1" | ${pkgs.coreutils}/bin/cut -d " " -f 1)''; # Spin HDDs down when inactive. Taken from: https://www.reddit.com/r/NixOS/comments/751i5t/comment
+  in {
     "${config.virtualisation.oci-containers.containers.homeassistant.serviceName}".after = [
       "systemd-udevd.service"
     ];
     "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = [
       "network-online.target"
     ];
+    i2p = {
+      after = [
+        "local-fs.target"
+        "cryptsetup.target"
+      ];
+      serviceConfig.WorkingDirectory = lib.mkForce config.users.users.i2p.home;
+    };
+    powerUpHdd = {
+      description = "Configure sleep time on HDDs.";
+      wantedBy = ["multi-user.target"];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = hddSleepCommand;
+      };
+    };
+    afterSleepHdd = {
+      description = "Configure sleep time on HDDs after coming back from suspend.";
+      wantedBy = ["sleep.target"];
+      unitConfig.StopWhenUnneeded = true;
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStop = hddSleepCommand;
+      };
+    };
   };
 
   myOptions = {
@@ -407,10 +423,8 @@
       nvtopPackages.full
       smartmontools
     ];
+    # TODO: Overwork nvidia variables
     sessionVariables = {
-      #LIBVA_DRIVER_NAME = "nvidia";
-      #MOZ_DISABLE_RDD_SANDBOX = "1";
-
       # Necessary to correctly enable va-api (video codec hardware
       # acceleration). If this isn't set, the libvdpau backend will be
       # picked, and that one doesn't work with most things, including
@@ -430,7 +444,6 @@
       # It appears that the normal rendering mode is broken on recent
       # nvidia drivers:
       # https://github.com/elFarto/nvidia-vaapi-driver/issues/213#issuecomment-1585584038
-      # TODO: I think this may be the culprit that broke it...
       NVD_BACKEND = "direct";
       # Required for firefox 98+, see:
       # https://github.com/elFarto/nvidia-vaapi-driver#firefox
@@ -467,8 +480,4 @@
       sopsFile = "${secrets}/secrets/services/paperless.yaml";
     };
   };
-
-  powerManagement.powerUpCommands = ''
-    ${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.hdparm} -S 90 -B 1 $(${pkgs.util-linux}/bin/lsblk -dnp -o name,rota | ${lib.getExe pkgs.gnugrep} ".*\s1" | ${pkgs.coreutils}/bin/cut -d " " -f 1)'
-  ''; # Spin HDDs down when inactive. Taken from: https://www.reddit.com/r/NixOS/comments/751i5t/comment
 }
