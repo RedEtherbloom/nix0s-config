@@ -45,6 +45,7 @@ in {
         };
       };
       security = {
+        rtkit.enable = true;
         pam.services.login.enableGnomeKeyring = true;
         ownAdditional.yubikey = true;
       };
@@ -141,6 +142,21 @@ in {
         upower.enable = true;
         gnome.evolution-data-server.enable = true; # Noctalia calendar support
         earlyoom.enable = true; # Out of memory management
+        pulseaudio = {
+          enable = false;
+          zeroconf.discovery.enable = true; # Just for the port. Check if I have to do this
+        };
+        pipewire = {
+          enable = true;
+          pulse.enable = true;
+          alsa = {
+            enable = true;
+            support32Bit = true;
+          };
+          jack.enable = true;
+          raopOpenFirewall = true;
+          wireplumber.enable = true;
+        };
       };
 
       hardware = {

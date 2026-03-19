@@ -1,6 +1,5 @@
 {
   imports = [
-    ./common/audio.nix
     ./common/localisation.nix
     ./common/security.nix
     ./common/shared_secrets.nix

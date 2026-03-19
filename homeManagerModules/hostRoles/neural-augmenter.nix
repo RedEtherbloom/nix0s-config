@@ -8,6 +8,7 @@
   ...
 }: let
   cfg = config.myOptions.hostRoles.neural-augmenter;
+  jsonFormatter = pkgs.formats.json {};
   inherit
     (import ../../homeManagerModules/lib/torrent_lib.nix {inherit osConfig pkgs;})
     mullvad-torrent
@@ -195,7 +196,6 @@ in {
       sessionVariables = {
         # MOZ_USE_XINPUT2 = "1"; # Smooth scrolling
         # QT_LOGGING_RULES = "*.debug=true";
-        PIPEWIRE_DEBUG = 2; # Print warnings and errors
       };
       pointerCursor = {
         gtk.enable = true;
@@ -256,6 +256,42 @@ in {
           ++ osConfig.xdg.portal.extraPortals; # See github.com/nix-community/home-manager/issues/7124
       };
       stateFile."piper-models/.keep".text = "";
+      configFile = {
+        "wireplumber/wireplumber.conf.d/no-headset-autoswitch.conf".source = jsonFormatter.generate "no-headset-autoswitch" {
+          "wireplumber.settings" = {
+            "bluetooth.autoswitch-to-headset-profile" = false;
+            "device.routes.mute-on-bluetooth-playback-removed" = true;
+          };
+        };
+        "wireplumber/wireplumber.conf.d/bluez-longer-pause.conf".source = jsonFormatter.generate "bluez-longer-pause" {
+          "monitor.bluez.rules" = [
+            {
+              matches = [
+                {"node.name" = "~bluez_output.*";}
+                {"node.name" = "~bluez_input.*";}
+              ];
+              actions.update-props."session.suspend-timeout-seconds" = 15;
+            }
+          ];
+        };
+        "wireplumber/wireplumber.conf.d/log-level-debug.conf".source = jsonFormatter.generate "log-level-debug" {
+          "context.properties"."log.level" = "2";
+        };
+        "pipewire/pipewire.conf.d/log-level-debug.conf".source = jsonFormatter.generate "log-level-debug" {
+          "log.level" = "2";
+        };
+        "pipewire/pipewire.conf.d/airplay.conf".source = jsonFormatter.generate "airplay" {
+          "context.modules" = [{name = "libpipewire-module-raop-discover";}]; # In case of lagging: Increase buffer size
+        };
+        "pipewire/pipewire-pulse.conf.d/switch-on-connect.conf".source = jsonFormatter.generate "switch-on-connect" {
+          "pulse.cmd" = [
+            {
+              "cmd" = "load-module";
+              "args" = "module-switch-on-connect";
+            }
+          ];
+        };
+      };
     };
 
     stylix = {
