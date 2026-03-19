@@ -335,6 +335,10 @@
     echo "Switching to window with ID $id"
     ${lib.getExe config.programs.niri.package} msg action focus-window --id "$id"
   '';
+  muteAllSinks = pkgs.writeShellScriptBin "muteAllSinks.sh" ''
+    set -e
+          ${pkgs.pipewire}/bin/pw-dump | ${lib.getExe pkgs.jq} 'map(select(.info.props."media.class" | contains("Audio/Sink")?).id)[]' | ${pkgs.findutils}/bin/xargs -I{} ${pkgs.wireplumber}/bin/wpctl set-mute {} 1
+  '';
 in {
   imports = [
     inputs.niri-flake.homeModules.niri
@@ -487,11 +491,15 @@ in {
           allow-when-locked = true;
           action.spawn = splitSpace (noctaliaIpcCommand "volume decrease");
         };
+        "Mod+Ctrl+Shift+Space" = {
+          allow-inhibiting = false;
+          allow-when-locked = true;
+          action.spawn = lib.getExe muteAllSinks;
+        };
         "XF86AudioMute" = {
           allow-when-locked = true;
           action.spawn = splitSpace "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
         };
-        # TODO: Force kill command for unresponsive playback using e.g. muting pipewire outputs that works on lockscreen
         "XF86AudioMicMute" = {
           allow-when-locked = true;
           action.spawn = splitSpace "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
@@ -1368,10 +1376,12 @@ in {
     wlrLaunchers.common
     wlrLaunchers.media-control
     wlrLaunchers.dev-tools
+    muteAllSinks
 
     # Own
     thunarWithExtensions
     ytui-music
+    shellbeats
     gnome-calendar
     geary
   ];

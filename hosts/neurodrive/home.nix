@@ -72,8 +72,8 @@ in {
       obs-studio.enable = true;
       niri.settings.binds."Mod+Ctrl+Equal" = {
         hotkey-overlay.title = "Reset displays to dual layout";
-        allow-when-locked = true;
         allow-inhibiting = false;
+        allow-when-locked = true;
         action.spawn = lib.strings.splitString " " "${pkgs.shikane}/bin/shikanectl switch dual";
       };
     };
