@@ -1428,7 +1428,7 @@ in {
     shikane.enable = true;
   };
   # TODO: Set up fcitx5
-  xdg.cacheFile."noctalia/wallpaper.json".text = builtins.toJSON {
+  xdg.cacheFile."noctalia/wallpapers.json".text = builtins.toJSON {
     defaultWallpaper = config.stylix.image;
   };
 }
