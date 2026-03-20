@@ -1086,7 +1086,7 @@ in {
         animationDisabled = false;
         animationSpeed = 1;
         autoStartAuth = false;
-        avatarImage = "${secrets}/dotfiles/pfp/cute_blushing_growth.jpg";
+        avatarImage = config.home.file.".face".source;
         boxRadiusRatio = 1;
         clockFormat = "hh\\nmm";
         clockStyle = "custom";
@@ -1387,6 +1387,8 @@ in {
   ];
   # TODO: Debug and redo polkit. KDE polkit still seems broken.
 
+  # TODO: Replace with noctalia idle
+  # TODO: Turn noctalia update command into shell alias!
   services = {
     swayidle = let
       lock_cmd = noctaliaIpcCommand "lockScreen lock";

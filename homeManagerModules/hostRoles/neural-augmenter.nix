@@ -204,6 +204,7 @@ in {
         size = 36;
       };
       activation.rebuildKdeXdgCache = lib.hm.dag.entryAfter ["writeBoundary"] "run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6"; # Rebuild cache for dolphin
+      file.".face".source = "${secrets}/dotfiles/pfp/cute_blushing_growth.jpg";
     };
 
     services = {
