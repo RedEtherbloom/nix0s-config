@@ -305,6 +305,11 @@
           cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim";
         }
         {
+          key = "o";
+          desc = "Notes obsidian-nvim";
+          cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.notesPackage}/bin/nvim ${config.xdg.userDirs.documents}/Obsidian/default";
+        }
+        {
           key = "w";
           desc = "Speech to text";
           submenu = [
