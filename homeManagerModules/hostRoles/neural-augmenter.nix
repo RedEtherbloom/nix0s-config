@@ -239,6 +239,7 @@ in {
       bat.enable = true;
       broot.enable = true; # TODO: Give a try for better comparison
       fish.enable = true;
+      sioyek.enable = true;
     };
 
     xdg = {
