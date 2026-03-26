@@ -478,6 +478,7 @@ in {
           hotkey-overlay.title = "Spawn terminal";
           action.spawn = "${lib.getExe config.programs.kitty.package}";
         };
+        "Mod+Shift+T".action.spawn = splitSpace "${pkgs.kitty}/bin/kitten quick-access-terminal";
         "Mod+D" = {
           hotkey-overlay.title = "Wlr: Various launchers and common applications";
           action.spawn = "${lib.getExe wlrLaunchers.common}";
@@ -692,7 +693,7 @@ in {
         "Mod+Escape" = {
           allow-inhibiting = false;
           action.toggle-keyboard-shortcuts-inhibit = [];
-        };
+        }; # Safety hatch for e.g. RDP clients that capture all keyboard input
 
         "Mod+Shift+E" = {
           hotkey-overlay.title = "Show session menu";
