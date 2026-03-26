@@ -59,6 +59,7 @@ in {
         additionalPrograms = [pkgs.ffmpeg];
       })
       ut1999
+      hyperspeedcube
     ];
     programs.mangohud.enable = true;
   };
