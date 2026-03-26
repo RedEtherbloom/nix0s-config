@@ -9,11 +9,9 @@
   imports =
     [
       ../../modules
-      ../../modules/common/ssh.nix
-      ../../modules/hdd.nix
-      # TODO: Remove once hm sops-nix supports secrets
-      ../../modules/common/taskwarrior-secrets.nix
-      ../../modules/binary-cache/cuda-maintainers.nix
+      ../../modules/ssh.nix
+      ../../modules/taskwarrior-secrets.nix # TODO: Remove once hm sops-nix supports secrets
+      ../../modules/cachix/cuda-maintainers.nix
 
       ./hardware-configuration.nix
     ]
@@ -49,7 +47,7 @@
     ];
     initrd = {
       availableKernelModules = [
-        # TODO: Lookup remainng crypto models
+        # TODO: Lookup remaining crypto kernel drivers for our CPU
         "aesni_intel"
       ];
       systemd.enable = true;
@@ -97,17 +95,6 @@
       options = ["nofail"];
     };
   };
-
-  systemd.services = {
-    i2p = {
-      after = [
-        "local-fs.target"
-        "cryptsetup.target"
-      ];
-      serviceConfig.WorkingDirectory = lib.mkForce config.users.users.i2p.home;
-    };
-  };
-
   networking = {
     hostName = "neurodrive";
     networkmanager.enable = true;
@@ -250,11 +237,10 @@
         MusicFolder = "/mnt/cryptostorage/Music";
       };
     };
-    power-profiles-daemon.enable = true;
   };
 
   hardware = {
-    logitech.wireless.enable = true; # Manage logitech options via solaar
+    logitech.wireless.enable = true;
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -275,11 +261,13 @@
       };
       nvidiaSettings = true;
       open = true;
-      # Fixes: https://github.com/NixOS/nixpkgs/issues/467814
-      # Fix from: https://github.com/NixOS/nixpkgs/issues/467814#issuecomment-3620802561
       package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
     nvidia-container-toolkit.enable = true;
+    sensor.hddtemp = {
+      enable = true;
+      drives = ["/dev/disk/by-path/*"];
+    };
   };
   virtualisation = {
     docker.daemon.settings = {
@@ -350,22 +338,46 @@
       };
     };
   };
-  systemd.services = {
+  systemd.services = let
+    hddSleepCommand = ''${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.hdparm} -S 90 -B 1 $(${pkgs.util-linux}/bin/lsblk -dnp -o name,rota | ${lib.getExe pkgs.gnugrep} ".*\s1" | ${pkgs.coreutils}/bin/cut -d " " -f 1)''; # Spin HDDs down when inactive. Taken from: https://www.reddit.com/r/NixOS/comments/751i5t/comment
+  in {
     "${config.virtualisation.oci-containers.containers.homeassistant.serviceName}".after = [
       "systemd-udevd.service"
     ];
     "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = [
       "network-online.target"
     ];
+    i2p = {
+      after = [
+        "local-fs.target"
+        "cryptsetup.target"
+      ];
+      serviceConfig.WorkingDirectory = lib.mkForce config.users.users.i2p.home;
+    };
+    powerUpHdd = {
+      description = "Configure sleep time on HDDs.";
+      wantedBy = ["multi-user.target"];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = hddSleepCommand;
+      };
+    };
+    afterSleepHdd = {
+      description = "Configure sleep time on HDDs after coming back from suspend.";
+      wantedBy = ["sleep.target"];
+      unitConfig.StopWhenUnneeded = true;
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStop = hddSleepCommand;
+      };
+    };
   };
 
   myOptions = {
-    hostRoles.desktop.enable = true;
+    hostRoles.neural-augmenter.enable = true;
     roles.gaming.enable = true;
-    services = {
-      taskchampion.enable = true;
-      gitea.enable = true;
-    };
+    services.gitea.enable = true;
   };
   users.users = {
     inf = {
@@ -411,10 +423,8 @@
       nvtopPackages.full
       smartmontools
     ];
+    # TODO: Overwork nvidia variables
     sessionVariables = {
-      #LIBVA_DRIVER_NAME = "nvidia";
-      #MOZ_DISABLE_RDD_SANDBOX = "1";
-
       # Necessary to correctly enable va-api (video codec hardware
       # acceleration). If this isn't set, the libvdpau backend will be
       # picked, and that one doesn't work with most things, including
@@ -434,7 +444,6 @@
       # It appears that the normal rendering mode is broken on recent
       # nvidia drivers:
       # https://github.com/elFarto/nvidia-vaapi-driver/issues/213#issuecomment-1585584038
-      # TODO: I think this may be the culprit that broke it...
       NVD_BACKEND = "direct";
       # Required for firefox 98+, see:
       # https://github.com/elFarto/nvidia-vaapi-driver#firefox

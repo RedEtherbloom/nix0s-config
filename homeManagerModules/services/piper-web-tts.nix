@@ -23,7 +23,7 @@
       data-dir = lib.mkOption {
         description = "Data directory for model download";
         type = lib.types.either lib.types.str lib.types.path;
-        default = "$HOME/.local/share/piper";
+        default = "${config.xdg.stateHome}/piper";
       };
       install-in-speech-dispatcher = lib.mkOption {
         description = "Whether to install this piper instance as a speech-dispatcher option automatically";
@@ -67,6 +67,7 @@
                     export DATA_DIR="${config.myOptions.services.piper-web-tts.data-dir}"
 
                     mkdir -p "$DATA_DIR"
+                    cd "$DATA_DIR"
 
                     # Check if the model is already downloaded, in case model is not a path.
                     if ! [[ "${config.myOptions.services.piper-web-tts.model}" =~ "/" ]] && ! [ $(fd -q "${config.myOptions.services.piper-web-tts.model}" "$DATA_DIR" ) ]; then

@@ -4,60 +4,59 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.office;
 in {
   options.myOptions.office = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable office";
-      type = with types; bool;
+      type = lib.types.bool;
       default = osConfig.myOptions.office.enable;
     };
 
-    audio_editing = mkOption {
+    audio_editing = lib.mkOption {
       description = "Enable audio_editing";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
-    image_editing = mkOption {
+    image_editing = lib.mkOption {
       description = "Enable image_editing";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
-    text_editing = mkOption {
+    text_editing = lib.mkOption {
       description = "Enable text_editing";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
-    pdf_editing = mkOption {
+    pdf_editing = lib.mkOption {
       description = "Install pdf editing utilities.";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
-    video_editing = mkOption {
+    video_editing = lib.mkOption {
       description = "Enable video_editing";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
-    scanning = mkOption {
+    scanning = lib.mkOption {
       description = "Enable scanning";
-      type = types.bool;
+      type = lib.types.bool;
       default = osConfig.myOptions.office.scanning;
     };
-    thunderbird = mkOption {
+    thunderbird = lib.mkOption {
       description = "Enable thunderbird";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
-    music = mkOption {
+    music = lib.mkOption {
       description = "Enable less-distracting music players.";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = with pkgs;
         lib.optionals cfg.audio_editing [
@@ -84,7 +83,7 @@ in {
       programs.thunderbird = {
         enable = true;
         package = pkgs.thunderbird-bin;
-        nativeMessagingHosts = [pkgs.thunderbird-external-editor-revived];
+        # nativeMessagingHosts = [pkgs.thunderbird-external-editor-revived]; # TODO: Not setup properly
         profiles.personal = {
           isDefault = true;
           withExternalGnupg = true;

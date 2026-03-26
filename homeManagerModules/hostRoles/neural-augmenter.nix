@@ -1,20 +1,27 @@
 {
   config,
+  inputs,
   lib,
   osConfig,
   pkgs,
+  secrets,
   ...
 }: let
   cfg = config.myOptions.hostRoles.neural-augmenter;
+  jsonFormatter = pkgs.formats.json {};
   inherit
     (import ../../homeManagerModules/lib/torrent_lib.nix {inherit osConfig pkgs;})
     mullvad-torrent
     vopono-torrent
     ;
 in {
+  imports = [
+    inputs.whisp-away.nixosModules.home-manager
+  ];
+
   options.myOptions.hostRoles.neural-augmenter = {
     enable = lib.mkOption {
-      description = "workstation hm settings";
+      description = "Workstation hm settings";
       type = lib.types.bool;
       default = osConfig.myOptions.hostRoles.neural-augmenter.enable;
     };
@@ -35,38 +42,13 @@ in {
           enable = lib.mkDefault true;
           stitching = lib.mkDefault true;
         };
-        hyprland.enable = lib.mkDefault true;
       };
-
       firefox.enable = lib.mkDefault true;
       socials.enable = lib.mkDefault true;
-
-      obsidian.enable = lib.mkDefault true;
-      taskwarrior = {
+      obsidian = {
         enable = lib.mkDefault true;
-        enableSync = lib.mkDefault true;
-        taskopen = lib.mkDefault true;
+        jjAutosync = lib.mkDefault true;
       };
-      taskwarrior-tui = {
-        enable = lib.mkDefault true;
-        # TODO: Update and/or move to overlay
-        package = with pkgs; (taskwarrior-tui.overrideAttrs (
-          _: oldAttrs: rec {
-            version = oldAttrs.version + "-fix";
-            src = pkgs.fetchFromGitHub {
-              owner = "RedEtherbloom";
-              repo = "taskwarrior-tui";
-              hash = "sha256-YNd4vtaWm+1fsB8ly3toq2u74Nicmhx2ey1m557q4K8=";
-              rev = "ee24bfb4a36f246933e6d2502ab85d3fc6abb85b";
-            };
-            cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-              inherit src;
-              hash = "sha256-7q85YszWmetjWry9nvc2irQeLFCWHwOAkEUHtc9CK/c=";
-            };
-          }
-        ));
-      };
-
       services.piper-web-tts = {
         enable = true;
         model = "en_US-libritts_r-medium";
@@ -75,104 +57,135 @@ in {
 
     home = {
       packages =
-        (with pkgs;
-          [
-            tor-browser
-            bitwarden-desktop
-            bitwarden-cli
-            restic
-            autorestic
-            krita
+        (
+          with pkgs;
+            [
+              tor-browser
+              bitwarden-desktop
+              bitwarden-cli
+              rofi-rbw # rofi-bitwarden
+              restic
+              autorestic
+              krita
 
-            # KDE info packages
-            clinfo
-            mesa-demos
-            vulkan-tools
-            wayland-utils
-            pciutils
-            aha
-            ddcutil
-            usbutils
+              # KDE info packages
+              clinfo
+              mesa-demos
+              vulkan-tools
+              wayland-utils
+              pciutils
+              aha
+              ddcutil
+              usbutils
 
-            ffmpeg-full
-            gst_all_1.gst-plugins-good
-            gst_all_1.gst-plugins-bad
-            handbrake
-            imagemagick
-            yt-dlp
-            bluetui
+              ffmpeg-full
+              gst_all_1.gst-plugins-good
+              gst_all_1.gst-plugins-bad
+              imagemagick
+              yt-dlp
 
-            vopono
-            mullvad-torrent
-            vopono-torrent
-            tailscale
-            # Certificate creation
-            xca
-            dumbpipe
+              gnome-keyring
+              seahorse
+              gcr
 
-            calibre
-            speedread
+              vopono
+              mullvad-torrent
+              vopono-torrent
+              # Certificate creation
+              xca
+              dumbpipe
 
-            scrcpy
-            android-tools
+              speedread
 
-            podman
-            dive
-            podman-tui
-            podman-compose
-            docker-compose
-            distrobox
+              scrcpy
+              android-tools
 
-            sonic-pi
-            reaper
-            # mpd players to compare
-            cantata
-            plattenalbum
-            # Subsonic clients
-            feishin
-            aonsoku
+              podman
+              dive
+              podman-tui
+              podman-compose
+              docker-compose
+              distrobox
 
-            nix-search-tv # TODO: Evaluate. If useful move to dev tools.
+              # sonic-pi Broken as of: 04-03-2026
+              reaper
+              # mpd players to compare
+              cantata
+              plattenalbum
+              # Subsonic clients
+              feishin
+              aonsoku
 
-            systemctl-tui
+              systemctl-tui
 
-            renderdoc # Debugging render scenes for Minecraft
+              renderdoc # Debugging render scenes for Minecraft
 
-            # Banking
-            hledger
-            hledger-ui
-            hledger-web
-            hledger-fmt
-            aqbanking
+              # Banking
+              hledger
+              hledger-ui
+              hledger-web
+              hledger-fmt
+              aqbanking
 
-            wivrn
-            wayvr
+              wivrn
+              wayvr
 
-            # dbus debugging
-            bustle
-            d-spy
+              # dbus debugging
+              bustle
+              d-spy
 
-            easyeffects
+              easyeffects
 
-            qalculate-qt
-            # gnome-calculator # Broken due to gtksourceview
-            nautilus
+              qalculate-qt
+              nautilus
 
-            sdrpp
-          ]
-          ++ (with pkgs.kdePackages; [
-            ark
-            gwenview
-            okular
-            kate
-            ktexteditor
-            dolphin
-            dolphin-plugins
-            baloo-widgets
-            ffmpegthumbs
-            # Font selector
-            kcharselect
-          ]))
+              sdrpp
+
+              # jambi TODO: Broken build
+              waystt
+
+              camset # Webcam image settings gui
+
+              pwvucontrol
+              coppwr # Debugging and low-level configuring of pipewire
+              raysession # Patchbay
+              rofi-bluetooth
+
+              # Fonts
+              nerd-fonts.commit-mono
+              powerline-symbols
+              powerline-fonts
+              noto-fonts-color-emoji # fcitx5
+
+              # TODO: Find a file manager with vim keybinds
+
+              (
+                pkgs.writeShellScriptBin "rofi-home-assistant-sops.sh" ''
+                  set -e
+
+                  export HASS_SERVER="http://${osConfig.networking.ownWireguard.hosts.neurodrive.mainIP}:8123"
+                  HASS_TOKEN="$(cat ${config.sops.secrets.hass_cli_token.path})"
+                  export HASS_TOKEN
+
+                  ${lib.getExe pkgs.rofi-home-assistant-changed}
+                ''
+              )
+              wdisplays
+              wev
+            ]
+            ++ (with pkgs.kdePackages; [
+              ark
+              gwenview
+              okular
+              kate
+              ktexteditor
+              dolphin
+              dolphin-plugins
+              baloo-widgets
+              ffmpegthumbs
+              kcharselect # Font explorer
+            ])
+        )
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
           with pkgs; [
             yubioath-flutter
@@ -183,22 +196,32 @@ in {
       sessionVariables = {
         # MOZ_USE_XINPUT2 = "1"; # Smooth scrolling
         # QT_LOGGING_RULES = "*.debug=true";
-        PIPEWIRE_DEBUG = 2; # Print warnings and errors
       };
-      extraOutputsToInstall = [
-        "doc"
-        "info"
-        "devdoc"
-      ];
+      pointerCursor = {
+        gtk.enable = true;
+        package = pkgs.lyra-cursors;
+        name = "LyraQ-cursors";
+        size = 36;
+      };
+      activation.rebuildKdeXdgCache = lib.hm.dag.entryAfter ["writeBoundary"] "run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6"; # Rebuild cache for dolphin
+      file.".face".source = "${secrets}/dotfiles/pfp/cute_blushing_growth.jpg";
     };
 
     services = {
-      syncthing.enable = true; # TODO: Setup options
+      syncthing.enable = true;
       playerctld.enable = true;
       kdeconnect = {
         enable = true;
-        indicator = false;
+        indicator = true;
         package = pkgs.kdePackages.kdeconnect-kde;
+      };
+      whisp-away = {
+        enable = true;
+        defaultModel = lib.mkDefault "small.en";
+        defaultBackend = lib.mkDefault "whisper-cpp"; # whisper.cpp seems more performant for our use cases
+        accelerationType = lib.mkDefault "vulkan";
+        useClipboard = lib.mkDefault false; # Typing at cursor position
+        useCrane = false; # Broken, as craneLib missing
       };
     };
     programs = {
@@ -208,34 +231,106 @@ in {
       };
       nushell.enable = true;
       rofi = {
-        enable = lib.mkDefault false;
-        terminal = "${config.programs.kitty.package}";
+        enable = lib.mkDefault true;
+        terminal = "${lib.getExe pkgs.kitty}";
+        extraConfig.show-icons = true;
+        theme = ../../dotfiles/rofi/launcher.rasi;
       };
-      spotify-player.enable = true;
       bat.enable = true;
       broot.enable = true; # TODO: Give a try for better comparison
-      fish.enable = true; # TODO: Try out fish as comparison to zsh
+      fish.enable = true;
     };
 
     xdg = {
       autostart = {
         enable = true;
-        entries = [
-          "${pkgs.bitwarden-desktop}/share/applications/bitwarden.desktop"
-        ];
+        entries = ["${pkgs.bitwarden-desktop}/share/applications/bitwarden.desktop"];
       };
-      configFile."nix-search-tv/config.json".source = pkgs.writers.writeJSON "nstw-config.json" {
-        "update_interval" = "48h0m0s";
-        experimental."render_docs_indexes" = {
-          "nvf" = "https://notashelf.github.io/nvf/options.html";
+      portal = {
+        enable = lib.mkForce true;
+        xdgOpenUsePortal = true;
+        extraPortals = with pkgs;
+          [
+            gnome-keyring
+            xdg-desktop-portal-gtk
+          ]
+          ++ osConfig.xdg.portal.extraPortals; # See github.com/nix-community/home-manager/issues/7124
+      };
+      stateFile."piper-models/.keep".text = "";
+      configFile = {
+        "wireplumber/wireplumber.conf.d/no-headset-autoswitch.conf".source = jsonFormatter.generate "no-headset-autoswitch" {
+          "wireplumber.settings" = {
+            "bluetooth.autoswitch-to-headset-profile" = false;
+            "device.routes.mute-on-bluetooth-playback-removed" = true;
+          };
+        };
+        "wireplumber/wireplumber.conf.d/bluez-longer-pause.conf".source = jsonFormatter.generate "bluez-longer-pause" {
+          "monitor.bluez.rules" = [
+            {
+              matches = [
+                {"node.name" = "~bluez_output.*";}
+                {"node.name" = "~bluez_input.*";}
+              ];
+              actions.update-props."session.suspend-timeout-seconds" = 15;
+            }
+          ];
+        };
+        "wireplumber/wireplumber.conf.d/log-level-debug.conf".source = jsonFormatter.generate "log-level-debug" {
+          "context.properties"."log.level" = "2";
+        };
+        "pipewire/pipewire.conf.d/log-level-debug.conf".source = jsonFormatter.generate "log-level-debug" {
+          "log.level" = "2";
+        };
+        "pipewire/pipewire.conf.d/airplay.conf".source = jsonFormatter.generate "airplay" {
+          "context.modules" = [{name = "libpipewire-module-raop-discover";}]; # In case of lagging: Increase buffer size
+        };
+        "pipewire/pipewire-pulse.conf.d/switch-on-connect.conf".source = jsonFormatter.generate "switch-on-connect" {
+          "pulse.cmd" = [
+            {
+              "cmd" = "load-module";
+              "args" = "module-switch-on-connect";
+            }
+          ];
         };
       };
     };
 
     stylix = {
-      targets.kde.enable = false;
       enable = true;
-      opacity.terminal = 0.85;
+      targets = {
+        kde.enable = true;
+        rofi.enable = false;
+      };
+      opacity.terminal = 0.8;
+    };
+
+    # Required for waybar and some other animations to properly function
+    gtk = {
+      gtk2.extraConfig = ''
+        gtk-enable-animations = true;
+      '';
+      gtk3.extraConfig.gtk-enable-animations = true;
+      gtk4.extraConfig.gtk-enable-animations = true;
+    };
+    dconf.settings = {
+      "org/gnome/desktop/interface" = {
+        enable-animations = true;
+      };
+    };
+    sops.secrets."hass_cli_token" = {
+      sopsFile = "${secrets}/secrets/services/home-assistant.yaml";
+      key = "access_tokens/cli";
+    };
+    i18n.inputMethod = {
+      enable = true;
+      type = "fcitx5";
+      fcitx5 = {
+        waylandFrontend = true;
+        addons = with pkgs; [
+          fcitx5-gtk
+          fcitx5-rose-pine
+        ];
+      };
     };
   };
 }

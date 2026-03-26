@@ -3,31 +3,35 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.vscode;
   cfg_development = config.myOptions.roles.development;
 in {
   options.myOptions.vscode = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable vscode";
-      type = with types; bool;
+      type = lib.types.bool;
       default = false;
     };
-    vimMode = mkOption {
+    extraExtensions = lib.mkOption {
+      description = "Enable extra extensions to turn VS-Code into an actual IDE.";
+      type = lib.types.bool;
+      default = false;
+    };
+    vimMode = lib.mkOption {
       description = "Enable Vim mode plugin";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     programs.vscode = {
       enable = true;
       profiles.default = {
         enableUpdateCheck = false;
         enableExtensionUpdateCheck = false;
-        extensions = with pkgs.vscode-extensions;
+        extensions = lib.optionals cfg.extraExtensions (with pkgs.vscode-extensions;
           [
             mhutchie.git-graph
             donjayamanne.githistory
@@ -84,7 +88,7 @@ in {
             # platformio.platformio-vscode-ide
             # Dependency of platformio
             ms-vscode.cpptools
-          ];
+          ]);
         userSettings = lib.mkMerge [
           {
             nix = {

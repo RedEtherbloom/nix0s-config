@@ -1,5 +1,4 @@
 {
-  config,
   inputs,
   lib,
   pkgs,
@@ -9,9 +8,8 @@
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
     ../../modules
-    ../../modules/common/ssh.nix
-    # TODO: Remove once hm sops-nix supports secrets
-    ../../modules/common/taskwarrior-secrets.nix
+    ../../modules/ssh.nix
+    ../../modules/taskwarrior-secrets.nix # TODO: Remove once hm sops-nix supports secrets
     ./restic.nix
     ./hardware-configuration.nix
   ];
@@ -69,15 +67,6 @@
     udev.extraRules = ''
       SUBSYSTEM=="usb", ATTRS{idVendor}=="0a5c", ATTRS{idProduct}=="21e6", ATTR{authorized}="0"
     '';
-    tlp = {
-      enable = true;
-      pd.enable = true;
-      settings = {
-        CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-        CPU_SCALING_GOVERNOR_ON_AC = "performance";
-        USB_EXCLUDE_BTUSB = "1";
-      };
-    };
   };
 
   hardware = {
@@ -100,7 +89,7 @@
   };
 
   myOptions = {
-    hostRoles.laptop.enable = true;
+    hostRoles.neural-augmenter.enable = true;
     roles.gaming.enable = true;
     roles.i2p.enable = lib.mkForce false; # Broken as of: 15.10.2025
   };

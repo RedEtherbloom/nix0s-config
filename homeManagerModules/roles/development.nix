@@ -108,26 +108,13 @@ in {
       default = true;
       description = "Enable MCU tools.";
     };
-    cursor = lib.mkOption {
-      description = "Enable cursor IDE.";
-      type = lib.types.bool;
-      default = true;
-    };
-    # I'm getting fed up with our half-baked nvim config.
-    helix = lib.mkOption {
-      description = "Enable helix IDE.";
-      type = lib.types.bool;
-      default = true;
-    };
   };
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
         home.packages = with pkgs;
-          [
-            just
-          ]
+          [just]
           ++ lib.optionals cfg.rust [
             clang
             clang-tools
@@ -153,15 +140,7 @@ in {
               nix-prefetch-scripts
               nix-prefetch-github
               nix-tree
-              (nixos-rebuild-ng.overrideAttrs (
-                _: prevAttrs: {
-                  # "Fixes" conflict with hm zsh completion collission
-                  # fixupPhase = (prevAttrs.fixupPhase or "") + ''
-                  #   rm $out/share/zsh/site-functions/_nixos-rebuild
-                  # '';
-                  meta.priority = 1;
-                }
-              ))
+              nixos-rebuild-ng
             ]
           )
           # ++ lib.optionals cfg.nix self.devShells.${system}.default.buildInputs
@@ -188,16 +167,14 @@ in {
             git-filter-repo
           ]
           ++ lib.optionals cfg.mcu [
-            # Broken as of 01.08.2025
-            # esphome
-            # platformio
+            esphome
+            platformio
             esptool
             espflash
             probe-rs-tools
-          ]
-          ++ lib.optionals cfg.cursor [
-            code-cursor
           ];
+
+        programs.go.enable = cfg.go;
       }
       (lib.mkIf cfg.git {
         programs = {
@@ -211,7 +188,10 @@ in {
               push.autoSetupRemote = true;
             };
           };
-          lazygit.enable = true;
+          lazygit = {
+            enable = true;
+            settings.git.overrideGpg = true;
+          };
         };
       })
       (lib.mkIf cfg.github {
@@ -235,7 +215,7 @@ in {
         };
         home.packages = with pkgs; [
           lazyjj
-          # jj-fzf
+          jj-fzf
         ];
       })
       (lib.mkIf cfg.java {
@@ -243,7 +223,6 @@ in {
           enable = true;
           package = pkgs.jdk25;
         };
-        home.packages = [pkgs.jetbrains.idea];
       })
       (lib.mkIf cfg.direnv {
         programs.direnv = {
@@ -302,22 +281,14 @@ in {
           };
         };
       })
-      (lib.mkIf cfg.go {
-        programs.go.enable = true;
-      })
       (lib.mkIf osConfig.security.ownAdditional.yubikey {
-        # TODO: Maybe merge with github config
         programs.git = {
           signing = {
             format = "openpgp";
-            # TODO: Turn into it's own global variable
             key = "341EB1EADB36EC0AC809FBE7BA719C19A950A2F3";
-            signByDefault = lib.mkDefault true;
+            signByDefault = lib.mkDefault false;
           };
         };
-      })
-      (lib.mkIf cfg.helix {
-        programs.helix.enable = true;
       })
     ]
   );

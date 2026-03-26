@@ -3,46 +3,45 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.solaar;
 in {
   options.myOptions.solaar = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable solaar";
-      type = with types; bool;
+      type = lib.types.bool;
       default = false;
     };
-    package = mkOption {
-      type = types.package;
+    package = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.solaar;
     };
     autostart = {
-      enable = mkOption {
+      enable = lib.mkOption {
         description = "Autostart solaar";
-        type = types.bool;
+        type = lib.types.bool;
         default = false;
       };
-      windowMode = mkOption {
+      windowMode = lib.mkOption {
         description = "Window mode to autostart in";
-        type = types.str;
+        type = lib.types.str;
         default = "hide";
       };
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       home.packages = [cfg.package];
     }
-    (mkIf cfg.autostart.enable (
+    (lib.mkIf cfg.autostart.enable (
       # TODO: Reuse this
       let
         name = "Solaar";
         out = pkgs.makeDesktopItem {
           inherit name;
           desktopName = name;
-          icon = strings.toLower name;
+          icon = lib.strings.toLower name;
           exec = "${cfg.package}/bin/solaar -w ${cfg.autostart.windowMode}";
         };
       in {

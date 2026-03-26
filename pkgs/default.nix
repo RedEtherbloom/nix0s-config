@@ -1,13 +1,11 @@
 {inputs, ...}: final: prev: {
   inherit
-    (final.lixPackages.stable)
+    (final.lixPackages.latest)
     nixpkgs-review
     nix-eval-jobs
     nix-fast-build
     colmena
     ;
-
-  nix-search-tv = inputs.nix-search-tv.packages.${final.system}.default;
 
   thunderbird-external-editor-revived = final.rustPlatform.buildRustPackage (finalAttrs: {
     pname = "thunderbird-external-editor-revived";
@@ -32,11 +30,7 @@
         }
       ];
     };
-  });
-
-  byar-launcher = final.callPackage "${inputs.sergv-nixos-config}/beyond-all-reason-launcher.nix" {};
-
-  # python3 = let in final.python3.override { packageOverrides = _: pythonPrev: { }; };
+  }); # TODO: Fix
 
   koboldcpp = prev.koboldcpp.overrideAttrs (
     _: pythonPrev: {
@@ -71,29 +65,6 @@
               ]);
           }
         );
-      surround-ui-nvim = final.vimUtils.buildVimPlugin {
-        name = "surround-ui.nvim";
-        version = "2024-07-16";
-        src = final.fetchFromGitHub {
-          owner = "roobert";
-          repo = "surround-ui.nvim";
-          rev = "40abcba017a943d6d3dd304e523f34a43d80405b";
-          hash = "sha256-sUtu+Z20rDh9mefTwvEJVI4g7oL+FuYdY9bmGrWcrM0=";
-        };
-        meta.homepage = "https://github.com/roobert/surround-ui.nvim";
-      };
-      vim-coach-nvim = final.vimUtils.buildVimPlugin {
-        name = "vim-coach.nvim";
-        version = "v2.0.0";
-        buildInputs = [final.vimPlugins.snacks-nvim];
-        src = final.fetchFromGitHub {
-          owner = "shahshlok";
-          repo = "vim-coach.nvim";
-          rev = "ed31e7b9450691199288180a922d8166ae11a0b9";
-          hash = "sha256-9Nnlghnor8wKKY4ETwNtGFjv1BUW64EWDKhRJJSj0pk=";
-        };
-        meta.homepage = "https://github.com/shahshlok/vim-coach.nvim";
-      };
       jj-nvim = final.vimUtils.buildVimPlugin {
         pname = "jj.nvim";
         version = "0.3.0-unstable-2026-01-06";
@@ -108,21 +79,9 @@
       };
     };
 
-  kdePackages = prev.kdePackages.overrideScope (
-    _: kdePrev: {
-      kscreenlocker-patched = kdePrev.kscreenlocker.overrideAttrs (
-        _: prevAttrs: {
-          version = prevAttrs.version + "-pmanager-patched";
-          __intentionallyOverridingVersion = true;
-          patches = (prevAttrs.patches or []) ++ [./kscreenlocker-allow-screen-shortcuts.patch];
-        }
-      );
-    }
-  );
-
   gnupg-with-pin-caching = prev.gnupg.overrideAttrs (
     _: prevAttrs: {
-      # Address missing PIn caching https://dev.gnupg.org/T7041
+      # Address missing pin caching https://dev.gnupg.org/T7041
       patches = (prevAttrs.patches or []) ++ [./0001-allow-shared-pin-cache.patch];
     }
   );
@@ -149,32 +108,6 @@
     }
   );
 
-  clipvault = final.rustPlatform.buildRustPackage rec {
-    pname = "clipvault";
-    version = "1.1.0";
-    src = final.fetchFromGitHub {
-      owner = "rolv-apneseth";
-      repo = "clipvault";
-      rev = "v${version}";
-      hash = "sha256-ahhbUGijNZOjZ/egjdecn/4M6Nicq7PDDac09FNZz/Y=";
-    };
-    cargoHash = "sha256-Mm0att6zu9Yknoa9NBsdrA8lz1o0Q6FzWS0UU+1f/f0=";
-    # Tests fail to due logs dir location not being creatable
-    doCheck = false;
-    meta = {
-      description = "Clipboard history manager for Wayland, inspired by cliphist.";
-      homepage = "https://github.com/rolv-apneseth/clipvault";
-      license = final.lib.licenses.gpl3Only;
-      maintainers = [
-        {
-          email = "etherbloom@mailbox.org";
-          github = "RedEtherbloom";
-          githubId = "16244495";
-          name = "Etherbloom";
-        }
-      ];
-    };
-  };
   waystt = final.rustPlatform.buildRustPackage rec {
     pname = "waystt";
     version = "0.3.0";
@@ -200,36 +133,23 @@
     };
   };
 
-  hyprlock-styles.style-3 = final.stdenv.mkDerivation {
-    pname = "hyprlock-styles-style-6";
-    version = "0.0.1";
-    src = final.fetchzip {
-      url = "https://github.com/MrVivekRajan/Hyprlock-Styles/releases/download/style3/Style-3.tar.gz";
-      hash = "sha256-A9fq1fDn86v6uORKAI8QviAeJzDip6PCije9Ml2s9Lk=";
-    };
-
-    installPhase = ''
-      cp -r $src/ $out/
-    '';
-  };
-
   sddm-fallback-patched = prev.kdePackages.sddm.overrideAttrs (
     _: prevAttrs: {
-      buildCommand = 
-        prevAttrs.buildCommand + ''
+      buildCommand =
+        prevAttrs.buildCommand
+        + ''
           ln -s $out/bin/sddm-greeter-qt6 $out/bin/sddm-greeter
-        ''
-      ;
+        '';
     }
   );
 
   # WARN: BROKEN and will be removed
-  flathunter-image = let 
+  flathunter-image = let
     src = final.fetchFromGitHub {
-        owner = "flathunters";
-        repo = "flathunter";
-        rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
-        hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
+      owner = "flathunters";
+      repo = "flathunter";
+      rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
+      hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
     };
     requirements_txt = final.runCommand "flathunter-requirements.txt" {} ''
       mkdir home
@@ -237,33 +157,37 @@
       cd ${src}
       ${final.pipenv}/bin/pipenv requirements > $out
     '';
-    project = inputs.pyproject-nix.lib.project.loadRequirementsTxt { requirements = builtins.readFile "${requirements_txt}"; projectRoot = src;};
-    python = final.python313;
-  in final.dockerTools.buildImage {
-    name = "flathunter";
-    tag = "latest";
-    copyToRoot = final.buildEnv {
-      name = "image-root";
-      pathsToLink = [
-"/bin"
-      ];
-      paths = with final; [
-        undetected-chromedriver
-        coreutils
-          (python.withPackages (project.renderers.withPackages { inherit python;}))
-      ];
+    project = inputs.pyproject-nix.lib.project.loadRequirementsTxt {
+      requirements = builtins.readFile "${requirements_txt}";
+      projectRoot = src;
     };
-  };
+    python = final.python313;
+  in
+    final.dockerTools.buildImage {
+      name = "flathunter";
+      tag = "latest";
+      copyToRoot = final.buildEnv {
+        name = "image-root";
+        pathsToLink = [
+          "/bin"
+        ];
+        paths = with final; [
+          undetected-chromedriver
+          coreutils
+          (python.withPackages (project.renderers.withPackages {inherit python;}))
+        ];
+      };
+    };
 
   flathunter-docker-image = final.stdenv.mkDerivation {
     name = "flathunter-docker-image";
     src = final.fetchFromGitHub {
-        owner = "flathunters";
-        repo = "flathunter";
-        rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
-        hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
+      owner = "flathunters";
+      repo = "flathunter";
+      rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
+      hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
     };
-    
+
     nativeBuildInputs = with final; [
       podman
       openssh
@@ -289,4 +213,152 @@
       runHook postInstall
     '';
   };
+
+  thunarWithExtensions = final.thunar.override {
+    thunarPlugins = with final; [
+      thunar-archive-plugin
+      thunar-media-tags-plugin
+      thunar-vcs-plugin
+    ];
+  };
+
+  jambi = inputs.jambi-transcript.packages.${final.stdenv.hostPlatform.system}.default;
+
+  # TODO: nix-update-script
+  shellbeats = final.stdenv.mkDerivation {
+    pname = "shellbeats";
+    version = "0-unstable-2026-02-11";
+
+    src = final.fetchFromGitHub {
+      owner = "lalo-space";
+      repo = "shellbeats";
+      rev = "280e5cabcc2e84a6a5f4b91c70c99f7b094a0c3f";
+      hash = "sha256-fqqqa8cCWo0uAi6cWCaLDl9UKN81HH4JOqko5mYEn+o=";
+    };
+
+    nativeBuildInputs = with final; [
+      makeWrapper
+      pkg-config
+      ncurses.dev
+    ];
+
+    buildInputs = with final; [
+      yt-dlp
+      mpv
+    ];
+
+    installPhase = ''
+      mkdir -p $out/bin
+      cp shellbeats $out/bin
+    '';
+
+    meta = {
+      homepage = "https://github.com/lalo-space/shellbeats";
+      description = "CLI music player for Linux/Mac. Stream YouTube audio and mp3 download. Minimal, fast, keyboard driven.";
+      license = final.lib.licenses.gpl3;
+      mainProgram = "shellbeats";
+    };
+  };
+
+  rofi-home-assistant = final.stdenvNoCC.mkDerivation {
+    pname = "rofi-home-assistant";
+    version = "0-unstable-2021-07-29";
+
+    src = final.fetchFromGitHub {
+      owner = "flxai";
+      repo = "rofi-home-assistant";
+      rev = "aa348dee26763e1c8c394c55788d84b83aff4c73";
+      hash = "sha256-2kZgMYZ1GR7fwEnXXg4vn5b6xwxjCoPYI/YENbrea2Q=";
+    };
+
+    dontBuild = true;
+
+    buildInputs = with final; [
+      rofi
+      jq
+      home-assistant-cli
+      libnotify
+    ];
+
+    installPhase = ''
+      mkdir -p $out/bin
+      cp bin/rofi-hass $out/bin/rofi-home-assistant
+    '';
+
+    postFixup = ''
+      substituteInPlace $out/bin/rofi-home-assistant \
+        --replace "light)" "light|switch|automation)"
+    '';
+
+    meta.mainProgram = "rofi-home-assistant";
+  };
+
+  rofi-home-assistant-verbose = final.rofi-home-assistant.overrideAttrs (_: prevAttrs: {
+    postFixup =
+      prevAttrs.postFixup or ""
+      + ''
+        substituteInPlace $out/bin/rofi-home-assistant \
+          --replace " &>/dev/null" ""
+      '';
+  });
+
+  rofi-home-assistant-changed = let
+    desiredTypes = [
+      "light"
+      "switch"
+    ];
+    extraTypes = [
+      "scene"
+    ];
+  in
+    final.writeShellScriptBin "rofi-home-assistant-changed.sh" ''
+      raw_json=$(${final.lib.getExe final.home-assistant-cli} -o json state list 2>/dev/null)
+      json=$(${final.lib.getExe final.jq} --argjson types '${builtins.toJSON (desiredTypes ++ extraTypes)}' -r 'map(.entity_id as $id | select(any($types[]; . as $el | $id | startswith($el))))' <<< "$raw_json")
+      idx=$(${final.lib.getExe final.jq} -r '.[] | [.entity_id, .state] | join(" ")' <<< "$json" | ${final.util-linux}/bin/column -t | ${final.lib.getExe final.rofi} -dmenu -i -markup-rows -format d)
+      item=$(${final.lib.getExe final.jq} -r '.[].entity_id' <<< "$json" | ${final.lib.getExe final.gnused} "''${idx}q;d")
+      itype=$(${final.lib.getExe final.gnused} -r 's/\..+$//' <<< "$item")
+
+      case "$itype" in
+          ${final.lib.strings.concatStringsSep "|" desiredTypes})
+              ${final.lib.getExe final.home-assistant-cli} state toggle "$item"
+              ;;
+          ${final.lib.strings.concatStringsSep "|" extraTypes})
+              ${final.lib.getExe final.home-assistant-cli} service call --arguments entity_id="$item" scene.turn_on
+              ;;
+          *)
+              ${final.libnotify}/bin/notify-send "Error" "Event type '$itype' not implemented yet. Do you have time to file an issue or write a PR?"
+              ;;
+      esac
+    '';
+
+  taskwarrior-tui = prev.taskwarrior-tui.overrideAttrs (
+    _: oldAttrs: rec {
+      version = oldAttrs.version + "-fix";
+      src = final.fetchFromGitHub {
+        owner = "RedEtherbloom";
+        repo = "taskwarrior-tui";
+        hash = "sha256-YNd4vtaWm+1fsB8ly3toq2u74Nicmhx2ey1m557q4K8=";
+        rev = "ee24bfb4a36f246933e6d2502ab85d3fc6abb85b";
+      };
+      cargoDeps = final.rustPlatform.fetchCargoVendor {
+        inherit src;
+        hash = "sha256-7q85YszWmetjWry9nvc2irQeLFCWHwOAkEUHtc9CK/c=";
+      };
+    }
+  );
+
+  wlr-which-key-fork = final.wlr-which-key.overrideAttrs (finalAttrs: _: {
+    version = "1.3.0-pr-46-2026-02-26";
+
+    src = final.fetchFromGitHub {
+      owner = "RedEtherbloom";
+      repo = "wlr-which-key";
+      hash = "sha256-N8iueJT8H77AuhuE5B1jF6JiSGZeQrUnnIEB5DtGMxc=";
+      rev = "207039df24dfcbe9dcc6bc14d17a77d530f38f52";
+    };
+    cargoDeps = final.rustPlatform.fetchCargoVendor {
+      inherit (finalAttrs) src;
+      hash = "sha256-v+4/lD00rjJvrQ2NQqFusZc0zQbM9mBG5T9bNioNGKQ=";
+    };
+  });
 }

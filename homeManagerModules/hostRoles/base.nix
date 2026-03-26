@@ -36,6 +36,9 @@ in {
         programs = {
           home-manager.enable = true;
           nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
+          fzf.enable = true;
+          zoxide.enable = true;
+          zellij.enable = false; # TMUX alternative
         };
         news.display = "silent";
         services.home-manager.autoExpire = {

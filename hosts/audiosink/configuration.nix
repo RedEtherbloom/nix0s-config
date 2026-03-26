@@ -13,7 +13,7 @@ in {
     inputs.sops-nix.nixosModules.sops
     ./hardware-configuration.nix
 
-    ../../modules/common/ssh.nix
+    ../../modules/ssh.nix
     ../../modules/roles/ssdp.nix
     # TODO: Try to insert normal modules again
   ];
@@ -191,7 +191,7 @@ in {
             pkgs.writeShellApplication {
               name = "openNetworkSinkPort";
               text = ''
-                nixos-firewall-tool open tcp ${builtins.toString networkSinkPort}
+                nixos-firewall-tool open tcp ${toString networkSinkPort}
               '';
               runtimeInputs = with pkgs; [
                 iptables

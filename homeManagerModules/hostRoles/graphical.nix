@@ -4,28 +4,27 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.hostRoles.graphical;
 in {
   imports = [
     ../services/piper-web-tts.nix
   ];
 
-  options.myOptions.hostRoles.graphical.enable = mkOption {
+  options.myOptions.hostRoles.graphical.enable = lib.mkOption {
     description = "graphical hostRole hm settings";
-    type = with types; bool;
+    type = lib.types.bool;
     default = osConfig.myOptions.hostRoles.graphical.enable;
   };
 
-  config = mkIf cfg.enable {
-    myOptions.hostRoles.base.enable = mkDefault true;
+  config = lib.mkIf cfg.enable {
+    myOptions.hostRoles.base.enable = lib.mkDefault true;
 
     home = {
       packages = with pkgs; [
-        helvum
         pavucontrol
         wl-clipboard
+        brightnessctl
         hyfetch
 
         # Attempts at notifications
@@ -36,12 +35,15 @@ in {
         # TODO: Recreate old shortcuts and configure via options instead
         feh
 
-        # Piper-tts voice management
-        pied
+        pied # Piper-tts voice management
       ];
-      sessionVariables = {
+      sessionVariables = let
+        askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+      in {
         # Native Wayland for Chromium apps
         NIXOS_OZONE_WL = "1";
+        SUDO_ASKPASS = askpass_helper;
+        SSH_ASKPASS = askpass_helper;
       };
     };
 
@@ -55,6 +57,9 @@ in {
           profile = "gpu-hq";
           gpu-context = "wayland";
         };
+        scripts = with pkgs.mpvScripts; [
+          mpris
+        ];
       };
       kitty = {
         enable = true;

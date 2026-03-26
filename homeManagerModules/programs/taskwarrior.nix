@@ -4,34 +4,33 @@
   osConfig,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.myOptions.taskwarrior;
 in {
   options.myOptions.taskwarrior = {
-    enable = mkOption {
+    enable = lib.mkOption {
       description = "Enable taskwarrior";
-      type = types.bool;
+      type = lib.types.bool;
       default = false;
     };
-    enableSync = mkOption {
+    enableSync = lib.mkOption {
       description = "Enable taskwarrior sync with secrets";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
-    taskopen = mkOption {
+    taskopen = lib.mkOption {
       description = "Enable taskopen";
-      type = types.bool;
+      type = lib.types.bool;
       default = true;
     };
-    vit = mkOption {
+    vit = lib.mkOption {
       description = "Enable vit";
-      type = types.bool;
+      type = lib.types.bool;
       default = false;
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = lib.mkIf cfg.enable (lib.mkMerge [
     {
       xdg.configFile."task/themes".source = ../../dotfiles/taskwarrior/themes;
 
@@ -115,7 +114,7 @@ in {
         };
       };
     }
-    (mkIf cfg.enableSync {
+    (lib.mkIf cfg.enableSync {
       services.taskwarrior-sync = {
         enable = true;
         package = pkgs.taskwarrior3;
@@ -124,8 +123,8 @@ in {
         include ${osConfig.sops.templates."taskwarrior-sync.rc".path}
       '';
     })
-    (mkIf cfg.taskopen {home.packages = [pkgs.taskopen];})
-    (mkIf cfg.vit {
+    (lib.mkIf cfg.taskopen {home.packages = [pkgs.taskopen];})
+    (lib.mkIf cfg.vit {
       home.packages = with pkgs; [
         (callPackage vit.override {taskwarrior2 = pkgs.taskwarrior3;})
       ];

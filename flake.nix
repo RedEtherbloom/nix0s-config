@@ -3,12 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # Last working nixos-unstable. Thought of doing this again.
-    nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=c6245e83d836d0433170a16eb185cefe0572f8b8";
-    # nixkpgs-next.url = "";
+    nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=c6245e83d836d0433170a16eb185cefe0572f8b8"; # Last working nixpkgs-unstable. Sporadically updated. Thought of doing this again.
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
-    nixpkgs-master.url = "github:nixos/nixpkgs/master";
-    nixpkgs-nvf-working.url = "github:NixOS/nixpkgs/cad22e7d996aea55ecab064e84834289143e44a0"; 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     secrets = {
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
@@ -35,6 +31,7 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-alien.url = "github:thiagokokada/nix-alien";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -53,63 +50,32 @@
     nvf = {
       url = "github:NotAShelf/nvf";
       inputs = {
-        nixpkgs.follows = "nixpkgs-nvf-working";
+        nixpkgs.follows = "nixpkgs";
         flake-compat.follows = "flake-compat";
       };
-    };
-    sergv-nixos-config = {
-      url = "github:sergv/nixos-config?rev=9c6306c86af6130f76d277e382c346360ec124dd";
-      flake = false;
-    };
-    nix-search-tv = {
-      url = "github:3timeslazy/nix-search-tv";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
-    hyprland-zaneyos = {
-      url = "gitlab:Zaney/zaneyos";
-      flake = false;
-    };
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprWorkspaceLayouts = {
-      url = "github:zakk4223/hyprWorkspaceLayouts";
-      inputs = {
-        hyprland.follows = "hyprland";
-        nixpkgs.follows = "hyprland/nixpkgs";
-      };
-    };
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
-    hyprDynamicMonitors = {
-      url = "github:fiffeek/hyprdynamicmonitors";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
-    mechabar = {
-      url = "github:sejjy/mechabar";
-      flake = false;
-    };
-    tokyonight = {
-      url = "github:stronk-dev/Tokyo-Night-Linux";
-      flake = false;
-    };
-    rofi-home-assistant = {
-      url = "github:flxai/rofi-home-assistant";
-      flake = false;
-    };
-    catppuccin-wlogout = {
-      url = "github:catppuccin/wlogout";
-      flake = false;
     };
     pyproject-nix = {
       url = "github:pyproject-nix/pyproject.nix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    noctalia-shell = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    niri-flake = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    whisp-away = {
+      url = "github:madjinn/whisp-away";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    jambi-transcript = {
+      url = "github:guttermonk/jambi";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
     };
   };
 
@@ -128,53 +94,48 @@
           "aarch64-linux"
         ];
         # TODO: Extract common resources e.g. IPs into nixos independent wrapper or import nixos into homeManager so that homeConfigurations can be split out
-        flake = {lib, ...}: let
+        flake = let
           defaultUsername = "inf";
-          # TODO: Set system in configuration.nix instead, to lessen use of anti patterns
           mkSystem = hostName: system:
             withSystem system (
-              ctx @ {...}:
-                inputs.nixpkgs.lib.nixosSystem rec {
+              {pkgs, ...}:
+                inputs.nixpkgs.lib.nixosSystem {
                   specialArgs = {
                     inherit inputs self;
                     inherit (inputs) secrets;
                   };
                   modules = [
-                    {nixpkgs = {inherit (ctx.pkgs) config overlays;};}
+                    {nixpkgs = {inherit (pkgs) config overlays;};}
                     # TODO: Decide how to reorganize module inputs
                     inputs.sops-nix.nixosModules.sops
                     inputs.nix-index-database.nixosModules.nix-index
-                    ./modules/binary-cache/default.nix
                     ./hosts/${hostName}/configuration.nix
                   ];
                 }
             );
-          mkHmConfiguration = hostName: host: let
+          mkHmConfiguration = host: let
             osConfig = host.config;
+            inherit (osConfig.networking) hostName;
           in
             # TODO: Move backupFileExtension to HM-Modules
             inputs.home-manager.lib.homeManagerConfiguration {
               inherit (host) pkgs;
               # Remove potentially interferring attrs
               extraSpecialArgs =
-                (builtins.removeAttrs host._module.specialArgs [
+                (removeAttrs host._module.specialArgs [
                   "self"
                   "modulesPath"
                 ])
                 // {
-                  inherit osConfig;
-                  osFlakeSelf = host._module.specialArgs.self;
-
-                  inherit self;
+                  inherit osConfig self;
+                  osFlakeSelf = osConfig._module.specialArgs.self;
                 };
               modules = [
                 ./hosts/${hostName}/home.nix
                 {
                   nix = {
-                    package = osConfig.nix.package;
-                    settings = {
-                      inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys;
-                    };
+                    inherit (osConfig.nix) package;
+                    settings = {inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys;};
                   };
 
                   home = {
@@ -184,45 +145,36 @@
                 }
               ];
             };
-        in
-          # TODO: Remove system here. Should be set in hardware-configuration.nix
-          rec {
-            nixosConfigurations = {
-              fractor = mkSystem "fractor" "x86_64-linux";
-              neurodrive = mkSystem "neurodrive" "x86_64-linux";
-              audiosink = mkSystem "audiosink" "aarch64-linux";
-            };
-            homeConfigurations = {
-              "inf@fractor" = mkHmConfiguration "fractor" nixosConfigurations.fractor;
-              "inf@neurodrive" = mkHmConfiguration "neurodrive" nixosConfigurations.neurodrive;
-              "inf@audiosink" = mkHmConfiguration "audiosink" nixosConfigurations.audiosink;
-            };
+          # TODO: Remove system here. Should be set in hardware-configuration.nix. Alternatively: Somehow base systems packages on perSystem packages
+          nixosConfigurations = {
+            fractor = mkSystem "fractor" "x86_64-linux";
+            neurodrive = mkSystem "neurodrive" "x86_64-linux";
+            audiosink = mkSystem "audiosink" "aarch64-linux";
           };
-        perSystem = {
-          pkgs,
-          system,
-          ...
-        }: rec {
-          # TODO: Merge into flake-parts
-          # getPatchedNixpkgs = system:
-          #   (import nixpkgs {inherit system;}).applyPatches {
-          #     name = "nixpkgs-patched";
-          #     src = nixpkgs;
-          #     patches = [];
-          #   };
-          # TODO: Check why own packages cannot be referred to via flake syntax
-          _module.args.pkgs = import inputs.nixpkgs {
+        in {
+          inherit nixosConfigurations;
+          homeConfigurations = {
+            "${defaultUsername}@fractor" = mkHmConfiguration nixosConfigurations.fractor;
+            "${defaultUsername}@neurodrive" = mkHmConfiguration nixosConfigurations.neurodrive;
+            "${defaultUsername}@audiosink" = mkHmConfiguration nixosConfigurations.audiosink;
+          };
+        };
+        perSystem = {system, ...}: let
+          # Initialize one central nixpkgs instance, including config and all required overlays
+          pkgs = import inputs.nixpkgs {
             inherit system;
-            config = {
-              allowUnfree = true;
-            };
+            config.allowUnfree = true;
             overlays = [
               inputs.fenix.overlays.default
+              inputs.niri-flake.overlays.niri
               (import ./pkgs {inherit inputs;})
             ];
           };
+        in {
+          _module.args.pkgs = pkgs;
+          # TODO: Check why own packages aren't exported
+          legacyPackages = pkgs; # TODO: This seems wrong
           formatter = pkgs.alejandra;
-          legacyPackages = _module.args.pkgs;
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgs; [
               lixPackageSets.latest.lix

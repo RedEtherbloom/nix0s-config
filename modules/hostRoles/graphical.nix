@@ -26,10 +26,19 @@ in {
       binfmt = true;
       package = appimage-run;
     };
-    environment.systemPackages = with pkgs; [
-      appimage-run
-      piper-tts
-    ];
+    environment = let
+      askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+    in {
+      systemPackages = with pkgs; [
+        appimage-run
+        piper-tts
+      ];
+      sessionVariables = {
+        SUDO_ASKPASS = askpass_helper;
+        SSH_ASKPASS = askpass_helper;
+      };
+      variables.SSH_ASKPASS = lib.mkForce askpass_helper; # Required due to nix conflict
+    };
     services.speechd = {
       enable = true;
       # package = pkgs.speechd-patched;
