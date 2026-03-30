@@ -479,7 +479,7 @@ in {
           action.spawn = "${lib.getExe config.programs.kitty.package}";
         };
         "Mod+Shift+T".action.spawn = splitSpace "${pkgs.kitty}/bin/kitten quick-access-terminal";
-        "Mod+D" = {
+        "Mod+Y" = {
           hotkey-overlay.title = "Wlr: Various launchers and common applications";
           action.spawn = "${lib.getExe wlrLaunchers.common}";
         };
@@ -713,7 +713,7 @@ in {
           action.power-off-monitors = [];
         };
 
-        "Mod+Space" = {
+        "Mod+Shift+Y" = {
           hotkey-overlay.title = "Show launcher";
           action.spawn-sh = noctaliaIpcCommand "launcher toggle";
         };
