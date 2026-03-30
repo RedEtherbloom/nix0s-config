@@ -183,6 +183,15 @@ in {
               symbola
               shellcheck # Bash
               pandoc # Markdown
+              gopls
+              gomodifytags
+              gotests
+              gore
+              ledger # Compatible with hledger?
+              nixfmt # Mostly to get rid of the warning. TODO: Make emacs use alejandra
+              isort
+              pipenv
+              uv
             ]
             ++ (with pkgs.kdePackages; [
               ark
