@@ -337,6 +337,15 @@
         };
       };
     };
+    libvirtd = {
+      enable = true;
+      qemu = {
+        package = pkgs.qemu_kvm;
+        runAsRoot = true;
+        swtpm.enable = true;
+      };
+    };
+    spiceUSBRedirection.enable = true;
   };
   systemd.services = let
     hddSleepCommand = ''${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.hdparm} -S 90 -B 1 $(${pkgs.util-linux}/bin/lsblk -dnp -o name,rota | ${lib.getExe pkgs.gnugrep} ".*\s1" | ${pkgs.coreutils}/bin/cut -d " " -f 1)''; # Spin HDDs down when inactive. Taken from: https://www.reddit.com/r/NixOS/comments/751i5t/comment
@@ -392,6 +401,7 @@
         "i2c"
         "podman"
         "dialout"
+        "libvirtd"
       ];
     };
     i2p.home = lib.mkForce "/mnt/cryptostorage/i2p";
@@ -413,6 +423,7 @@
       SDL2
       glib
     ];
+    virt-manager.enable = true;
   };
 
   environment = {
