@@ -4,7 +4,6 @@
   inputs,
   pkgs,
   osConfig,
-  secrets,
   ...
 }: let
   # TODO: Move to own file, then upstream as home-manager option
@@ -419,12 +418,13 @@ in {
             y = 5;
           };
         };
-        struts = {
-          top = 8;
-          right = 8;
-          bottom = 8;
-          left = 8;
-        };
+        # TODO: These may have interfered with Noctalias window layouting(new windows peeked off the right side of the screen)
+        # struts = {
+        #   top = 8;
+        #   right = 8;
+        #   bottom = 8;
+        #   left = 8;
+        # };
       };
       prefer-no-csd = true;
       screenshot-path = "${config.xdg.userDirs.pictures}/Screenshots/%Y-%m-%d_%H-%M-%S.png";
