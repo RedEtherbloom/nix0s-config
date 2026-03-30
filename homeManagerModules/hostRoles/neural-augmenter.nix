@@ -172,6 +172,17 @@ in {
               )
               wdisplays
               wev
+
+              # Emacs
+              git
+              emacs
+              ripgrep
+              coreutils
+              fd
+              clang
+              symbola
+              shellcheck # Bash
+              pandoc # Markdown
             ]
             ++ (with pkgs.kdePackages; [
               ark
@@ -194,9 +205,12 @@ in {
         ));
 
       sessionVariables = {
-        # MOZ_USE_XINPUT2 = "1"; # Smooth scrolling
+        MOZ_USE_XINPUT2 = "1"; # Smooth scrolling
         # QT_LOGGING_RULES = "*.debug=true";
       };
+      sessionPath = [
+        "$HOME/.emacs.d/bin"
+      ];
       pointerCursor = {
         gtk.enable = true;
         package = pkgs.lyra-cursors;
