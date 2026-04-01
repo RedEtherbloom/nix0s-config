@@ -175,7 +175,7 @@ in {
 
               # Emacs
               git
-              emacs
+              emacs-pgtk
               ripgrep
               coreutils
               fd
