@@ -192,6 +192,9 @@ in {
               isort
               pipenv
               uv
+              go-grip
+              gnumake
+              cmake
             ]
             ++ (with pkgs.kdePackages; [
               ark
