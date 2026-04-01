@@ -18,8 +18,8 @@
 
   services.xserver.xkb = {
     model = "pc104";
-    layout = "us,de";
-    variant = "colemak_dh_iso,nodeadkeys";
+    layout = "us,us,de";
+    variant = "colemak_dh_iso,,nodeadkeys"; # Standard qwerty only needed for Chrysalis custom-keyboard
     options = "terminate:ctrl_alt_bksp,caps:escape";
   };
   console.keyMap = "colemak/mod-dh-iso-us";

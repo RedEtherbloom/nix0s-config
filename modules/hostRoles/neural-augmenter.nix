@@ -87,6 +87,7 @@ in {
           package = pkgs.niri-unstable;
         };
         nix-ld.enable = true;
+        chrysalis.enable = true;
       };
 
       services = {
