@@ -114,7 +114,6 @@ in {
         wivrn = {
           enable = true;
           openFirewall = true;
-          defaultRuntime = true;
           steam.importOXRRuntimes = true;
         };
         displayManager.gdm = {
