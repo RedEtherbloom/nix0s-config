@@ -713,6 +713,10 @@ in {
           action.power-off-monitors = [];
         };
 
+        "Mod+Space" = {
+          hotkey-overlay.title = "Show launcher";
+          action.spawn-sh = noctaliaIpcCommand "launcher toggle";
+        };
         "Mod+Shift+Y" = {
           hotkey-overlay.title = "Show launcher";
           action.spawn-sh = noctaliaIpcCommand "launcher toggle";
