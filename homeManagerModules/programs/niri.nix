@@ -761,16 +761,8 @@ in {
         }
       ];
       states = {
-        activate-linux = {
-          enabled = false;
-          sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
-        };
         catwalk = {
-          enabled = true;
-          sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
-        };
-        kagi-quick-search = {
-          enabled = true;
+          enabled = false;
           sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
         };
         keybind-cheatsheet = {
@@ -782,10 +774,6 @@ in {
           sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
         };
         pomodoro = {
-          enabled = true;
-          sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
-        };
-        translator = {
           enabled = true;
           sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
         };
@@ -1216,7 +1204,7 @@ in {
         monitors = [];
         overlayLayer = true;
       };
-      plugins.autoUpdate = false;
+      plugins.autoUpdate = true;
       sessionMenu = {
         countdownDuration = 10000;
         enableCountdown = true;
