@@ -156,6 +156,7 @@ in {
               powerline-symbols
               powerline-fonts
               noto-fonts-color-emoji # fcitx5
+              gyre-fonts
 
               # TODO: Find a file manager with vim keybinds
 
