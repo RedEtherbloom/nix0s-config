@@ -745,6 +745,11 @@ in {
           hotkey-overlay.title = "Switch to Obsidian";
           action.spawn-sh = "${lib.getExe niriSwitchToWindow} app_id obsidian || obsidian";
         };
+        "Mod+Ctrl+0" = {
+          hotkey-overlay.title = "Switch to next niri keyboard layout";
+          allow-when-locked = true;
+          action.spawn = splitSpace "niri msg action switch-layout next";
+        };
       };
     };
   };
