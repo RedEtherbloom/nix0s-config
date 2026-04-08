@@ -196,6 +196,9 @@ in {
               go-grip
               gnumake
               cmake
+              libtool
+
+              supercollider_scel
             ]
             ++ (with pkgs.kdePackages; [
               ark
