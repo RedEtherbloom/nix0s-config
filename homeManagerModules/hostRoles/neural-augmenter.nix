@@ -200,6 +200,7 @@ in {
               gnumake
               cmake
               libtool
+              emacs-lsp-booster
 
               supercollider_scel
             ]
