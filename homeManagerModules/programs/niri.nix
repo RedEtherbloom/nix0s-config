@@ -304,6 +304,11 @@
           cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim";
         }
         {
+          key = "e";
+          desc = "Launch Emacs";
+          cmd = "${pkgs.gtk3}/bin/gtk-launch emacs";
+        }
+        {
           key = "o";
           desc = "Notes obsidian-nvim";
           cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.notesPackage}/bin/nvim ${config.xdg.userDirs.documents}/Obsidian/default";
