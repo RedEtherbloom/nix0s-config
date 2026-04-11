@@ -77,6 +77,10 @@
         flake-utils.follows = "flake-utils";
       };
     };
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -167,6 +171,7 @@
             overlays = [
               inputs.fenix.overlays.default
               inputs.niri-flake.overlays.niri
+              inputs.emacs-overlay.overlays.default
               (import ./pkgs {inherit inputs;})
             ];
           };

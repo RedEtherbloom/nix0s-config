@@ -179,7 +179,7 @@ in {
 
               # Emacs
               git
-              emacs-pgtk
+              emacs-git-pgtk
               ripgrep
               coreutils
               fd
