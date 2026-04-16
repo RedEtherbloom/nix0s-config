@@ -283,7 +283,6 @@ in {
       };
       niri-flake.cache.enable = false; # We manage it ourself for readability
       boot = {
-        kernelPackages = lib.mkOverride 1001 pkgs.linuxPackages-rt_latest;
         kernelParams = [
           "PREEMPT=FULL" # Attempt to improve bluetooth reliability
         ];

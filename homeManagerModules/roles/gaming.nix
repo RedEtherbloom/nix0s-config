@@ -16,7 +16,6 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       steam
-      steam-tui
       gcs
       (olympus.override {celesteWrapper = pkgs.steam-run;})
 
