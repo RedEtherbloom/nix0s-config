@@ -237,6 +237,16 @@
         MusicFolder = "/mnt/cryptostorage/Music";
       };
     };
+    caddy = {
+      enable = true;
+      logFormat = "level INFO";
+      openFirewall = true;
+      virtualHosts = {
+        ":8124".extraConfig = ''
+          reverse_proxy http://192.168.122.248:8123
+        '';
+      };
+    };
   };
 
   hardware = {
