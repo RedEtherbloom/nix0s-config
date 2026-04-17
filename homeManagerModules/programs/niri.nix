@@ -383,15 +383,14 @@ in {
           # scroll-button 273
         };
         warp-mouse-to-focus.enable = true;
-        focus-follows-mouse = {
-          enable = true;
-          max-scroll-amount = "0%";
-        };
+        focus-follows-mouse.enable = true;
       };
 
       layout = {
         background-color = "transparent";
         gaps = 16;
+        always-center-single-column = true;
+        empty-workspace-above-first = true;
 
         preset-column-widths = [
           {proportion = 1.0 / 3.0;} # Default
@@ -405,14 +404,14 @@ in {
         #   {proportion = 2.0 / 3.0;} # Default
         # ];
         focus-ring = {
-          width = 2;
+          width = 4;
           # active-color "#7fc8ff" # Hope that noctalia takes care of this
           # inactive-color "#505050" # Hope that noctalia takes care of this
           # You can also use gradients. They take precedence over solid colors.
         };
         border.enable = false; # If you enable the border, you probably want to disable the focus ring.
         shadow = {
-          enable = true;
+          enable = false;
           # By default, the shadow draws only around its window, and not behind it.
           # Can lead to some weird issues.
           draw-behind-window = true;
@@ -423,13 +422,10 @@ in {
             y = 5;
           };
         };
-        # TODO: These may have interfered with Noctalias window layouting(new windows peeked off the right side of the screen)
-        # struts = {
-        #   top = 8;
-        #   right = 8;
-        #   bottom = 8;
-        #   left = 8;
-        # };
+        insert-hint = {
+          enable = true;
+          display.color = "#ffc87f80";
+        };
       };
       prefer-no-csd = true;
       screenshot-path = "${config.xdg.userDirs.pictures}/Screenshots/%Y-%m-%d_%H-%M-%S.png";
@@ -437,10 +433,10 @@ in {
         {
           # Noctalia requirement
           geometry-corner-radius = {
-            top-left = 5.0;
-            top-right = 5.0;
-            bottom-left = 5.0;
-            bottom-right = 5.0;
+            top-left = 20.0;
+            top-right = 20.0;
+            bottom-left = 20.0;
+            bottom-right = 20.0;
           };
           clip-to-geometry = true;
         }
@@ -461,7 +457,7 @@ in {
         }
       ];
       overview.workspace-shadow.enable = false;
-      debug.honor-xdg-activation-with-invalid-serial = true; # Required by noctalia
+      debug.honor-xdg-activation-with-invalid-serial = true; # Required by Noctalia
       xwayland-satellite = {
         enable = true;
         path = "${lib.getExe pkgs.xwayland-satellite-unstable}";
