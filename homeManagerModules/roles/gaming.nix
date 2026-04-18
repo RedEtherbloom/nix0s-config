@@ -59,6 +59,7 @@ in {
       })
       ut1999
       hyperspeedcube
+      _2ship2harkinian
     ];
     programs.mangohud.enable = true;
   };
