@@ -344,9 +344,9 @@ in {
     stylix = {
       enable = true;
       targets = {
-        kde.enable = true;
         rofi.enable = false;
         emacs.enable = false;
+        lazygit.enable = false;
       };
       opacity.terminal = 0.8;
     };
