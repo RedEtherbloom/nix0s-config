@@ -50,7 +50,7 @@ in {
         stylix = {
           enable = true;
           inherit (osConfig.stylix) image polarity;
-          base16Scheme = osConfig.stylix.base16Scheme or osConfig.stylix.generated.palette;
+          base16Scheme = osConfig.stylix.base16Scheme;
           targets = {
             nixos-icons.enable = false; # Broken targets
             qt.enable = true;
