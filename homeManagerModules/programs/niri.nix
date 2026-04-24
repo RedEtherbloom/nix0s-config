@@ -404,7 +404,7 @@ in {
         #   {proportion = 2.0 / 3.0;} # Default
         # ];
         focus-ring = {
-          width = 4;
+          width = 3;
           # active-color "#7fc8ff" # Hope that noctalia takes care of this
           # inactive-color "#505050" # Hope that noctalia takes care of this
           # You can also use gradients. They take precedence over solid colors.
@@ -426,6 +426,12 @@ in {
           enable = true;
           display.color = "#ffc87f80";
         };
+        struts = {
+          left = 20.0;
+          right = 20.0;
+          top = -4.0;
+          bottom = -4.0;
+        };
       };
       prefer-no-csd = true;
       screenshot-path = "${config.xdg.userDirs.pictures}/Screenshots/%Y-%m-%d_%H-%M-%S.png";
@@ -433,10 +439,10 @@ in {
         {
           # Noctalia requirement
           geometry-corner-radius = {
-            top-left = 20.0;
-            top-right = 20.0;
-            bottom-left = 20.0;
-            bottom-right = 20.0;
+            top-left = 10.0;
+            top-right = 10.0;
+            bottom-left = 10.0;
+            bottom-right = 10.0;
           };
           clip-to-geometry = true;
         }
