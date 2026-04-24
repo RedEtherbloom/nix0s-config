@@ -179,7 +179,6 @@ in {
 
               # Emacs
               git
-              emacs-git-pgtk
               ripgrep
               coreutils
               fd
@@ -261,6 +260,10 @@ in {
         useClipboard = lib.mkDefault false; # Typing at cursor position
         useCrane = false; # Broken, as craneLib missing
       };
+      emacs = {
+        client.enable = true;
+        defaultEditor = true;
+      };
     };
     programs = {
       chromium = {
@@ -278,6 +281,10 @@ in {
       broot.enable = true; # TODO: Give a try for better comparison
       fish.enable = true;
       sioyek.enable = true;
+      emacs = {
+        enable = true;
+        package = pkgs.emacs-git-pgtk;
+      };
     };
 
     xdg = {
@@ -339,6 +346,7 @@ in {
       targets = {
         kde.enable = true;
         rofi.enable = false;
+        emacs.enable = false;
       };
       opacity.terminal = 0.8;
     };
