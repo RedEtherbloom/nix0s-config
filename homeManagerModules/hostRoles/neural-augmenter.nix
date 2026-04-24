@@ -203,6 +203,10 @@ in {
               emacs-lsp-booster
 
               supercollider_scel
+
+              inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+              blanket # Local noise generator
             ]
             ++ (with pkgs.kdePackages; [
               ark
