@@ -96,7 +96,7 @@ in {
                 viAlias = false;
                 vimAlias = false;
                 lsp = {
-                  harper-ls.settings.linters = {
+                  servers.harper.settings.linters = {
                     SentenceCapitalization = true;
                     SpellCheck = true;
                     UnclosedQuotes = true;
@@ -152,26 +152,26 @@ in {
           formatOnSave = false;
           inlayHints.enable = true;
 
-          harper-ls = {
-            enable = true; # TODO: Version user dictionary via VCS
-            settings.linters = {
+          lightbulb.enable = true;
+          lspkind.enable = true;
+          nvim-docs-view.enable = true;
+          otter-nvim.enable = true;
+          presets.harper.enable = true;
+          servers = {
+            harper.settings.linters = {
               SentenceCapitalization = false;
               SpellCheck = false;
               ToDoHyphen = false;
               ExpandControl = false;
               UnclosedQuotes = false;
             };
-          };
-          lightbulb.enable = true;
-          lspkind.enable = true;
-          nvim-docs-view.enable = true;
-          otter-nvim.enable = true;
-          servers.nixd.settings.nixd = {
-            nixpkgs.expr = "import <nixpkgs> { allowUnfree = true; }";
-            formatting.command = ["alejandra"];
-            options = {
-              nixos.expr = "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.${osConfig.networking.hostName}.options";
-              home-manager.expr = ''(builtins.getFlake (builtins.toString ./.)).homeConfigurations."${config.home.username}@${osConfig.networking.hostName}".options'';
+            nixd.settings.nixd = {
+              nixpkgs.expr = "import <nixpkgs> { allowUnfree = true; }";
+              formatting.command = ["alejandra"];
+              options = {
+                nixos.expr = "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.${osConfig.networking.hostName}.options";
+                home-manager.expr = ''(builtins.getFlake (builtins.toString ./.)).homeConfigurations."${config.home.username}@${osConfig.networking.hostName}".options'';
+              };
             };
           };
           trouble.enable = true;

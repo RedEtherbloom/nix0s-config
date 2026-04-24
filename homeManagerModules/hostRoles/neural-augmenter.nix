@@ -357,7 +357,10 @@ in {
         gtk-enable-animations = true;
       '';
       gtk3.extraConfig.gtk-enable-animations = true;
-      gtk4.extraConfig.gtk-enable-animations = true;
+      gtk4 = {
+        inherit (config.gtk) theme;
+        extraConfig.gtk-enable-animations = true;
+      };
     };
     dconf.settings = {
       "org/gnome/desktop/interface" = {
