@@ -301,7 +301,6 @@ in {
             fsIdentifier = "uuid";
             useOSProber = true;
             device = "nodev";
-            memtest86.enable = true;
             extraEntries = ''
               menuentry "Poweroff" {
                 halt
@@ -315,17 +314,11 @@ in {
             '';
           };
         };
-        initrd.systemd.enable = true; # Required for plymouth to work in luks
-        plymouth.enable = lib.mkDefault true; # Prettier boot screen. TODO: Tends to crash after idling for a few minutes
+        initrd.systemd.enable = true;
       };
     })
     (lib.mkIf cfg.verboseSpecialisation {
-      specialisation.verbose-boot.configuration = {
-        boot = {
-          consoleLogLevel = 7;
-          plymouth.enable = false;
-        };
-      };
+      specialisation.verbose-boot.configuration.boot.consoleLogLevel = 7;
     })
   ]);
 }
