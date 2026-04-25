@@ -26,7 +26,7 @@
       exec ${lib.getExe pkgs.wlr-which-key} ${mkWlrConfig name menu}
     '';
   noctaliaPackage = config.programs.noctalia-shell.package;
-  noctaliaIpcCommand = command: "${noctaliaPackage}/bin/noctalia-shell ipc call ${command}";
+  noctaliaIpcCommand = command: "noctalia-shell ipc call ${command}";
   shikaneProfileSelector = let
     rofiSep = "|";
   in
@@ -100,12 +100,12 @@
               {
                 key = "p";
                 desc = "Lock screen and power off monitors";
-                cmd = "${noctaliaIpcCommand "lockScreen lock"} && ${lib.getExe config.programs.niri.package} msg action power-off-monitors";
+                cmd = "${noctaliaIpcCommand "lockScreen lock"} && niri msg action power-off-monitors";
               }
               {
                 key = "P";
                 desc = "Power off monitors";
-                cmd = "${lib.getExe config.programs.niri.package} msg action power-off-monitors";
+                cmd = "niri msg action power-off-monitors";
               }
             ];
           }
@@ -337,12 +337,12 @@
   niriSwitchToWindow = pkgs.writeShellScriptBin "niriSwitchToWindow.sh" ''
     set -e
 
-    raw_json="$(${lib.getExe config.programs.niri.package} msg -j windows)"
+    raw_json="$(niri msg -j windows)"
     filtered="$(${lib.getExe pkgs.jq} --arg filterField "$1" --arg filterValue "$2" 'map(select(.[$filterField] == $filterValue))' <<< "$raw_json")"
     echo "Found $(${lib.getExe pkgs.jq} 'length' <<< "$filtered") windows matching criteria"
     id="$(${lib.getExe pkgs.jq} 'first | .id' <<< "$filtered")"
     echo "Switching to window with ID $id"
-    ${lib.getExe config.programs.niri.package} msg action focus-window --id "$id"
+    niri msg action focus-window --id "$id"
   '';
   muteAllSinks = pkgs.writeShellScriptBin "muteAllSinks.sh" ''
     set -e
@@ -713,7 +713,7 @@ in {
 
         "Mod+Shift+P" = {
           hotkey-overlay.title = "Lock the screen and power it off";
-          action.spawn-sh = "${noctaliaIpcCommand "lockScreen lock"} && ${lib.getExe config.programs.niri.package} msg action power-off-monitors";
+          action.spawn-sh = "${noctaliaIpcCommand "lockScreen lock"} && niri msg action power-off-monitors";
         };
         "Mod+Shift+Ctrl+P" = {
           hotkey-overlay.title = "Power off the screens";
@@ -1412,7 +1412,7 @@ in {
       timeouts = [
         {
           timeout = 300;
-          command = "${lib.getExe config.programs.niri.package} msg action power-off-monitors";
+          command = "niri msg action power-off-monitors";
         }
         {
           # Longer default
@@ -1421,7 +1421,7 @@ in {
         }
         {
           timeout = 930;
-          command = "${lib.getExe config.programs.niri.package} msg action power-off-monitors";
+          command = "niri msg action power-off-monitors";
         }
       ];
     };
