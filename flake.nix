@@ -40,6 +40,15 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+        systems.follows = "systems";
+        darwin.follows = ""; # Don't pull in unneeded resources
+      };
+    };
     stylix = {
       url = "github:danth/stylix";
       inputs = {
@@ -116,7 +125,9 @@
                     {nixpkgs = {inherit (pkgs) config overlays;};}
                     # TODO: Decide how to reorganize module inputs
                     inputs.sops-nix.nixosModules.sops
+                    inputs.agenix.nixosModules.default
                     inputs.nix-index-database.nixosModules.nix-index
+
                     ./hosts/${hostName}/configuration.nix
                   ];
                 }
@@ -139,6 +150,11 @@
                   osFlakeSelf = osConfig._module.specialArgs.self;
                 };
               modules = [
+                inputs.sops-nix.homeManagerModules.sops
+                inputs.agenix.homeManagerModules.default
+                inputs.nix-index-database.homeModules.nix-index
+                inputs.stylix.homeModules.stylix
+
                 ./hosts/${hostName}/home.nix
                 {
                   nix = {

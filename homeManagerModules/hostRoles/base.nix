@@ -1,7 +1,7 @@
 {
   config,
-  lib,
   inputs,
+  lib,
   osConfig,
   pkgs,
   secrets,
@@ -9,12 +9,6 @@
 }: let
   cfg = config.myOptions.hostRoles.base;
 in {
-  imports = [
-    inputs.nix-index-database.homeModules.nix-index
-    inputs.sops-nix.homeManagerModules.sops
-    inputs.stylix.homeModules.stylix
-  ];
-
   options.myOptions.hostRoles.base = {
     enable = lib.mkOption {
       description = "Enable home manager";
@@ -56,6 +50,9 @@ in {
             qt.enable = true;
           };
         };
+        home.packages = [
+          inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
+        ];
       }
       (lib.mkIf osConfig.security.ownAdditional.yubikey {
         # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)
