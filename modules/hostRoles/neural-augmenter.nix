@@ -187,11 +187,11 @@ in {
       ];
 
       # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
-      system.extraDependencies = let
-        collectFlakeInputs = input:
-          [input] ++ builtins.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or {}));
-      in
-        builtins.concatMap collectFlakeInputs (builtins.attrValues inputs);
+      # system.extraDependencies = let
+      #   collectFlakeInputs = input:
+      #     [input] ++ builtins.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or {}));
+      # in
+      #   builtins.concatMap collectFlakeInputs (builtins.attrValues inputs);
 
       nixpkgs.config.permittedInsecurePackages = ["olm-3.2.16"]; # Required by Nheko to work
       zramSwap.enable = true;
