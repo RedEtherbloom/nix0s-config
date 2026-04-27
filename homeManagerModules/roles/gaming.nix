@@ -16,7 +16,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       steam
-      gcs
+      # gcs
       (olympus.override {celesteWrapper = pkgs.steam-run;})
 
       dxvk_2
@@ -32,32 +32,32 @@ in {
       })
       winetricks
       wineWow64Packages.waylandFull
-      (prismlauncher.override {
-        additionalLibs = with pkgs; [
-          nss
-          nspr
-          libgbm
-          glib
-          at-spi2-atk
-          cups
-          libdrm
-          libXcomposite
-          libXdamage
-          libXfixes
-          libX11
-          libXext
-          libXrandr
-          libxcb
-          expat
-          libxkbcommon
-          dbus
-          pango
-          cairo
-          stdenv.cc.cc.lib
-        ];
-        # Optional
-        additionalPrograms = [pkgs.ffmpeg];
-      })
+      # (prismlauncher.override {
+      #   additionalLibs = with pkgs; [
+      #     nss
+      #     nspr
+      #     libgbm
+      #     glib
+      #     at-spi2-atk
+      #     cups
+      #     libdrm
+      #     libXcomposite
+      #     libXdamage
+      #     libXfixes
+      #     libX11
+      #     libXext
+      #     libXrandr
+      #     libxcb
+      #     expat
+      #     libxkbcommon
+      #     dbus
+      #     pango
+      #     cairo
+      #     stdenv.cc.cc.lib
+      #   ];
+      #   # Optional
+      #   additionalPrograms = [pkgs.ffmpeg];
+      # })
       ut1999
       hyperspeedcube
       _2ship2harkinian
