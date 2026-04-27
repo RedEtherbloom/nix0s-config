@@ -108,6 +108,11 @@ in {
       default = true;
       description = "Enable MCU tools.";
     };
+    vibecoding = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Trying out some slop coding. Probably won't be used much";
+    };
   };
 
   config = lib.mkIf cfg.enable (
@@ -173,6 +178,8 @@ in {
             esptool
             espflash
             probe-rs-tools
+          ] ++ lib.optionals cfg.vibecoding [
+            antigravity-fhs
           ];
 
         programs.go.enable = cfg.go;
