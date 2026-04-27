@@ -157,6 +157,7 @@ in {
           raopOpenFirewall = true;
           wireplumber.enable = true;
         };
+        gvfs.enable = true;
       };
 
       hardware = {
