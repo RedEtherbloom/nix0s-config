@@ -30,6 +30,7 @@ in {
           pkgs.vulkan-tools
         ];
       })
+      winetricks
       wineWow64Packages.waylandFull
       (prismlauncher.override {
         additionalLibs = with pkgs; [
