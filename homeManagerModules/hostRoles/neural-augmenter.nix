@@ -233,6 +233,7 @@ in {
       };
       sessionPath = [
         "$HOME/.emacs.d/bin"
+        "$HOME/.cargo/bin"
       ];
       pointerCursor = {
         gtk.enable = true;
