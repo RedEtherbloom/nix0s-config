@@ -119,14 +119,15 @@ in {
             clang
             clang-tools
             pkg-config
-            (fenix.complete.withComponents [
-              "cargo"
-              "clippy"
-              "rust-src"
-              "rustc"
-              "rustfmt"
-            ])
-            rust-analyzer-nightly
+            # (fenix.complete.withComponents [
+            #   "cargo"
+            #   "clippy"
+            #   "rust-src"
+            #   "rustc"
+            #   "rustfmt"
+            # ])
+            # rust-analyzer-nightly
+            rustup
           ]
           ++ lib.optionals cfg.openscad [
             openscad-unstable
