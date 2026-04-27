@@ -1440,7 +1440,42 @@ in {
     shikane.enable = true;
   };
   # TODO: Set up fcitx5
-  xdg.cacheFile."noctalia/wallpapers.json".text = builtins.toJSON {
-    defaultWallpaper = config.stylix.image;
+  xdg = {
+    cacheFile."noctalia/wallpapers.json".text = builtins.toJSON {
+      defaultWallpaper = config.stylix.image;
+    };
+    configFile."Thunar/uca.xml".text = ''
+      <?xml version="1.0" encoding="UTF-8"?>
+      <actions>
+      <action>
+        <icon>utilities-terminal</icon>
+        <name>Start terminal here</name>
+        <submenu></submenu>
+        <unique-id>1772009767743084-1</unique-id>
+        <command>kitty -d %d</command>
+        <description></description>
+        <range></range>
+        <patterns>*</patterns>
+        <startup-notify/>
+        <audio-files/>
+        <image-files/>
+        <other-files/>
+        <text-files/>
+        <video-files/>
+      </action>
+      <action>
+        <icon></icon>
+        <name>Start terminal in this directory</name>
+        <submenu></submenu>
+        <unique-id>1777313197096717-1</unique-id>
+        <command>kitty -d %f</command>
+        <description></description>
+        <range></range>
+        <patterns>*</patterns>
+        <startup-notify/>
+        <directories/>
+      </action>
+      </actions>
+    '';
   };
 }
