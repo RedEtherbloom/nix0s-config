@@ -352,6 +352,7 @@ in {
         rofi.enable = false;
         emacs.enable = false;
         lazygit.enable = false;
+        obsidian.enable = false;
       };
       opacity.terminal = 0.8;
     };
