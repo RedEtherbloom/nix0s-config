@@ -764,34 +764,34 @@ in {
   programs.noctalia-shell = {
     enable = true;
     package = inputs.noctalia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default.override {calendarSupport = true;};
-    plugins = {
-      sources = [
-        {
-          enabled = true;
-          name = "Noctalia Plugins";
-          url = "https://github.com/noctalia-dev/noctalia-plugins";
-        }
-      ];
-      states = {
-        catwalk = {
-          enabled = false;
-          sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
-        };
-        keybind-cheatsheet = {
-          enabled = true;
-          sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
-        };
-        niri-overview-launcher = {
-          enabled = true;
-          sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
-        };
-        pomodoro = {
-          enabled = true;
-          sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
-        };
-      };
-      version = 2;
-    };
+    # plugins = {
+    #   sources = [
+    #     {
+    #       enabled = true;
+    #       name = "Noctalia Plugins";
+    #       url = "https://github.com/noctalia-dev/noctalia-plugins";
+    #     }
+    #   ];
+    #   states = {
+    #     catwalk = {
+    #       enabled = false;
+    #       sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+    #     };
+    #     keybind-cheatsheet = {
+    #       enabled = true;
+    #       sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+    #     };
+    #     niri-overview-launcher = {
+    #       enabled = true;
+    #       sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+    #     };
+    #     pomodoro = {
+    #       enabled = true;
+    #       sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+    #     };
+    #   };
+    #   version = 2;
+    # };
     # TODO: Turn into a simple override using a common JSON that gets merged into it every single rebuild time. Setting all the settings declaratively may cause issues as noctalia version and noctalia settings version begin to drift
     # settings = {
     #   appLauncher = {
