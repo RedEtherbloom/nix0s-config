@@ -47,7 +47,7 @@ in {
       };
       nvf = {
         enable = true;
-        defaultEditor = true;
+        defaultEditor = false;
         settings.vim = config.myOptions.roles.nvf.defaultNvfSettings;
       };
     };
