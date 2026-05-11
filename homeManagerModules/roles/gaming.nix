@@ -20,16 +20,17 @@ in {
       (olympus.override {celesteWrapper = pkgs.steam-run;})
 
       dxvk_2
-      (lutris.override {
-        extraLibraries = pkgs: [
-          pkgs.glib-networking
-          pkgs.dconf
-          pkgs.gamemode.lib
-        ];
-        extraPkgs = pkgs: [
-          pkgs.vulkan-tools
-        ];
-      })
+      # 19-05-2026: Disabled due to broken openldap build
+      # (lutris.override {
+      #   extraLibraries = pkgs: [
+      #     pkgs.glib-networking
+      #     pkgs.dconf
+      #     pkgs.gamemode.lib
+      #   ];
+      #   extraPkgs = pkgs: [
+      #     pkgs.vulkan-tools
+      #   ];
+      # })
       winetricks
       wineWow64Packages.waylandFull
       # (prismlauncher.override {
