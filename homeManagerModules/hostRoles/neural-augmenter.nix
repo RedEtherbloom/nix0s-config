@@ -200,7 +200,7 @@ in {
               gnumake
               cmake
               libtool
-              # emacs-lsp-booster
+              # emacs-lsp-booster # Would require eglot
               bash
               shfmt
 
@@ -209,6 +209,8 @@ in {
               inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
               blanket # Local noise generator
+
+              activitywatch
             ]
             ++ (with pkgs.kdePackages; [
               ark
@@ -268,6 +270,7 @@ in {
         client.enable = true;
         defaultEditor = true;
       };
+      activitywatch.enable = true;
     };
     programs = {
       chromium = {
