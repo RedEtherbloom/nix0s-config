@@ -218,6 +218,12 @@
         desc = "Switch to or start Obsidian";
         cmd = "${lib.getExe niriSwitchToWindow} app_id obsidian || obsidian";
       }
+      {
+        key = "k";
+        keep_open = true;
+        desc = "Switch to next niri keyboard layout";
+        cmd = "niri msg action switch-layout next";
+      }
     ];
     media-control = mkWlrMenu "noctalia-media-control" [
       {
@@ -730,7 +736,11 @@ in {
         };
         "Mod+Shift+Space" = {
           hotkey-overlay.title = "Show window switcher";
-          action.spawn-sh = noctaliaIpcCommand "launcher windows";
+          action.spawn = splitSpace "${lib.getExe pkgs.playerctl} play-pause";
+        };
+        "Mod+Shift+Tab" = {
+          hotkey-overlay.title = "Show window switcher";
+          action.spawn = splitSpace "${lib.getExe pkgs.playerctl} play-pause";
         };
         "Mod+Comma" = {
           hotkey-overlay.title = "Show control center";
@@ -751,11 +761,6 @@ in {
         "Mod+Shift+O" = {
           hotkey-overlay.title = "Switch to Obsidian";
           action.spawn-sh = "${lib.getExe niriSwitchToWindow} app_id obsidian || obsidian";
-        };
-        "Mod+Ctrl+0" = {
-          hotkey-overlay.title = "Switch to next niri keyboard layout";
-          allow-when-locked = true;
-          action.spawn = splitSpace "niri msg action switch-layout next";
         };
       };
     };
