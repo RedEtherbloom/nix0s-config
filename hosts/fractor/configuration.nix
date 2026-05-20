@@ -22,15 +22,6 @@
 
   boot = {
     binfmt.emulatedSystems = ["aarch64-linux"];
-    # Attempt to fix some intel stuttering
-    # kernelParams = [
-    #   "i915.enable_psr=0"
-    #   "i915.enable_fbc=0"
-    #   "intel_idle.max_cstate=1"
-    # ];
-    kernelParams = [
-      "iwlwifi.bt_coex_active=0" # Attempt to improve bluetooth reliability
-    ];
     resumeDevice = "/dev/disk/by-uuid/6960c42d-4b92-474d-aeae-e550d670be12";
     initrd = {
       systemd.enable = true;
@@ -64,8 +55,9 @@
         foomatic-db-nonfree
       ];
     };
+    # Disable inbuilt bluetooth to avoid wifi-bluetooth issues
     udev.extraRules = ''
-      SUBSYSTEM=="usb", ATTRS{idVendor}=="0a5c", ATTRS{idProduct}=="21e6", ATTR{authorized}="0"
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="8087", ATTRS{idProduct}=="0a2b", ATTR{authorized}="0"
     '';
   };
 
