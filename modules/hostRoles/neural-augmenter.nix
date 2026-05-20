@@ -153,7 +153,7 @@ in {
             enable = true;
             support32Bit = true;
           };
-          jack.enable = true;
+          jack.enable = false;
           raopOpenFirewall = true;
           wireplumber.enable = true;
         };
@@ -287,6 +287,10 @@ in {
         kernelParams = [
           "PREEMPT=FULL" # Attempt to improve bluetooth reliability
         ];
+        extraModprobeConfig = ''
+            options btusb disable_autosuspend=1
+            options btusb enable_autosuspend=0
+        '';
       };
     }
     (lib.mkIf cfg.setupGrubOptions {
