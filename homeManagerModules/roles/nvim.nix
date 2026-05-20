@@ -64,6 +64,9 @@ in {
           utility.motion.hop.enable = lib.mkForce false;
           languages.sql.enable = lib.mkForce false;
           treesitter.textobjects.enable = lib.mkForce false;
+
+          # Just to disable
+          assistant.avante-nvim.enable = lib.mkForce false;
         };
       };
       nvfRemoveBuildConficts = nvfIn:
@@ -513,6 +516,7 @@ in {
             vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true})
           '';
         };
+        assistant.avante-nvim.enable = false;
       };
     };
     stylix.targets = {
