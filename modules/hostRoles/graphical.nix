@@ -68,7 +68,6 @@ in {
     };
     stylix = {
       # DE independent
-      targets.qt.platform = lib.mkOverride 999 "qtct";
       fonts = {
         monospace = {
           # TODO: Need a better mono font

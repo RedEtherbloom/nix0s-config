@@ -47,7 +47,8 @@ in {
           base16Scheme = osConfig.stylix.base16Scheme;
           targets = {
             nixos-icons.enable = false; # Broken targets
-            qt.enable = true;
+            qt.enable = false;
+            gtksourceview.enable = lib.mkForce false; # See: Constant rebuilds of e.g. inkscape caused by this
           };
         };
         home.packages = [

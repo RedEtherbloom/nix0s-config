@@ -352,6 +352,7 @@ in {
       enable = true;
       targets = {
         kde.enable = false;
+        qt.enable = false;
         rofi.enable = false;
         emacs.enable = false;
         lazygit.enable = false;
