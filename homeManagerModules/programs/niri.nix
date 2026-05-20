@@ -377,7 +377,7 @@ in {
           scroll-method = "two-finger";
         };
         mouse = {
-          accel-profile = "adaptive";
+          accel-profile = "flat";
           natural-scroll = true;
         };
         trackpoint = {
@@ -388,27 +388,28 @@ in {
           middle-emulation = true;
           # scroll-button 273
         };
-        warp-mouse-to-focus.enable = true;
-        focus-follows-mouse.enable = true;
+        warp-mouse-to-focus.enable = false;
+        focus-follows-mouse = {
+          enable = true;
+          max-scroll-amount = "0%";
+        };
       };
 
       layout = {
         background-color = "transparent";
         gaps = 16;
-        always-center-single-column = true;
         empty-workspace-above-first = true;
 
         preset-column-widths = [
-          {proportion = 1.0 / 3.0;} # Default
-          {proportion = 1.0 / 2.0;} # Default
-          {proportion = 2.0 / 3.0;} # Default
+          {proportion = 1. / 3.;}
+          {proportion = 1. / 2.;}
+          {proportion = 2. / 3.;}
         ];
-        # Missing from niri-flake. If required: Extra config
-        # preset-column-heights = [
-        #   {proportion = 1.0 / 3.0;} # Default
-        #   {proportion = 1.0 / 2.0;} # Default
-        #   {proportion = 2.0 / 3.0;} # Default
-        # ];
+        preset-window-heights = [
+          {proportion = 1. / 3.;}
+          {proportion = 1. / 2.;}
+          {proportion = 2. / 3.;}
+        ];
         focus-ring = {
           width = 3;
           # active-color "#7fc8ff" # Hope that noctalia takes care of this
@@ -445,10 +446,10 @@ in {
         {
           # Noctalia requirement
           geometry-corner-radius = {
-            top-left = 10.0;
-            top-right = 10.0;
-            bottom-left = 10.0;
-            bottom-right = 10.0;
+            top-left = 7.0;
+            top-right = 7.0;
+            bottom-left = 7.0;
+            bottom-right = 7.0;
           };
           clip-to-geometry = true;
         }
@@ -501,7 +502,6 @@ in {
           action.spawn = splitSpace (noctaliaIpcCommand "lockScreen lock");
         };
 
-        # "-l 1.0" limits the volume to 100%.
         "XF86AudioRaiseVolume" = {
           allow-when-locked = true;
           action.spawn = splitSpace (noctaliaIpcCommand "volume increase");
@@ -1366,13 +1366,7 @@ in {
     #   };
     # };
   };
-  systemd.user.services = {
-    noctalia-shell.Unit.ConditionEnv = ["XDG_CURRENT_DESKTOP=niri"];
-    swayidle.Unit.ConditionEnvironment = lib.mkForce [
-      "WAYLAND_DISPLAY"
-      "XDG_CURRENT_DESKTOP=niri"
-    ];
-  };
+  systemd.user.services.noctalia-shell.Unit.ConditionEnvironment = ["XDG_CURRENT_DESKTOP=niri"];
   stylix.targets.noctalia-shell.enable = false;
 
   home.packages = with pkgs; [
