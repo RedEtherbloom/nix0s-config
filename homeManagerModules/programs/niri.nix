@@ -1383,7 +1383,7 @@ in {
     nautilus
 
     # Fonts, cursors, etc.
-    lyra-cursors
+    breeze-hacked-cursor-theme
 
     # Helper script block
     shikaneProfileSelector

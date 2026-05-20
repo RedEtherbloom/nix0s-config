@@ -242,8 +242,8 @@ in {
       ];
       pointerCursor = {
         gtk.enable = true;
-        package = pkgs.lyra-cursors;
-        name = "LyraQ-cursors";
+        package = pkgs.breeze-hacked-cursor-theme;
+        name = "Breeze_Hacked";
         size = 36;
       };
       activation.rebuildKdeXdgCache = lib.hm.dag.entryAfter ["writeBoundary"] "run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6"; # Rebuild cache for dolphin
