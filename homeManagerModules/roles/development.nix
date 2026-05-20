@@ -150,6 +150,7 @@ in {
                 nixpkgs-review
                 nix-eval-jobs
                 nix-du
+                nurl
               ]
               ++ (
                 with pkgs; [
@@ -157,8 +158,6 @@ in {
                   nh
                   nixd
                   direnv
-                  nix-prefetch-scripts
-                  nix-prefetch-github
                   nix-tree
                 ]
               )

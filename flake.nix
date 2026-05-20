@@ -206,6 +206,7 @@
                 nixos-rebuild-ng
                 nix-direnv
                 nix-init
+                nurl
                 nix-update
                 nixos-anywhere
                 nix-fast-build
@@ -218,8 +219,6 @@
                 alejandra
                 nh
                 direnv
-                nix-prefetch-scripts
-                nix-prefetch-github
                 nix-tree
               ]);
           };
