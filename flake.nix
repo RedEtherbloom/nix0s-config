@@ -200,16 +200,28 @@
           legacyPackages = pkgs; # TODO: This seems wrong
           formatter = pkgs.alejandra;
           devShells.default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              lixPackageSets.latest.lix
-              alejandra
-              nh
-              direnv
-              nix-prefetch-scripts
-              nix-prefetch-github
-              nix-tree
-              nixos-rebuild-ng
-            ];
+            buildInputs = with pkgs.lixPackageSets.latest;
+              [
+                lix
+                nixos-rebuild-ng
+                nix-direnv
+                nix-init
+                nix-update
+                nixos-anywhere
+                nix-fast-build
+                colmena
+                nixpkgs-review
+                nix-eval-jobs
+                nix-du
+              ]
+              ++ (with pkgs; [
+                alejandra
+                nh
+                direnv
+                nix-prefetch-scripts
+                nix-prefetch-github
+                nix-tree
+              ]);
           };
         };
       }

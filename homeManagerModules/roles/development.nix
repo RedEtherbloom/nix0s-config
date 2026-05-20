@@ -138,16 +138,30 @@ in {
             openscad-unstable
           ]
           ++ lib.optionals cfg.nix (
-            with pkgs; [
-              alejandra
-              nh
-              nixd
-              direnv
-              nix-prefetch-scripts
-              nix-prefetch-github
-              nix-tree
-              nixos-rebuild-ng
-            ]
+            with lixPackageSets.latest;
+              [
+                nixos-rebuild-ng
+                nix-fast-build
+                nix-direnv
+                nix-init
+                nix-update
+                nixos-anywhere
+                colmena
+                nixpkgs-review
+                nix-eval-jobs
+                nix-du
+              ]
+              ++ (
+                with pkgs; [
+                  alejandra
+                  nh
+                  nixd
+                  direnv
+                  nix-prefetch-scripts
+                  nix-prefetch-github
+                  nix-tree
+                ]
+              )
           )
           # ++ lib.optionals cfg.nix self.devShells.${system}.default.buildInputs
           ++ lib.optionals cfg.electronics [
@@ -178,7 +192,8 @@ in {
             esptool
             espflash
             probe-rs-tools
-          ] ++ lib.optionals cfg.vibecoding [
+          ]
+          ++ lib.optionals cfg.vibecoding [
             antigravity-fhs
           ];
 

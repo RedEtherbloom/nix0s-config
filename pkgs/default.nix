@@ -1,37 +1,4 @@
 {inputs, ...}: final: prev: {
-  inherit
-    (final.lixPackages.latest)
-    nixpkgs-review
-    nix-eval-jobs
-    nix-fast-build
-    colmena
-    ;
-
-  thunderbird-external-editor-revived = final.rustPlatform.buildRustPackage (finalAttrs: {
-    pname = "thunderbird-external-editor-revived";
-    version = "1.2.0";
-    src = final.fetchFromGitHub {
-      owner = "Frederick888";
-      repo = "external-editor-revived";
-      rev = "v${finalAttrs.version}";
-      hash = "sha256-K5agRpFJ8iqvPnx3IIMTvrkObT/GB962EtdvWf7Eq4w=";
-    };
-    cargoHash = "sha256-QYSsdEBNwjpR7lppyOcsc0F8ombBY+dlFRY1GO/D8so=";
-    meta = {
-      description = "Native messaging host for the MailExtension Vim addon for Thunderbird.";
-      homepage = "https://github.com/Frederick888/external-editor-revived";
-      license = final.lib.licenses.unlicense;
-      maintainers = [
-        {
-          email = "etherbloom@mailbox.org";
-          github = "RedEtherbloom";
-          githubId = "16244495";
-          name = "Etherbloom";
-        }
-      ];
-    };
-  }); # TODO: Fix
-
   koboldcpp = prev.koboldcpp.overrideAttrs (
     _: pythonPrev: {
       pythonInputs =
@@ -42,29 +9,6 @@
   vimPlugins =
     (prev.vimPlugins or [])
     // {
-      music-controls-nvim = let
-        base = final.vimUtils.buildVimPlugin {
-          pname = "music-controls.nvim";
-          version = "2025-01-01";
-          src = final.fetchFromGitHub {
-            owner = "AntonVanAssche";
-            repo = "music-controls.nvim";
-            rev = "35e6a644d66e916aeaad47b3f76f3dc608a32b68";
-            hash = "sha256-cPam2gwmEHq1OPB65It9797PZ9xXVLXGMYsHfM2LJeA=";
-          };
-          meta.homepage = "https://github.com/troydm/zoomwintab.vim/";
-          meta.hydraPlatforms = [];
-        };
-      in
-        base.overrideAttrs (
-          _: prevAttrs: {
-            buildInputs =
-              (prevAttrs.buildInputs or [])
-              ++ (with final; [
-                playerctl
-              ]);
-          }
-        );
       jj-nvim = final.vimUtils.buildVimPlugin {
         pname = "jj.nvim";
         version = "0.3.0-unstable-2026-01-06";
@@ -96,6 +40,7 @@
       '';
   });
 
+  # TODO: Check if fix got merged
   speechd-patched = prev.speechd.overrideAttrs (
     _: prevAttrs: {
       version = prevAttrs.version + "-sh-patch";
