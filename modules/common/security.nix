@@ -35,22 +35,24 @@ in {
         enable = true;
         extraConfig = ''
           @includedir ${dirOf config.sops.secrets."sudoers/optional".path}
+
+          Defaults pwfeedback
         '';
       };
 
       # in µs
       security.pam.services = {
         sudo.failDelay.delay = {
-          delay = 500000;
+          delay = 50000;
           enable = true;
         };
         # KDE and SDDM's yubikey handling is yikes
         kde.failDelay = {
-          delay = 100000;
+          delay = 50000;
           enable = true;
         };
         sddm.failDelay.delay = {
-          delay = 100000;
+          delay = 50000;
           enable = true;
         };
       };
