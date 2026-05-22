@@ -122,7 +122,7 @@ in {
                   python.enable = false;
                   rust.enable = false;
                   sql.enable = false;
-                  ts.enable = true;
+                  typescript.enable = true;
                   typst.enable = true;
                 };
                 debugger.nvim-dap.enable = false;
@@ -239,7 +239,7 @@ in {
             };
           };
           sql.enable = true;
-          ts.enable = true;
+          typescript.enable = true;
           typst.enable = true;
         };
         debugger.nvim-dap = {
