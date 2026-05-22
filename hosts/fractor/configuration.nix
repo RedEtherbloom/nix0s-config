@@ -24,6 +24,9 @@
     binfmt.emulatedSystems = ["aarch64-linux"];
     resumeDevice = "/dev/disk/by-uuid/6960c42d-4b92-474d-aeae-e550d670be12";
     initrd = {
+      kernelModules = [
+        "aesni_intel"
+      ];
       systemd.enable = true;
       luks.devices."luks" = {
         device = "/dev/disk/by-uuid/7da6adea-a5ff-4044-bd33-38decf43fd60";
@@ -69,16 +72,14 @@
     graphics = {
       enable = true;
       extraPackages = with pkgs; [
-        intel-media-driver # LIBVA_DRIVER_NAME=iHD
-        intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+        intel-media-driver
+        intel-vaapi-driver
         libvdpau-va-gl
       ];
     };
   };
 
-  environment = {
-    sessionVariables.LIBVA_DRIVER_NAME = "iHD";
-  };
+  environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
 
   myOptions = {
     hostRoles.neural-augmenter.enable = true;

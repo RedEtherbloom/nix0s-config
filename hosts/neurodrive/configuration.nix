@@ -45,9 +45,11 @@
       "coretemp"
       "nct6775"
     ];
+    extraModprobeConfig = ''
+      options nvidia_drm modeset=1
+    '';
     initrd = {
-      availableKernelModules = [
-        # TODO: Lookup remaining crypto kernel drivers for our CPU
+      kernelModules = [
         "aesni_intel"
       ];
       systemd.enable = true;
