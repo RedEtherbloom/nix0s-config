@@ -21,6 +21,8 @@ in {
 
   config = lib.mkIf cfg.enable {
     myOptions.utilities.enable = lib.mkDefault true;
+
+    system.build.nixos-rebuild = lib.mkForce pkgs.lixPackageSets.latest.nixos-rebuild-ng;
     security.pki.certificateFiles = ["${secrets}/secrets/root_ca/root_ca.crt"];
 
     services = {

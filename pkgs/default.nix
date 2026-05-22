@@ -306,4 +306,7 @@
       hash = "sha256-v+4/lD00rjJvrQ2NQqFusZc0zQbM9mBG5T9bNioNGKQ=";
     };
   });
+
+  comma = prev.comma.override { nix = final.lixPackageSets.latest.lix; };
+  nixos-rebuild-ng = prev.nixos-rebuild-ng.override { nix = prev.lixPackageSets.latest.lix; };
 }
