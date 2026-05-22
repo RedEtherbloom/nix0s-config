@@ -475,9 +475,12 @@ in {
         enable = true;
         path = "${lib.getExe pkgs.xwayland-satellite-unstable}";
       };
-      hotkey-overlay.hide-not-bound = true;
+      hotkey-overlay = {
+        hide-not-bound = true;
+        skip-at-startup = true;
+      };
       cursor = {
-        inherit (config.home.pointerCursor.size);
+        inherit (config.home.pointerCursor) size;
         theme = config.home.pointerCursor.name;
         hide-after-inactive-ms = 15 * 1000;
         hide-when-typing = true;
