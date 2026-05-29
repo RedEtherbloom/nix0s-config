@@ -116,10 +116,7 @@ in {
           openFirewall = true;
           steam.importOXRRuntimes = true;
         };
-        displayManager.gdm = {
-          enable = true;
-          wayland = true;
-        };
+        displayManager.gdm.enable = true;
         ollama = {
           enable = true;
           environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
