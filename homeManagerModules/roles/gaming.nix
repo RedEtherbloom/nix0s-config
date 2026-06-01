@@ -16,10 +16,10 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       steam
-      # gcs
-      (olympus.override {celesteWrapper = pkgs.steam-run;})
+      # _2ship2harkinian
+      # ut1999
+      # (olympus.override {celesteWrapper = pkgs.steam-run;})
 
-      dxvk_2
       # 19-05-2026: Disabled due to broken openldap build
       # (lutris.override {
       #   extraLibraries = pkgs: [
@@ -31,38 +31,6 @@ in {
       #     pkgs.vulkan-tools
       #   ];
       # })
-      winetricks
-      wineWow64Packages.waylandFull
-      # (prismlauncher.override {
-      #   additionalLibs = with pkgs; [
-      #     nss
-      #     nspr
-      #     libgbm
-      #     glib
-      #     at-spi2-atk
-      #     cups
-      #     libdrm
-      #     libXcomposite
-      #     libXdamage
-      #     libXfixes
-      #     libX11
-      #     libXext
-      #     libXrandr
-      #     libxcb
-      #     expat
-      #     libxkbcommon
-      #     dbus
-      #     pango
-      #     cairo
-      #     stdenv.cc.cc.lib
-      #   ];
-      #   # Optional
-      #   additionalPrograms = [pkgs.ffmpeg];
-      # })
-      ut1999
-      hyperspeedcube
-      _2ship2harkinian
     ];
-    programs.mangohud.enable = true;
   };
 }

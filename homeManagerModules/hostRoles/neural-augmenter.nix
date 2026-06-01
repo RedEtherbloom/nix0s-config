@@ -6,15 +6,16 @@
   pkgs,
   secrets,
   ...
-}: let
+}:
+let
   cfg = config.myOptions.hostRoles.neural-augmenter;
-  jsonFormatter = pkgs.formats.json {};
-  inherit
-    (import ../../homeManagerModules/lib/torrent_lib.nix {inherit osConfig pkgs;})
+  jsonFormatter = pkgs.formats.json { };
+  inherit (import ../../homeManagerModules/lib/torrent_lib.nix { inherit osConfig pkgs; })
     mullvad-torrent
     vopono-torrent
     ;
-in {
+in
+{
   imports = [
     inputs.whisp-away.nixosModules.home-manager
   ];
@@ -60,173 +61,176 @@ in {
       packages =
         (
           with pkgs;
-            [
-              tor-browser
-              bitwarden-desktop
-              bitwarden-cli
-              rofi-rbw # rofi-bitwarden
-              restic
-              autorestic
-              krita
+          [
+            tor-browser
+            bitwarden-desktop
+            bitwarden-cli
+            rofi-rbw # rofi-bitwarden
+            restic
+            autorestic
+            krita
 
-              # KDE info packages
-              clinfo
-              mesa-demos
-              vulkan-tools
-              wayland-utils
-              pciutils
-              aha
-              ddcutil
-              usbutils
+            # KDE info packages
+            clinfo
+            mesa-demos
+            vulkan-tools
+            wayland-utils
+            pciutils
+            aha
+            ddcutil
+            usbutils
 
-              ffmpeg-full
-              gst_all_1.gst-plugins-good
-              gst_all_1.gst-plugins-bad
-              imagemagick
-              yt-dlp
+            ffmpeg-full
+            gst_all_1.gst-plugins-good
+            gst_all_1.gst-plugins-bad
+            imagemagick
+            yt-dlp
 
-              gnome-keyring
-              seahorse
-              gcr
+            gnome-keyring
+            seahorse
+            gcr
 
-              vopono
-              mullvad-torrent
-              vopono-torrent
-              # Certificate creation
-              xca
-              dumbpipe
+            vopono
+            mullvad-torrent
+            vopono-torrent
+            # Certificate creation
+            xca
+            dumbpipe
 
-              speedread
+            speedread
 
-              scrcpy
-              android-tools
+            scrcpy
+            android-tools
 
-              podman
-              dive
-              podman-tui
-              podman-compose
-              docker-compose
-              distrobox
+            podman
+            dive
+            podman-tui
+            podman-compose
+            docker-compose
+            distrobox
 
-              # sonic-pi Broken as of: 04-03-2026
-              reaper
-              # mpd players to compare
-              cantata
-              plattenalbum
-              # Subsonic clients
-              feishin
-              aonsoku
+            # sonic-pi Broken as of: 04-03-2026
+            reaper
+            # mpd players to compare
+            cantata
+            plattenalbum
+            # Subsonic clients
+            feishin
+            aonsoku
 
-              systemctl-tui
+            systemctl-tui
 
-              renderdoc # Debugging render scenes for Minecraft
+            renderdoc # Debugging render scenes for Minecraft
 
-              # Banking
-              hledger
-              hledger-ui
-              hledger-web
-              hledger-fmt
-              aqbanking
+            # Banking
+            hledger
+            hledger-ui
+            hledger-web
+            hledger-fmt
+            aqbanking
 
-              wivrn
-              wayvr
+            wivrn
+            wayvr
 
-              # dbus debugging
-              bustle
-              d-spy
+            # dbus debugging
+            bustle
+            d-spy
 
-              easyeffects
+            easyeffects
 
-              qalculate-qt
-              nautilus
+            qalculate-qt
+            nautilus
 
-              sdrpp
+            sdrpp
 
-              # jambi TODO: Broken build
-              waystt
+            # jambi TODO: Broken build
+            waystt
 
-              camset # Webcam image settings gui
+            camset # Webcam image settings gui
 
-              pwvucontrol
-              coppwr # Debugging and low-level configuring of pipewire
-              raysession # Patchbay
-              rofi-bluetooth
+            pwvucontrol
+            coppwr # Debugging and low-level configuring of pipewire
+            raysession # Patchbay
+            rofi-bluetooth
 
-              # Fonts
-              nerd-fonts.commit-mono
-              powerline-symbols
-              powerline-fonts
-              noto-fonts-color-emoji # fcitx5
-              gyre-fonts
-              fira-sans
-              nerd-fonts.fira-code
-              nerd-fonts.fira-mono
+            # Fonts
+            nerd-fonts.commit-mono
+            powerline-symbols
+            powerline-fonts
+            noto-fonts-color-emoji # fcitx5
+            gyre-fonts
+            fira-sans
+            nerd-fonts.fira-code
+            nerd-fonts.fira-mono
 
-              # TODO: Find a file manager with vim keybinds
+            # TODO: Find a file manager with vim keybinds
 
-              (
-                pkgs.writeShellScriptBin "rofi-home-assistant-sops.sh" ''
-                  set -e
+            (pkgs.writeShellScriptBin "rofi-home-assistant-sops.sh" ''
+              set -e
 
-                  export HASS_SERVER="http://${osConfig.networking.ownWireguard.hosts.neurodrive.mainIP}:8123"
-                  HASS_TOKEN="$(cat ${config.sops.secrets.hass_cli_token.path})"
-                  export HASS_TOKEN
+              export HASS_SERVER="http://${osConfig.networking.ownWireguard.hosts.neurodrive.mainIP}:8123"
+              HASS_TOKEN="$(cat ${config.sops.secrets.hass_cli_token.path})"
+              export HASS_TOKEN
 
-                  ${lib.getExe pkgs.rofi-home-assistant-changed}
-                ''
-              )
-              wdisplays
-              wev
+              ${lib.getExe pkgs.rofi-home-assistant-changed}
+            '')
+            wdisplays
+            wev
 
-              # Emacs
-              git
-              ripgrep
-              coreutils
-              fd
-              clang
-              symbola
-              shellcheck # Bash
-              pandoc # Markdown
-              gopls
-              gomodifytags
-              gotests
-              gore
-              ledger # Compatible with hledger?
-              nixfmt # Mostly to get rid of the warning. TODO: Make emacs use alejandra
-              isort
-              pipenv
-              uv
-              go-grip
-              gnumake
-              cmake
-              libtool
-              # emacs-lsp-booster # Would require eglot
-              bash
-              shfmt
+            # Emacs
+            git
+            ripgrep
+            coreutils
+            fd
+            clang
+            symbola
+            shellcheck # Bash
+            pandoc # Markdown
+            gopls
+            gomodifytags
+            gotests
+            gore
+            ledger # Compatible with hledger?
+            nixfmt # Mostly to get rid of the warning. TODO: Make emacs use alejandra
+            isort
+            pipenv
+            uv
+            go-grip
+            gnumake
+            cmake
+            libtool
+            # emacs-lsp-booster # Would require eglot
+            bash
+            shfmt
 
-              supercollider_scel
+            supercollider_scel
 
-              inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+            inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
-              blanket # Local noise generator
+            blanket # Local noise generator
 
-              activitywatch
-            ]
-            ++ (with pkgs.kdePackages; [
-              ark
-              gwenview
-              okular
-              kate
-              ktexteditor
-              dolphin
-              dolphin-plugins
-              baloo-widgets
-              ffmpegthumbs
-              kcharselect # Font explorer
-            ])
+            config.services.activitywatch.package
+
+            winetricks
+            wineWow64Packages.waylandFull
+            dxvk_2
+          ]
+          ++ (with pkgs.kdePackages; [
+            ark
+            gwenview
+            okular
+            kate
+            ktexteditor
+            dolphin
+            dolphin-plugins
+            baloo-widgets
+            ffmpegthumbs
+            kcharselect # Font explorer
+          ])
         )
         ++ (lib.optionals osConfig.security.ownAdditional.yubikey (
-          with pkgs; [
+          with pkgs;
+          [
             yubioath-flutter
             yubikey-manager
           ]
@@ -246,7 +250,9 @@ in {
         name = "Breeze_Hacked";
         size = 36;
       };
-      activation.rebuildKdeXdgCache = lib.hm.dag.entryAfter ["writeBoundary"] "run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6"; # Rebuild cache for dolphin
+      activation.rebuildKdeXdgCache = lib.hm.dag.entryAfter [
+        "writeBoundary"
+      ] "run ${pkgs.kdePackages.kservice.out}/bin/kbuildsycoca6"; # Rebuild cache for dolphin
       file.".face".source = "${secrets}/dotfiles/pfp/cute_blushing_growth.jpg";
     };
 
@@ -313,12 +319,13 @@ in {
     xdg = {
       autostart = {
         enable = true;
-        entries = ["${pkgs.bitwarden-desktop}/share/applications/bitwarden.desktop"];
+        entries = [ "${pkgs.bitwarden-desktop}/share/applications/bitwarden.desktop" ];
       };
       portal = {
         enable = lib.mkForce true;
         xdgOpenUsePortal = true;
-        extraPortals = with pkgs;
+        extraPortals =
+          with pkgs;
           [
             gnome-keyring
             xdg-desktop-portal-gtk
@@ -327,40 +334,48 @@ in {
       };
       stateFile."piper-models/.keep".text = "";
       configFile = {
-        "wireplumber/wireplumber.conf.d/no-headset-autoswitch.conf".source = jsonFormatter.generate "no-headset-autoswitch" {
-          "wireplumber.settings" = {
-            "bluetooth.autoswitch-to-headset-profile" = false;
-            "device.routes.mute-on-bluetooth-playback-removed" = true;
-          };
-        };
-        "wireplumber/wireplumber.conf.d/bluez-longer-pause.conf".source = jsonFormatter.generate "bluez-longer-pause" {
-          "monitor.bluez.rules" = [
+        "wireplumber/wireplumber.conf.d/no-headset-autoswitch.conf".source =
+          jsonFormatter.generate "no-headset-autoswitch"
             {
-              matches = [
-                {"node.name" = "~bluez_output.*";}
-                {"node.name" = "~bluez_input.*";}
+              "wireplumber.settings" = {
+                "bluetooth.autoswitch-to-headset-profile" = false;
+                "device.routes.mute-on-bluetooth-playback-removed" = true;
+              };
+            };
+        "wireplumber/wireplumber.conf.d/bluez-longer-pause.conf".source =
+          jsonFormatter.generate "bluez-longer-pause"
+            {
+              "monitor.bluez.rules" = [
+                {
+                  matches = [
+                    { "node.name" = "~bluez_output.*"; }
+                    { "node.name" = "~bluez_input.*"; }
+                  ];
+                  actions.update-props."session.suspend-timeout-seconds" = 15;
+                }
               ];
-              actions.update-props."session.suspend-timeout-seconds" = 15;
-            }
-          ];
-        };
-        "wireplumber/wireplumber.conf.d/log-level-debug.conf".source = jsonFormatter.generate "log-level-debug" {
-          "context.properties"."log.level" = "2";
-        };
+            };
+        "wireplumber/wireplumber.conf.d/log-level-debug.conf".source =
+          jsonFormatter.generate "log-level-debug"
+            {
+              "context.properties"."log.level" = "2";
+            };
         "pipewire/pipewire.conf.d/log-level-debug.conf".source = jsonFormatter.generate "log-level-debug" {
           "log.level" = "2";
         };
         "pipewire/pipewire.conf.d/airplay.conf".source = jsonFormatter.generate "airplay" {
-          "context.modules" = [{name = "libpipewire-module-raop-discover";}]; # In case of lagging: Increase buffer size
+          "context.modules" = [ { name = "libpipewire-module-raop-discover"; } ]; # In case of lagging: Increase buffer size
         };
-        "pipewire/pipewire-pulse.conf.d/switch-on-connect.conf".source = jsonFormatter.generate "switch-on-connect" {
-          "pulse.cmd" = [
+        "pipewire/pipewire-pulse.conf.d/switch-on-connect.conf".source =
+          jsonFormatter.generate "switch-on-connect"
             {
-              "cmd" = "load-module";
-              "args" = "module-switch-on-connect";
-            }
-          ];
-        };
+              "pulse.cmd" = [
+                {
+                  "cmd" = "load-module";
+                  "args" = "module-switch-on-connect";
+                }
+              ];
+            };
       };
     };
 
