@@ -270,12 +270,28 @@ in {
         client.enable = true;
         defaultEditor = true;
       };
-      activitywatch.enable = true;
+
+      # Fix 01.06.2026: Pull from unstable-small until https://github.com/NixOS/nixpkgs/pull/524671 is available in cache
+      activitywatch = {
+        enable = true;
+        package = pkgs.nixpkgs-unstable-small.aw-server-rust;
+        watchers = {
+          awatcher = {
+            package = pkgs.awatcher;
+            settings = {
+              # Defaults
+              idle-timeout-seconds = 180;
+              poll-time-idle-seconds = 5;
+              poll-time-window-seconds = 1;
+            };
+          };
+        };
+      };
     };
     programs = {
       chromium = {
         enable = lib.mkDefault true;
-        package = pkgs.chromium.override {enableWideVine = true;};
+        package = pkgs.chromium.override { enableWideVine = true; };
       };
       nushell.enable = true;
       rofi = {

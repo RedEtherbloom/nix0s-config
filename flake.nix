@@ -2,9 +2,11 @@
   description = "Flake for our infrastructure";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=c6245e83d836d0433170a16eb185cefe0572f8b8"; # Last working nixpkgs-unstable. Sporadically updated. Thought of doing this again.
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
+    # Fix gdm crash until fix got merged https://github.com/NixOS/nixpkgs/pull/525968
+    nixpkgs.url = "github:NixOS/nixpkgs/pull/525968/head";
+    nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    # nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=c6245e83d836d0433170a16eb185cefe0572f8b8"; # Last working nixpkgs-unstable. Sporadically updated. Thought of doing this again.
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     secrets = {
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
@@ -184,13 +186,14 @@
         };
         perSystem = {system, ...}: let
           # Initialize one central nixpkgs instance, including config and all required overlays
-          pkgs = import inputs.nixpkgs {
+          pkgs = import inputs.nixpkgs rec {
             inherit system;
             config.allowUnfree = true;
             overlays = [
               inputs.fenix.overlays.default
               inputs.niri-flake.overlays.niri
               inputs.emacs-overlay.overlays.default
+              (final: prev: {nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};})
               (import ./pkgs {inherit inputs;})
             ];
           };
