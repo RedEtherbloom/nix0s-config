@@ -38,7 +38,7 @@ in
           reverseEngineering = lib.mkDefault true;
           vibecoding = lib.mkDefault true;
         };
-        nvf.enable = lib.mkDefault true;
+        # nvf.enable = lib.mkDefault true;
         gamedev.enable = lib.mkDefault true;
         art = {
           enable = lib.mkDefault true;

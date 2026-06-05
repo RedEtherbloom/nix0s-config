@@ -14,7 +14,7 @@
     ./roles/development.nix
     ./roles/gamedev.nix
     ./roles/gaming.nix
-    ./roles/nvim.nix
+    # ./roles/nvim.nix
     ./roles/office.nix
     ./roles/vtubing.nix
     ./services/obsidian-git.nix
