@@ -168,6 +168,23 @@ in {
           wireplumber.enable = true;
         };
         gvfs.enable = true;
+        locate = {
+          enable = true;
+          interval = "hourly";
+          package = pkgs.plocate;
+          pruneNames = [
+            ".bzr"
+            ".cache"
+            ".git"
+            ".hg"
+            ".svn"
+            ".jj"
+            ".pio"
+            ".fingerprint"
+            ".direnv"
+            "target"
+          ];
+        };
       };
 
       hardware = {
