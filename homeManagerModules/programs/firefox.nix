@@ -31,7 +31,7 @@ in {
   config = lib.mkIf cfg.enable rec {
     programs.firefox = {
       enable = true;
-      package = pkgs.firefox-bin;
+      package = pkgs.firefox;
       languagePacks = [
         "en-US"
         "de"
