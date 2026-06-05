@@ -25,8 +25,7 @@
     pkgs.writeShellScriptBin "wlr-menu-${name}.sh" ''
       exec ${lib.getExe pkgs.wlr-which-key} ${mkWlrConfig name menu}
     '';
-  noctaliaPackage = config.programs.noctalia-shell.package;
-  noctaliaIpcCommand = command: "noctalia-shell ipc call ${command}";
+  noctaliaIpcCommand = command: "${config.programs.noctalia-shell.package}/bin/noctalia-shell ipc call ${command}";
   shikaneProfileSelector = let
     rofiSep = "|";
   in
@@ -434,8 +433,8 @@ in {
           display.color = "#ffc87f80";
         };
         struts = {
-          # left = 20.0;
-          # right = 20.0;
+          left = 8.0;
+          right = 8.0;
           top = -4.0;
           bottom = -4.0;
         };
@@ -486,7 +485,7 @@ in {
         hide-when-typing = true;
       };
       spawn-at-startup = [
-        {command = ["noctalia-shell"];}
+        {sh = "noctalia-shell";}
       ];
       binds = {
         "Mod+Shift+Slash".action.show-hotkey-overlay = [];
@@ -1369,64 +1368,63 @@ in {
     #   };
     # };
   };
-  systemd.user.services.noctalia-shell.Unit.ConditionEnvironment = ["XDG_CURRENT_DESKTOP=niri"];
   stylix.targets.noctalia-shell.enable = false;
 
-  home.packages = with pkgs; [
-    # Optional noctalia dependencies
-    cliphist
-    cava
-    ddcutil
-    nautilus
+  home = {
+    # Solution by 0x0013: https://github.com/noctalia-dev/noctalia-shell/issues/2272#issuecomment-4263496085
+    activation.restartNoctaliaIfUpdated = let
+      # this will correspond to noctalia in the just-activated home-manager generation
+      noctaliaExe = lib.getExe config.programs.noctalia-shell.package;
+    in
+      lib.hm.dag.entryAfter ["linkGeneration"]
+      # bash
+      ''
+        if [[ ! -v oldGenPath || ! -x "$oldGenPath/home-path/bin/noctalia-shell" ]]; then
+        exit 0
+        fi
 
-    # Fonts, cursors, etc.
-    breeze-hacked-cursor-theme
+        oldExe="$(readlink -f "$oldGenPath/home-path/bin/noctalia-shell")"
 
-    # Helper script block
-    shikaneProfileSelector
-    niriSwitchToWindow
-    wlrLaunchers.common
-    wlrLaunchers.media-control
-    wlrLaunchers.dev-tools
-    muteAllSinks
+        if [[ "$oldExe" != "${noctaliaExe}" ]]; then
 
-    # Own
-    thunarWithExtensions
-    ytui-music
-    shellbeats
-    gnome-calendar
-    geary
-  ];
-  # TODO: Debug and redo polkit. KDE polkit still seems broken.
+        # this will use noctalia from the previous generation,
+        # and tie the kill command to the instance of that generation
+        "$oldExe" kill --any-display || true
 
-  # TODO: Replace with noctalia idle
-  # TODO: Turn noctalia update command into shell alias!
+        # start in daemon mode of the new generation
+        "${noctaliaExe}" -d
+        fi
+      '';
+    packages = with pkgs; [
+      # Optional noctalia dependencies
+      cliphist
+      cava
+      ddcutil
+      nautilus
+
+      # Fonts, cursors, etc.
+      breeze-hacked-cursor-theme
+
+      # Helper script block
+      shikaneProfileSelector
+      niriSwitchToWindow
+      wlrLaunchers.common
+      wlrLaunchers.media-control
+      wlrLaunchers.dev-tools
+      muteAllSinks
+
+      # Own
+      thunarWithExtensions
+      ytui-music
+      shellbeats
+      gnome-calendar
+      geary
+    ];
+  };
+  # TODO: Debug KDE polkit still seems broken.
+
+  # TODO: Set up fcitx5
   services = {
-    swayidle = let
-      lock_cmd = noctaliaIpcCommand "lockScreen lock";
-    in {
-      enable = true;
-      events = {
-        lock = lock_cmd;
-        before-sleep = "${noctaliaIpcCommand "media pause"}; ${lock_cmd}";
-        after-resume = "${lock_cmd}";
-      };
-      timeouts = [
-        {
-          timeout = 300;
-          command = "niri msg action power-off-monitors";
-        }
-        {
-          # Longer default
-          timeout = 900;
-          command = "${lock_cmd}";
-        }
-        {
-          timeout = 930;
-          command = "niri msg action power-off-monitors";
-        }
-      ];
-    };
     gnome-keyring = {
       enable = true;
       # Exclude ssh component
@@ -1441,11 +1439,10 @@ in {
     };
     shikane.enable = true;
   };
-  # TODO: Set up fcitx5
   xdg = {
-    cacheFile."noctalia/wallpapers.json".text = builtins.toJSON {
-      defaultWallpaper = config.stylix.image;
-    };
+    # cacheFile."noctalia/wallpapers.json".text = builtins.toJSON {
+    #   defaultWallpaper = config.stylix.image;
+    # };
     configFile."Thunar/uca.xml".text = ''
       <?xml version="1.0" encoding="UTF-8"?>
       <actions>
