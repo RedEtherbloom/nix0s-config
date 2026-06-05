@@ -88,6 +88,19 @@ in {
         };
         nix-ld.enable = true;
         chrysalis.enable = true;
+        nh = {
+          enable = true;
+          flake = "/home/inf/Projects/nix0s-config/";
+          clean = {
+            enable = true;
+            dates = "daily";
+            extraArgs = "--keep 5 --keep-since 7d --optimise";
+          };
+        };
+      };
+      nix = {
+        gc.automatic = false;
+        optimise.automatic = false;
       };
 
       services = {
@@ -185,13 +198,12 @@ in {
       ];
 
       # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
-      system.extraDependencies = let
-        collectFlakeInputs = input:
-          [input] ++ builtins.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or {}));
-      in
-        builtins.concatMap collectFlakeInputs (builtins.attrValues inputs);
+      # system.extraDependencies = let
+      #   collectFlakeInputs = input:
+      #     [input] ++ builtins.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or {}));
+      # in
+      #   builtins.concatMap collectFlakeInputs (builtins.attrValues inputs);
 
-      nixpkgs.config.permittedInsecurePackages = ["olm-3.2.16"]; # Required by Nheko to work
       zramSwap.enable = true;
       virtualisation = {
         containers = {

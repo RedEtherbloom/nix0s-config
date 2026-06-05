@@ -70,12 +70,12 @@ in {
         trusted-users = ["root" "@wheel" "inf"];
       };
       gc = {
-        automatic = true;
+        automatic = lib.mkDefault true;
         dates = "daily";
         options = "--delete-older-than 5d";
       };
       optimise = {
-        automatic = true;
+        automatic = lib.mkDefault true;
         dates = ["15:00"];
       };
     };

@@ -155,7 +155,6 @@ in {
               ++ (
                 with pkgs; [
                   alejandra
-                  nh
                   nixd
                   direnv
                   nix-tree
