@@ -63,7 +63,7 @@ in {
       };
 
       stylix = {
-        enable = true;
+        enable = false;
         polarity = "dark";
         targets.grub = {
           enable = true;

@@ -380,7 +380,6 @@ in
     };
 
     stylix = {
-      enable = true;
       targets = {
         kde.enable = false;
         qt.enable = false;
@@ -388,6 +387,8 @@ in
         emacs.enable = false;
         lazygit.enable = false;
         obsidian.enable = false;
+
+        kitty.enable = true;
       };
       opacity.terminal = 0.8;
     };

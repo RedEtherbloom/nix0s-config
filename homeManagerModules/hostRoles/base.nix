@@ -43,6 +43,7 @@ in {
         xdg.userDirs.createDirectories = true;
         stylix = {
           enable = true;
+          autoEnable = false;
           inherit (osConfig.stylix) image polarity;
           base16Scheme = osConfig.stylix.base16Scheme;
           targets = {
