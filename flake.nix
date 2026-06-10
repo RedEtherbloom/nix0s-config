@@ -2,8 +2,7 @@
   description = "Flake for our infrastructure";
 
   inputs = {
-    # Fix gdm crash until fix got merged https://github.com/NixOS/nixpkgs/pull/525968
-    nixpkgs.url = "github:NixOS/nixpkgs/pull/525968/head";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     # nixpkgs-prev.url = "github:NixOS/nixpkgs?rev=c6245e83d836d0433170a16eb185cefe0572f8b8"; # Last working nixpkgs-unstable. Sporadically updated. Thought of doing this again.
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";

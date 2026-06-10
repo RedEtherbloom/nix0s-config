@@ -129,7 +129,10 @@ in {
           openFirewall = true;
           steam.importOXRRuntimes = true;
         };
-        displayManager.gdm.enable = true;
+        displayManager = {
+					gdm.enable = true;
+					defaultSession = "niri";
+				};
         ollama = {
           enable = true;
           environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost

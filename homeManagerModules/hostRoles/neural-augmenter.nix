@@ -63,7 +63,8 @@ in
           with pkgs;
           [
             tor-browser
-            bitwarden-desktop
+            # Disabled: 09.06.2026 due to mismatched npm hash
+						# bitwarden-desktop
             bitwarden-cli
             rofi-rbw # rofi-bitwarden
             restic
@@ -280,7 +281,7 @@ in
       # Fix 01.06.2026: Pull from unstable-small until https://github.com/NixOS/nixpkgs/pull/524671 is available in cache
       activitywatch = {
         enable = true;
-        package = pkgs.nixpkgs-unstable-small.aw-server-rust;
+        package = pkgs.aw-server-rust;
         watchers = {
           awatcher = {
             package = pkgs.awatcher;
