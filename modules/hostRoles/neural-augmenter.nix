@@ -345,7 +345,10 @@ in {
             '';
           };
         };
-        initrd.systemd.enable = true;
+        initrd.systemd = {
+					enable = true;
+					package = pkgs.systemd-token-timeout-patched;
+				};
       };
     })
     (lib.mkIf cfg.verboseSpecialisation {

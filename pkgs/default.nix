@@ -307,6 +307,12 @@
     };
   });
 
+	systemd-token-timeout-patched = prev.systemd.overrideAttrs ( finalAttrs: prevAttrs: {
+		patches = (prevAttrs.patches or []) ++ [
+		  ./0001-systemd-token-timeout.patch
+		];
+	});
+
   comma = prev.comma.override { nix = final.lixPackageSets.latest.lix; };
   nixos-rebuild-ng = prev.nixos-rebuild-ng.override { nix = prev.lixPackageSets.latest.lix; };
 }

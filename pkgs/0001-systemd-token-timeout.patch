@@ -1,0 +1,28 @@
+diff --git a/src/cryptsetup/cryptsetup.c b/src/cryptsetup/cryptsetup.c
+index dbd0b14..85d8789 100644
+--- a/src/cryptsetup/cryptsetup.c
++++ b/src/cryptsetup/cryptsetup.c
+@@ -1664,7 +1664,8 @@ static int attach_luks_or_plain_or_bitlk_by_fido2(
+ 
+         for (;;) {
+                 if (use_libcryptsetup_plugin && !arg_fido2_cid) {
+-                        r = attach_luks2_by_fido2_via_plugin(cd, name, until, arg_fido2_device, flags);
++                        usec_t token_timeout_until = usec_add(now(CLOCK_MONOTONIC), arg_token_timeout_usec);
++                        r = attach_luks2_by_fido2_via_plugin(cd, name, token_timeout_until, arg_fido2_device, flags);
+                         if (IN_SET(r, -ENOTUNIQ, -ENXIO, -ENOENT))
+                                 return log_debug_errno(SYNTHETIC_ERRNO(EAGAIN),
+                                                        "Automatic FIDO2 metadata discovery was not possible because missing or not unique, falling back to traditional unlocking.");
+@@ -2689,11 +2690,12 @@ static int verb_attach(int argc, char *argv[], void *userdata) {
+ 
+                 /* Tokens are available in LUKS2 only, but it is ok to call (and fail) with LUKS1. */
+                 if (!key_file && use_token_plugins()) {
++                        usec_t token_timeout_until = usec_add(now(CLOCK_MONOTONIC), arg_token_timeout_usec);
+                         r = crypt_activate_by_token_pin_ask_password(
+                                         cd,
+                                         volume,
+                                         /* type= */ NULL,
+-                                        until,
++                                        token_timeout_until,
+                                         /* userdata= */ NULL,
+                                         flags,
+                                         "Please enter LUKS2 token PIN:",

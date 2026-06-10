@@ -31,7 +31,10 @@
       luks.devices."luks" = {
         device = "/dev/disk/by-uuid/7da6adea-a5ff-4044-bd33-38decf43fd60";
         # Needs to be enrolled with systemd-cryptenroll, with sudo systemd-cryptenroll --fido2-with-client-pin=true --fido2-device=auto <disk id>
-        crypttabExtraOpts = ["fido2-device=auto"];
+        crypttabExtraOpts = [
+					"fido2-device=auto"
+					"token-timeout=10s"
+				];
         bypassWorkqueues = true;
         # Potential security implications
         allowDiscards = true;
