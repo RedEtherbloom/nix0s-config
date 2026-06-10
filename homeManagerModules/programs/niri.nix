@@ -25,7 +25,7 @@
     pkgs.writeShellScriptBin "wlr-menu-${name}.sh" ''
       exec ${lib.getExe pkgs.wlr-which-key} ${mkWlrConfig name menu}
     '';
-  noctaliaIpcCommand = command: "${config.programs.noctalia-shell.package}/bin/noctalia-shell ipc call ${command}";
+  noctaliaIpcCommand = command: "${config.programs.noctalia.package}/bin/noctalia msg ${command}";
   shikaneProfileSelector = let
     rofiSep = "|";
   in
@@ -41,27 +41,22 @@
           {
             key = "c";
             desc = "Clipboard";
-            cmd = noctaliaIpcCommand "launcher clipboard";
+            cmd = noctaliaIpcCommand "panel-toggle clipboard";
           }
           {
             key = "e";
             desc = "Emoji";
-            cmd = noctaliaIpcCommand "launcher emoji";
-          }
-          {
-            key = "r";
-            desc = "Command runner";
-            cmd = noctaliaIpcCommand "launcher command";
+            cmd = noctaliaIpcCommand "panel-toggle launcher /emo";
           }
           {
             key = "w";
             desc = "Window switcher";
-            cmd = noctaliaIpcCommand "launcher windows";
+            cmd = noctaliaIpcCommand "panel-toggle launcher /win";
           }
           {
             key = "s";
             desc = "Settings search";
-            cmd = noctaliaIpcCommand "launcher settings";
+            cmd = noctaliaIpcCommand "panel-toggle settings-toggle";
           }
           {
             key = "c";
@@ -81,25 +76,25 @@
               {
                 key = "j";
                 desc = "Decrease brightness";
-                cmd = noctaliaIpcCommand "brightness decrease";
+                cmd = noctaliaIpcCommand "brightness-down";
                 keep_open = true;
               }
               {
                 key = "k";
                 desc = "Increase brightness";
-                cmd = noctaliaIpcCommand "brightness increase";
+                cmd = noctaliaIpcCommand "brightness-up";
                 keep_open = true;
               }
               {
                 key = "n";
                 desc = "Toggle eye strain dimmer(nightlight)";
-                cmd = noctaliaIpcCommand "nightLight toggle";
+                cmd = noctaliaIpcCommand "nightlight-force-toggle";
                 keep_open = true;
               }
               {
                 key = "p";
                 desc = "Lock screen and power off monitors";
-                cmd = "${noctaliaIpcCommand "lockScreen lock"} && niri msg action power-off-monitors";
+                cmd = "${noctaliaIpcCommand "session lock"} && niri msg action power-off-monitors";
               }
               {
                 key = "P";
@@ -115,22 +110,22 @@
               {
                 key = "s";
                 desc = "Powersaver";
-                cmd = noctaliaIpcCommand "powerProfile set powersaver";
+                cmd = noctaliaIpcCommand "power-set power-saver";
               }
               {
                 key = "b";
                 desc = "Balanced";
-                cmd = noctaliaIpcCommand "powerProfile set balanced";
+                cmd = noctaliaIpcCommand "power-set balanced";
               }
               {
                 key = "p";
                 desc = "Performance";
-                cmd = noctaliaIpcCommand "powerProfile set performance";
+                cmd = noctaliaIpcCommand "power-set performance";
               }
               {
                 key = "c";
                 desc = "Cycle power profiles";
-                cmd = noctaliaIpcCommand "powerProfile cycle";
+                cmd = noctaliaIpcCommand "power-cycle";
               }
             ];
           }
@@ -139,12 +134,12 @@
       {
         key = "c";
         desc = "Clipboard";
-        cmd = noctaliaIpcCommand "launcher clipboard";
+        cmd = noctaliaIpcCommand "panel-toggle clipboard";
       }
       {
         key = "e";
         desc = "Emoji";
-        cmd = noctaliaIpcCommand "launcher emoji";
+        cmd = noctaliaIpcCommand "launcher /emo";
       }
       {
         key = "f";
@@ -183,12 +178,12 @@
           {
             key = "d";
             desc = "Toggle do not disturb";
-            cmd = noctaliaIpcCommand "notifications toggleDND";
+            cmd = noctaliaIpcCommand "notification-dnd-toggle";
           }
           {
             key = "D";
             desc = "Turn on do not disturb";
-            cmd = noctaliaIpcCommand "notifications enableDND";
+            cmd = noctaliaIpcCommand "notification-dnd-set on";
           }
           {
             key = "t";
@@ -198,7 +193,7 @@
           {
             key = "x";
             desc = "Dismiss all notifications";
-            cmd = noctaliaIpcCommand "notifications dismissAll";
+            cmd = noctaliaIpcCommand "panel-toggle control-center notifications";
           }
         ];
       }
@@ -238,7 +233,7 @@
       {
         key = "space";
         desc = "Toggle playback status";
-        cmd = noctaliaIpcCommand "media playPause";
+        cmd = noctaliaIpcCommand "media toggle";
         keep_open = true;
       }
       {
@@ -256,27 +251,28 @@
       {
         key = "j";
         desc = "Lower volume";
-        cmd = noctaliaIpcCommand "volume decrease";
+        cmd = noctaliaIpcCommand "volume-down";
         keep_open = true;
       }
       {
         key = "k";
         desc = "Raise volume";
-        cmd = noctaliaIpcCommand "volume increase";
+        cmd = noctaliaIpcCommand "volume-up";
         keep_open = true;
       }
-      {
-        key = "h";
-        desc = "Seek back 5s";
-        cmd = noctaliaIpcCommand "media seekRelative -5";
-        keep_open = true;
-      }
-      {
-        key = "l";
-        desc = "Seek forward 5s";
-        cmd = noctaliaIpcCommand "media seekRelative +5";
-        keep_open = true;
-      }
+			# TODO: Implement with playerctl instead
+      # {
+      #   key = "h";
+      #   desc = "Seek back 5s";
+      #   cmd = noctaliaIpcCommand "media seekRelative -5";
+      #   keep_open = true;
+      # }
+      # {
+      #   key = "l";
+      #   desc = "Seek forward 5s";
+      #   cmd = noctaliaIpcCommand "media seekRelative +5";
+      #   keep_open = true;
+      # }
       {
         key = "m";
         desc = "Mute";
@@ -485,7 +481,7 @@ in {
         hide-when-typing = true;
       };
       spawn-at-startup = [
-        {sh = "noctalia-shell";}
+        {sh = "noctalia";}
       ];
       binds = {
         "Mod+Shift+Slash".action.show-hotkey-overlay = [];
@@ -501,16 +497,16 @@ in {
         };
         "Mod+Alt+L" = {
           hotkey-overlay.title = "Lock screen";
-          action.spawn = splitSpace (noctaliaIpcCommand "lockScreen lock");
+          action.spawn = splitSpace (noctaliaIpcCommand "session lock");
         };
 
         "XF86AudioRaiseVolume" = {
           allow-when-locked = true;
-          action.spawn = splitSpace (noctaliaIpcCommand "volume increase");
+          action.spawn = splitSpace (noctaliaIpcCommand "volume-up");
         };
         "XF86AudioLowerVolume" = {
           allow-when-locked = true;
-          action.spawn = splitSpace (noctaliaIpcCommand "volume decrease");
+          action.spawn = splitSpace (noctaliaIpcCommand "volume-down");
         };
         "Mod+Ctrl+Shift+Space" = {
           allow-inhibiting = false;
@@ -712,16 +708,16 @@ in {
 
         "Mod+Shift+E" = {
           hotkey-overlay.title = "Show session menu";
-          action.spawn-sh = noctaliaIpcCommand "sessionMenu toggle";
+          action.spawn-sh = noctaliaIpcCommand "panel-toggle sesssion";
         };
         "Ctrl+Alt+Delete" = {
           hotkey-overlay.title = "Show system monitor";
-          action.spawn-sh = noctaliaIpcCommand "systemMonitor toggle";
+          action.spawn-sh = "kitty -e btop";
         };
 
         "Mod+Shift+P" = {
           hotkey-overlay.title = "Lock the screen and power it off";
-          action.spawn-sh = "${noctaliaIpcCommand "lockScreen lock"} && niri msg action power-off-monitors";
+          action.spawn-sh = "${noctaliaIpcCommand "session lock"} && niri msg action power-off-monitors";
         };
         "Mod+Shift+Ctrl+P" = {
           hotkey-overlay.title = "Power off the screens";
@@ -730,27 +726,19 @@ in {
 
         "Mod+Space" = {
           hotkey-overlay.title = "Show launcher";
-          action.spawn-sh = noctaliaIpcCommand "launcher toggle";
-        };
-        "Mod+Shift+Y" = {
-          hotkey-overlay.title = "Show launcher";
-          action.spawn-sh = noctaliaIpcCommand "launcher toggle";
+          action.spawn-sh = noctaliaIpcCommand "panel-toggle launcher";
         };
         "Mod+Shift+Space" = {
-          hotkey-overlay.title = "Show window switcher";
-          action.spawn = splitSpace "${lib.getExe pkgs.playerctl} play-pause";
-        };
-        "Mod+Shift+Tab" = {
-          hotkey-overlay.title = "Show window switcher";
+          hotkey-overlay.title = "Toggle playback";
           action.spawn = splitSpace "${lib.getExe pkgs.playerctl} play-pause";
         };
         "Mod+Comma" = {
           hotkey-overlay.title = "Show control center";
-          action.spawn-sh = noctaliaIpcCommand "controlCenter toggle";
+          action.spawn-sh = noctaliaIpcCommand "panel-toggle control-center";
         };
         "Mod+Shift+Comma" = {
           hotkey-overlay.title = "Show settings menu";
-          action.spawn-sh = noctaliaIpcCommand "settings toggle";
+          action.spawn-sh = noctaliaIpcCommand "settings-toggle";
         };
         "Mod+P" = {
           hotkey-overlay.title = "Media control";
@@ -768,9 +756,9 @@ in {
     };
   };
 
-  programs.noctalia-shell = {
+  programs.noctalia = {
     enable = true;
-    package = inputs.noctalia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default.override {calendarSupport = true;};
+    package = inputs.noctalia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
     # plugins = {
     #   sources = [
     #     {
@@ -1374,16 +1362,16 @@ in {
     # Solution by 0x0013: https://github.com/noctalia-dev/noctalia-shell/issues/2272#issuecomment-4263496085
     activation.restartNoctaliaIfUpdated = let
       # this will correspond to noctalia in the just-activated home-manager generation
-      noctaliaExe = lib.getExe config.programs.noctalia-shell.package;
+      noctaliaExe = lib.getExe config.programs.noctalia.package;
     in
       lib.hm.dag.entryAfter ["linkGeneration"]
       # bash
       ''
-        if [[ ! -v oldGenPath || ! -x "$oldGenPath/home-path/bin/noctalia-shell" ]]; then
+        if [[ ! -v oldGenPath || ! -x "$oldGenPath/home-path/bin/noctalia" ]]; then
         exit 0
         fi
 
-        oldExe="$(readlink -f "$oldGenPath/home-path/bin/noctalia-shell")"
+        oldExe="$(readlink -f "$oldGenPath/home-path/bin/noctalia")"
 
         if [[ "$oldExe" != "${noctaliaExe}" ]]; then
 
