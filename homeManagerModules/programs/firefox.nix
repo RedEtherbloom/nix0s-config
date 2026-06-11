@@ -31,6 +31,7 @@ in {
   config = lib.mkIf cfg.enable rec {
     programs.firefox = {
       enable = true;
+      configPath = "${config.xdg.configHome}/mozilla/firefox";
       package = pkgs.firefox;
       languagePacks = [
         "en-US"
@@ -525,10 +526,5 @@ in {
         };
       };
     };
-    stylix.targets.firefox.profileNames =
-      lib.attrsets.mapAttrsToList (
-        name: _: "${name}"
-      )
-      programs.firefox.profiles;
   };
 }
