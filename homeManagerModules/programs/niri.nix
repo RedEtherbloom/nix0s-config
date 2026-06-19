@@ -143,8 +143,8 @@
       }
       {
         key = "f";
-        desc = "Firefox";
-        cmd = "firefox";
+        desc = "Zen Browser(Firefox)";
+        cmd = "zen";
       }
       {
         key = "t";
@@ -708,7 +708,7 @@ in {
 
         "Mod+Shift+E" = {
           hotkey-overlay.title = "Show session menu";
-          action.spawn-sh = noctaliaIpcCommand "panel-toggle sesssion";
+          action.spawn-sh = noctaliaIpcCommand "panel-toggle session";
         };
         "Ctrl+Alt+Delete" = {
           hotkey-overlay.title = "Show system monitor";
