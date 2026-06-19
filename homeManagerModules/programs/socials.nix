@@ -29,7 +29,10 @@ in {
     ];
     programs = {
       nheko.enable = true;
-      vesktop.enable = true;
+      vesktop = {
+        enable = true;
+        package = pkgs.vesktop-rtc-fix;
+      };
     };
     xdg.autostart = lib.mkIf cfg.autostart {
       enable = true;

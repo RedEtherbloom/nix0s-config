@@ -307,12 +307,27 @@
     };
   });
 
-	systemd-token-timeout-patched = prev.systemd.overrideAttrs ( finalAttrs: prevAttrs: {
-		patches = (prevAttrs.patches or []) ++ [
-		  ./0001-systemd-token-timeout.patch
-		];
-	});
+  systemd-token-timeout-patched = final.systemd.overrideAttrs (finalAttrs: prevAttrs: {
+    patches =
+      (prevAttrs.patches or [])
+      ++ [
+        ./0001-systemd-token-timeout.patch
+      ];
+  });
 
-  comma = prev.comma.override { nix = final.lixPackageSets.latest.lix; };
-  nixos-rebuild-ng = prev.nixos-rebuild-ng.override { nix = prev.lixPackageSets.latest.lix; };
+  vesktop-rtc-fix = final.vesktop.overrideAttrs (
+    finalAttrs: prevAttrs: {
+      patches =
+        (prevAttrs.patches or [])
+        ++ [
+          (final.fetchpatch {
+            url = "https://patch-diff.githubusercontent.com/raw/Vencord/Vesktop/pull/1251.diff";
+            hash = "sha256-WmnXRISB1vfnbvSXJlD6sGkl5HSBTHpye+ezLyidtHU=";
+          })
+        ];
+    }
+  );
+
+  comma = prev.comma.override {nix = final.lixPackageSets.latest.lix;};
+  nixos-rebuild-ng = prev.nixos-rebuild-ng.override {nix = prev.lixPackageSets.latest.lix;};
 }
