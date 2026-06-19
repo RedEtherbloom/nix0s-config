@@ -203,6 +203,11 @@ in
             # emacs-lsp-booster # Would require eglot
             bash
             shfmt
+						nodejs
+						graphviz-nox
+						python313Packages.black
+						python313Packages.pyflakes
+						python313Packages.pytest
 
             supercollider_scel
 
@@ -274,11 +279,12 @@ in
         useCrane = false; # Broken, as craneLib missing
       };
       emacs = {
+				enable = true;
         client.enable = true;
         defaultEditor = true;
+				startWithUserSession = "graphical";
       };
 
-      # Fix 01.06.2026: Pull from unstable-small until https://github.com/NixOS/nixpkgs/pull/524671 is available in cache
       activitywatch = {
         enable = true;
         package = pkgs.aw-server-rust;

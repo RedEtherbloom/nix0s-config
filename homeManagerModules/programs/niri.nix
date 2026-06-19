@@ -304,16 +304,16 @@
         #   desc = "Nvf stock maximal configuration as fallback";
         #   cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim";
         # }
-        {
-          key = "e";
-          desc = "Launch Emacs";
-          cmd = "${pkgs.gtk3}/bin/gtk-launch emacs";
-        }
         # {
         #   key = "o";
         #   desc = "Notes obsidian-nvim";
         #   cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.notesPackage}/bin/nvim ${config.xdg.userDirs.documents}/Obsidian/default";
         # }
+        {
+          key = "e";
+          desc = "Launch Emacs";
+          cmd = "emacsclient -c";
+        }
         {
           key = "w";
           desc = "Speech to text";
