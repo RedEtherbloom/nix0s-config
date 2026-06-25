@@ -340,7 +340,17 @@ in
           ]
           ++ osConfig.xdg.portal.extraPortals; # See github.com/nix-community/home-manager/issues/7124
       };
-      stateFile."piper-models/.keep".text = "";
+      stateFile = {
+       "piper-models/.keep".text = "";
+       "home-manager/user-files/wallpapers" = {
+         source = "${secrets}/dotfiles/wallpapers";
+         recursive = true;
+       };
+       "home-manager/user-files/pfps" = {
+          source = "${secrets}/dotfiles/pfp";
+          recursive = true;
+       };
+      };
       configFile = {
         "wireplumber/wireplumber.conf.d/no-headset-autoswitch.conf".source =
           jsonFormatter.generate "no-headset-autoswitch"
