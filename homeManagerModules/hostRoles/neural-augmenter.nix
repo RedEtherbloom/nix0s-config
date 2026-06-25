@@ -282,7 +282,8 @@ in
 				enable = true;
         client.enable = true;
         defaultEditor = true;
-				startWithUserSession = "graphical";
+				socketActivation.enable = true;
+				startWithUserSession = true;
       };
 
       activitywatch = {
