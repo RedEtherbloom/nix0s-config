@@ -159,12 +159,7 @@ in
             powerline-symbols
             powerline-fonts
             noto-fonts-color-emoji # fcitx5
-            gyre-fonts
-            fira-sans
             nerd-fonts.fira-code
-            nerd-fonts.fira-mono
-
-            # TODO: Find a file manager with vim keybinds
 
             (pkgs.writeShellScriptBin "rofi-home-assistant-sops.sh" ''
               set -e
