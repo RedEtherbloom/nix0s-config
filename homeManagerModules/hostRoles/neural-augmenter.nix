@@ -311,7 +311,12 @@ in
       };
       bat.enable = true;
       broot.enable = true; # TODO: Give a try for better comparison
-      fish.enable = true;
+      fish = {
+        enable = true;
+        functions = {
+          "fish_greeting" = "";
+        };
+      };
       sioyek.enable = true;
       emacs = {
         enable = true;
