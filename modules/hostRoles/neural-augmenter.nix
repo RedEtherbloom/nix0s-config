@@ -97,6 +97,7 @@ in {
             extraArgs = "--keep 5 --keep-since 7d --optimise";
           };
         };
+        ydotool.enable = true;
       };
       nix = {
         gc.automatic = false;
@@ -251,6 +252,7 @@ in {
           autoSubUidGidRange = true; # Needed for podman
           extraGroups = [
             "plugdev"
+            "ydotool"
           ];
         };
         groups.plugdev = {};

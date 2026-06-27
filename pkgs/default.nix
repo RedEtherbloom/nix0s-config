@@ -327,6 +327,7 @@
         ];
     }
   );
+  voxd = final.callPackage ./voxd.nix {};
 
   comma = prev.comma.override {nix = final.lixPackageSets.latest.lix;};
   nixos-rebuild-ng = prev.nixos-rebuild-ng.override {nix = prev.lixPackageSets.latest.lix;};

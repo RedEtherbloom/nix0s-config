@@ -215,6 +215,9 @@ in {
               winetricks
               wineWow64Packages.waylandFull
               dxvk_2
+
+              # Voice typing
+              voxd
             ]
             ++ (with pkgs.kdePackages; [
               ark
