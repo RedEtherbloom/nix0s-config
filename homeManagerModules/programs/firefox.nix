@@ -5,13 +5,6 @@
   ...
 }: let
   cfg = config.myOptions.firefox;
-  commonConfig = {
-    # middle-click behavior
-    "general.autoScroll" = true;
-    "browser.toolbars.bookmarks.visibility" = "newtab";
-    # More compact browser layout
-    "browser.uidensity" = "1";
-  };
   # Map each alias to a version with @ prepended and : appended
   defineAliasVariants = baseAlias: (lib.lists.concatMap (x: [
       ("@" + x)
@@ -41,11 +34,6 @@ in {
         personal = {
           id = 0;
           isDefault = true;
-          extraConfig = lib.strings.concatLines [
-            (builtins.readFile ../../dotfiles/firefox/betterfox.js)
-            (builtins.readFile ../../dotfiles/firefox/media_decoding.js)
-          ];
-          settings = {} // commonConfig;
           search = {
             enable = true;
 
@@ -514,14 +502,13 @@ in {
               "network.proxy.http_port" = 4444;
               "network.proxy.ssl" = "127.0.0.1";
               "network.proxy.ssl_port" = 4444;
-            }
-            // commonConfig;
+            };
           #TODO: Try out i2p for private browsing extension
           extensions.force = true;
         };
         work = {
           id = 2;
-          inherit (programs.firefox.profiles.personal) extraConfig search settings;
+          inherit (programs.firefox.profiles.personal) search;
           extensions.force = true;
         };
       };

@@ -9,7 +9,6 @@
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
     ../../modules
     ../../modules/ssh.nix
-    ../../modules/taskwarrior-secrets.nix # TODO: Remove once hm sops-nix supports secrets
     ./restic.nix
     ./hardware-configuration.nix
   ];

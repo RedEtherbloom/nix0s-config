@@ -7,14 +7,11 @@
     ./programs/niri.nix
     ./programs/obsidian.nix
     ./programs/socials.nix
-    ./programs/taskwarrior-tui.nix
-    ./programs/taskwarrior.nix
     ./programs/vscode.nix
     ./roles/art.nix
     ./roles/development.nix
     ./roles/gamedev.nix
     ./roles/gaming.nix
-    # ./roles/nvim.nix
     ./roles/office.nix
     ./roles/vtubing.nix
     ./services/obsidian-git.nix

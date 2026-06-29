@@ -10,7 +10,6 @@
     [
       ../../modules
       ../../modules/ssh.nix
-      ../../modules/taskwarrior-secrets.nix # TODO: Remove once hm sops-nix supports secrets
       ../../modules/cachix/cuda-maintainers.nix
 
       ./hardware-configuration.nix
