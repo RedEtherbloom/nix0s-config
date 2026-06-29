@@ -108,18 +108,19 @@
           4333 # Feishin remote control port
           4713 # Pulseaudio Network Sharing. Probably only needed for publish
           8123 # Home Assistant
-          10222 # Taskwarrior
           27062 # SteamVR
           (lib.mkIf config.myOptions.roles.ssdp.enable 40000)
           config.services.paperless.port
           (lib.strings.toInt config.services.restic.server.listenAddress)
           config.services.tabby.port
-          (lib.strings.toInt config.virtualisation.oci-containers.containers.esphome.environment.PORT)
         ]
         ++ (lib.lists.concatMap (el: [el.port]) config.services.mosquitto.listeners);
       allowedUDPPorts = [
         9944 # SteamVR
         27062 # SteamVR
+      ];
+      trustedInterfaces = [
+        "virbr0"
       ];
     };
   };
@@ -182,11 +183,6 @@
         }
       ];
     };
-    matter-server = {
-      enable = true;
-      openFirewall = true;
-      logLevel = "debug";
-    };
     restic.server = {
       enable = true;
       privateRepos = true;
@@ -211,25 +207,8 @@
     };
     udev.extraRules = ''
       SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="zigbee-ap"
-      ACTION=="add", SUBSYSTEM=="tty", ENV{DEVLINKS}=="*/dev/zigbee-ap*", RUN+="${config.systemd.package}/bin/systemctl restart podman-homeassistant.service"
     '';
-    # Disabled due to invidious-companion needing packaging first https://github.com/NixOS/nixpkgs/issues/415116
-    # invidious = {
-    #   enable = true;
-    #   # domain = "${config.networking.ownWireguard.hosts.neurodrive.mainIP}";
-    #   port = invidiousSigHelperPort + 1;
-    #   # Personal and work/music only
-    #   serviceScale = 2;
-    #   nginx.enable = true;
-    #   # Faster loading speeds
-    #   http3-ytproxy.enable = true;
-    #   # Sig helper is broken and should be replaced with the companion app. additionally google seems to often shadownban(inabilit to load videos after a while).
-    # };
-    # # Individious
-    # nginx.virtualHosts."${config.networking.ownWireguard.hosts.neurodrive.mainIP}" = {
-    #   forceSSL = false;
-    #   enableACME = false;
-    # };
+    # ACTION=="add", SUBSYSTEM=="tty", ENV{DEVLINKS}=="*/dev/zigbee-ap*", RUN+="${config.systemd.package}/bin/systemctl restart podman-homeassistant.service"
     navidrome = {
       enable = true;
       openFirewall = true;
@@ -244,8 +223,9 @@
       logFormat = "level INFO";
       openFirewall = true;
       virtualHosts = {
-        ":8124".extraConfig = ''
-          reverse_proxy http://192.168.122.248:8123
+        # TODO: Matter, esphome, mqtt
+        ":8123".extraConfig = ''
+          reverse_proxy http://192.168.122.189:8123
         '';
       };
     };
@@ -294,22 +274,6 @@
     };
     oci-containers = {
       containers = {
-        homeassistant = {
-          volumes = ["home-assistant:/config"];
-          devices = [
-            "/dev/zigbee-ap:/dev/ttyUSB0"
-          ];
-          environment.TZ = config.time.timeZone;
-          image = "ghcr.io/home-assistant/home-assistant:stable";
-          # Use the host network namespace for all sockets
-          extraOptions = [
-            "--network=host"
-            "--stop-timeout=30"
-          ];
-          capabilities = {
-            CAP_NET_RAW = true;
-          };
-        };
         comfyui = {
           # Broken and needs debugging
           autoStart = false;
@@ -332,27 +296,6 @@
             registry = "docker.io";
           };
         };
-        esphome = rec {
-          image = "ghcr.io/esphome/esphome";
-          pull = "newer";
-          environment.TZ = config.time.timeZone;
-          volumes = [
-            "esphome:/config"
-          ];
-          privileged = true;
-          extraOptions = [
-            "--network=host"
-            "--stop-timeout=30"
-          ];
-          cmd = [
-            "dashboard"
-            "--port=${environment.PORT}"
-            "/config"
-          ];
-          environment = {
-            PORT = "8152";
-          };
-        };
       };
     };
     libvirtd = {
@@ -368,9 +311,9 @@
   systemd.services = let
     hddSleepCommand = ''${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.hdparm} -S 90 -B 1 $(${pkgs.util-linux}/bin/lsblk -dnp -o name,rota | ${lib.getExe pkgs.gnugrep} ".*\s1" | ${pkgs.coreutils}/bin/cut -d " " -f 1)''; # Spin HDDs down when inactive. Taken from: https://www.reddit.com/r/NixOS/comments/751i5t/comment
   in {
-    "${config.virtualisation.oci-containers.containers.homeassistant.serviceName}".after = [
-      "systemd-udevd.service"
-    ];
+    # "${config.virtualisation.oci-containers.containers.homeassistant.serviceName}".after = [
+    #   "systemd-udevd.service"
+    # ];
     "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = [
       "network-online.target"
     ];
@@ -451,8 +394,10 @@
       cudaPackages.cudnn
       nvtopPackages.full
       smartmontools
+
+      # For VM-Host functionalities
+      dnsmasq
     ];
-    # TODO: Overwork nvidia variables
     sessionVariables = {
       # Necessary to correctly enable va-api (video codec hardware
       # acceleration). If this isn't set, the libvdpau backend will be
