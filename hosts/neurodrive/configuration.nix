@@ -104,9 +104,15 @@
     firewall = {
       allowedTCPPorts =
         [
+          1883 # MQTT Home-Assistant
+          1884 # MQTT Home-Assistant
           4333 # Feishin remote control port
           4713 # Pulseaudio Network Sharing. Probably only needed for publish
+          5580 # Matter in Home-Assistant
+          6052 # Matter in Home-Assistant
           8123 # Home Assistant
+          8883 # MQTT Home-Assistant
+          8884 # MQTT Home-Assistant
           27062 # SteamVR
           (lib.mkIf config.myOptions.roles.ssdp.enable 40000)
           config.services.paperless.port
@@ -119,6 +125,25 @@
         27062 # SteamVR
       ];
       trustedInterfaces = [
+        "virbr0"
+      ];
+    };
+    nftables = {
+      enable = true;
+      ruleset = ''
+        table ip nat {
+          chain PREROUTING {
+            type nat hook prerouting priority -199;
+            iifname "enp0s25" tcp dport { 1883, 8883 } dnat to 192.168.122.189
+            iifname "wg0" tcp dport { 1883, 8883 } dnat to 192.168.122.189
+            iifname "lo" tcp dport { 1883, 8883 } dnat to 192.168.122.189
+          }
+        }
+        '';
+    };
+    nat = {
+      enable = true;
+      internalInterfaces = [
         "virbr0"
       ];
     };
@@ -155,32 +180,6 @@
     nextjs-ollama-llm-ui = {
       # May need to set CORS in ollama variables for VPN to work
       hostname = "${config.networking.ownWireguard.hosts.neurodrive.mainIP}";
-    };
-    mosquitto = {
-      enable = true;
-      logType = ["all"];
-      listeners = [
-        # TODO: Add encrypted listener
-        {
-          port = 1883;
-          # By default everyone may read everything
-          acl = ["pattern read #"];
-          users = {
-            root = {
-              acl = ["readwrite #"];
-              passwordFile = config.sops.secrets."mosquitto/users/root".path;
-            };
-            client = {
-              # R/W to everything for now until I figure out the proper settings
-              acl = ["readwrite #"];
-              passwordFile = config.sops.secrets."mosquitto/users/client".path;
-            };
-          };
-          settings = {
-            allow_anonymous = false;
-          };
-        }
-      ];
     };
     restic.server = {
       enable = true;
@@ -222,9 +221,25 @@
       logFormat = "level INFO";
       openFirewall = true;
       virtualHosts = {
-        # TODO: Matter, esphome, mqtt
+        # MQTT
+        ":1884".extraConfig = ''
+          reverse_proxy http://192.168.122.189:1884
+        '';
+        # Matter
+        ":5580".extraConfig = ''
+          reverse_proxy http://192.168.122.189:5580
+        '';
+        # ESP-Home
+        ":6052".extraConfig = ''
+          reverse_proxy http://192.168.122.189:6052
+        '';
+        # HASS
         ":8123".extraConfig = ''
           reverse_proxy http://192.168.122.189:8123
+        '';
+        # MQTT
+        ":8884".extraConfig = ''
+          reverse_proxy http://192.168.122.189:8884
         '';
       };
     };
@@ -234,6 +249,7 @@
       port = 11435;
       openFirewall = true;
     };
+    avahi.reflector = true;
   };
 
   hardware = {

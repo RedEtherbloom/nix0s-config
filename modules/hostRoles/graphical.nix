@@ -19,7 +19,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     myOptions = {
-      roles.ssdp.enable = lib.mkDefault true;
+      roles.ssdp.enable = lib.mkDefault false;
       hostRoles.base.enable = lib.mkDefault true;
     };
     programs.appimage = {
