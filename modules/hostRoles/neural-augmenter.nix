@@ -198,12 +198,12 @@ in {
           powerOnBoot = true;
           settings = {
             General = {
-              Experimental = true;
-              KernelExperimental = true;
+              # Experimental = true;
+              # KernelExperimental = true;
               ControllerMode = "bredr"; # Problems with Bose
-              FastConnectable = true;
-              Class = "0x000100"; # Generic desktop TODO: Do I need object major class as well?
-              JustWorksRepairing = true; # Security implications?
+              # FastConnectable = true;
+              # Class = "0x000100"; # Generic desktop TODO: Do I need object major class as well?
+              # JustWorksRepairing = true; # Security implications?
             };
           };
         };
