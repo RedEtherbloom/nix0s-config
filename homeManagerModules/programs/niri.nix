@@ -497,7 +497,7 @@ in {
         };
         "Mod+Alt+L" = {
           hotkey-overlay.title = "Lock screen";
-          action.spawn = splitSpace (noctaliaIpcCommand "session lock");
+          action.spawn = splitSpace "${noctaliaIpcCommand "session lock"} && niri msg action power-off-monitors";
         };
 
         "XF86AudioRaiseVolume" = {
