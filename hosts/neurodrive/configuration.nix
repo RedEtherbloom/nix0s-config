@@ -110,6 +110,7 @@
           4713 # Pulseaudio Network Sharing. Probably only needed for publish
           5580 # Matter in Home-Assistant
           6052 # Matter in Home-Assistant
+          8122 # Home Assistant SSH
           8123 # Home Assistant
           8883 # MQTT Home-Assistant
           8884 # MQTT Home-Assistant
@@ -134,9 +135,9 @@
         table ip nat {
           chain PREROUTING {
             type nat hook prerouting priority -199;
-            iifname "enp0s25" tcp dport { 1883, 8883 } dnat to 192.168.122.189
-            iifname "wg0" tcp dport { 1883, 8883 } dnat to 192.168.122.189
-            iifname "lo" tcp dport { 1883, 8883 } dnat to 192.168.122.189
+            iifname "enp0s25" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
+            iifname "wg0" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
+            iifname "lo" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
           }
         }
         '';
