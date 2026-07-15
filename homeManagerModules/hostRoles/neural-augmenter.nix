@@ -206,8 +206,6 @@ in {
 
               supercollider_scel
 
-              inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-
               blanket # Local noise generator
 
               config.services.activitywatch.package

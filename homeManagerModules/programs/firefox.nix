@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: let
   cfg = config.myOptions.firefox;
@@ -13,6 +14,10 @@
     baseAlias);
   iconRefreshInterval = 24 * 60 * 60 * 1000;
 in {
+  imports = [
+    inputs.zen-browser.homeModules.beta
+  ];
+
   options.myOptions.firefox = {
     enable = lib.mkOption {
       description = "Enable firefox";
@@ -21,24 +26,22 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable rec {
-    programs.firefox = {
+  config = lib.mkIf cfg.enable {
+    programs.zen-browser = {
       enable = true;
-      configPath = "${config.xdg.configHome}/mozilla/firefox";
-      package = pkgs.firefox;
       languagePacks = [
         "en-US"
         "de"
       ];
       profiles = {
-        personal = {
-          id = 0;
-          isDefault = true;
+        default = {
           search = {
             enable = true;
+            force = true;
 
             # TODO: Add Icon settings
             engines = {
+              # TODO: Export to vimium shortcuts
               "NixPkgs(Unstable)" = {
                 definedAliases = defineAliasVariants [
                   "nix"
@@ -272,26 +275,6 @@ in {
                 ];
               };
 
-              "PerplexityAI" = {
-                definedAliases = defineAliasVariants [
-                  "p"
-                  "per"
-                  "perplexity"
-                ];
-                icon = "https://www.perplexity.ai/favicon.ico";
-                updateInterval = iconRefreshInterval;
-                urls = [
-                  {
-                    template = "https://www.perplexity.ai/search";
-                    params = [
-                      {
-                        name = "q";
-                        value = "{searchTerms}";
-                      }
-                    ];
-                  }
-                ];
-              };
               # Gemini does not have a simple search URL
               "dict.cc english" = {
                 definedAliases = defineAliasVariants [
@@ -479,37 +462,12 @@ in {
             order = [
               "kagi"
               "google"
-              "perplexityai"
               "github"
               "duckduckgo"
               "youtube"
               "reddit"
             ];
-            # Force it onto firefox and overwrite
-            force = true;
           };
-          extensions.force = true;
-        };
-        "i2p" = {
-          id = 1;
-          settings =
-            {
-              "media.peerConnection.ice.proxy_only" = true;
-              # manual mode
-              "network.proxy.type" = 1;
-              "network.proxy.socks_version" = 5;
-              "network.proxy.http" = "127.0.0.1";
-              "network.proxy.http_port" = 4444;
-              "network.proxy.ssl" = "127.0.0.1";
-              "network.proxy.ssl_port" = 4444;
-            };
-          #TODO: Try out i2p for private browsing extension
-          extensions.force = true;
-        };
-        work = {
-          id = 2;
-          inherit (programs.firefox.profiles.personal) search;
-          extensions.force = true;
         };
       };
     };
