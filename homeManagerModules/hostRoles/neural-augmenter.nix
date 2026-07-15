@@ -116,7 +116,7 @@ in {
               plattenalbum
               # Subsonic clients
               feishin
-              aonsoku
+              # aonsoku
 
               systemctl-tui
 
@@ -217,7 +217,7 @@ in {
               # Voice typing
               voxd
 							pixelflasher
-							beeref
+							(inputs.nixpkgs-stable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.beeref)
             ]
             ++ (with pkgs.kdePackages; [
               ark
@@ -248,6 +248,7 @@ in {
         "$HOME/.cargo/bin"
       ];
       pointerCursor = {
+				enable = true;
         gtk.enable = true;
         package = pkgs.breeze-hacked-cursor-theme;
         name = "Breeze_Hacked";
