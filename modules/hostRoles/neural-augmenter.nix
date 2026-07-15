@@ -216,6 +216,7 @@ in {
         lm_sensors
         nftables # vopono daemon
         inputs.nix-alien.packages.${pkgs.stdenv.hostPlatform.system}.nix-alien
+				android-tools
       ];
 
       # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515

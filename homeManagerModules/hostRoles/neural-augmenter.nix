@@ -218,6 +218,8 @@ in {
 
               # Voice typing
               voxd
+							pixelflasher
+							beeref
             ]
             ++ (with pkgs.kdePackages; [
               ark
@@ -322,7 +324,7 @@ in {
       sioyek.enable = true;
       emacs = {
         enable = true;
-        package = pkgs.emacs-pgtk;
+        package = pkgs.emacs31-pgtk;
       };
     };
 
