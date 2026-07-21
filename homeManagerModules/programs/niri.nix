@@ -522,7 +522,7 @@ in {
           hotkey-overlay.title = "Wlr: Various launchers and common applications";
           action.spawn = "${lib.getExe wlrLaunchers.common}";
         };
-        "Mod+O" = {
+        "Mod+Shift+O" = {
           hotkey-overlay.title = "Wlr: Note taking launchers";
           action.spawn = "${lib.getExe wlrLaunchers.note-taking}";
         };
@@ -579,7 +579,7 @@ in {
         };
 
         # You can also move the mouse into the top-left hot corner or do a four-finger swipe up on a touchpad.
-        "Mod+Shift+O" = {
+        "Mod+O" = {
           repeat = false;
           action.toggle-overview = [];
         };

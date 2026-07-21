@@ -323,7 +323,7 @@ in {
       sioyek.enable = true;
       emacs = {
         enable = true;
-        package = pkgs.emacs31-pgtk;
+        package = pkgs.emacs-pgtk;
       };
     };
 
