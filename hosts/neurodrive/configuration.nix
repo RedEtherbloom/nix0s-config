@@ -134,10 +134,11 @@
       ruleset = ''
         table ip nat {
           chain PREROUTING {
-            type nat hook prerouting priority -199;
-            iifname "enp0s25" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
-            iifname "wg0" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
-            iifname "lo" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
+            type nat hook prerouting priority -199; policy accept;
+            tcp dport { 1883, 8122, 8883 } meta nftrace set 1 dnat to 192.168.122.189
+            # iifname "enp0s25" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
+            # iifname "wg0" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
+            # iifname "lo" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
           }
         }
         '';
