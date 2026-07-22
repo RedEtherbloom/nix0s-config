@@ -51,6 +51,8 @@ in {
 
         beyond-all-reason
         starsector-gl-fix
+
+        shikane
       ];
     };
 
