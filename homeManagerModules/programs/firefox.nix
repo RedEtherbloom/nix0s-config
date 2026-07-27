@@ -12,7 +12,7 @@
       (x + ":")
     ])
     baseAlias);
-  iconRefreshInterval = 24 * 60 * 60 * 1000;
+  iconRefreshInterval = 7 * 24 * 60 * 60 * 1000;
 in {
   imports = [
     inputs.zen-browser.homeModules.beta
@@ -39,7 +39,6 @@ in {
             enable = true;
             force = true;
 
-            # TODO: Add Icon settings
             engines = {
               # TODO: Export to vimium shortcuts
               "NixPkgs(Unstable)" = {

@@ -15,10 +15,6 @@
     vopono-torrent
     ;
 in {
-  imports = [
-    inputs.whisp-away.nixosModules.home-manager
-  ];
-
   options.myOptions.hostRoles.neural-augmenter = {
     enable = lib.mkOption {
       description = "Workstation hm settings";
@@ -61,11 +57,10 @@ in {
         (
           with pkgs;
             [
-              tor-browser
-              # Disabled: 09.06.2026 due to mismatched npm hash
-              # bitwarden-desktop
+              bitwarden-desktop
               bitwarden-cli
               rofi-rbw # rofi-bitwarden
+              tor-browser
               restic
               autorestic
               krita
@@ -142,9 +137,6 @@ in {
               nautilus
 
               sdrpp
-
-              # jambi TODO: Broken build
-              waystt
 
               camset # Webcam image settings gui
 
@@ -267,14 +259,6 @@ in {
         enable = true;
         indicator = true;
         package = pkgs.kdePackages.kdeconnect-kde;
-      };
-      whisp-away = {
-        enable = true;
-        defaultModel = lib.mkDefault "small.en";
-        defaultBackend = lib.mkDefault "whisper-cpp"; # whisper.cpp seems more performant for our use cases
-        accelerationType = lib.mkDefault "vulkan";
-        useClipboard = lib.mkDefault false; # Typing at cursor position
-        useCrane = false; # Broken, as craneLib missing
       };
       emacs = {
         enable = true;

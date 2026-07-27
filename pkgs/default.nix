@@ -53,31 +53,6 @@
     }
   );
 
-  waystt = final.rustPlatform.buildRustPackage rec {
-    pname = "waystt";
-    version = "0.3.0";
-    description = "Minimal Speech-To-Text tool for Wayland";
-    src = final.fetchFromGitHub {
-      owner = "sevos";
-      repo = "waystt";
-      rev = "v${version}";
-      hash = "sha256-7RKYqED2/aPDvofNGAa48DTexQYdUqkQzb7BX0CsDCU=";
-    };
-    cargoHash = "sha256-W2pfYDPFyo/ICZ5Y0nLsP4ZeUe7lBffItelnWXrOSLc=";
-    nativeBuildInputs = with final; [
-      pkg-config
-      cmake
-      git
-    ];
-    buildInputs = with final; [
-      alsa-lib.dev
-      openssl.dev
-    ];
-    env = {
-      LIBCLANG_PATH = "${final.llvmPackages.libclang.lib}/lib";
-    };
-  };
-
   sddm-fallback-patched = prev.kdePackages.sddm.overrideAttrs (
     _: prevAttrs: {
       buildCommand =
@@ -166,8 +141,6 @@
       thunar-vcs-plugin
     ];
   };
-
-  jambi = inputs.jambi-transcript.packages.${final.stdenv.hostPlatform.system}.default;
 
   # TODO: nix-update-script
   shellbeats = final.stdenv.mkDerivation {

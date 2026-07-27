@@ -317,23 +317,10 @@
           desc = "Launch Emacs";
           cmd = "emacsclient -a \"\" -c";
         }
-        {
-          key = "w";
-          desc = "Speech to text";
-          submenu = [
-            {
-              key = "s";
-              desc = "Listen to speech";
-              cmd = "whisp-away start";
-              keep_open = true;
-            }
-            {
-              key = "S";
-              desc = "Stop listening to speech";
-              cmd = "whisp-away stop";
-              keep_open = true;
-            }
-          ];
+				{
+          key = "v";
+          desc = "TODO: Voxd gui dictation";
+          cmd = "voxd --gui";
         }
       ];
     note-taking =
