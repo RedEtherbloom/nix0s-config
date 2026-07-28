@@ -77,20 +77,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     zen-browser = {
-			url = "github:0xc000022070/zen-browser-flake";
+      url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs =
-    {
-      self,
-      flake-parts,
-      ...
-    }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } (
-      { withSystem, ... }:
-      {
+  outputs = {
+    self,
+    flake-parts,
+    ...
+  } @ inputs:
+    flake-parts.lib.mkFlake {inherit inputs;} (
+      {withSystem, ...}: {
         imports = [
           inputs.home-manager.flakeModules.home-manager
         ];
@@ -99,20 +97,18 @@
           "aarch64-linux"
         ];
         # TODO: Extract common resources e.g. IPs into nixos independent wrapper or import nixos into homeManager so that homeConfigurations can be split out
-        flake =
-          let
-            defaultUsername = "inf";
-            mkSystem =
-              hostName: system:
-              withSystem system (
-                { pkgs, ... }:
+        flake = let
+          defaultUsername = "inf";
+          mkSystem = hostName: system:
+            withSystem system (
+              {pkgs, ...}:
                 inputs.nixpkgs.lib.nixosSystem {
                   specialArgs = {
                     inherit inputs self;
                     inherit (inputs) secrets;
                   };
                   modules = [
-                    { nixpkgs = { inherit (pkgs) config overlays; }; }
+                    {nixpkgs = {inherit (pkgs) config overlays;};}
                     # TODO: Decide how to reorganize module inputs
                     inputs.sops-nix.nixosModules.sops
                     inputs.agenix.nixosModules.default
@@ -121,120 +117,113 @@
                     ./hosts/${hostName}/configuration.nix
                   ];
                 }
-              );
-            mkHmConfiguration =
-              host:
-              let
-                osConfig = host.config;
-                inherit (osConfig.networking) hostName;
-              in
-              # TODO: Move backupFileExtension to HM-Modules
-              inputs.home-manager.lib.homeManagerConfiguration {
-                inherit (host) pkgs;
-                # Remove potentially interferring attrs
-                extraSpecialArgs =
-                  (removeAttrs host._module.specialArgs [
-                    "self"
-                    "modulesPath"
-                  ])
-                  // {
-                    inherit osConfig self;
-                    osFlakeSelf = osConfig._module.specialArgs.self;
+            );
+          mkHmConfiguration = host: let
+            osConfig = host.config;
+            inherit (osConfig.networking) hostName;
+          in
+            # TODO: Move backupFileExtension to HM-Modules
+            inputs.home-manager.lib.homeManagerConfiguration {
+              inherit (host) pkgs;
+              # Remove potentially interferring attrs
+              extraSpecialArgs =
+                (removeAttrs host._module.specialArgs [
+                  "self"
+                  "modulesPath"
+                ])
+                // {
+                  inherit osConfig self;
+                  osFlakeSelf = osConfig._module.specialArgs.self;
+                };
+              modules = [
+                inputs.sops-nix.homeManagerModules.sops
+                inputs.agenix.homeManagerModules.default
+                inputs.nix-index-database.homeModules.nix-index
+                inputs.stylix.homeModules.stylix
+
+                ./hosts/${hostName}/home.nix
+                {
+                  nix = {
+                    inherit (osConfig.nix) package;
+                    settings = {
+                      inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys;
+                    };
                   };
-                modules = [
-                  inputs.sops-nix.homeManagerModules.sops
-                  inputs.agenix.homeManagerModules.default
-                  inputs.nix-index-database.homeModules.nix-index
-                  inputs.stylix.homeModules.stylix
 
-                  ./hosts/${hostName}/home.nix
-                  {
-                    nix = {
-                      inherit (osConfig.nix) package;
-                      settings = {
-                        inherit (osConfig.nix.settings) substituters trusted-substituters trusted-public-keys;
-                      };
-                    };
-
-                    home = {
-                      username = defaultUsername;
-                      homeDirectory = osConfig.users.users."${defaultUsername}".home;
-                    };
-                  }
-                ];
-              };
-            # TODO: Remove system here. Should be set in hardware-configuration.nix. Alternatively: Somehow base systems packages on perSystem packages
-            nixosConfigurations = {
-              fractor = mkSystem "fractor" "x86_64-linux";
-              neurodrive = mkSystem "neurodrive" "x86_64-linux";
-              audiosink = mkSystem "audiosink" "aarch64-linux";
-            };
-          in
-          {
-            inherit nixosConfigurations;
-            homeConfigurations = {
-              "${defaultUsername}@fractor" = mkHmConfiguration nixosConfigurations.fractor;
-              "${defaultUsername}@neurodrive" = mkHmConfiguration nixosConfigurations.neurodrive;
-              "${defaultUsername}@audiosink" = mkHmConfiguration nixosConfigurations.audiosink;
-            };
-          };
-        perSystem =
-          { system, ... }:
-          let
-            # Initialize one central nixpkgs instance, including config and all required overlays
-            pkgs = import inputs.nixpkgs rec {
-              inherit system;
-              config = {
-                allowUnfree = true;
-                permittedInsecurePackages = [
-                  "olm-3.2.16" # Required by Nheko to work
-                  "electron-39.8.10" # Bitwarden
-                ];
-              };
-              overlays = [
-                inputs.fenix.overlays.default
-                inputs.niri-flake.overlays.niri
-                inputs.emacs-overlay.overlays.default
-                (final: prev: {
-                  nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small { inherit system config; };
-                })
-                (import ./pkgs { inherit inputs; })
-              ];
-              patches = [
-
+                  home = {
+                    username = defaultUsername;
+                    homeDirectory = osConfig.users.users."${defaultUsername}".home;
+                  };
+                }
               ];
             };
-          in
-          {
-            _module.args.pkgs = pkgs;
-            # TODO: Check why own packages aren't exported
-            legacyPackages = pkgs; # TODO: This seems wrong
-            formatter = pkgs.alejandra;
-            devShells.default = pkgs.mkShell {
-              buildInputs =
-                with pkgs.lixPackageSets.latest;
-                [
-                  lix
-                  nixos-rebuild-ng
-                  nix-direnv
-                  nix-init
-                  nurl
-                  nix-update
-                  nixos-anywhere
-                  nix-fast-build
-                  colmena
-                  nixpkgs-review
-                  nix-eval-jobs
-                  nix-du
-                ]
-                ++ (with pkgs; [
-                  alejandra
-                  nh
-                  direnv
-                  nix-tree
-                ]);
-            };
+          # TODO: Remove system here. Should be set in hardware-configuration.nix. Alternatively: Somehow base systems packages on perSystem packages
+          nixosConfigurations = {
+            fractor = mkSystem "fractor" "x86_64-linux";
+            neurodrive = mkSystem "neurodrive" "x86_64-linux";
+            audiosink = mkSystem "audiosink" "aarch64-linux";
           };
+        in {
+          inherit nixosConfigurations;
+          homeConfigurations = {
+            "${defaultUsername}@fractor" = mkHmConfiguration nixosConfigurations.fractor;
+            "${defaultUsername}@neurodrive" = mkHmConfiguration nixosConfigurations.neurodrive;
+            "${defaultUsername}@audiosink" = mkHmConfiguration nixosConfigurations.audiosink;
+          };
+        };
+        perSystem = {system, ...}: let
+          # Initialize one central nixpkgs instance, including config and all required overlays
+          pkgs = import inputs.nixpkgs rec {
+            inherit system;
+            config = {
+              allowUnfree = true;
+              permittedInsecurePackages = [
+                "olm-3.2.16" # Required by Nheko to work
+                "electron-39.8.10" # Bitwarden
+              ];
+            };
+            overlays = [
+              inputs.fenix.overlays.default
+              inputs.niri-flake.overlays.niri
+              inputs.emacs-overlay.overlays.default
+              (final: prev: {
+                nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};
+              })
+              (import ./pkgs {inherit inputs;})
+            ];
+            patches = [
+            ];
+          };
+        in {
+          _module.args.pkgs = pkgs;
+          # TODO: Check why own packages aren't exported
+          legacyPackages = pkgs; # TODO: This seems wrong
+          formatter = pkgs.alejandra;
+          devShells.default = pkgs.mkShell {
+            buildInputs = with pkgs.lixPackageSets.latest;
+              [
+                lix
+                nixos-rebuild-ng
+                nix-direnv
+                nix-init
+                nurl
+                nix-update
+                nixos-anywhere
+                nix-fast-build
+                colmena
+                nixpkgs-review
+                nix-eval-jobs
+                nix-du
+              ]
+              ++ (with pkgs; [
+                pre-commit
+                alejandra
+                nh
+                direnv
+                nix-tree
+              ]);
+          };
+        };
       }
     );
 }

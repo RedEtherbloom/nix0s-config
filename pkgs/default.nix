@@ -249,7 +249,6 @@
       esac
     '';
 
-
   wlr-which-key-fork = final.wlr-which-key.overrideAttrs (finalAttrs: _: {
     version = "1.3.0-pr-46-2026-02-26";
 

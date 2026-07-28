@@ -131,9 +131,9 @@ in {
           steam.importOXRRuntimes = true;
         };
         displayManager = {
-					gdm.enable = true;
-					defaultSession = "niri";
-				};
+          gdm.enable = true;
+          defaultSession = "niri";
+        };
         ollama = {
           enable = true;
           environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
@@ -216,7 +216,7 @@ in {
         lm_sensors
         nftables # vopono daemon
         inputs.nix-alien.packages.${pkgs.stdenv.hostPlatform.system}.nix-alien
-				android-tools
+        android-tools
       ];
 
       # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
@@ -320,8 +320,8 @@ in {
           "PREEMPT=FULL" # Attempt to improve bluetooth reliability
         ];
         extraModprobeConfig = ''
-            options btusb disable_autosuspend=1
-            options btusb enable_autosuspend=0
+          options btusb disable_autosuspend=1
+          options btusb enable_autosuspend=0
         '';
       };
     }
@@ -352,9 +352,9 @@ in {
           };
         };
         initrd.systemd = {
-					enable = true;
-					package = pkgs.systemd-token-timeout-patched;
-				};
+          enable = true;
+          package = pkgs.systemd-token-timeout-patched;
+        };
       };
     })
     (lib.mkIf cfg.verboseSpecialisation {

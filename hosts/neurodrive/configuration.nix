@@ -141,7 +141,7 @@
             # iifname "lo" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
           }
         }
-        '';
+      '';
     };
     nat = {
       enable = true;

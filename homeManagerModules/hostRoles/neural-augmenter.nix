@@ -208,8 +208,8 @@ in {
 
               # Voice typing
               voxd
-							pixelflasher
-							(inputs.nixpkgs-stable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.beeref)
+              pixelflasher
+              (inputs.nixpkgs-stable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.beeref)
             ]
             ++ (with pkgs.kdePackages; [
               ark
@@ -240,7 +240,7 @@ in {
         "$HOME/.cargo/bin"
       ];
       pointerCursor = {
-				enable = true;
+        enable = true;
         gtk.enable = true;
         package = pkgs.breeze-hacked-cursor-theme;
         name = "Breeze_Hacked";

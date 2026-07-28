@@ -13,8 +13,10 @@ in {
       steam = {
         enable = true;
         remotePlay.openFirewall = true;
+        dedicatedServer.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;
         protontricks.enable = true;
+        extest.enable = true;
         package = pkgs.steam.override {
           # Disable the GUI popping up on startup
           extraArgs = "-silent";
@@ -34,6 +36,19 @@ in {
               libXxf86vm
               #RimSort
               nss
+
+              # Gamescope
+              libXcursor
+              libXi
+              libXinerama
+              libXScrnSaver
+              libpng
+              libpulseaudio
+              libvorbis
+              stdenv.cc.cc.lib # Provides libstdc++.so.6
+              libkrb5
+              keyutils
+              # Add other libraries as needed
             ];
         };
       };
@@ -46,6 +61,7 @@ in {
       };
       gamescope = {
         enable = true;
+        enableWsi = true;
         capSysNice = true;
       };
     };

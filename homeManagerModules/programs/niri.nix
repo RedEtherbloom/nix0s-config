@@ -196,80 +196,81 @@
             cmd = noctaliaIpcCommand "panel-toggle control-center notifications";
           }
         ];
-      }{
+      }
+      {
         key = "M";
         desc = "Noctalia Media Control";
         submenu = [
-      {
-        key = "w";
-        desc = "Configure pipewire volumes";
-        cmd = "${lib.getExe pkgs.pwvucontrol}";
-      }
-      {
-        key = "W";
-        desc = "Pipewire patchbay";
-        cmd = "${pkgs.raysession}/bin/raysession";
-      }
-      {
-        key = "space";
-        desc = "Toggle playback status";
-        cmd = noctaliaIpcCommand "media toggle";
-        keep_open = true;
-      }
-      {
-        key = "n";
-        desc = "Next track";
-        cmd = noctaliaIpcCommand "media next";
-        keep_open = true;
-      }
-      {
-        key = "N";
-        desc = "Previous track";
-        cmd = noctaliaIpcCommand "media previous";
-        keep_open = true;
-      }
-      {
-        key = "j";
-        desc = "Lower volume";
-        cmd = noctaliaIpcCommand "volume-down";
-        keep_open = true;
-      }
-      {
-        key = "k";
-        desc = "Raise volume";
-        cmd = noctaliaIpcCommand "volume-up";
-        keep_open = true;
-      }
-			# TODO: Implement with playerctl instead
-      # {
-      #   key = "h";
-      #   desc = "Seek back 5s";
-      #   cmd = noctaliaIpcCommand "media seekRelative -5";
-      #   keep_open = true;
-      # }
-      # {
-      #   key = "l";
-      #   desc = "Seek forward 5s";
-      #   cmd = noctaliaIpcCommand "media seekRelative +5";
-      #   keep_open = true;
-      # }
-      {
-        key = "m";
-        desc = "Mute";
-        cmd = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-        keep_open = true;
-      }
-      {
-        key = "M";
-        desc = "Mute microphone";
-        cmd = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
-        keep_open = true;
-      }
-      {
-        key = "p";
-        desc = "Toggle media panel";
-        cmd = noctaliaIpcCommand "media toggle";
-      }
+          {
+            key = "w";
+            desc = "Configure pipewire volumes";
+            cmd = "${lib.getExe pkgs.pwvucontrol}";
+          }
+          {
+            key = "W";
+            desc = "Pipewire patchbay";
+            cmd = "${pkgs.raysession}/bin/raysession";
+          }
+          {
+            key = "space";
+            desc = "Toggle playback status";
+            cmd = noctaliaIpcCommand "media toggle";
+            keep_open = true;
+          }
+          {
+            key = "n";
+            desc = "Next track";
+            cmd = noctaliaIpcCommand "media next";
+            keep_open = true;
+          }
+          {
+            key = "N";
+            desc = "Previous track";
+            cmd = noctaliaIpcCommand "media previous";
+            keep_open = true;
+          }
+          {
+            key = "j";
+            desc = "Lower volume";
+            cmd = noctaliaIpcCommand "volume-down";
+            keep_open = true;
+          }
+          {
+            key = "k";
+            desc = "Raise volume";
+            cmd = noctaliaIpcCommand "volume-up";
+            keep_open = true;
+          }
+          # TODO: Implement with playerctl instead
+          # {
+          #   key = "h";
+          #   desc = "Seek back 5s";
+          #   cmd = noctaliaIpcCommand "media seekRelative -5";
+          #   keep_open = true;
+          # }
+          # {
+          #   key = "l";
+          #   desc = "Seek forward 5s";
+          #   cmd = noctaliaIpcCommand "media seekRelative +5";
+          #   keep_open = true;
+          # }
+          {
+            key = "m";
+            desc = "Mute";
+            cmd = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+            keep_open = true;
+          }
+          {
+            key = "M";
+            desc = "Mute microphone";
+            cmd = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+            keep_open = true;
+          }
+          {
+            key = "p";
+            desc = "Toggle media panel";
+            cmd = noctaliaIpcCommand "media toggle";
+          }
         ];
       }
       {
@@ -317,7 +318,7 @@
           desc = "Launch Emacs";
           cmd = "emacsclient -a \"\" -c";
         }
-				{
+        {
           key = "v";
           desc = "TODO: Voxd gui dictation";
           cmd = "voxd --gui";
@@ -341,7 +342,7 @@
           desc = "Org-capture note";
           cmd = "org-capture -k n";
         }
-				];
+      ];
   };
   splitSpace = string: lib.strings.splitString " " string;
   niriSwitchToWindow = pkgs.writeShellScriptBin "niriSwitchToWindow.sh" ''
@@ -403,8 +404,8 @@ in {
         background-color = "transparent";
         gaps = 16;
         empty-workspace-above-first = true;
-				center-focused-column = "on-overflow";
-				always-center-single-column = true;
+        center-focused-column = "on-overflow";
+        always-center-single-column = true;
 
         preset-column-widths = [
           {proportion = 1. / 3.;}
@@ -458,8 +459,8 @@ in {
             bottom-right = 7.0;
           };
           clip-to-geometry = true;
-					# Fun gimmicks
-					# baba-is-float = true;
+          # Fun gimmicks
+          # baba-is-float = true;
         }
         {
           matches = [
@@ -496,7 +497,7 @@ in {
       spawn-at-startup = [
         {sh = "noctalia";}
       ];
-			switch-events.lid-close.action.spawn = splitSpace (noctaliaIpcCommand "session lock");
+      switch-events.lid-close.action.spawn = splitSpace (noctaliaIpcCommand "session lock");
       binds = {
         "Mod+Shift+Slash".action.show-hotkey-overlay = [];
 
@@ -750,10 +751,10 @@ in {
           hotkey-overlay.title = "Toggle playback";
           action.spawn = splitSpace "${lib.getExe pkgs.playerctl} play-pause";
         };
-				"Mod+Shift+Tab" = {
-					hotkey-overlay.title = "Window switcher";
-					action.spawn = splitSpace (noctaliaIpcCommand "panel-toggle launcher /win");
-				};
+        "Mod+Shift+Tab" = {
+          hotkey-overlay.title = "Window switcher";
+          action.spawn = splitSpace (noctaliaIpcCommand "panel-toggle launcher /win");
+        };
         "Mod+Comma" = {
           hotkey-overlay.title = "Show control center";
           action.spawn-sh = noctaliaIpcCommand "panel-toggle control-center";
