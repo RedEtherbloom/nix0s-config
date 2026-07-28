@@ -505,7 +505,7 @@
   },
   "wallpaper": {
     "automationEnabled": false,
-    "_directory": "TODO: Link to path in home directory"
+    "_directory": "TODO: Link to path in home directory",
     "directory": "/nix/store/gd16zy67ra4wd03ci6wy8pzj2q8sg1r5-source/dotfiles/wallpapers/cyborg_girl_tactical.jpg",
     "enableMultiMonitorDirectories": false,
     "enabled": true,
