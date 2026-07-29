@@ -81,7 +81,7 @@
       requirements = builtins.readFile "${requirements_txt}";
       projectRoot = src;
     };
-    python = final.python313;
+    python = final.python314;
   in
     final.dockerTools.buildImage {
       name = "flathunter";

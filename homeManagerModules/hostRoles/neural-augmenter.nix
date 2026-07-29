@@ -9,11 +9,6 @@
 }: let
   cfg = config.myOptions.hostRoles.neural-augmenter;
   jsonFormatter = pkgs.formats.json {};
-  inherit
-    (import ../../homeManagerModules/lib/torrent_lib.nix {inherit osConfig pkgs;})
-    mullvad-torrent
-    vopono-torrent
-    ;
 in {
   options.myOptions.hostRoles.neural-augmenter = {
     enable = lib.mkOption {
@@ -86,8 +81,6 @@ in {
               gcr
 
               vopono
-              mullvad-torrent
-              vopono-torrent
               # Certificate creation
               xca
               dumbpipe
@@ -192,9 +185,9 @@ in {
               shfmt
               nodejs
               graphviz-nox
-              python313Packages.black
-              python313Packages.pyflakes
-              python313Packages.pytest
+              python314Packages.black
+              python314Packages.pyflakes
+              python314Packages.pytest
 
               supercollider_scel
 

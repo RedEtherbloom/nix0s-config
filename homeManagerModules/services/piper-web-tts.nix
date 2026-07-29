@@ -44,7 +44,7 @@
             Type = "exec";
 
             ExecStart = let
-              python = pkgs.python313.withPackages (_: [
+              python = pkgs.python314.withPackages (_: [
                 (pkgs.python3Packages.toPythonModule config.myOptions.services.piper-web-tts.package)
               ]);
             in

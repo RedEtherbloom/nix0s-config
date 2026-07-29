@@ -3,30 +3,12 @@
   osConfig,
   pkgs,
   ...
-}: let
-  inherit
-    (import ../../homeManagerModules/lib/torrent_lib.nix {inherit osConfig pkgs;})
-    vopono-torrent
-    ;
-in {
+}: {
   imports = [
     ../../homeManagerModules
   ];
 
-  config = let
-    vopono-torrent-desktop = pkgs.makeDesktopItem {
-      name = "Vopono_Torrent";
-      desktopName = "Vopono Torrent";
-      exec = "${lib.getExe vopono-torrent}";
-      icon = "qbittorrent";
-      comment = "Start qbittorrent and associated plugins and applications in a vopono workspace.";
-      categories = [
-        "X-Multimedia"
-        "X-Internet"
-        "X-Utilities"
-      ];
-    };
-  in {
+  config = {
     home = {
       stateVersion = "24.05";
       packages = with pkgs; [
@@ -46,8 +28,6 @@ in {
         vrcx
         sidequest
         wivrn
-
-        vopono-torrent-desktop
 
         beyond-all-reason
         starsector-gl-fix
@@ -123,12 +103,7 @@ in {
           categories = ["X-Games"];
         };
       };
-      autostart = {
-        enable = true;
-        entries = lib.lists.map (desktop: "${desktop}/share/applications/${desktop.name}") [
-          vopono-torrent-desktop
-        ];
-      };
+      autostart.enable = true;
     };
     systemd.user = {
       services."morning-layout-niri" = {

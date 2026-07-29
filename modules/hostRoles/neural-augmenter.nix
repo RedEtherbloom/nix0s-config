@@ -109,10 +109,6 @@ in {
           platformio-core
           probe-rs-tools
         ];
-        mullvad-vpn = {
-          enable = true;
-          package = pkgs.mullvad-vpn; # Contains GUI
-        };
         colord.enable = true;
         samba.enable = true;
         xserver.wacom.enable = true;
