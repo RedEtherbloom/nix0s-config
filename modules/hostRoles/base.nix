@@ -43,9 +43,9 @@ in {
 
     # See: https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix
     environment.pathsToLink = [
-        "/share/xdg-desktop-portal"
-        "/share/applications"
-      ];
+      "/share/xdg-desktop-portal"
+      "/share/applications"
+    ];
 
     stylix = {
       base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
