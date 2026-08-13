@@ -14,20 +14,12 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-compat.url = "github:edolstra/flake-compat";
-    systems.url = "github:nix-systems/default";
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
     };
+    systems.url = "github:nix-systems/default";
 
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -41,25 +33,10 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-        systems.follows = "systems";
-      };
-    };
     stylix = {
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # nvf = {
-    #   url = "github:NotAShelf/nvf";
-    #   inputs = {
-    #     nixpkgs.follows = "nixpkgs";
-    #     flake-compat.follows = "flake-compat";
-    #   };
-    # };
     pyproject-nix = {
       url = "github:pyproject-nix/pyproject.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -78,7 +55,10 @@
     };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
   };
 
@@ -111,7 +91,6 @@
                     {nixpkgs = {inherit (pkgs) config overlays;};}
                     # TODO: Decide how to reorganize module inputs
                     inputs.sops-nix.nixosModules.sops
-                    inputs.agenix.nixosModules.default
                     inputs.nix-index-database.nixosModules.nix-index
 
                     ./hosts/${hostName}/configuration.nix
@@ -137,7 +116,6 @@
                 };
               modules = [
                 inputs.sops-nix.homeManagerModules.sops
-                inputs.agenix.homeManagerModules.default
                 inputs.nix-index-database.homeModules.nix-index
                 inputs.stylix.homeModules.stylix
 
@@ -183,7 +161,6 @@
               ];
             };
             overlays = [
-              inputs.fenix.overlays.default
               inputs.niri-flake.overlays.niri
               inputs.emacs-overlay.overlays.default
               (final: prev: {

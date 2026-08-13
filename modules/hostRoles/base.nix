@@ -42,15 +42,10 @@ in {
     users.defaultUserShell = pkgs.fish;
 
     # See: https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix
-    environment = {
-      pathsToLink = [
+    environment.pathsToLink = [
         "/share/xdg-desktop-portal"
         "/share/applications"
       ];
-      systemPackages = [
-        inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
-      ];
-    };
 
     stylix = {
       base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";

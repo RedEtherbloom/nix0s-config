@@ -124,14 +124,6 @@ in {
             clang
             clang-tools
             pkg-config
-            # (fenix.complete.withComponents [
-            #   "cargo"
-            #   "clippy"
-            #   "rust-src"
-            #   "rustc"
-            #   "rustfmt"
-            # ])
-            # rust-analyzer-nightly
             rustup
           ]
           ++ lib.optionals cfg.openscad [
@@ -192,7 +184,7 @@ in {
             probe-rs-tools
           ]
           ++ lib.optionals cfg.vibecoding [
-            antigravity-fhs
+            antigravity-ide-fhs
           ];
 
         programs.go.enable = cfg.go;

@@ -52,9 +52,6 @@ in {
             gtksourceview.enable = lib.mkForce false; # See: Constant rebuilds of e.g. inkscape caused by this
           };
         };
-        home.packages = [
-          inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
-        ];
       }
       (lib.mkIf osConfig.security.ownAdditional.yubikey {
         # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)

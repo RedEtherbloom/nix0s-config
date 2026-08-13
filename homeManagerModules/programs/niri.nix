@@ -298,49 +298,20 @@
     dev-tools =
       mkWlrMenu "dev-tools"
       [
-        # {
-        #   key = "n";
-        #   desc = "Neovide";
-        #   cmd = "neovide";
-        # }
-        # {
-        #   key = "N";
-        #   desc = "Nvf stock maximal configuration as fallback";
-        #   cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.maximalPackage}/bin/nvim";
-        # }
-        # {
-        #   key = "o";
-        #   desc = "Notes obsidian-nvim";
-        #   cmd = "neovide --neovim-bin ${config.myOptions.roles.nvf.notesPackage}/bin/nvim ${config.xdg.userDirs.documents}/Obsidian/default";
-        # }
         {
           key = "e";
           desc = "Launch Emacs";
           cmd = "emacsclient -a \"\" -c";
         }
         {
+          key = "E";
+          desc = "Restart Emacs daemon, then launch Emacs";
+          cmd = "systemctl restart --user emacs.service && emacsclient -a \"\" -c";
+        }
+        {
           key = "v";
           desc = "TODO: Voxd gui dictation";
           cmd = "voxd --gui";
-        }
-      ];
-    note-taking =
-      mkWlrMenu "note-taking"
-      [
-        {
-          key = "f";
-          desc = "Launch org-capture";
-          cmd = "org-capture";
-        }
-        {
-          key = "F";
-          desc = "Org-capture todo";
-          cmd = "org-capture -k t";
-        }
-        {
-          key = "n";
-          desc = "Org-capture note";
-          cmd = "org-capture -k n";
         }
       ];
   };
