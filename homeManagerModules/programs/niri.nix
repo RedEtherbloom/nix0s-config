@@ -378,6 +378,9 @@ in {
         center-focused-column = "on-overflow";
         always-center-single-column = true;
 
+        default-column-width = {
+          proportion = 1. / 2.;
+        };
         preset-column-widths = [
           {proportion = 1. / 3.;}
           {proportion = 1. / 2.;}
@@ -482,8 +485,8 @@ in {
           action.spawn = "${lib.getExe wlrLaunchers.common}";
         };
         "Mod+Shift+O" = {
-          hotkey-overlay.title = "Wlr: Note taking launchers";
-          action.spawn = "${lib.getExe wlrLaunchers.note-taking}";
+          hotkey-overlay.title = "Org capture";
+          action.spawn = "org-capture";
         };
         "Mod+Alt+L" = {
           hotkey-overlay.title = "Lock screen";
