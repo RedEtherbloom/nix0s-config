@@ -371,11 +371,12 @@ in {
         };
       };
 
-      layout = {
+			workspaces."socials" = {};
+      layout = rec {
         background-color = "transparent";
         gaps = 16;
         empty-workspace-above-first = true;
-        center-focused-column = "on-overflow";
+        center-focused-column = "never";
         always-center-single-column = true;
 
         default-column-width = {
@@ -385,11 +386,13 @@ in {
           {proportion = 1. / 3.;}
           {proportion = 1. / 2.;}
           {proportion = 2. / 3.;}
+          {proportion = 1. / 1.;}
         ];
         preset-window-heights = [
           {proportion = 1. / 3.;}
           {proportion = 1. / 2.;}
           {proportion = 2. / 3.;}
+          {proportion = 1. / 1.;}
         ];
         focus-ring = {
           width = 3;
@@ -439,12 +442,30 @@ in {
         {
           matches = [
             {
-              app-id = "firefox$";
+              app-id = "firefox|zen|zen-beta$";
               title = "^Picture-in-Picture$";
             }
           ];
           open-floating = true;
         }
+				{
+					matches = [
+						{
+              app-id = "discord|vesktop|org.telegram.desktop|signal|nheko$";
+							is-floating = false;
+						}
+					];
+					open-on-workspace = "socials";
+				}
+				{
+					matches = [
+						{
+						app-id = "thunderbird";
+							title = "\\d+\\sReminders$";
+					}
+					];
+					open-floating = true;
+				}
       ];
       layer-rules = [
         {
@@ -668,10 +689,10 @@ in {
         "Mod+R".action.switch-preset-column-width = [];
         "Mod+Shift+R".action.switch-preset-window-height = [];
         "Mod+Ctrl+R".action.reset-window-height = [];
-        "Mod+F".action.maximize-column = [];
+        "Mod+Ctrl+F".action.maximize-column = [];
         "Mod+Shift+F".action.fullscreen-window = [];
         "Mod+M".action.maximize-window-to-edges = [];
-        "Mod+Ctrl+F".action.expand-column-to-available-width = []; # Expand the focused column to space not taken up by other fully visible columns.
+        "Mod+F".action.expand-column-to-available-width = []; # Expand the focused column to space not taken up by other fully visible columns.
 
         "Mod+C".action.center-column = [];
         "Mod+Ctrl+C".action.center-visible-columns = [];
