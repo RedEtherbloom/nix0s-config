@@ -53,8 +53,6 @@ in {
     };
 
     nix = {
-      registry.nixpkgs.flake = inputs.nixpkgs;
-      nixPath = ["nixpkgs=${inputs.nixpkgs}"];
       package = pkgs.lixPackageSets.latest.lix;
       settings = {
         experimental-features = [
