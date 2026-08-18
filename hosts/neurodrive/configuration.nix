@@ -276,7 +276,7 @@
       };
       nvidiaSettings = true;
       open = true;
-      package = config.boot.kernelPackages.nvidiaPackages.beta;
+      package = config.boot.kernelPackages.nvidiaPackages.latest;
     };
     nvidia-container-toolkit.enable = true;
     sensor.hddtemp = {
