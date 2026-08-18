@@ -75,7 +75,10 @@ in {
       };
     };
 
-    boot.tmp.cleanOnBoot = true;
+    boot = {
+      kernelPackages = pkgs.linux-zen;
+      tmp.cleanOnBoot = true;
+    };
     sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
   };
 }
