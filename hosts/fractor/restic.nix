@@ -23,7 +23,7 @@
     };
     # TODO: Reference neurodrive port
     # TODO: I need some proper deployment managment, not just a self-built system(e.g. NixOPS?)
-    repository = "rest:https://10.69.0.3:8193/infinity-fractor/";
+    repository = "rest:https://100.108.50.97:8193/infinity-fractor/";
     pruneOpts = [
       "--keep-daily 3"
       "--keep-weekly 5"

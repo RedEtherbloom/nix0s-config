@@ -41,15 +41,7 @@
     };
   };
 
-  networking = {
-    hostName = "fractor";
-    # Set MTU to account for some pickier wifi's
-    wireguard.interfaces = {
-      "wg0".mtu = 1312;
-      "wg1".mtu = 1312;
-    };
-  };
-
+  networking.hostName = "fractor";
   services = {
     # Does this have to be replaced with home-manager?
     printing = {

@@ -9,7 +9,7 @@
 
   # DEFAULT Port, reexported
   GITEA_PORT = 3000;
-  GITEA_DOMAIN = config.networking.ownWireguard.hosts.neurodrive.mainIP;
+  GITEA_DOMAIN = "100.108.50.97";
   GITEA_SECRET_DIRECTORY = "${secrets}/secrets/services/gitea";
   GITEA_SECRET_FILE = "${GITEA_SECRET_DIRECTORY}/gitea.yaml";
 in {

@@ -179,10 +179,7 @@
       host = "0.0.0.0";
       openFirewall = true;
     };
-    nextjs-ollama-llm-ui = {
-      # May need to set CORS in ollama variables for VPN to work
-      hostname = "${config.networking.ownWireguard.hosts.neurodrive.mainIP}";
-    };
+    nextjs-ollama-llm-ui.hostname = "100.108.50.97";
     restic.server = {
       enable = true;
       privateRepos = true;
@@ -208,7 +205,6 @@
     udev.extraRules = ''
       SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="zigbee-ap"
     '';
-    # ACTION=="add", SUBSYSTEM=="tty", ENV{DEVLINKS}=="*/dev/zigbee-ap*", RUN+="${config.systemd.package}/bin/systemctl restart podman-homeassistant.service"
     navidrome = {
       enable = true;
       openFirewall = true;
@@ -301,7 +297,7 @@
           ports = [
             "127.0.0.1:8188:8188"
             "192.168.190.180:8188:8188"
-            "${config.networking.ownWireguard.hosts.${config.networking.hostName}.mainIP}:8188:8188"
+            "100.108.50.97:8188:8188"
           ];
           extraOptions = [
             "--security-opt=label=disable"

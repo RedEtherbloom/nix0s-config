@@ -284,11 +284,6 @@
         cmd = "${lib.getExe pkgs.rofi-bluetooth}";
       }
       {
-        key = "o";
-        desc = "Switch to or start Obsidian";
-        cmd = "${lib.getExe niriSwitchToWindow} app_id obsidian || obsidian";
-      }
-      {
         key = "k";
         keep_open = true;
         desc = "Switch to next niri keyboard layout";
@@ -371,7 +366,7 @@ in {
         };
       };
 
-			workspaces."socials" = {};
+      workspaces."socials" = {};
       layout = rec {
         background-color = "transparent";
         gaps = 16;
@@ -448,24 +443,24 @@ in {
           ];
           open-floating = true;
         }
-				{
-					matches = [
-						{
+        {
+          matches = [
+            {
               app-id = "discord|vesktop|org.telegram.desktop|signal|nheko$";
-							is-floating = false;
-						}
-					];
-					open-on-workspace = "socials";
-				}
-				{
-					matches = [
-						{
-						app-id = "thunderbird";
-							title = "\\d+\\sReminders$";
-					}
-					];
-					open-floating = true;
-				}
+              is-floating = false;
+            }
+          ];
+          open-on-workspace = "socials";
+        }
+        {
+          matches = [
+            {
+              app-id = "thunderbird";
+              title = "\\d+\\sReminders$";
+            }
+          ];
+          open-floating = true;
+        }
       ];
       layer-rules = [
         {
@@ -762,10 +757,6 @@ in {
           hotkey-overlay.title = "Dev tools and note taking";
           action.spawn-sh = "${lib.getExe wlrLaunchers.dev-tools}";
         };
-        # "Mod+Shift+O" = {
-        #   hotkey-overlay.title = "Switch to Obsidian";
-        #   action.spawn-sh = "${lib.getExe niriSwitchToWindow} app_id obsidian || obsidian";
-        # };
       };
     };
   };

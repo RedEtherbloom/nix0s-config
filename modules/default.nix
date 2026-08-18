@@ -14,6 +14,5 @@
     ./roles/utilities.nix
     ./roles/vtubing.nix
     ./services/gitea.nix
-    ./wireguard.nix
   ];
 }

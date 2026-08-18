@@ -231,17 +231,17 @@ in {
       virtualisation = {
         containers = {
           enable = true;
-          registries.search = [
-            "docker.io"
-            "quay.io"
-            "mirror.gcr.io" # Google mirror
+          registries.settings.registry = [
+            {location = "docker.io";}
+            {location = "quay.io";}
+            {location = "mirror.gcr.io";} # Google mirror
           ];
         };
         podman = {
           enable = true;
           dockerSocket.enable = true;
           autoPrune.enable = true;
-          dockerCompat = true; # Docker alias
+          dockerCompat = true;
           defaultNetwork.settings.dns_enabled = true; # Required for containers under podman-compose to be able to talk to each other.
         };
         oci-containers.backend = "podman";
@@ -304,7 +304,6 @@ in {
           enable = true;
           wifi.powersave = false;
         };
-        ownWireguard.enable = true;
         firewall = {
           allowedTCPPorts = [
             22000 # SyncThing

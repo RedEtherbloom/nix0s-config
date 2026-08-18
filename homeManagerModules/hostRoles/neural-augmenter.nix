@@ -28,7 +28,6 @@ in {
           reverseEngineering = lib.mkDefault true;
           vibecoding = lib.mkDefault true;
         };
-        # nvf.enable = lib.mkDefault true;
         gamedev.enable = lib.mkDefault true;
         art = {
           enable = lib.mkDefault true;
@@ -37,10 +36,6 @@ in {
       };
       firefox.enable = lib.mkDefault true;
       socials.enable = lib.mkDefault true;
-      obsidian = {
-        enable = lib.mkDefault true;
-        jjAutosync = lib.mkDefault true;
-      };
       services.piper-web-tts = {
         enable = true;
         model = "en_US-libritts_r-medium";
@@ -149,7 +144,7 @@ in {
               (pkgs.writeShellScriptBin "rofi-home-assistant-sops.sh" ''
                 set -e
 
-                export HASS_SERVER="http://${osConfig.networking.ownWireguard.hosts.neurodrive.mainIP}:8123"
+                export HASS_SERVER="http://100.108.50.97:8123"
                 HASS_TOKEN="$(cat ${config.sops.secrets.hass_cli_token.path})"
                 export HASS_TOKEN
 
@@ -202,7 +197,9 @@ in {
               # Voice typing
               voxd
               pixelflasher
-              (inputs.nixpkgs-stable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.beeref)
+              beeref
+
+              obsidian
             ]
             ++ (with pkgs.kdePackages; [
               ark

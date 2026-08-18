@@ -5,7 +5,6 @@
     ./hostRoles/neural-augmenter.nix
     ./programs/firefox.nix
     ./programs/niri.nix
-    ./programs/obsidian.nix
     ./programs/socials.nix
     ./programs/vscode.nix
     ./roles/art.nix
@@ -14,7 +13,6 @@
     ./roles/gaming.nix
     ./roles/office.nix
     ./roles/vtubing.nix
-    ./services/obsidian-git.nix
     ./services/piper-web-tts.nix
     ./services/solaar.nix
   ];
