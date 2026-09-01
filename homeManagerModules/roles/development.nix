@@ -303,6 +303,9 @@ in {
           };
         };
       })
+      (lib.mkIf cfg.vibecoding {
+        programs.pi-coding-agent.enable = true;
+      })
     ]
   );
 }
