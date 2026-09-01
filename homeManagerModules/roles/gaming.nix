@@ -20,17 +20,16 @@ in {
       # ut1999
       # (olympus.override {celesteWrapper = pkgs.steam-run;})
 
-      # 19-05-2026: Disabled due to broken openldap build
-      # (lutris.override {
-      #   extraLibraries = pkgs: [
-      #     pkgs.glib-networking
-      #     pkgs.dconf
-      #     pkgs.gamemode.lib
-      #   ];
-      #   extraPkgs = pkgs: [
-      #     pkgs.vulkan-tools
-      #   ];
-      # })
+      (lutris.override {
+        extraLibraries = pkgs: [
+          pkgs.glib-networking
+          pkgs.dconf
+          pkgs.gamemode.lib
+        ];
+        extraPkgs = pkgs: [
+          pkgs.vulkan-tools
+        ];
+      })
     ];
   };
 }

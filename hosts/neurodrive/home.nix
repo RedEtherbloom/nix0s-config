@@ -16,21 +16,20 @@
         zenity
         yad
 
-        koboldcpp
-        sillytavern
+        # koboldcpp
+        # sillytavern
 
-        coolercontrol.coolercontrol-gui
+        # coolercontrol.coolercontrol-gui
         gsmartcontrol
 
         # VRChat tools
         oscavmgr
         vrcadvert
         vrcx
-        sidequest
+        # sidequest
         wivrn
-
-        beyond-all-reason
-        starsector-gl-fix
+        # beyond-all-reason
+        # starsector-gl-fix
 
         shikane
       ];
@@ -45,11 +44,6 @@
 
     # Let's try out McFly on our beefier machine
     programs = {
-      mcfly = {
-        enable = false;
-        fzf.enable = true;
-        keyScheme = "vim";
-      };
       btop.package = pkgs.btop-cuda;
       obs-studio.enable = true;
       niri.settings.binds."Mod+Ctrl+Equal" = {

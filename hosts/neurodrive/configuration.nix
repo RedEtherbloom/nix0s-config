@@ -355,7 +355,12 @@
         ExecStop = hddSleepCommand;
       };
     };
-    navidrome.serviceConfig.BindReadOnlyPaths = ["/mnt/cryptostorage/inf/Torrent/Finished/lidarr"];
+    navidrome = {
+      after = [
+        "mnt-cryptostorage.mount"
+      ];
+      serviceConfig.BindReadOnlyPaths = ["/mnt/cryptostorage/inf/Torrent/Finished/lidarr"];
+    };
   };
 
   myOptions = {

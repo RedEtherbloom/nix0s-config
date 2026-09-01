@@ -146,7 +146,7 @@ in {
     };
   };
 
-  # Should probably be redone with home-manager(Clara: Learing curve, yayyy...)
+  # Should probably be redone with home-manager(Clara: Learning curve, yayyy...)
   systemd = {
     user.services = {
       pipewire-pulse = {
