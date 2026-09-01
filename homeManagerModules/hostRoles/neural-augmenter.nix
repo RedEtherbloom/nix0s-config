@@ -200,6 +200,8 @@ in {
               beeref
 
               obsidian
+
+              alarm-clock-applet
             ]
             ++ (with pkgs.kdePackages; [
               ark
