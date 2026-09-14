@@ -73,7 +73,6 @@ in {
 
               gnome-keyring
               seahorse
-              gcr
 
               vopono
               # Certificate creation

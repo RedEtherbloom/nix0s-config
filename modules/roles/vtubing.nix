@@ -19,13 +19,12 @@ in {
           obs-backgroundremoval
           obs-pipewire-audio-capture
           obs-composite-blur
-          obs-shaderfilter
+          # obs-shaderfilter
           obs-scale-to-sound
-          obs-move-transition
+          # obs-move-transition
           obs-gradient-source
-          obs-replay-source
+          # obs-replay-source
           obs-source-clone
-          obs-3d-effect
           obs-livesplit-one
           waveform
           obs-gstreamer
