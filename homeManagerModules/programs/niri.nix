@@ -152,11 +152,6 @@
         cmd = "thunar";
       }
       {
-        key = "m";
-        desc = "YouTube Music";
-        cmd = "${lib.getExe config.programs.kitty.package} -e${lib.getExe pkgs.ytui-music}";
-      }
-      {
         key = "M";
         desc = "ShellBeats!";
         cmd = "${lib.getExe config.programs.kitty.package} -e ${lib.getExe pkgs.shellbeats}";
@@ -198,7 +193,7 @@
         ];
       }
       {
-        key = "M";
+        key = "m";
         desc = "Noctalia Media Control";
         submenu = [
           {
@@ -348,7 +343,7 @@ in {
           scroll-method = "two-finger";
         };
         mouse = {
-          accel-profile = "flat";
+          accel-profile = "adaptive";
           natural-scroll = true;
         };
         trackpoint = {
@@ -357,19 +352,18 @@ in {
           scroll-method = "on-button-down";
           scroll-button-lock = true;
           middle-emulation = true;
-          # scroll-button 273
         };
-        warp-mouse-to-focus.enable = false;
+        warp-mouse-to-focus.enable = true;
         focus-follows-mouse = {
           enable = true;
-          max-scroll-amount = "0%";
+          max-scroll-amount = "25%";
         };
       };
 
       workspaces."socials" = {};
       layout = rec {
         background-color = "transparent";
-        gaps = 16;
+        gaps = 24;
         empty-workspace-above-first = true;
         center-focused-column = "never";
         always-center-single-column = true;
@@ -378,19 +372,19 @@ in {
           proportion = 1. / 2.;
         };
         preset-column-widths = [
-          {proportion = 1. / 3.;}
+          {proportion = 1. / 4.;}
           {proportion = 1. / 2.;}
-          {proportion = 2. / 3.;}
+          {proportion = 3. / 4.;}
           {proportion = 1. / 1.;}
         ];
         preset-window-heights = [
-          {proportion = 1. / 3.;}
+          {proportion = 1. / 4.;}
           {proportion = 1. / 2.;}
-          {proportion = 2. / 3.;}
+          {proportion = 3. / 4.;}
           {proportion = 1. / 1.;}
         ];
         focus-ring = {
-          width = 3;
+          width = 2;
           # active-color "#7fc8ff" # Hope that noctalia takes care of this
           # inactive-color "#505050" # Hope that noctalia takes care of this
           # You can also use gradients. They take precedence over solid colors.
@@ -425,10 +419,10 @@ in {
         {
           # Noctalia requirement
           geometry-corner-radius = {
-            top-left = 7.0;
-            top-right = 7.0;
-            bottom-left = 7.0;
-            bottom-right = 7.0;
+            top-left = 8.0;
+            top-right = 8.0;
+            bottom-left = 8.0;
+            bottom-right = 8.0;
           };
           clip-to-geometry = true;
           # Fun gimmicks
@@ -437,7 +431,7 @@ in {
         {
           matches = [
             {
-              app-id = "firefox|zen|zen-beta$";
+              app-id = "^firefox|zen|zen-beta$";
               title = "^Picture-in-Picture$";
             }
           ];
@@ -446,7 +440,7 @@ in {
         {
           matches = [
             {
-              app-id = "discord|vesktop|org.telegram.desktop|signal|nheko$";
+              app-id = "^discord|vesktop|org.telegram.desktop|signal|nheko$";
               is-floating = false;
             }
           ];
@@ -456,7 +450,7 @@ in {
           matches = [
             {
               app-id = "thunderbird";
-              title = "\\d+\\sReminders$";
+              title = "\\d+\\sReminder(s)?$";
             }
           ];
           open-floating = true;
@@ -817,7 +811,6 @@ in {
     ];
   };
 
-  # TODO: Set up fcitx5
   services = {
     gnome-keyring = {
       enable = true;

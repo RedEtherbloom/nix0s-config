@@ -457,14 +457,14 @@ in {
               "bing".metaData.alias = "@bing";
               "google".metaData.alias = "@g";
             };
-            default = "kagi";
+            default = "duckduckgo";
             order = [
-              "kagi"
+              "duckduckgo"
               "google"
               "github"
-              "duckduckgo"
               "youtube"
               "reddit"
+              "kagi"
             ];
           };
         };
