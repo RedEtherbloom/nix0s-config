@@ -27,6 +27,7 @@ in {
           electronics = lib.mkDefault true;
           reverseEngineering = lib.mkDefault true;
           vibecoding = lib.mkDefault true;
+          fren-coding = lib.mkDefault true;
         };
         gamedev.enable = lib.mkDefault true;
         art = {

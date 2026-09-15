@@ -113,6 +113,11 @@ in {
       default = false;
       description = "Trying out some slop coding. Probably won't be used much";
     };
+    fren-coding = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "A fren shared with us :3.";
+    };
   };
 
   config = lib.mkIf cfg.enable (
@@ -144,14 +149,12 @@ in {
                 nix-du
                 nurl
               ]
-              ++ (
-                with pkgs; [
-                  alejandra
-                  nixd
-                  direnv
-                  nix-tree
-                ]
-              )
+              ++ (with pkgs; [
+                alejandra
+                nixd
+                direnv
+                nix-tree
+              ])
           )
           # ++ lib.optionals cfg.nix self.devShells.${system}.default.buildInputs
           ++ lib.optionals cfg.electronics [
@@ -305,6 +308,81 @@ in {
       })
       (lib.mkIf cfg.vibecoding {
         programs.pi-coding-agent.enable = true;
+      })
+      (lib.mkIf cfg.fren-coding {
+        home.file.".pi/agent/models.json".text = builtins.toJSON {
+          providers.astarion-litellm = {
+            baseUrl = "http://100.74.165.55:4000/v1";
+            apiKey = "not-needed";
+            api = "openai-responses";
+
+            models = [
+              {
+                id = "chatgpt-gpt-5.5";
+                name = "GPT-5.5 via astarion";
+                reasoning = true;
+                input = [
+                  "text"
+                  "image"
+                ];
+                contextWindow = 272000;
+                maxTokens = 128000;
+              }
+              {
+                id = "chatgpt-gpt-5.5-pro";
+                name = "GPT-5.5 Pro via astarion";
+                reasoning = true;
+                input = [
+                  "text"
+                  "image"
+                ];
+                contextWindow = 272000;
+                maxTokens = 128000;
+              }
+              {
+                id = "chatgpt-gpt-5.3-codex-spark";
+                name = "GPT-5.3 Codex Spark via astarion";
+                reasoning = true;
+                input = ["text"];
+                contextWindow = 128000;
+                maxTokens = 128000;
+              }
+              {
+                id = "chatgpt-gpt-5.6-sol";
+                name = "GPT-5.6 Sol via astarion";
+                reasoning = true;
+                input = [
+                  "text"
+                  "image"
+                ];
+                contextWindow = 272000;
+                maxTokens = 128000;
+              }
+              {
+                id = "chatgpt-gpt-5.6-terra";
+                name = "GPT-5.6 Terra via astarion";
+                reasoning = true;
+                input = [
+                  "text"
+                  "image"
+                ];
+                contextWindow = 272000;
+                maxTokens = 128000;
+              }
+              {
+                id = "chatgpt-gpt-5.6-luna";
+                name = "GPT-5.6 Luna via astarion";
+                reasoning = true;
+                input = [
+                  "text"
+                  "image"
+                ];
+                contextWindow = 272000;
+                maxTokens = 128000;
+              }
+            ];
+          };
+        };
       })
     ]
   );
