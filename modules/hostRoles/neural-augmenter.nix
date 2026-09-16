@@ -126,7 +126,6 @@ in {
               package = pkgs.openrgb-with-all-plugins;
             };
           };
-          blueman.enable = true;
           wivrn = {
             enable = true;
             openFirewall = true;
@@ -136,18 +135,18 @@ in {
             gdm.enable = true;
             defaultSession = "niri";
           };
-          ollama = {
-            enable = true;
-            environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
-            loadModels = [
-              "qwen3:1.7b"
-              "qwen3:4b"
-            ];
-          };
-          nextjs-ollama-llm-ui = {
-            enable = true;
-            port = 8154; # Reasonably close to ollama
-          };
+          # ollama = {
+          #   enable = true;
+          #   environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
+          #   loadModels = [
+          #     "qwen3:1.7b"
+          #     "qwen3:4b"
+          #   ];
+          # };
+          # nextjs-ollama-llm-ui = {
+          #   enable = true;
+          #   port = 8154; # Reasonably close to ollama
+          # };
           avahi = {
             enable = true;
             nssmdns4 = true;
