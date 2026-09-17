@@ -38,6 +38,7 @@ in {
         defaultEditor = true;
       };
       fish.enable = true;
+      starship.enable = true;
     };
     users.defaultUserShell = pkgs.fish;
 
