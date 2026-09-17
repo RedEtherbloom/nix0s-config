@@ -11,7 +11,6 @@ in {
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.niri-flake.nixosModules.niri
-    ../cachix/niri-flake.nix
   ];
 
   options.myOptions.hostRoles.neural-augmenter = {
@@ -315,7 +314,6 @@ in {
             ];
           };
         };
-        niri-flake.cache.enable = false; # We manage it ourself for readability
         boot = {
           kernelParams = [
             "PREEMPT=FULL" # Attempt to improve bluetooth reliability

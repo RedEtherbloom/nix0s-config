@@ -1,27 +1,10 @@
-{inputs, ...}: final: prev: {
+{...}: final: prev: {
   koboldcpp = prev.koboldcpp.overrideAttrs (
     _: pythonPrev: {
       pythonInputs =
         pythonPrev.pythonInputs ++ (builtins.attrValues {inherit (final.python3Packages) psutil;});
     }
   );
-
-  vimPlugins =
-    (prev.vimPlugins or [])
-    // {
-      jj-nvim = final.vimUtils.buildVimPlugin {
-        pname = "jj.nvim";
-        version = "0.3.0-unstable-2026-01-06";
-        src = final.fetchFromGitHub {
-          owner = "NicolasGB";
-          repo = "jj.nvim";
-          rev = "ba48ed08b5c08a7192b1a47a689e0c9f949fe5a4";
-          hash = "sha256-bmLNfG5J2wtjzpsfd5Pkk9n7hYw+rw2b8CmnVwQY2Co=";
-        };
-        meta.homepage = "https://github.com/NicolasGB/jj.nvim/";
-        meta.hydraPlatforms = [];
-      };
-    };
 
   gnupg-with-pin-caching = prev.gnupg.overrideAttrs (
     _: prevAttrs: {
@@ -62,77 +45,6 @@
         '';
     }
   );
-
-  # WARN: BROKEN and will be removed
-  flathunter-image = let
-    src = final.fetchFromGitHub {
-      owner = "flathunters";
-      repo = "flathunter";
-      rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
-      hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
-    };
-    requirements_txt = final.runCommand "flathunter-requirements.txt" {} ''
-      mkdir home
-      export HOME=$(pwd)/home
-      cd ${src}
-      ${final.pipenv}/bin/pipenv requirements > $out
-    '';
-    project = inputs.pyproject-nix.lib.project.loadRequirementsTxt {
-      requirements = builtins.readFile "${requirements_txt}";
-      projectRoot = src;
-    };
-    python = final.python314;
-  in
-    final.dockerTools.buildImage {
-      name = "flathunter";
-      tag = "latest";
-      copyToRoot = final.buildEnv {
-        name = "image-root";
-        pathsToLink = [
-          "/bin"
-        ];
-        paths = with final; [
-          undetected-chromedriver
-          coreutils
-          (python.withPackages (project.renderers.withPackages {inherit python;}))
-        ];
-      };
-    };
-
-  flathunter-docker-image = final.stdenv.mkDerivation {
-    name = "flathunter-docker-image";
-    src = final.fetchFromGitHub {
-      owner = "flathunters";
-      repo = "flathunter";
-      rev = "fb66e768faba869e115b5d8a81981fe867f0fd30";
-      hash = "sha256-PoZ9VwydJ1zVDlpuLR4OJgrh3T4KvvUjYzQHZxVlgQ0=";
-    };
-
-    nativeBuildInputs = with final; [
-      podman
-      openssh
-    ];
-
-    buildPhase = ''
-      runHook preBuild
-      # Docker build fails due to no home directory
-      mkdir home
-      export HOME=$(pwd)/home
-
-      ls .
-      pwd
-      podman machine init
-      podman machine start
-      podman --log-level trace build --tag flathunter -f $src/Dockerfile .
-      runHook postBuild
-    '';
-
-    installPhase = ''
-      runHook preInstall
-      cp $src/flathunter.tar $out
-      runHook postInstall
-    '';
-  };
 
   thunarWithExtensions = final.thunar.override {
     thunarPlugins = with final; [

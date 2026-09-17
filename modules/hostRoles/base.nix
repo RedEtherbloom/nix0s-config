@@ -1,8 +1,10 @@
 {
   config,
+  home-manager,
   inputs,
   lib,
   secrets,
+  self,
   pkgs,
   ...
 }: let
@@ -11,6 +13,9 @@ in {
   imports = [
     # cache.nixos.org is implicitly imported
     ../cachix/nix-community.nix
+    home-manager.nixosModules.home-manager
+    inputs.sops-nix.nixosModules.sops
+    inputs.nix-index-database.nixosModules.nix-index
   ];
 
   options.myOptions.hostRoles.base.enable = lib.mkOption {
@@ -79,5 +84,14 @@ in {
       tmp.cleanOnBoot = true;
     };
     sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      extraSpecialArgs = {
+        inherit inputs self secrets;
+        osConfig = config;
+      };
+      users.inf = "${self}/hosts/${config.networking.hostName}/home.nix";
+    };
   };
 }

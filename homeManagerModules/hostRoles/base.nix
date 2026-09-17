@@ -9,6 +9,11 @@
 }: let
   cfg = config.myOptions.hostRoles.base;
 in {
+  imports = [
+    inputs.sops-nix.homeManagerModules.sops
+    inputs.nix-index-database.homeModules.nix-index
+    inputs.stylix.homeModules.stylix
+  ];
   options.myOptions.hostRoles.base = {
     enable = lib.mkOption {
       description = "Enable home manager";

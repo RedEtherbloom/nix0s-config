@@ -30,7 +30,8 @@
     max-jobs = 8;
     cores = 8;
   };
-  nixpkgs.config = {
+  # It is not entirely clear if this would have an effect with readOnlyPkgs
+  nixpkgs.config = lib.mkForce {
     cudaSupport = true;
     cudnnSupport = true;
     cudaCapabilities = ["7.5"];

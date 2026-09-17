@@ -322,13 +322,10 @@
   '';
 in {
   imports = [
-    inputs.niri-flake.homeModules.niri
     inputs.noctalia-shell.homeModules.default
   ];
 
   programs.niri = {
-    enable = true;
-    inherit (osConfig.programs.niri) package;
     settings = {
       input = {
         keyboard = {

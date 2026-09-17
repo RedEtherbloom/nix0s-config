@@ -66,7 +66,7 @@ in {
         ]
         ++ lib.optionals cfg.image_editing [gimp]
         ++ lib.optionals cfg.text_editing [
-          libreoffice-qt6-fresh
+          libreoffice
           hunspell
           hunspellDicts.en_US
           hunspellDicts.de_DE
