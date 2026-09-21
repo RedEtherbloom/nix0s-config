@@ -291,12 +291,12 @@
         {
           key = "e";
           desc = "Launch Emacs";
-          cmd = "emacsclient -a \"\" -c";
+          cmd = "emacsclient -a \"emacs\" -c";
         }
         {
           key = "E";
           desc = "Restart Emacs daemon, then launch Emacs";
-          cmd = "systemctl restart --user emacs.service && emacsclient -a \"\" -c";
+          cmd = "systemctl restart --user emacs.service && emacsclient -a \"emacs\" -c";
         }
         {
           key = "v";
