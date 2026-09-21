@@ -26,6 +26,7 @@ in {
       threema-desktop
 
       mumble
+      beeper
     ];
     programs = {
       nheko.enable = true;
