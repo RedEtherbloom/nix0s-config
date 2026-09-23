@@ -298,7 +298,7 @@ in {
       sioyek.enable = true;
       emacs = {
         enable = true;
-        package = pkgs.emacs-pgtk;
+        package = pkgs.emacs;
       };
     };
 
