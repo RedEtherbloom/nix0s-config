@@ -201,6 +201,9 @@ in {
               obsidian
 
               alarm-clock-applet
+
+              pear-desktop
+              youtube-tui
             ]
             ++ (with pkgs.kdePackages; [
               ark

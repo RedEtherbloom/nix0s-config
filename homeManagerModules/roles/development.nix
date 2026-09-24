@@ -124,7 +124,10 @@ in {
     lib.mkMerge [
       {
         home.packages = with pkgs;
-          [just]
+          [
+            just
+            pkgs.godot
+          ]
           ++ lib.optionals cfg.rust [
             clang
             clang-tools

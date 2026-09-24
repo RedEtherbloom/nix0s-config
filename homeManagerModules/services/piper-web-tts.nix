@@ -34,6 +34,9 @@
   };
 
   config = lib.mkIf config.myOptions.services.piper-web-tts.enable {
+    home.packages = [
+      pkgs.pied # Piper-tts voice management
+    ];
     systemd.user = {
       services = {
         piper-web-tts = {

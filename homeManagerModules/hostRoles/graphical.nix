@@ -27,23 +27,16 @@ in {
         brightnessctl
         hyfetch
 
-        # Attempts at notifications
-        kdePackages.kdialog
-        libnotify
-
         vlc
-        # TODO: Recreate old shortcuts and configure via options instead
-        feh
-
-        pied # Piper-tts voice management
+        feh # TODO: Recreate old shortcuts and configure via options instead
       ];
       sessionVariables = let
-        askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+        # askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
       in {
         # Native Wayland for Chromium apps
         NIXOS_OZONE_WL = "1";
-        SUDO_ASKPASS = askpass_helper;
-        SSH_ASKPASS = askpass_helper;
+        # SUDO_ASKPASS = askpass_helper;
+        # SSH_ASKPASS = askpass_helper;
       };
     };
 
@@ -95,7 +88,5 @@ in {
       fzf.tmux.enableShellIntegration = true;
       btop.enable = true;
     };
-
-    fonts.fontconfig.enable = true;
   };
 }
