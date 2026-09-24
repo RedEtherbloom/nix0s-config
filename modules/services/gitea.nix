@@ -1,27 +1,16 @@
 {
-  config,
-  lib,
-  pkgs,
-  secrets,
-  ...
-}: let
-  cfg = config.myOptions.services.gitea;
-
-  # DEFAULT Port, reexported
-  GITEA_PORT = 3000;
-  GITEA_DOMAIN = "100.108.50.97";
-  GITEA_SECRET_DIRECTORY = "${secrets}/secrets/services/gitea";
-  GITEA_SECRET_FILE = "${GITEA_SECRET_DIRECTORY}/gitea.yaml";
-in {
-  options.myOptions.services.gitea = {
-    enable = lib.mkOption {
-      description = "Enable gitea";
-      type = lib.types.bool;
-      default = false;
-    };
-  };
-
-  config = lib.mkIf cfg.enable {
+  flake.nixosModules.gitea = {
+    config,
+    pkgs,
+    secrets,
+    ...
+  }: let
+    # DEFAULT Port, reexported
+    GITEA_PORT = 3000;
+    GITEA_DOMAIN = "100.108.50.97";
+    GITEA_SECRET_DIRECTORY = "${secrets}/secrets/services/gitea";
+    GITEA_SECRET_FILE = "${GITEA_SECRET_DIRECTORY}/gitea.yaml";
+  in {
     sops.secrets."gitea/database_password" = {
       sopsFile = GITEA_SECRET_FILE;
       owner = config.services.gitea.user;
@@ -63,11 +52,6 @@ in {
         createDatabase = true;
         passwordFile = config.sops.secrets."gitea/database_password".path;
       };
-    };
-
-    networking.firewall.interfaces."wg0" = {
-      allowedTCPPorts = [GITEA_PORT];
-      allowedUDPPorts = [GITEA_PORT];
     };
   };
 }

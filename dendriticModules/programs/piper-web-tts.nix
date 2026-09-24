@@ -1,39 +1,10 @@
 {
-  lib,
-  pkgs,
-  config,
-  ...
-}: {
-  options.myOptions.services = {
-    piper-web-tts = {
-      enable = lib.mkOption {
-        description = "Autostart a local piper server for fluid tts playback.";
-        type = lib.types.bool;
-        default = false;
-      };
-      package = lib.mkOption {
-        description = "Piper package to use";
-        type = lib.types.package;
-        default = pkgs.piper-tts;
-      };
-      model = lib.mkOption {
-        description = "Name of model or part to model";
-        type = lib.types.either lib.types.str lib.types.path;
-      };
-      data-dir = lib.mkOption {
-        description = "Data directory for model download";
-        type = lib.types.either lib.types.str lib.types.path;
-        default = "${config.xdg.stateHome}/piper";
-      };
-      install-in-speech-dispatcher = lib.mkOption {
-        description = "Whether to install this piper instance as a speech-dispatcher option automatically";
-        type = lib.types.bool;
-        default = false;
-      };
-    };
-  };
-
-  config = lib.mkIf config.myOptions.services.piper-web-tts.enable {
+  flake.homeModules.piper-web-tts = {
+    config,
+    lib,
+    pkgs,
+    ...
+  }: {
     home.packages = [
       pkgs.pied # Piper-tts voice management
     ];
@@ -47,17 +18,17 @@
             Type = "exec";
 
             ExecStart = let
-              python = pkgs.python314.withPackages (_: [
+              pythonEnv = pkgs.python3.withPackages (_: [
                 (pkgs.python3Packages.toPythonModule config.myOptions.services.piper-web-tts.package)
               ]);
             in
               lib.getExe (
                 pkgs.writeShellApplication {
                   name = "piper-web-tts";
-                  runtimeInputs = with pkgs; [
-                    coreutils
-                    fd
-                    python
+                  runtimeInputs = [
+                    pkgs.coreutils
+                    pkgs.fd
+                    pythonEnv
                     config.myOptions.services.piper-web-tts.package
                   ];
 
@@ -83,11 +54,9 @@
                 }
               );
           };
-          Install = {
-            # Auto-start, to avoid delay
-            # TODO: Offer startup via TCP socket
-            WantedBy = ["default.target"];
-          };
+          # Auto-start, to avoid delay
+          # IDEA: Offer startup via TCP socket
+          Install.WantedBy = ["default.target"];
         };
       };
     };

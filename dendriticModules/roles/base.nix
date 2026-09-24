@@ -1,0 +1,238 @@
+{
+  inputs,
+  self,
+  ...
+}: {
+  flake = {
+    nixosModules.base = {
+      config,
+      lib,
+      secrets,
+      pkgs,
+      ...
+    }: {
+      imports = [
+        inputs.home-manager.nixosModules.home-manager
+        inputs.sops-nix.nixosModules.sops
+        inputs.nix-index-database.nixosModules.nix-index
+        # cache.nixos.org is implicitly imported
+        self.nixosModules.cachix-nix-community
+      ];
+
+      config = {
+        myOptions.utilities.enable = lib.mkDefault true;
+
+        system.build.nixos-rebuild = lib.mkForce pkgs.lixPackageSets.latest.nixos-rebuild-ng;
+        security.pki.certificateFiles = ["${secrets}/secrets/root_ca/root_ca.crt"];
+
+        services = {
+          fwupd.enable = lib.mkDefault true;
+          fstrim.enable = lib.mkDefault true;
+        };
+
+        programs = {
+          nix-index-database.comma.enable = lib.mkDefault true;
+          # Fallback in case of e.g. broken system
+          neovim = {
+            enable = true;
+            defaultEditor = true;
+          };
+          fish.enable = true;
+          starship.enable = true;
+        };
+        users.defaultUserShell = pkgs.fish;
+
+        # See: https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix
+        environment.pathsToLink = [
+          "/share/xdg-desktop-portal"
+          "/share/applications"
+        ];
+
+        stylix = {
+          base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+          targets.gtksourceview.enable = lib.mkForce false; # See: https://github.com/nix-community/stylix/issues/1686
+        };
+
+        nix = {
+          package = pkgs.lixPackageSets.latest.lix;
+          settings = {
+            experimental-features = [
+              "nix-command"
+              "flakes"
+              "pipe-operator"
+            ];
+            trusted-users = [
+              "root"
+              "@wheel"
+              "inf"
+            ];
+          };
+          gc = {
+            automatic = lib.mkDefault true;
+            dates = "daily";
+            options = "--delete-older-than 5d";
+          };
+          optimise = {
+            automatic = lib.mkDefault true;
+            dates = ["15:00"];
+          };
+        };
+
+        boot = {
+          kernelPackages = pkgs.linuxPackages_zen;
+          tmp.cleanOnBoot = true;
+        };
+        sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+        home-manager = {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          extraSpecialArgs = {
+            inherit inputs self secrets;
+            osConfig = config;
+          };
+          users.inf = "${self}/hosts/${config.networking.hostName}/home.nix";
+        };
+      };
+    };
+    homeModules.base = {
+      config,
+      lib,
+      osConfig,
+      pkgs,
+      secrets,
+      ...
+    }: {
+      imports = [
+        inputs.sops-nix.homeManagerModules.sops
+        inputs.nix-index-database.homeModules.nix-index
+        inputs.stylix.homeModules.stylix
+      ];
+      # REFACTOR: Move stylix to toggleable option
+
+      config = (
+        lib.mkMerge [
+          {
+            sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+            programs = {
+              home-manager.enable = true;
+              nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
+              fzf.enable = true;
+              zoxide.enable = true;
+              zellij.enable = false; # TMUX alternative
+            };
+            news.display = "silent";
+            services.home-manager.autoExpire = {
+              enable = true;
+              frequency = "daily";
+              timestamp = "-5 days";
+            };
+            xdg.userDirs.createDirectories = true;
+            stylix = {
+              enable = true;
+              autoEnable = false;
+              inherit (osConfig.stylix) image polarity;
+              base16Scheme = osConfig.stylix.base16Scheme;
+              targets = {
+                nixos-icons.enable = false; # Broken targets
+                qt.enable = false;
+                gtksourceview.enable = lib.mkForce false; # See: Constant rebuilds of e.g. inkscape caused by this
+              };
+            };
+            fonts.fontconfig.enable = true;
+          }
+          (lib.mkIf osConfig.security.ownAdditional.yubikey {
+            # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)
+            programs.gpg = {
+              enable = true;
+              package = pkgs.gnupg-with-pin-caching;
+              # https://support.yubico.com/hc/en-us/articles/4819584884124-Resolving-GPG-s-CCID-conflicts
+              # https://wiki.archlinux.org/title/YubiKey#gpg:_no_such_device
+              scdaemonSettings = {
+                disable-ccid = true;
+                pcsc-shared = true;
+              };
+              settings = {
+                # Copied from: https://github.com/drduh/YubiKey-Guide/blob/master/config/gpg.conf
+                personal-cipher-preferences = "AES256 AES192 AES";
+                personal-digest-preferences = "SHA512 SHA384 SHA256";
+                personal-compress-preferences = "ZLIB BZIP2 ZIP Uncompressed";
+                # Default preferences for new keys
+                default-preference-list = "SHA512 SHA384 SHA256 AES256 AES192 AES ZLIB BZIP2 ZIP Uncompressed";
+                # SHA512 as digest to sign keys
+                cert-digest-algo = "SHA512";
+                # SHA512 as digest for symmetric ops
+                s2k-digest-algo = "SHA512";
+                # AES256 as cipher for symmetric ops
+                s2k-cipher-algo = "AES256";
+                # UTF-8 support for compatibility
+                charset = "utf-8";
+                # No comments in messages
+                no-comments = true;
+                # No version in output
+                no-emit-version = true;
+                # Disable banner
+                no-greeting = true;
+                # Long key id format
+                keyid-format = "0xlong";
+                # Display UID validity and list expired subkeys
+                list-options = "show-uid-validity show-unusable-subkeys";
+                verify-options = "show-uid-validity";
+                # Display all keys and their fingerprints
+                with-fingerprint = true;
+                # Cross-certify subkeys are present and valid
+                require-cross-certification = true;
+                # Enforce memory locking to avoid accidentally swapping GPG memory to disk
+                require-secmem = true;
+                # Enable caching of passphrase for symmetrical ops
+                no-symkey-cache = false;
+                # Output ASCII instead of binary
+                armor = true;
+                # Enable smartcard
+                use-agent = true;
+                # Disable recipient key ID in messages (warning: breaks Mailvelope)
+                throw-keyids = true;
+                # TODO: What keyservers are enable by default?
+                # keyserver = "hkps://keys.openpgp.org hkps://keyserver.ubuntu.com:443";
+                # Enable key retrieval using WKD and DANE
+                auto-key-locate = "wkd,dane,local";
+                auto-key-retrieve = true;
+              };
+              publicKeys = [
+                {
+                  source = "${secrets}/public/gpg/yubikey_personal.asc";
+                  trust = "ultimate";
+                }
+              ];
+            };
+
+            services.gpg-agent = {
+              enable = true;
+
+              # Default
+              defaultCacheTtl = 600;
+              maxCacheTtl = 7200;
+              defaultCacheTtlSsh = 600;
+              maxCacheTtlSsh = 7200;
+
+              enableSshSupport = true;
+              enableExtraSocket = true;
+              pinentry.package = lib.mkDefault pkgs.pinentry-gnome3;
+              verbose = true;
+              extraConfig = ''
+                allow-loopback-pinentry
+              '';
+            };
+
+            systemd.user.services.gpg-agent.Service.ExecStart =
+              lib.mkForce "${config.programs.gpg.package}/bin/gpg-agent --supervised --verbose --verbose --verbose";
+            # Adapted from: https://github.com/Mic92/sops-nix/issues/356#issuecomment-3701467494
+            # Disable gpg auto decryption as it effectively ignores an existing ssh key
+            systemd.user.services.sops-nix.Service.Environment = lib.mkForce [
+              "SOPS_GPG_EXEC=${pkgs.coreutils}/bin/false"
+            ];
+          })
+        ]
+      );
+    };
+  };
+}
