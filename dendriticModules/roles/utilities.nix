@@ -82,74 +82,73 @@
 
     config = lib.mkMerge [
       {
-        environment.systemPackages = with pkgs;
+        environment.systemPackages =
           lib.optionals cfg.minimum [
-            age
-            ssh-to-age
-            sops
+            pkgs.age
+            pkgs.ssh-to-age
+            pkgs.sops
           ]
           ++ lib.optionals cfg.diverse [
-            file
-            util-linux
-            psmisc
-            zip
-            unzip
-            unar
-            p7zip
-            ripgrep
-            fd
-            jq
-            fzf
-            lshw
-            fuse3
+            pkgs.file
+            pkgs.util-linux
+            pkgs.psmisc
+            pkgs.zip
+            pkgs.unzip
+            pkgs.unar
+            pkgs.p7zip
+            pkgs.ripgrep
+            pkgs.fd
+            pkgs.jq
+            pkgs.fzf
+            pkgs.lshw
+            pkgs.fuse3
           ]
           ++ lib.optionals cfg.git [
-            git
-            git-lfs
+            pkgs.git
+            pkgs.git-lfs
           ]
           ++ lib.optionals cfg.python [
-            python3
+            pkgs.python3
           ]
-          ++ lib.optionals cfg.htop [htop]
+          ++ lib.optionals cfg.htop [pkgs.htop]
           ++ lib.optionals cfg.cmdFileManagers [
-            ranger
-            dust
-            dua
-            ncdu
-            # Rust based
-            yazi
+            pkgs.ranger
+            pkgs.dust
+            pkgs.dua
+            pkgs.ncdu
+            pkgs.yazi # Rust based
           ]
           ++ lib.optionals cfg.networkUtils [
-            dig
-            wget
-            curl
+            pkgs.dig
+            pkgs.wget
+            pkgs.curl
           ]
           ++ lib.optionals cfg.rescueTools [
-            ddrescue
+            pkgs.ddrescue
           ]
           ++ lib.optionals cfg.binaryTools [
-            unixtools.xxd
+            pkgs.unixtools.xxd
           ]
           ++ lib.optionals cfg.wormhole [
-            magic-wormhole
-            magic-wormhole-rs
-            warp
+            pkgs.magic-wormhole
+            pkgs.magic-wormhole-rs
+            pkgs.warp
           ]
           ++ lib.optionals cfg.tmux [
-            tmux
+            pkgs.tmux
           ]
           ++ lib.optionals cfg.ssh_utils [
-            sshfs
-            mosh
+            pkgs.sshfs
+            pkgs.mosh
           ]
           ++ lib.optionals cfg.pdfUtils [
-            poppler-utils
-            ripgrep-all
+            pkgs.poppler-utils
+            pkgs.ripgrep-all
           ]
           ++ lib.optionals cfg.diskUtilities [
-            parted
-            gparted
-            util-linux # For losetup and fdisk
+            pkgs.parted
+            pkgs.gparted
+            pkgs.util-linux # For losetup and fdisk
           ];
       }
     ];

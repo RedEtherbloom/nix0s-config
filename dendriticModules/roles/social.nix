@@ -10,20 +10,17 @@
       default = true;
       description = "Autostart socials applications";
     };
-    home.packages = with pkgs; [
-      telegram-desktop
-      signal-desktop
-      threema-desktop
+    home.packages = [
+      pkgs.telegram-desktop
+      pkgs.signal-desktop
+      pkgs.threema-desktop
 
-      mumble
-      beeper
+      pkgs.mumble
+      pkgs.beeper
     ];
     programs = {
       nheko.enable = true;
-      vesktop = {
-        enable = true;
-        package = pkgs.vesktop-rtc-fix;
-      };
+      vesktop.enable = true;
     };
     xdg.autostart = lib.mkIf config.roles.socials.autostart {
       enable = true;

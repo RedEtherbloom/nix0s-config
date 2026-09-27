@@ -25,6 +25,7 @@
         inputs.stylix.nixosModules.stylix
         inputs.niri-flake.nixosModules.niri
         self.homeModules.neural-augmenter
+        self.nixosModule.ssh
       ];
 
       options.myOptions.hostRoles.neural-augmenter = {
@@ -131,9 +132,9 @@
             };
 
             services = {
-              udev.packages = with pkgs; [
-                platformio-core
-                probe-rs-tools
+              udev.packages = [
+                pkgs.platformio-core
+                pkgs.probe-rs-tools
               ];
               colord.enable = true;
               samba.enable = true;
@@ -796,10 +797,10 @@
           portal = {
             enable = lib.mkForce true;
             xdgOpenUsePortal = true;
-            extraPortals = with pkgs;
+            extraPortals =
               [
-                gnome-keyring
-                xdg-desktop-portal-gtk
+                pkgs.gnome-keyring
+                pkgs.xdg-desktop-portal-gtk
               ]
               ++ osConfig.xdg.portal.extraPortals; # See github.com/nix-community/home-manager/issues/7124
           };

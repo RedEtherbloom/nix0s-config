@@ -53,7 +53,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
     description = "VOXD is a speech-to-text, voice-typing, dictation software for linux distributions. It is an open-source, free of charge, USER-FRIENDLY software, for as many linux distros as possible";
     homepage = "https://github.com/jakovius/voxd";
     license = lib.licenses.mit;
-    maintainers = with lib.maintainers; [];
+    maintainers = [];
     mainProgram = "voxd";
   };
 })

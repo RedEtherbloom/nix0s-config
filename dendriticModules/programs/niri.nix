@@ -790,15 +790,15 @@
           "${noctaliaExe}" -d
           fi
         '';
-      packages = with pkgs; [
+      packages = [
         # Optional noctalia dependencies
-        cliphist
-        cava
-        ddcutil
-        nautilus
+        pkgs.cliphist
+        pkgs.cava
+        pkgs.ddcutil
+        pkgs.nautilus
 
         # Fonts, cursors, etc.
-        breeze-hacked-cursor-theme
+        pkgs.breeze-hacked-cursor-theme
 
         # Helper script block
         shikaneProfileSelector
@@ -808,10 +808,10 @@
         muteAllSinks
 
         # Own
-        thunarWithExtensions
-        ytui-music
-        shellbeats
-        gnome-calendar
+        pkgs.thunarWithExtensions
+        pkgs.ytui-music
+        pkgs.shellbeats
+        pkgs.gnome-calendar
       ];
     };
 

@@ -50,12 +50,12 @@
       };
     };
     homeModules.gaming = {pkgs, ...}: {
-      home.packages = with pkgs; [
-        # _2ship2harkinian # Ocarina of Time
-        # (olympus.override {celesteWrapper = pkgs.steam-run;})
-        ut1999
+      home.packages = [
+        # pkgs._2ship2harkinian # Ocarina of Time
+        # (pkgs.olympus.override {celesteWrapper = pkgs.steam-run;})
+        pkgs.ut1999
 
-        (lutris.override {
+        (pkgs.lutris.override {
           extraLibraries = pkgs: [
             pkgs.glib-networking
             pkgs.dconf

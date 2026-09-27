@@ -110,11 +110,6 @@
         default = true;
         description = "Enable MCU tools.";
       };
-      vibecoding = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Trying out some slop coding. Probably won't be used much";
-      };
       fren-coding = lib.mkOption {
         type = lib.types.bool;
         default = false;
@@ -125,74 +120,71 @@
     config = lib.mkIf cfg.enable (
       lib.mkMerge [
         {
-          home.packages = with pkgs;
+          home.packages =
             [
               pkgs.just
               pkgs.godot
               # renderdoc # Debugging render scenes for Minecraft
             ]
             ++ lib.optionals cfg.rust [
-              clang
-              clang-tools
-              pkg-config
-              rustup
+              pkgs.clang
+              pkgs.clang-tools
+              pkgs.pkg-config
+              pkgs.rustup
             ]
             ++ lib.optionals cfg.openscad [
-              openscad-unstable
+              pkgs.openscad-unstable
             ]
+            # IDEA: Reference main dev-shell
             ++ lib.optionals cfg.nix (
-              with lixPackageSets.latest;
-                [
-                  nixos-rebuild-ng
-                  nix-fast-build
-                  nix-direnv
-                  nix-init
-                  nix-update
-                  nixos-anywhere
-                  colmena
-                  nixpkgs-review
-                  nix-eval-jobs
-                  nix-du
-                  nurl
-                ]
-                ++ (with pkgs; [
-                  alejandra
-                  nixd
-                  direnv
-                  nix-tree
-                ])
+              [
+                pkgs.lixPackageSets.latest.nixos-rebuild-ng
+                pkgs.lixPackageSets.latest.nix-fast-build
+                pkgs.lixPackageSets.latest.nix-direnv
+                pkgs.lixPackageSets.latest.nix-init
+                pkgs.lixPackageSets.latest.nix-update
+                pkgs.lixPackageSets.latest.nixos-anywhere
+                pkgs.lixPackageSets.latest.colmena
+                pkgs.lixPackageSets.latest.nixpkgs-review
+                pkgs.lixPackageSets.latest.nix-eval-jobs
+                pkgs.lixPackageSets.latest.nix-du
+                pkgs.lixPackageSets.latest.nurl
+              ]
+              ++ [
+                pkgs.alejandra
+                pkgs.nixd
+                pkgs.direnv
+                pkgs.nix-tree
+              ]
             )
             ++ lib.optionals cfg.electronics [
-              kicad-small
+              pkgs.kicad-small
             ]
             ++ lib.optionals cfg.three-d-printing [
-              prusa-slicer
+              pkgs.prusa-slicer
             ]
             ++ lib.optionals cfg.reverseEngineering [
-              ghidra
+              pkgs.ghidra
             ]
             ++ lib.optionals cfg.network-analysis [
-              nmap
-              wireshark
+              pkgs.nmap
+              pkgs.wireshark
             ]
             ++ lib.optionals cfg.python [
-              python3Packages.flake8
+              pkgs.python3Packages.flake8
             ]
             ++ lib.optionals cfg.git [
-              git
-              git-lfs
-              git-xet
-              git-filter-repo
+              pkgs.git
+              pkgs.git-lfs
+              pkgs.git-xet
+              pkgs.git-filter-repo
             ]
             ++ lib.optionals cfg.mcu [
-              esphome
-              platformio
-              esptool
-              espflash
-              probe-rs-tools
-            ]
-            ++ lib.optionals cfg.vibecoding [
-              antigravity-ide-fhs
+              pkgs.esphome
+              pkgs.platformio
+              pkgs.esptool
+              pkgs.espflash
+              pkgs.probe-rs-tools
             ];
 
           programs.go.enable = cfg.go;
@@ -234,9 +226,9 @@
               };
             };
           };
-          home.packages = with pkgs; [
-            lazyjj
-            jj-fzf
+          home.packages = [
+            pkgs.lazyjj
+            pkgs.jj-fzf
           ];
         })
         (lib.mkIf cfg.java {
