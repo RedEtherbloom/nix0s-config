@@ -4,7 +4,7 @@
   ...
 }: {
   flake = {
-    nixosModule = {
+    nixosModules = {
       fractor = {
         lib,
         pkgs,

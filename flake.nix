@@ -71,7 +71,7 @@
       }: {
         # TODO: Insert home-manager module
         imports = [
-          (inputs.import-tree ./dendriticModules)
+          (inputs.import-tree.matchNot ".*/hardware-configuration\.nix" [./dendriticModules ./hosts])
         ];
         systems = [
           "x86_64-linux"
