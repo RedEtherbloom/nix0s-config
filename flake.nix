@@ -69,6 +69,10 @@
         self,
         ...
       }: {
+        # TODO: Insert home-manager module
+        imports = [
+          (inputs.import-tree ./dendriticModules)
+        ];
         systems = [
           "x86_64-linux"
           "aarch64-linux"
@@ -117,7 +121,7 @@
               (final: prev: {
                 nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};
               })
-              (import ./pkgs {inherit inputs;})
+              self.overlays.default
             ];
             # patches = [ ];
           };

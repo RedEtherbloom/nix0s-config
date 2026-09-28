@@ -17,11 +17,12 @@
         inputs.nix-index-database.nixosModules.nix-index
         # cache.nixos.org is implicitly imported
         self.nixosModules.cachix-nix-community
+        self.nixosModules.security
+        self.nixosModules.utilities
       ];
 
       config = {
-        myOptions.utilities.enable = lib.mkDefault true;
-
+        # NOTE: May this slow down rebuild times?
         system.build.nixos-rebuild = lib.mkForce pkgs.lixPackageSets.latest.nixos-rebuild-ng;
         security.pki.certificateFiles = ["${secrets}/secrets/root_ca/root_ca.crt"];
 
@@ -175,6 +176,7 @@
             };
             fonts.fontconfig.enable = true;
           }
+          # TODO: How to fix this?
           (lib.mkIf osConfig.security.ownAdditional.yubikey {
             # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)
             programs.gpg = {

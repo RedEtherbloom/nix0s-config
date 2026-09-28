@@ -10,11 +10,6 @@
     cfg = config.myOptions.roles.development;
   in {
     options.myOptions.roles.development = {
-      enable = lib.mkOption {
-        type = with lib.types; bool;
-        default = false;
-        description = "Enable development modules.";
-      };
       rust = lib.mkOption {
         type = lib.types.bool;
         default = true;
@@ -117,7 +112,7 @@
       };
     };
 
-    config = lib.mkIf cfg.enable (
+    config = (
       lib.mkMerge [
         {
           home.packages =

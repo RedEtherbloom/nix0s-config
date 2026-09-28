@@ -1,11 +1,9 @@
 {inputs, ...}: {
   flake.homeModules.firefox = {
-    config,
     lib,
     pkgs,
     ...
   }: let
-    cfg = config.myOptions.firefox;
     # Map each alias to a version with @ prepended and : appended
     defineAliasVariants = baseAlias: (lib.lists.concatMap (x: [
         ("@" + x)
@@ -17,16 +15,7 @@
     imports = [
       inputs.zen-browser.homeModules.beta
     ];
-
-    options.myOptions.firefox = {
-      enable = lib.mkOption {
-        description = "Enable firefox";
-        type = lib.types.bool;
-        default = false;
-      };
-    };
-
-    config = lib.mkIf cfg.enable {
+    config = {
       programs.zen-browser = {
         enable = true;
         # IDEA: Map this from system languages
