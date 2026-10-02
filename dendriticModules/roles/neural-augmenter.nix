@@ -26,6 +26,7 @@
         inputs.niri-flake.nixosModules.niri
         self.homeModules.neural-augmenter
         self.nixosModule.ssh
+        self.nixosModule.openrazer
       ];
 
       options.myOptions.hostRoles.neural-augmenter = {
