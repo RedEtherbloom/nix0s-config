@@ -10,7 +10,7 @@
     programs = {
       niri = {
         enable = true;
-        package = pkgs.niri-unstable;
+        package = pkgs.niri;
       };
     };
     services.displayManager.defaultSession = "niri";
@@ -485,7 +485,7 @@
         debug.honor-xdg-activation-with-invalid-serial = true; # Required by Noctalia
         xwayland-satellite = {
           enable = true;
-          path = "${lib.getExe pkgs.xwayland-satellite-unstable}";
+          path = "${lib.getExe pkgs.xwayland-satellite}";
         };
         hotkey-overlay = {
           hide-not-bound = true;

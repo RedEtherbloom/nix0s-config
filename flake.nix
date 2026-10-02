@@ -49,10 +49,6 @@
       url = "github:epireyn/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    emacs-overlay = {
-      url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs = {
@@ -117,11 +113,7 @@
           _module.args.pkgs = import inputs.nixpkgs {
             inherit config system;
             overlays = [
-              inputs.niri-flake.overlays.niri
-              inputs.emacs-overlay.overlays.default
-              (final: prev: {
-                nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};
-              })
+              (final: prev: {nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};})
               self.overlays.default
             ];
             # patches = [ ];
