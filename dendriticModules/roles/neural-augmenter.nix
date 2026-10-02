@@ -115,6 +115,268 @@
                 gtksourceview.enable = lib.mkForce false;
               };
             };
+            programs = {
+              # Open the ports for KDE-Connect as home manager sadly can't do it
+              kdeconnect = {
+                enable = true;
+                package = lib.mkForce pkgs.kdePackages.kdeconnect-kde;
+              };
+              ausweisapp = {
+                enable = true;
+                openFirewall = true;
+              };
+              extra-container.enable = true;
+              nix-ld.enable = true;
+              chrysalis.enable = true;
+              nh = {
+                enable = true;
+                flake = "/home/inf/Projects/nix0s-config/";
+                clean = {
+                  enable = true;
+                  dates = "daily";
+                  extraArgs = "--keep 5 --keep-since 7d --optimise";
+                };
+              };
+              ydotool.enable = true;
+              appimage = {
+                binfmt = true;
+                package = appimage-run-with-libs;
+              };
+            };
+            nix = {
+              gc.automatic = false;
+              optimise.automatic = false;
+            };
+
+            services = {
+              udev.packages = [
+                pkgs.platformio-core
+                pkgs.probe-rs-tools
+              ];
+              colord.enable = true;
+              samba.enable = true;
+              xserver.wacom.enable = true;
+              flatpak.enable = true;
+              hardware = {
+                bolt.enable = true;
+                openrgb = {
+                  enable = true;
+                  package = pkgs.openrgb-with-all-plugins;
+                };
+              };
+              wivrn = {
+                enable = true;
+                openFirewall = true;
+                steam.importOXRRuntimes = true;
+              };
+              displayManager = {
+                gdm.enable = true;
+              };
+              # ollama = {
+              #   enable = true;
+              #   environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
+              # };
+              avahi = {
+                enable = true;
+                nssmdns4 = true;
+                openFirewall = true;
+              };
+              tuned.enable = true;
+              tlp.enable = lib.mkForce false; # Conflicts with tuned
+              upower.enable = true;
+              gnome.evolution-data-server.enable = true; # Noctalia calendar support
+              earlyoom.enable = true; # Out of memory management
+              pulseaudio = {
+                enable = false;
+                zeroconf.discovery.enable = true; # Just for the port. Check if I have to do this
+              };
+              pipewire = {
+                enable = true;
+                pulse.enable = true;
+                alsa = {
+                  enable = true;
+                  support32Bit = true;
+                };
+                jack.enable = false;
+                raopOpenFirewall = true;
+                wireplumber.enable = true;
+              };
+              gvfs.enable = true;
+              locate = {
+                enable = true;
+                interval = "hourly";
+                package = pkgs.plocate;
+                pruneNames = [
+                  ".bzr"
+                  ".cache"
+                  ".git"
+                  ".hg"
+                  ".svn"
+                  ".jj"
+                  ".pio"
+                  ".fingerprint"
+                  ".direnv"
+                  "target"
+                ];
+              };
+              speechd.enable = true;
+            };
+
+            hardware = {
+              enableAllFirmware = lib.mkDefault true;
+              bluetooth = {
+                enable = true;
+                powerOnBoot = true;
+                settings = {
+                  General = {
+                    Experimental = true;
+                    KernelExperimental = true;
+                    # ControllerMode = "bredr"; # Problems with Bose
+                    FastConnectable = true;
+                    # Class = "0x000100"; # Generic desktop TODO: Do I need object major class as well?
+                    # JustWorksRepairing = true; # Security implications?
+                  };
+                };
+              };
+              i2c.enable = true;
+              sensor.iio.enable = true; # Autorotation
+              opentabletdriver.enable = true; # May improve krita comfort
+              rtl-sdr.enable = true;
+            };
+            environment = let
+              # askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+            in {
+              # EXPERIMENT: Try if noctalia automatically picks up the slack
+              # sessionVariables = {
+              #   SUDO_ASKPASS = askpass_helper;
+              #   SSH_ASKPASS = askpass_helper;
+              # };
+              # variables.SSH_ASKPASS = lib.mkForce askpass_helper; # Required due to nix conflict
+              systemPackages = [
+                pkgs.lm_sensors
+                pkgs.nftables # vopono daemon
+                pkgs.android-tools
+                pkgs.piper-tts
+                appimage-run-with-libs
+                inputs.nix-alien.packages.${pkgs.stdenv.hostPlatform.system}.nix-alien
+              ];
+            };
+
+            # Don't garbage collect flake sources for our dev machines, for faster devflows. Copied from: https://github.com/NixOS/nix/issues/3995#issuecomment-2081164515
+            # system.extraDependencies = let
+            #   collectFlakeInputs = input:
+            #     [input] ++ builtins.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or {}));
+            # in
+            #   builtins.concatMap collectFlakeInputs (builtins.attrValues inputs);
+
+            zramSwap.enable = true;
+            virtualisation = {
+              containers = {
+                enable = true;
+                registries.settings.registry = [
+                  {location = "docker.io";}
+                  {location = "quay.io";}
+                  {location = "mirror.gcr.io";} # Google mirror
+                ];
+              };
+              podman = {
+                enable = true;
+                dockerSocket.enable = true;
+                autoPrune.enable = true;
+                dockerCompat = true;
+                defaultNetwork.settings.dns_enabled = true; # Required for containers under podman-compose to be able to talk to each other.
+              };
+              oci-containers.backend = "podman";
+              waydroid.enable = true;
+            };
+
+            sops.secrets."registry/dockerhub/password".sopsFile = "${secrets}/secrets/services/docker.yaml";
+            users = {
+              users."inf" = {
+                autoSubUidGidRange = true; # Needed for podman
+                extraGroups = [
+                  "plugdev"
+                  "ydotool"
+                ];
+              };
+              groups.plugdev = {};
+            };
+            documentation = {
+              dev.enable = true;
+              man = {
+                mandoc.enable = true; # For some reason search is broken. Also in less.
+                man-db.enable = false;
+              };
+            };
+
+            systemd = {
+              oomd.enable = true; # Out of memory management
+              services = {
+                NetworkManager-wait-online.enable = lib.mkForce false; # Issues with builds randomly failing
+                vopono = {
+                  description = "Vopono VPN";
+                  after = ["network.target"];
+                  requires = ["network.target"];
+                  wantedBy = ["multi-user.target"];
+                  serviceConfig = {
+                    # TODO: Setup separate user
+                    Type = "simple";
+                    ExecStart = "${lib.getExe pkgs.vopono} daemon";
+                    Restart = "on-failure";
+                    RestartSec = "2s";
+                    Environment = ["RUST_LOG=info"]; # Structured logging
+                  };
+                };
+              };
+            };
+            networking = {
+              networkmanager = {
+                enable = true;
+                wifi.powersave = false;
+              };
+              firewall = {
+                allowedTCPPorts = [
+                  22000 # SyncThing
+                ];
+                allowedUDPPorts = [
+                  21027 # SyncThing
+                  22000 # SyncThing
+                ];
+              };
+            };
+            boot = {
+              kernelParams = [
+                "PREEMPT=FULL" # Attempt to improve bluetooth reliability
+              ];
+              extraModprobeConfig = ''
+                options btusb disable_autosuspend=1
+                options btusb enable_autosuspend=0
+              '';
+            };
+            # TODO: Switch font to nicer font, like jetbrains
+            fonts = {
+              fontDir.enable = true;
+              packages = [
+                pkgs.nerd-fonts.open-dyslexic
+                # E.g. material fonts
+                pkgs.nerd-fonts.symbols-only
+                pkgs.noto-fonts
+                pkgs.noto-fonts-cjk-sans
+                pkgs.noto-fonts-color-emoji
+                pkgs.noto-fonts-monochrome-emoji
+              ];
+              fontconfig = {
+                # The default of slight always felt to fuzzy
+                hinting.style = "medium";
+                defaultFonts = {
+                  serif = ["OpenDyslexic Nerd Font"];
+                  sansSerif = ["OpenDyslexic Nerd Font"];
+                  monospace = ["OpenDyslexicM Nerd Font Mono"];
+                  emoji = ["Noto Color Emoji"];
+                  # OpenDyslexic is very large by default. Too large for our taste.
+                };
+              };
+            };
           }
           (lib.mkIf cfg.tailscale {
             services.tailscale.enable = true;
