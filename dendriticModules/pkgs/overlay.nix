@@ -1,0 +1,145 @@
+{inputs, ...}: {
+  imports = [
+    inputs.flake-parts.flakeModules.easyOverlay
+  ];
+  perSystem = {
+    config,
+    pkgs,
+    final,
+    ...
+  }: {
+    overlayAttrs = {
+      inherit (config.packages) koboldcpp-with-psutil gnupg-with-pin-caching starsector-gl-fix thunarWithExtensions rofi-home-assistant rofi-home-assistant-verbose rofi-home-assistant-changed wlr-which-key-fork systemd-token-timeout-patched voxd comma nixos-rebuild-ng;
+    };
+    packages = {
+      koboldcpp-with-psutil = pkgs.koboldcpp.overrideAttrs (
+        _: pythonPrev: {
+          pythonInputs =
+            pythonPrev.pythonInputs ++ (builtins.attrValues {inherit (final.python3Packages) psutil;});
+        }
+      );
+
+      gnupg-with-pin-caching = pkgs.gnupg.overrideAttrs (
+        _: prevAttrs: {
+          # Address missing pin caching https://dev.gnupg.org/T7041
+          patches = (prevAttrs.patches or []) ++ [./0001-allow-shared-pin-cache.patch];
+        }
+      );
+
+      # Eve: Account for bug: https://fractalsoftworks.com/forum/index.php?topic=30633.0
+      starsector-gl-fix = pkgs.starsector.overrideAttrs (oldAttrs: {
+        buildInputs = oldAttrs.buildInputs ++ [final.makeWrapper];
+        postInstall =
+          (oldAttrs.postInstall or "")
+          + ''
+            wrapProgram "$out/bin/starsector" --set __GL_THREADED_OPTIMIZATIONS 0
+          '';
+      });
+
+      thunarWithExtensions = final.thunar.override {
+        thunarPlugins = with final; [
+          thunar-archive-plugin
+          thunar-media-tags-plugin
+          thunar-vcs-plugin
+        ];
+      };
+
+      rofi-home-assistant = final.stdenvNoCC.mkDerivation {
+        pname = "rofi-home-assistant";
+        version = "0-unstable-2021-07-29";
+
+        src = final.fetchFromGitHub {
+          owner = "flxai";
+          repo = "rofi-home-assistant";
+          rev = "aa348dee26763e1c8c394c55788d84b83aff4c73";
+          hash = "sha256-2kZgMYZ1GR7fwEnXXg4vn5b6xwxjCoPYI/YENbrea2Q=";
+        };
+
+        dontBuild = true;
+
+        buildInputs = with final; [
+          rofi
+          jq
+          home-assistant-cli
+          libnotify
+        ];
+
+        installPhase = ''
+          mkdir -p $out/bin
+          cp bin/rofi-hass $out/bin/rofi-home-assistant
+        '';
+
+        postFixup = ''
+          substituteInPlace $out/bin/rofi-home-assistant \
+            --replace "light)" "light|switch|automation)"
+        '';
+
+        meta.mainProgram = "rofi-home-assistant";
+      };
+
+      rofi-home-assistant-verbose = final.rofi-home-assistant.overrideAttrs (_: prevAttrs: {
+        postFixup =
+          prevAttrs.postFixup or ""
+          + ''
+            substituteInPlace $out/bin/rofi-home-assistant \
+              --replace " &>/dev/null" ""
+          '';
+      });
+
+      rofi-home-assistant-changed = let
+        desiredTypes = [
+          "light"
+          "switch"
+        ];
+        extraTypes = [
+          "scene"
+        ];
+      in
+        final.writeShellScriptBin "rofi-home-assistant-changed.sh" ''
+          raw_json=$(${final.lib.getExe final.home-assistant-cli} -o json state list 2>/dev/null)
+          json=$(${final.lib.getExe final.jq} --argjson types '${builtins.toJSON (desiredTypes ++ extraTypes)}' -r 'map(.entity_id as $id | select(any($types[]; . as $el | $id | startswith($el))))' <<< "$raw_json")
+          idx=$(${final.lib.getExe final.jq} -r '.[] | [.entity_id, .state] | join(" ")' <<< "$json" | ${final.util-linux}/bin/column -t | ${final.lib.getExe final.rofi} -dmenu -i -markup-rows -format d)
+          item=$(${final.lib.getExe final.jq} -r '.[].entity_id' <<< "$json" | ${final.lib.getExe final.gnused} "''${idx}q;d")
+          itype=$(${final.lib.getExe final.gnused} -r 's/\..+$//' <<< "$item")
+
+          case "$itype" in
+              ${final.lib.strings.concatStringsSep "|" desiredTypes})
+                  ${final.lib.getExe final.home-assistant-cli} state toggle "$item"
+                  ;;
+              ${final.lib.strings.concatStringsSep "|" extraTypes})
+                  ${final.lib.getExe final.home-assistant-cli} service call --arguments entity_id="$item" scene.turn_on
+                  ;;
+              *)
+                  ${final.libnotify}/bin/notify-send "Error" "Event type '$itype' not implemented yet. Do you have time to file an issue or write a PR?"
+                  ;;
+          esac
+        '';
+
+      wlr-which-key-fork = final.wlr-which-key.overrideAttrs (finalAttrs: _: {
+        version = "1.3.0-pr-46-2026-02-26";
+
+        src = final.fetchFromGitHub {
+          owner = "RedEtherbloom";
+          repo = "wlr-which-key";
+          hash = "sha256-N8iueJT8H77AuhuE5B1jF6JiSGZeQrUnnIEB5DtGMxc=";
+          rev = "207039df24dfcbe9dcc6bc14d17a77d530f38f52";
+        };
+        cargoDeps = final.rustPlatform.fetchCargoVendor {
+          inherit (finalAttrs) src;
+          hash = "sha256-v+4/lD00rjJvrQ2NQqFusZc0zQbM9mBG5T9bNioNGKQ=";
+        };
+      });
+
+      systemd-token-timeout-patched = final.systemd.overrideAttrs (finalAttrs: prevAttrs: {
+        patches =
+          (prevAttrs.patches or [])
+          ++ [
+            ./0001-systemd-token-timeout.patch
+          ];
+      });
+
+      comma = pkgs.comma.override {nix = final.lixPackageSets.latest.lix;};
+      nixos-rebuild-ng = pkgs.nixos-rebuild-ng.override {nix = pkgs.lixPackageSets.latest.lix;};
+    };
+  };
+}

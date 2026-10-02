@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
+    import-tree.url = "github:vic/import-tree";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     secrets = {
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
@@ -68,12 +69,19 @@
         self,
         ...
       }: {
+        imports = [
+          inputs.flake-parts.flakeModules.modules
+          inputs.flake-parts.flakeModules.flakeModules
+          inputs.home-manager.flakeModules.home-manager
+          (inputs.import-tree.matchNot ".*/hardware-configuration.nix" [./dendriticModules ./hosts])
+        ];
+        debug = true;
         systems = [
           "x86_64-linux"
           "aarch64-linux"
         ];
         flake.nixosConfigurations = let
-          mkSystem = hostName: system:
+          mkSystem = hostname: system:
             withSystem system (
               {pkgs, ...}:
                 inputs.nixpkgs.lib.nixosSystem {
@@ -82,10 +90,8 @@
                     inherit (inputs) home-manager secrets;
                   };
                   modules = [
-                    inputs.nixpkgs.nixosModules.readOnlyPkgs
                     {nixpkgs.pkgs = pkgs;}
-                    {stylix.overlays.enable = false;}
-                    ./hosts/${hostName}/configuration.nix
+                    self.nixosModules.${hostname}
                   ];
                 }
             );
@@ -116,29 +122,29 @@
               (final: prev: {
                 nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};
               })
-              (import ./pkgs {inherit inputs;})
+              self.overlays.default
             ];
             # patches = [ ];
           };
           formatter = pkgs.alejandra;
           devShells.default = pkgs.mkShell {
-            buildInputs = with pkgs.lixPackageSets.latest;
+            buildInputs =
               [
-                lix
-                nixos-rebuild-ng
-                nix-direnv
-                nix-init
-                nurl
-                nix-update
-                colmena
-                nix-du
+                pkgs.lixPackageSets.latest.lix
+                pkgs.lixPackageSets.latest.nixos-rebuild-ng
+                pkgs.lixPackageSets.latest.nix-direnv
+                pkgs.lixPackageSets.latest.nix-init
+                pkgs.lixPackageSets.latest.nurl
+                pkgs.lixPackageSets.latest.nix-update
+                pkgs.lixPackageSets.latest.colmena
+                pkgs.lixPackageSets.latest.nix-du
               ]
-              ++ (with pkgs; [
-                pre-commit
-                alejandra
-                nh
-                nix-tree
-              ]);
+              ++ [
+                pkgs.pre-commit
+                pkgs.alejandra
+                pkgs.nh
+                pkgs.nix-tree
+              ];
           };
         };
       }
