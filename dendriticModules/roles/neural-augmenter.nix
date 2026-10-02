@@ -21,6 +21,7 @@
       };
     in {
       imports = [
+        inputs.nixpkgs.nixosModules.readOnlyPkgs # Set here instead of flake.nix as some platform fixes, e.g. for the Pi kernel for audiosink have to add additional overlays
         inputs.stylix.nixosModules.stylix
         self.nixosModules.base
         self.nixosModules.office
@@ -39,7 +40,7 @@
           type = lib.types.bool;
           default = false;
         };
-        # TODO: Move to base.nix
+        # IDEA: Move to base.nix
         tailscale = lib.mkOption {
           description = "Enable tailscale support.";
           type = lib.types.bool;

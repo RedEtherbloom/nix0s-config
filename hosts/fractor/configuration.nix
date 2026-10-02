@@ -17,7 +17,6 @@
           self.nixosModules.gaming
           self.nixosModules.fractor-restic
           self.nixosModules.fractor-hardware-configuration
-          ./hardware-configuration.nix
         ];
         home-manager.sharedModules = [
           self.homeModules.fractor

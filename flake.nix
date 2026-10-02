@@ -69,7 +69,6 @@
         self,
         ...
       }: {
-        # TODO: Insert home-manager module
         imports = [
           inputs.flake-parts.flakeModules.modules
           inputs.flake-parts.flakeModules.flakeModules
@@ -90,7 +89,6 @@
                     inherit (inputs) home-manager secrets;
                   };
                   modules = [
-                    inputs.nixpkgs.nixosModules.readOnlyPkgs
                     {nixpkgs.pkgs = pkgs;}
                     {stylix.overlays.enable = false;}
                     self.nixosModules.${hostname}

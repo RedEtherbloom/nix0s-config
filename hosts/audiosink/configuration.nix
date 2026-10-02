@@ -285,108 +285,107 @@
           ./configuration.nix
         ];
       };
-      homeModules.audiosink = {
-        config,
-        pkgs,
-        secrets,
-        ...
-      }: {
-        imports = [
-          inputs.sops-nix.homeManagerModules.sops
-          self.homeModules.base
-        ];
+    };
+    homeModules.audiosink = {
+      config,
+      pkgs,
+      secrets,
+      ...
+    }: {
+      imports = [
+        inputs.sops-nix.homeManagerModules.sops
+      ];
 
-        home.stateVersion = "25.05";
-        sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+      home.stateVersion = "25.05";
+      sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
 
-        xdg.configFile."pulse/cookie" = {
+      xdg.configFile."pulse/cookie" = {
+        enable = true;
+        source = "${secrets}/secrets/common/pulse_cookie";
+      };
+
+      services = {
+        librespot = {
           enable = true;
-          source = "${secrets}/secrets/common/pulse_cookie";
+          package = pkgs.librespot;
+          settings = {
+            "name" = "spotify_pi";
+            "device-type" = "speaker";
+            "enable-oauth" = true;
+            # Headless login
+            "oauth-port" = 0;
+          };
         };
+        mpd = {
+          enable = true;
+          musicDirectory = "${config.home.homeDirectory}/Music";
+          network.listenAddress = "any";
+          extraConfig = ''
+            audio_output {
+              type "pipewire"
+              name "PipeWire Sound Server"
+            }
+          '';
+        };
+        mpdris2.enable = true;
+        mopidy = {
+          enable = true;
+          extensionPackages = [
+            pkgs.mopidy-mpd
+            pkgs.mopidy-mpris
+          ];
+          settings = {
+            file = {
+              media_dirs = [
+                "$HOME/Music|Music"
+              ];
+              followSymlinks = true;
+            };
+          };
+        };
+      };
 
+      systemd.user = {
         services = {
-          librespot = {
-            enable = true;
-            package = pkgs.librespot;
-            settings = {
-              "name" = "spotify_pi";
-              "device-type" = "speaker";
-              "enable-oauth" = true;
-              # Headless login
-              "oauth-port" = 0;
+          stop-librespot = {
+            Unit = {
+              Description = "Stop librespot during the night.";
+            };
+            Service = {
+              Type = "oneshot";
+              # TODO: Insert systemd unit name
+              # Maybe this should be a list?
+              Conflicts = "librespot.service restart-librespot.service";
             };
           };
-          mpd = {
-            enable = true;
-            musicDirectory = "${config.home.homeDirectory}/Music";
-            network.listenAddress = "any";
-            extraConfig = ''
-              audio_output {
-                type "pipewire"
-                name "PipeWire Sound Server"
-              }
-            '';
-          };
-          mpdris2.enable = true;
-          mopidy = {
-            enable = true;
-            extensionPackages = [
-              pkgs.mopidy-mpd
-              pkgs.mopidy-mpris
-            ];
-            settings = {
-              file = {
-                media_dirs = [
-                  "$HOME/Music|Music"
-                ];
-                followSymlinks = true;
-              };
+          restart-librespot = {
+            Unit = {
+              Description = "Restart librespot in the morning.";
+            };
+            Service = {
+              Wants = "librespot.service";
             };
           };
         };
-
-        systemd.user = {
-          services = {
-            stop-librespot = {
-              Unit = {
-                Description = "Stop librespot during the night.";
-              };
-              Service = {
-                Type = "oneshot";
-                # TODO: Insert systemd unit name
-                # Maybe this should be a list?
-                Conflicts = "librespot.service restart-librespot.service";
-              };
+        timers = {
+          # Stop during the night to avoid accidental pairing
+          stop-librespot = {
+            Unit = {
+              Description = "Stop librespot during the night.";
             };
-            restart-librespot = {
-              Unit = {
-                Description = "Restart librespot in the morning.";
-              };
-              Service = {
-                Wants = "librespot.service";
-              };
+            Timer = {
+              Persistent = true;
+              OnCalendar = "*-*-* 22:00:00";
             };
           };
-          timers = {
-            # Stop during the night to avoid accidental pairing
-            stop-librespot = {
-              Unit = {
-                Description = "Stop librespot during the night.";
-              };
-              Timer = {
-                Persistent = true;
-                OnCalendar = "*-*-* 22:00:00";
-              };
+          restart-librespot = {
+            Unit = {
+              Description = "Restart librespot on the new day.";
             };
-            restart-librespot = {
-              Unit = {
-                Description = "Restart librespot on the new day.";
-              };
-              Timer = {
-                # Avoid accidental start durng the night, in case of inconvenient reboot
-                Persistent = false;
-                OnCalendar = "*-*-* 08:00:00";
-              };
+            Timer = {
+              # Avoid accidental start durng the night, in case of inconvenient reboot
+              Persistent = false;
+              OnCalendar = "*-*-* 08:00:00";
             };
           };
         };
