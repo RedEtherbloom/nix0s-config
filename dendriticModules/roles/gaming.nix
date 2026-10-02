@@ -1,7 +1,7 @@
 {self, ...}: {
   flake = {
     nixosModules.gaming = {pkgs, ...}: {
-      imports = [
+      home-manager.sharedModules = [
         self.homeModules.gaming
       ];
       programs = {

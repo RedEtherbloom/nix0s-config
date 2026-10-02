@@ -4,7 +4,6 @@
   ...
 }: {
   flake = {
-    # TODO: Move niri into niri.nix
     nixosModules.neural-augmenter = {
       config,
       lib,
@@ -23,12 +22,12 @@
     in {
       imports = [
         inputs.stylix.nixosModules.stylix
-        inputs.niri-flake.nixosModules.niri
-        self.homeModules.neural-augmenter
-        self.nixosModule.ssh
-        self.nixosModule.openrazer
+        self.nixosModules.base
+        self.nixosModules.office
+        self.nixosModules.vtubing
+        self.nixosModules.niri
+        self.nixosModules.openrazer
       ];
-
       options.myOptions.hostRoles.neural-augmenter = {
         setupGrubOptions = lib.mkOption {
           description = "Set common grub options among our setups.";
@@ -51,22 +50,16 @@
       config = (
         lib.mkMerge [
           {
+            home-manager.sharedModules = [
+              self.homeModules.neural-augmenter
+            ];
+
             # FIX: Move to module imports
-            myOptions = {
-              hostRoles.graphical.enable = lib.mkDefault true;
-              hostRoles.base.enable = lib.mkDefault true;
-              office.enable = true;
-              utilities = {
-                rescueTools = true;
-                binaryTools = true;
-                pdfUtils = true;
-                diskUtilities = true;
-              };
-              roles = {
-                i2p.enable = true;
-                vtubing.enable = true;
-                ssdp.enable = true;
-              };
+            myOptions.utilities = {
+              rescueTools = true;
+              binaryTools = true;
+              pdfUtils = true;
+              diskUtilities = true;
             };
             security = {
               rtkit.enable = true;
@@ -106,10 +99,6 @@
                 openFirewall = true;
               };
               extra-container.enable = true;
-              niri = {
-                enable = true;
-                package = pkgs.niri-unstable;
-              };
               nix-ld.enable = true;
               chrysalis.enable = true;
               nh = {
@@ -155,7 +144,6 @@
               };
               displayManager = {
                 gdm.enable = true;
-                defaultSession = "niri";
               };
               # ollama = {
               #   enable = true;
@@ -321,7 +309,6 @@
                   };
                 };
               };
-              user.services.niri-flake-polkit.enable = false;
             };
             networking = {
               networkmanager = {
@@ -460,31 +447,20 @@
     in {
       imports = [
         self.homeModules.piper-web-tts
+        self.homeModules.firefox
+        self.homeModules.art
+        self.homeModules.development
+        self.homeModules.social
       ];
       config = {
         # TODO: Convert into imports
         myOptions = {
-          hostRoles.graphical.enable = lib.mkDefault true;
-          roles = {
-            development = {
-              enable = lib.mkDefault true;
-              electronics = lib.mkDefault true;
-              reverseEngineering = lib.mkDefault true;
-              vibecoding = lib.mkDefault true;
-              fren-coding = lib.mkDefault true;
-            };
-            gamedev.enable = lib.mkDefault true;
-            art = {
-              enable = lib.mkDefault true;
-              stitching = lib.mkDefault true;
-            };
+          roles.development = {
+            electronics = true;
+            reverseEngineering = true;
+            fren-coding = true;
           };
-          firefox.enable = lib.mkDefault true;
-          socials.enable = lib.mkDefault true;
-          services.piper-web-tts = {
-            enable = true;
-            model = "en_US-libritts_r-medium";
-          };
+          services.piper-web-tts.model = "en_US-libritts_r-medium";
         };
 
         home = {
@@ -642,16 +618,16 @@
               pkgs.pear-desktop
               pkgs.youtube-tui
 
-              pkgs.kdePackages.rk
-              pkgs.kdePackages.wenview
-              pkgs.kdePackages.kular
-              pkgs.kdePackages.ate
-              pkgs.kdePackages.texteditor
-              pkgs.kdePackages.olphin
-              pkgs.kdePackages.olphin-plugins
-              pkgs.kdePackages.aloo-widgets
-              pkgs.kdePackages.fmpegthumbs
-              pkgs.kdePackages.charselect # Font explorer
+              pkgs.kdePackages.ark
+              pkgs.kdePackages.gwenview
+              pkgs.kdePackages.okular
+              pkgs.kdePackages.kate
+              pkgs.kdePackages.ktexteditor
+              pkgs.kdePackages.dolphin
+              pkgs.kdePackages.dolphin-plugins
+              pkgs.kdePackages.baloo-widgets
+              pkgs.kdePackages.ffmpegthumbs
+              pkgs.kdePackages.kcharselect # Font explorer
             ]
             ++ (lib.optionals osConfig.security.ownAdditional.yubikey [
               pkgs.yubioath-flutter

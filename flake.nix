@@ -71,7 +71,10 @@
       }: {
         # TODO: Insert home-manager module
         imports = [
-          (inputs.import-tree.matchNot ".*/hardware-configuration\.nix" [./dendriticModules ./hosts])
+          inputs.flake-parts.flakeModules.modules
+          inputs.flake-parts.flakeModules.flakeModules
+          inputs.home-manager.flakeModules.home-manager
+          (inputs.import-tree.matchNot ".*/hardware-configuration.nix" [./dendriticModules ./hosts])
         ];
         systems = [
           "x86_64-linux"

@@ -1,4 +1,24 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
+  flake.nixosModules.niri = {pkgs, ...}: {
+    imports = [
+      inputs.niri-flake.nixosModules.niri
+    ];
+    programs = {
+      niri = {
+        enable = true;
+        package = pkgs.niri-unstable;
+      };
+    };
+    services.displayManager.defaultSession = "niri";
+    systemd.user.services.niri-flake-polkit.enable = false;
+    home-manager.sharedModules = [
+      self.homeModules.niri
+    ];
+  };
   # IDEA: Split noctalia into own file
   flake.homeModules.niri = {
     config,
@@ -151,11 +171,6 @@
           key = "t";
           desc = "Thunar";
           cmd = "thunar";
-        }
-        {
-          key = "M";
-          desc = "ShellBeats!";
-          cmd = "${lib.getExe config.programs.kitty.package} -e ${lib.getExe pkgs.shellbeats}";
         }
         {
           key = "d";
@@ -810,7 +825,6 @@
         # Own
         pkgs.thunarWithExtensions
         pkgs.ytui-music
-        pkgs.shellbeats
         pkgs.gnome-calendar
       ];
     };

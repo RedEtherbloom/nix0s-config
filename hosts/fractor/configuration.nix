@@ -14,10 +14,13 @@
         imports = [
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
           self.nixosModules.neural-augmenter
+          self.nixosModules.gaming
           self.nixosModules.fractor-restic
           self.nixosModules.fractor-hardware-configuration
-          self.homeModules.fractor
           ./hardware-configuration.nix
+        ];
+        home-manager.sharedModules = [
+          self.homeModules.fractor
         ];
 
         # TODO: Lookup proper X270 settings
@@ -82,12 +85,6 @@
 
         environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
 
-        myOptions = {
-          hostRoles.neural-augmenter.enable = true;
-          roles.gaming.enable = true;
-          roles.i2p.enable = lib.mkForce false; # Broken as of: 15.10.2025
-        };
-
         users.users.inf = {
           isNormalUser = true;
           description = "Infinity";
@@ -111,10 +108,6 @@
       };
     };
     homeModules.fractor = {pkgs, ...}: {
-      imports = [
-        self.homeModules.neural-augmenter
-      ];
-
       home = {
         stateVersion = "24.05";
         packages = [

@@ -12,7 +12,7 @@
       ...
     }: {
       imports = [
-        inputs.home-manager.nixosModules.home-manager
+        inputs.home-manager.nixosModules.default
         inputs.sops-nix.nixosModules.sops
         inputs.nix-index-database.nixosModules.nix-index
         # cache.nixos.org is implicitly imported
@@ -22,6 +22,9 @@
       ];
 
       config = {
+        home-manager.sharedModules = [
+          self.homeModules.base
+        ];
         # NOTE: May this slow down rebuild times?
         system.build.nixos-rebuild = lib.mkForce pkgs.lixPackageSets.latest.nixos-rebuild-ng;
         security.pki.certificateFiles = ["${secrets}/secrets/root_ca/root_ca.crt"];
@@ -108,7 +111,7 @@
             inherit inputs self secrets;
             osConfig = config;
           };
-          users.inf = "${self}/hosts/${config.networking.hostName}/home.nix";
+          users.inf = self.homeModules.${config.networking.hostName};
         };
         time.timeZone = "Europe/Berlin";
         i18n = {

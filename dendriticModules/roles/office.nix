@@ -1,7 +1,7 @@
 {self, ...}: {
   flake = {
     nixosModules.office = {lib, ...}: {
-      imports = [
+      home-manager.sharedModules = [
         self.homeModules.office
       ];
       services.printing.enable = lib.mkDefault true;

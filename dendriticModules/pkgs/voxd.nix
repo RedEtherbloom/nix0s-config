@@ -1,6 +1,6 @@
 {
   perSystem = {pkgs, ...}: {
-    packages.voxd = {
+    packages.voxd = pkgs.callPackage ({
       lib,
       python3Packages,
       fetchFromGitHub,
@@ -58,6 +58,6 @@
           maintainers = [];
           mainProgram = "voxd";
         };
-      });
+      })) {};
   };
 }

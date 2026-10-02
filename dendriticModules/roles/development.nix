@@ -298,10 +298,8 @@
             };
           };
         })
-        (lib.mkIf cfg.vibecoding {
-          programs.pi-coding-agent.enable = true;
-        })
         (lib.mkIf cfg.fren-coding {
+          programs.pi-coding-agent.enable = true;
           home.file.".pi/agent/models.json".text = builtins.toJSON {
             providers.astarion-litellm = {
               baseUrl = "http://100.74.165.55:4000/v1";

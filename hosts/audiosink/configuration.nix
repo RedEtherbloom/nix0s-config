@@ -20,9 +20,11 @@
 
           self.nixosModules.audiosink-hardware-configuration
           # self.nixosModules.audiosink-disko
-          self.nixosModules.ssh
           self.nixosModules.ssdp
           self.nixosModules.base
+        ];
+
+        home-manager.sharedModules = [
           self.homeModules.audiosink
         ];
 

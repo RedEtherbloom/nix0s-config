@@ -9,7 +9,7 @@
     ...
   }: {
     overlayAttrs = {
-      inherit (config.packages) koboldcpp-with-psutil gnupg-with-pin-caching starsector-gl-fix thunarWithExtensions rofi-home-assistant rofi-home-assistant-verbose rofi-home-assistant-changed wlr-which-key-fork systemd-token-timeout-patch voxd comma nixos-rebuild-ng;
+      inherit (config.packages) koboldcpp-with-psutil gnupg-with-pin-caching starsector-gl-fix thunarWithExtensions rofi-home-assistant rofi-home-assistant-verbose rofi-home-assistant-changed wlr-which-key-fork systemd-token-timeout-patched voxd comma nixos-rebuild-ng;
     };
     packages = {
       koboldcpp-with-psutil = pkgs.koboldcpp.overrideAttrs (
@@ -137,8 +137,6 @@
             ./0001-systemd-token-timeout.patch
           ];
       });
-
-      voxd = final.callPackage ./voxd.nix {};
 
       comma = pkgs.comma.override {nix = final.lixPackageSets.latest.lix;};
       nixos-rebuild-ng = pkgs.nixos-rebuild-ng.override {nix = pkgs.lixPackageSets.latest.lix;};
