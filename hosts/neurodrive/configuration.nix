@@ -309,6 +309,7 @@
                 # TODO: How to set this as default
                 login = {
                   username = "redetherbloom";
+                  # TODO: May need podman user id
                   passwordFile = config.sops.secrets."registry/dockerhub/password".path;
                   registry = "docker.io";
                 };
@@ -460,6 +461,10 @@
             owner = "paperless";
             format = "yaml";
             sopsFile = "${secrets}/secrets/services/paperless.yaml";
+          };
+          "registry/dockerhub/password" = {
+            format = "yaml";
+            sopsFile = "${secrets}/secrets/services/docker.yaml";
           };
         };
       };

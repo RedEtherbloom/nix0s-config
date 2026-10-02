@@ -75,6 +75,7 @@
           inputs.home-manager.flakeModules.home-manager
           (inputs.import-tree.matchNot ".*/hardware-configuration.nix" [./dendriticModules ./hosts])
         ];
+        debug = true;
         systems = [
           "x86_64-linux"
           "aarch64-linux"
@@ -90,7 +91,6 @@
                   };
                   modules = [
                     {nixpkgs.pkgs = pkgs;}
-                    {stylix.overlays.enable = false;}
                     self.nixosModules.${hostname}
                   ];
                 }

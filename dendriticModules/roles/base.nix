@@ -69,11 +69,6 @@
           "/share/applications"
         ];
 
-        stylix = {
-          base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
-          targets.gtksourceview.enable = lib.mkForce false; # See: https://github.com/nix-community/stylix/issues/1686
-        };
-
         nix = {
           package = pkgs.lixPackageSets.latest.lix;
           settings = {
@@ -99,10 +94,7 @@
           };
         };
 
-        boot = {
-          kernelPackages = pkgs.linuxPackages_zen;
-          tmp.cleanOnBoot = true;
-        };
+        boot.tmp.cleanOnBoot = true;
         sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
         home-manager = {
           useGlobalPkgs = true;
@@ -144,7 +136,6 @@
       imports = [
         inputs.sops-nix.homeManagerModules.sops
         inputs.nix-index-database.homeModules.nix-index
-        inputs.stylix.homeModules.stylix
       ];
       # REFACTOR: Move stylix to toggleable option
 
@@ -166,17 +157,6 @@
               timestamp = "-5 days";
             };
             xdg.userDirs.createDirectories = true;
-            stylix = {
-              enable = true;
-              autoEnable = false;
-              inherit (osConfig.stylix) image polarity;
-              base16Scheme = osConfig.stylix.base16Scheme;
-              targets = {
-                nixos-icons.enable = false; # Broken targets
-                qt.enable = false;
-                gtksourceview.enable = lib.mkForce false; # See: Constant rebuilds of e.g. inkscape caused by this
-              };
-            };
             fonts.fontconfig.enable = true;
           }
           # TODO: How to fix this?

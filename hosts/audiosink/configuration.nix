@@ -28,27 +28,6 @@
           self.homeModules.audiosink
         ];
 
-        nix = {
-          settings = {
-            experimental-features = [
-              "nix-command"
-              "flakes"
-            ];
-            trusted-users = [
-              "root"
-              "@wheel"
-            ];
-          };
-          gc = {
-            automatic = true;
-            dates = "weekly";
-            options = "--delete-older-than 14d";
-          };
-          optimise = {
-            automatic = true;
-            dates = ["07:00"];
-          };
-        };
         swapDevices = [
           {
             size = 8192;
@@ -279,10 +258,10 @@
 
         system.stateVersion = "25.05";
       };
-      # audiosink-disko =
+      # audiosink-disko
       audiosink-hardware-configuration = {
         imports = [
-          ./configuration.nix
+          ./hardware-configuration.nix
         ];
       };
     };
@@ -305,17 +284,6 @@
       };
 
       services = {
-        librespot = {
-          enable = true;
-          package = pkgs.librespot;
-          settings = {
-            "name" = "spotify_pi";
-            "device-type" = "speaker";
-            "enable-oauth" = true;
-            # Headless login
-            "oauth-port" = 0;
-          };
-        };
         mpd = {
           enable = true;
           musicDirectory = "${config.home.homeDirectory}/Music";
