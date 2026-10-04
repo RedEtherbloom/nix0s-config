@@ -44,6 +44,7 @@
         };
         gamescope = {
           enable = true;
+          enableWsi = true;
           capSysNice = false;
         };
         steam.gamescopeSession.enable = true;
