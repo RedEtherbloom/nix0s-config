@@ -59,8 +59,12 @@
               pkgs.gutenprint
               pkgs.foomatic-db
               pkgs.foomatic-db-nonfree
+              pkgs.ptouch-driver
+              pkgs.cups-filters
+              pkgs.cups-browsed
             ];
           };
+          ipp-usb.enable = true;
           # Disable inbuilt bluetooth to avoid wifi-bluetooth issues
           udev.extraRules = ''
             SUBSYSTEM=="usb", ATTRS{idVendor}=="8087", ATTRS{idProduct}=="0a2b", ATTR{authorized}="0"
