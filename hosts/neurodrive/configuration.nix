@@ -252,6 +252,10 @@
             openFirewall = true;
           };
           avahi.reflector = true;
+          ollama = {
+            enable = true;
+            environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
+          };
         };
 
         hardware = {
