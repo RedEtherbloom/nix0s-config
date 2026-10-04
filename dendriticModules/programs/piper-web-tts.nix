@@ -11,6 +11,8 @@
         type = lib.types.package;
         default = pkgs.piper-tts;
       };
+      # TODO: Rename to defaultModel and create additional models argument that takes list of models to install
+      # TODO: Seperate model downloader and model runner for programmatic management. ALthough nixos option instead may also be attractive.
       model = lib.mkOption {
         description = "Name of model or part to model";
         type = lib.types.either lib.types.str lib.types.path;
@@ -28,16 +30,11 @@
       systemd.user = {
         services = {
           piper-web-tts = {
-            Unit = {
-              Description = "Local Piper-Web Service for local TTS Streaming";
-            };
+            Unit.Description = "Local Piper-Web Service for local TTS Streaming";
             Service = {
               Type = "exec";
-
               ExecStart = let
-                pythonEnv = pkgs.python3.withPackages (_: [
-                  (pkgs.python3Packages.toPythonModule config.myOptions.services.piper-web-tts.package)
-                ]);
+                pythonEnv = pkgs.python3.withPackages (_: [(pkgs.python3Packages.toPythonModule config.myOptions.services.piper-web-tts.package)]);
               in
                 lib.getExe (
                   pkgs.writeShellApplication {
