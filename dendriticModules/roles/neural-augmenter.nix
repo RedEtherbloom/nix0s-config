@@ -2,7 +2,9 @@
   inputs,
   self,
   ...
-}: {
+}: let
+  base16Scheme = pkgs: "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+in {
   flake = {
     nixosModules.neural-augmenter = {
       config,
@@ -83,7 +85,7 @@
 
             stylix = {
               overlays.enable = false;
-              base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+              base16Scheme = base16Scheme pkgs;
               autoEnable = false;
               enable = true;
               fonts = {
@@ -169,13 +171,7 @@
                 openFirewall = true;
                 steam.importOXRRuntimes = true;
               };
-              displayManager = {
-                gdm.enable = true;
-              };
-              # ollama = {
-              #   enable = true;
-              #   environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
-              # };
+              displayManager.gdm.enable = true;
               avahi = {
                 enable = true;
                 nssmdns4 = true;
@@ -253,12 +249,13 @@
               # };
               # variables.SSH_ASKPASS = lib.mkForce askpass_helper; # Required due to nix conflict
               systemPackages = [
+                inputs.nix-alien.packages.${pkgs.stdenv.hostPlatform.system}.nix-alien
+                appimage-run-with-libs
                 pkgs.lm_sensors
                 pkgs.nftables # vopono daemon
                 pkgs.android-tools
                 pkgs.piper-tts
-                appimage-run-with-libs
-                inputs.nix-alien.packages.${pkgs.stdenv.hostPlatform.system}.nix-alien
+                pkgs.base16-schemes
               ];
             };
 
@@ -838,7 +835,7 @@
           enable = true;
           autoEnable = false;
           inherit (osConfig.stylix) image polarity;
-          base16Scheme = osConfig.stylix.base16Scheme;
+          base16Scheme = base16Scheme pkgs;
           opacity.terminal = 0.8;
           targets = {
             kde.enable = false;
