@@ -104,55 +104,29 @@
         networking = {
           hostName = "neurodrive";
           networkmanager.enable = true;
-          interfaces."enp0s25".wakeOnLan.enable = true;
+          interfaces = {
+            "enp0s25" = {
+              wakeOnLan.enable = true;
+              useDHCP = false;
+            };
+            "br0".useDHCP = true;
+          };
+          bridges.br0.interfaces = ["enp0s25"];
 
           firewall = {
-            allowedTCPPorts =
-              [
-                1883 # MQTT Home-Assistant
-                1884 # MQTT Home-Assistant
-                4333 # Feishin remote control port
-                4713 # Pulseaudio Network Sharing. Probably only needed for publish
-                5580 # Matter in Home-Assistant
-                6052 # Matter in Home-Assistant
-                8122 # Home Assistant SSH
-                8123 # Home Assistant
-                8883 # MQTT Home-Assistant
-                8884 # MQTT Home-Assistant
-                27062 # SteamVR
-                config.services.paperless.port
-                (lib.strings.toInt config.services.restic.server.listenAddress)
-                config.services.tabby.port
-              ]
-              ++ (lib.lists.concatMap (el: [el.port]) config.services.mosquitto.listeners);
+            allowedTCPPorts = [
+              4333 # Feishin remote control port # CLEANUP: Needed?
+              4713 # Pulseaudio Network Sharing. Probably only needed for publish
+              27062 # SteamVR
+              config.services.paperless.port
+              (lib.strings.toInt config.services.restic.server.listenAddress)
+            ];
             allowedUDPPorts = [
               9944 # SteamVR
               27062 # SteamVR
             ];
-            trustedInterfaces = [
-              "virbr0"
-            ];
           };
-          nftables = {
-            enable = true;
-            ruleset = ''
-              table ip nat {
-                chain PREROUTING {
-                  type nat hook prerouting priority -199; policy accept;
-                  tcp dport { 1883, 8122, 8883 } meta nftrace set 1 dnat to 192.168.122.189
-                  # iifname "enp0s25" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
-                  # iifname "wg0" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
-                  # iifname "lo" tcp dport { 1883, 8122, 8883 } dnat to 192.168.122.189
-                }
-              }
-            '';
-          };
-          nat = {
-            enable = true;
-            internalInterfaces = [
-              "virbr0"
-            ];
-          };
+          nftables.enable = true;
         };
 
         services = {
@@ -183,7 +157,6 @@
             host = "0.0.0.0";
             openFirewall = true;
           };
-          nextjs-ollama-llm-ui.hostname = "100.108.50.97";
           restic.server = {
             enable = true;
             privateRepos = true;
@@ -218,40 +191,13 @@
               MusicFolder = "/mnt/cryptostorage/Music";
             };
           };
-          caddy = {
-            enable = true;
-            logFormat = "level INFO";
-            openFirewall = true;
-            virtualHosts = {
-              # MQTT
-              ":1884".extraConfig = ''
-                reverse_proxy http://192.168.122.189:1884
-              '';
-              # Matter
-              ":5580".extraConfig = ''
-                reverse_proxy http://192.168.122.189:5580
-              '';
-              # ESP-Home
-              ":6052".extraConfig = ''
-                reverse_proxy http://192.168.122.189:6052
-              '';
-              # HASS
-              ":8123".extraConfig = ''
-                reverse_proxy http://192.168.122.189:8123
-              '';
-              # MQTT
-              ":8884".extraConfig = ''
-                reverse_proxy http://192.168.122.189:8884
-              '';
-            };
-          };
           open-webui = {
             enable = true;
             host = "0.0.0.0";
             port = 11435;
             openFirewall = true;
           };
-          avahi.reflector = true;
+          # avahi.reflector = true;
           ollama = {
             enable = true;
             environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
@@ -263,6 +209,7 @@
           graphics = {
             enable = true;
             enable32Bit = true;
+            # TODO: Sort through installed packages. Perhaps one of them leads to e.g. weird behaviour with gamescope
             extraPackages = [
               pkgs.nvidia-vaapi-driver
               pkgs.libva-vdpau-driver
@@ -333,9 +280,6 @@
         systemd.services = let
           hddSleepCommand = ''${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.hdparm} -S 90 -B 1 $(${pkgs.util-linux}/bin/lsblk -dnp -o name,rota | ${lib.getExe pkgs.gnugrep} ".*\s1" | ${pkgs.coreutils}/bin/cut -d " " -f 1)''; # Spin HDDs down when inactive. Taken from: https://www.reddit.com/r/NixOS/comments/751i5t/comment
         in {
-          # "${config.virtualisation.oci-containers.containers.homeassistant.serviceName}".after = [
-          #   "systemd-udevd.service"
-          # ];
           "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = [
             "network-online.target"
           ];
