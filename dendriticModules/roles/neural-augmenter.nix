@@ -27,6 +27,7 @@ in {
         inputs.stylix.nixosModules.stylix
         self.nixosModules.base
         self.nixosModules.office
+        self.nixosModules.email
         self.nixosModules.vtubing
         self.nixosModules.niri
         self.nixosModules.openrazer

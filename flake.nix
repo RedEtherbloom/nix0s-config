@@ -9,7 +9,13 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     secrets = {
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
-      flake = false;
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+        flake-parts.follows = "flake-parts";
+        import-tree.follows = "import-tree";
+        sops-nix.follows = "sops-nix";
+      };
     };
 
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -71,7 +77,7 @@
           inputs.home-manager.flakeModules.home-manager
           (inputs.import-tree.matchNot ".*/hardware-configuration.nix" [./dendriticModules ./hosts])
         ];
-        debug = true;
+        debug = false;
         systems = [
           "x86_64-linux"
           "aarch64-linux"

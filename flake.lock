@@ -578,13 +578,29 @@
       }
     },
     "secrets": {
-      "flake": false,
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "home-manager": [
+          "home-manager"
+        ],
+        "import-tree": [
+          "import-tree"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "sops-nix": [
+          "sops-nix"
+        ]
+      },
       "locked": {
-        "lastModified": 1777158775,
-        "narHash": "sha256-AV5XLtj9BDS1SFuE01JhyJ2ejWtF3hTpmzzW5Jqw0GU=",
+        "lastModified": 1791990221,
+        "narHash": "sha256-q2cAoCP2PU3GvLjtmAAWRmYkCKu12OvRwGYhGG2r32U=",
         "ref": "refs/heads/main",
-        "rev": "7d71031efb112ffe4e1f058c91c39082c5604122",
-        "revCount": 44,
+        "rev": "e8a818bb61202d8ecbf332e9e032b48919002f92",
+        "revCount": 46,
         "type": "git",
         "url": "ssh://git@github.com/RedEtherbloom/nix0s-secrets"
       },

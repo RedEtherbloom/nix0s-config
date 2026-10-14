@@ -6,7 +6,6 @@
   flake = {
     nixosModules = {
       fractor = {
-        lib,
         pkgs,
         secrets,
         ...
