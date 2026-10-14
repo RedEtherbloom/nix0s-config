@@ -1,0 +1,16 @@
+diff --git a/src/piper/templates/index.html b/src/piper/templates/index.html
+index e032411..9b37fa2 100644
+--- a/src/piper/templates/index.html
++++ b/src/piper/templates/index.html
+@@ -497,8 +497,9 @@
+               hasAlignments ? "" : "none";
+           document.getElementById("noAlignments").style.display =
+               hasAlignments ? "none" : "";
+-          document.getElementById("sectionFrog").style.display =
+-              hasAlignments ? "" : "none";
++          // Hate this frog
++          // document.getElementById("sectionFrog").style.display =
++          //     hasAlignments ? "" : "none";
+
+           if (hasAlignments) {
+               renderTimeline(last.alignments);
