@@ -66,6 +66,7 @@
             pkgs.vulkan-tools
           ];
         })
+        pkgs.melonDS
       ];
     };
   };
