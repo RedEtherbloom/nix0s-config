@@ -13,7 +13,6 @@
         imports = [
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
           self.nixosModules.neural-augmenter
-          self.nixosModules.gaming
           self.nixosModules.fractor-restic
           self.nixosModules.fractor-hardware-configuration
         ];

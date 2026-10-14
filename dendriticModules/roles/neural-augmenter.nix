@@ -31,6 +31,7 @@ in {
         self.nixosModules.vtubing
         self.nixosModules.niri
         self.nixosModules.openrazer
+        self.nixosModules.gaming
       ];
       options.myOptions.hostRoles.neural-augmenter = {
         setupGrubOptions = lib.mkOption {
