@@ -20,8 +20,9 @@
 
           self.nixosModules.audiosink-hardware-configuration
           # self.nixosModules.audiosink-disko
-          self.nixosModules.ssdp
+          # self.nixosModules.ssdp  # TODO: May need an ssdp option enabled
           self.nixosModules.base
+          self.nixosModules.tailscale
         ];
 
         home-manager.sharedModules = [

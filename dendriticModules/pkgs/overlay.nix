@@ -148,14 +148,6 @@
             ./0001-piper-tts-disable-frogSection.patch
           ];
       });
-
-      onnxruntime-with-cuda = pkgs.onnxruntime.override {cudaSupport = true;};
-      # Broken as of 08-10-2026. The final argument of flake-parts overlay does not contain our own onnxruntime-with-cuda package
-      piper-tts-with-cuda = pkgs.piper-tts.override {
-        python3Packages = pkgs.python3Packages.overrideScope (python-final: python-prev: {
-          onnxruntime = python-final.toPythonModule (python-prev.onnxruntime.override {onnxruntime = final.onnxruntime-with-cuda;});
-        });
-      };
     };
   };
 }

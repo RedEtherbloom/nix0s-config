@@ -19,6 +19,7 @@
         self.nixosModules.cachix-nix-community
         self.nixosModules.security
         self.nixosModules.utilities
+        self.nixosModules.tailscale
       ];
 
       config = {

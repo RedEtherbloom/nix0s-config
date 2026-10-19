@@ -1,3 +1,4 @@
+# TODO: Add checks and add deploy-rs to devShell
 {
   description = "Flake for our infrastructure";
 
@@ -25,6 +26,13 @@
       inputs.systems.follows = "systems";
     };
     systems.url = "github:nix-systems/default";
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        utils.follows = "flake-utils";
+      };
+    };
 
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
@@ -73,34 +81,63 @@
       }: {
         imports = [
           inputs.flake-parts.flakeModules.modules
-          inputs.flake-parts.flakeModules.flakeModules
           inputs.home-manager.flakeModules.home-manager
-          (inputs.import-tree.matchNot ".*/hardware-configuration.nix" [./dendriticModules ./hosts])
+          (inputs.import-tree.matchNot ".*/hardware-configuration.nix" [
+            ./dendriticModules
+            ./hosts
+          ])
         ];
-        debug = false;
+        debug = true;
         systems = [
           "x86_64-linux"
           "aarch64-linux"
         ];
-        flake.nixosConfigurations = let
-          mkSystem = hostname: system:
-            withSystem system (
-              {pkgs, ...}:
-                inputs.nixpkgs.lib.nixosSystem {
-                  specialArgs = {
-                    inherit inputs self;
-                    inherit (inputs) home-manager secrets;
-                  };
-                  modules = [
-                    {nixpkgs.pkgs = pkgs;}
-                    self.nixosModules.${hostname}
-                  ];
-                }
-            );
-        in {
-          fractor = mkSystem "fractor" "x86_64-linux";
-          neurodrive = mkSystem "neurodrive" "x86_64-linux";
-          audiosink = mkSystem "audiosink" "aarch64-linux";
+        flake = {
+          nixosConfigurations = let
+            mkSystem = hostname: system:
+              withSystem system (
+                {pkgs, ...}:
+                  inputs.nixpkgs.lib.nixosSystem {
+                    specialArgs = {
+                      inherit inputs self;
+                      inherit (inputs) home-manager secrets;
+                    };
+                    modules = [
+                      {nixpkgs.pkgs = pkgs;}
+                      self.nixosModules.${hostname}
+                    ];
+                  }
+              );
+          in {
+            fractor = mkSystem "fractor" "x86_64-linux";
+            neurodrive = mkSystem "neurodrive" "x86_64-linux";
+            audiosink = mkSystem "audiosink" "aarch64-linux";
+          };
+          deploy.nodes = withSystem "x86_64-linux" (
+            {pkgs, ...}: {
+              fractor = {
+                hostname = "fractor.tail83ad26.ts.net";
+                profiles.system = {
+                  user = "root";
+                  path = pkgs.deploy-rs.lib.activate.nixos self.nixosConfigurations.fractor;
+                };
+              };
+              neurodrive = {
+                hostname = "neurodrive.tail83ad26.ts.net";
+                profiles.system = {
+                  user = "root";
+                  path = pkgs.deploy-rs.lib.activate.nixos self.nixosConfigurations.neurodrive;
+                };
+              };
+              audiosink = {
+                hostname = "audiosink.tail83ad26.ts.net"; # TODO: Connect to tailscale
+                profiles.system = {
+                  user = "root";
+                  path = pkgs.deploy-rs.lib.activate.nixos self.nixosConfigurations.audiosink;
+                };
+              };
+            }
+          );
         };
         perSystem = {
           pkgs,
@@ -119,31 +156,44 @@
           _module.args.pkgs = import inputs.nixpkgs {
             inherit config system;
             overlays = [
-              (final: prev: {nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};})
+              (_: prev: {
+                _deploy-rs-original = prev.deploy-rs;
+              })
+              # NOTE: Not entirely sure if this overrides the deploy-rs set in the activate functions
+              inputs.deploy-rs.overlays.default
+              (final: prev: {
+                deploy-rs = {
+                  deploy-rs = prev._deploy-rs-original;
+                  lib = prev.deploy-rs.lib;
+                };
+              })
+              (final: prev: {
+                nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};
+              })
               self.overlays.default
             ];
             # patches = [ ];
           };
           formatter = pkgs.alejandra;
           devShells.default = pkgs.mkShell {
-            buildInputs =
-              [
-                pkgs.lixPackageSets.latest.lix
-                pkgs.lixPackageSets.latest.nixos-rebuild-ng
-                pkgs.lixPackageSets.latest.nix-direnv
-                pkgs.lixPackageSets.latest.nix-init
-                pkgs.lixPackageSets.latest.nurl
-                pkgs.lixPackageSets.latest.nix-update
-                pkgs.lixPackageSets.latest.colmena
-                pkgs.lixPackageSets.latest.nix-du
-              ]
-              ++ [
-                pkgs.pre-commit
-                pkgs.alejandra
-                pkgs.nh
-                pkgs.nix-tree
-              ];
+            buildInputs = [
+              pkgs.lixPackageSets.latest.lix
+              pkgs.lixPackageSets.latest.nixos-rebuild-ng
+              pkgs.lixPackageSets.latest.nix-direnv
+              pkgs.lixPackageSets.latest.nix-init
+              pkgs.lixPackageSets.latest.nurl
+              pkgs.lixPackageSets.latest.nix-update
+              pkgs.lixPackageSets.latest.colmena
+              pkgs.lixPackageSets.latest.nix-du
+              pkgs.pre-commit
+              pkgs.alejandra
+              pkgs.nh
+              pkgs.nix-tree
+              pkgs.deploy-rs.deploy-rs
+            ];
           };
+          # checks = builtins.mapAttrs (system: deployLib: (pkgs.lib.debug.trace self deployLib.deployChecks) (pkgs.lib.debug.trace self self.deploy)) pkgs.deploy-rs.lib;
+          checks = pkgs.deploy-rs.lib.deployChecks self.deploy;
         };
       }
     );

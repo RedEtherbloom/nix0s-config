@@ -44,12 +44,6 @@ in {
           type = lib.types.bool;
           default = false;
         };
-        # IDEA: Move to base.nix
-        tailscale = lib.mkOption {
-          description = "Enable tailscale support.";
-          type = lib.types.bool;
-          default = true;
-        };
       };
 
       config = (
@@ -377,19 +371,6 @@ in {
               };
             };
           }
-          (lib.mkIf cfg.tailscale {
-            services.tailscale.enable = true;
-            networking = {
-              nftables.enable = true;
-              firewall = {
-                trustedInterfaces = [config.services.tailscale.interfaceName];
-                allowedUDPPorts = [config.services.tailscale.port];
-              };
-            };
-            systemd.services.tailscaled.serviceConfig.Environment = [
-              "TS_DEBUG_FIREWALL_MODE=nftables"
-            ];
-          })
           (lib.mkIf cfg.setupGrubOptions {
             boot = {
               loader = {
