@@ -266,11 +266,18 @@ in {
             virtualisation = {
               containers = {
                 enable = true;
-                registries.settings.registry = [
-                  {location = "docker.io";}
-                  {location = "quay.io";}
-                  {location = "mirror.gcr.io";} # Google mirror
-                ];
+                registries.settings = {
+                  unqualified-search-registries = [
+                    "docker.io"
+                    "quay.io"
+                    "mirror.gcr.io"
+                  ];
+                  registry = [
+                    {location = "docker.io";}
+                    {location = "quay.io";}
+                    {location = "mirror.gcr.io";} # Google mirror
+                  ];
+                };
               };
               podman = {
                 enable = true;
