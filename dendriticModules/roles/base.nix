@@ -14,7 +14,7 @@
       imports = [
         inputs.home-manager.nixosModules.default
         inputs.sops-nix.nixosModules.sops
-        inputs.nix-index-database.nixosModules.nix-index
+        inputs.nix-index-database.nixosModules.default
         # cache.nixos.org is implicitly imported
         self.nixosModules.cachix-nix-community
         self.nixosModules.security
@@ -26,7 +26,6 @@
         home-manager.sharedModules = [
           self.homeModules.base
         ];
-        # NOTE: May this slow down rebuild times?
         system.build.nixos-rebuild = lib.mkForce pkgs.lixPackageSets.latest.nixos-rebuild-ng;
         security.pki.certificateFiles = ["${secrets}/secrets/root_ca/root_ca.crt"];
 
@@ -49,11 +48,14 @@
         };
 
         programs = {
-          nix-index-database.comma.enable = lib.mkDefault true;
+          nix-index-database = {
+            enable = true;
+            comma.enable = lib.mkDefault true;
+          };
           # Fallback in case of e.g. broken system
           neovim = {
             enable = true;
-            defaultEditor = true;
+            defaultEditor = true; # TODO: Change to emacs
           };
           fish.enable = true;
           starship.enable = true;
@@ -136,7 +138,7 @@
     }: {
       imports = [
         inputs.sops-nix.homeManagerModules.sops
-        inputs.nix-index-database.homeModules.nix-index
+        inputs.nix-index-database.homeModules.default
       ];
       # REFACTOR: Move stylix to toggleable option
 
@@ -146,7 +148,7 @@
             sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
             programs = {
               home-manager.enable = true;
-              nix-index-database.comma.enable = osConfig.programs.nix-index-database.comma.enable;
+              nix-index-database.comma.enable = true;
               fzf.enable = true;
               zoxide.enable = true;
               zellij.enable = false; # TMUX alternative
@@ -160,7 +162,7 @@
             xdg.userDirs.createDirectories = true;
             fonts.fontconfig.enable = true;
           }
-          # TODO: How to fix this?
+          # REFACTOR: Move to own module
           (lib.mkIf osConfig.security.ownAdditional.yubikey {
             # Thanks to joinemm for the guide!(https://joinemm.dev/blog/yubikey-nixos-guide)
             programs.gpg = {
