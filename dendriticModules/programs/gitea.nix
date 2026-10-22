@@ -27,9 +27,9 @@
     services.gitea = {
       enable = true;
       settings = {
-        server = {
+        server = rec {
           PROTOCOL = "http";
-          DOMAIN = GITEA_DOMAIN;
+          ROOT_URL = "${PROTOCOL}://${GITEA_DOMAIN}:${toString GITEA_PORT}";
           HTTP_PORT = GITEA_PORT;
           CERT_FILE = toString "${secrets}/secrets/services/gitea/gitea.crt";
           KEY_FILE = config.sops.secrets."gitea/gitea.key".path;

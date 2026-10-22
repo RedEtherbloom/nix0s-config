@@ -70,6 +70,22 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+    nixpkgs-fix-openrazer-pr = {
+      url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/576293.patch";
+      flake = false;
+    };
+    nixpkgs-fix-pyopenjtalk-pr = {
+      url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/576063.patch";
+      flake = false;
+    };
+    nixpkgs-fix-openwebui-pr = {
+      url = "https://github.com/NixOS/nixpkgs/pull/576653.patch";
+      flake = false;
+    };
+    nixpkgs-fix-audacity-pr = {
+      url = "https://github.com/NixOS/nixpkgs/pull/577022.patch";
+      flake = false;
+    };
   };
 
   outputs = inputs:
@@ -153,27 +169,33 @@
           };
         in {
           # Initialize one central nixpkgs instance, including config and all required overlays
-          _module.args.pkgs = import inputs.nixpkgs {
-            inherit config system;
-            overlays = [
-              (_: prev: {
-                _deploy-rs-original = prev.deploy-rs;
-              })
-              # NOTE: Not entirely sure if this overrides the deploy-rs set in the activate functions
-              inputs.deploy-rs.overlays.default
-              (final: prev: {
-                deploy-rs = {
-                  deploy-rs = prev._deploy-rs-original;
-                  lib = prev.deploy-rs.lib;
-                };
-              })
-              (final: prev: {
-                nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};
-              })
-              self.overlays.default
-            ];
-            # patches = [ ];
-          };
+          _module.args.pkgs = let
+            nixpkgs-patched = (import inputs.nixpkgs {inherit config system;}).applyPatches {
+              name = "nixpkgs-patched";
+              src = inputs.nixpkgs;
+              patches = [inputs.nixpkgs-fix-openrazer-pr inputs.nixpkgs-fix-pyopenjtalk-pr inputs.nixpkgs-fix-openwebui-pr inputs.nixpkgs-fix-audacity-pr];
+            };
+          in
+            import nixpkgs-patched {
+              inherit config system;
+              overlays = [
+                (_: prev: {
+                  _deploy-rs-original = prev.deploy-rs;
+                })
+                # NOTE: Not entirely sure if this overrides the deploy-rs set in the activate functions
+                inputs.deploy-rs.overlays.default
+                (final: prev: {
+                  deploy-rs = {
+                    deploy-rs = prev._deploy-rs-original;
+                    lib = prev.deploy-rs.lib;
+                  };
+                })
+                (final: prev: {
+                  nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};
+                })
+                self.overlays.default
+              ];
+            };
           formatter = pkgs.alejandra;
           devShells.default = pkgs.mkShell {
             buildInputs = [
