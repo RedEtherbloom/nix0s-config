@@ -147,11 +147,10 @@
           {
             sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
             programs = {
-              home-manager.enable = true;
               nix-index-database.comma.enable = true;
               fzf.enable = true;
               zoxide.enable = true;
-              zellij.enable = false; # TMUX alternative
+              zellij.enable = true; # TMUX alternative
             };
             news.display = "silent";
             services.home-manager.autoExpire = {

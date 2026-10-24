@@ -765,11 +765,11 @@ in {
           stateFile = {
             # REFACTOR: piper module
             "piper-models/.keep".text = "";
-            "home-manager/user-files/wallpapers" = {
+            "home-manager-user-files/wallpapers" = {
               source = "${secrets}/dotfiles/wallpapers";
               recursive = true;
             };
-            "home-manager/user-files/pfps" = {
+            "home-manager-user-files/pfps" = {
               source = "${secrets}/dotfiles/pfp";
               recursive = true;
             };
@@ -860,6 +860,8 @@ in {
           sopsFile = "${secrets}/secrets/services/home-assistant.yaml";
           key = "access_tokens/cli";
         };
+        systemd.user.services.emacs.Unit.X-SwitchMethod = "keep-old";
+        systemd.user.sockets.emacs.Unit.X-SwitchMethod = "keep-old";
       };
     };
   };

@@ -9,7 +9,7 @@
     ...
   }: {
     overlayAttrs = {
-      inherit (config.packages) koboldcpp-with-psutil gnupg-with-pin-caching starsector-gl-fix thunarWithExtensions rofi-home-assistant rofi-home-assistant-verbose rofi-home-assistant-changed wlr-which-key-fork systemd-token-timeout-patched voxd;
+      inherit (config.packages) koboldcpp-with-psutil gnupg-with-pin-caching starsector-gl-fix thunarWithExtensions rofi-home-assistant rofi-home-assistant-verbose rofi-home-assistant-changed wlr-which-key-fork systemd-token-timeout-patched voxd sd-switch;
     };
     packages = {
       koboldcpp-with-psutil = pkgs.koboldcpp.overrideAttrs (
@@ -144,6 +144,13 @@
           ++ [
             ./0001-piper-tts-disable-frogSection.patch
           ];
+      });
+
+      sd-switch = pkgs.sd-switch.overrideAttrs (finalAttrs: prevAttrs: {
+        # Weirdly patch gets double added to the list if appending to prevAttrs.patches
+        patches = [
+          ./0001-fix-add-missing-KeepOld-restart-path.patch
+        ];
       });
     };
   };
