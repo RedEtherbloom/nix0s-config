@@ -18,6 +18,7 @@
 
         pkgs.mumble
         pkgs.beeper
+        pkgs.sable
       ];
       programs = {
         nheko.enable = true;
