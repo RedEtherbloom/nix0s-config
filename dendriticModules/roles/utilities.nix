@@ -162,7 +162,7 @@
         ripgrep = {
           enable = true;
           arguments = [
-            "--hyperlink-format kitty"
+            "--hyperlink-format=kitty"
           ];
         };
         ripgrep-all.enable = true;
