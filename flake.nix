@@ -1,4 +1,3 @@
-# TODO: Add checks and add deploy-rs to devShell
 {
   description = "Flake for our infrastructure";
 
@@ -7,7 +6,10 @@
     nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
     import-tree.url = "github:vic/import-tree";
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     secrets = {
       url = "git+ssh://git@github.com/RedEtherbloom/nix0s-secrets";
       inputs = {
@@ -192,23 +194,28 @@
           system,
           ...
         }: let
-          config = {
+          nixpkgs_config = {
             allowUnfree = true;
             permittedInsecurePackages = [
               "olm-3.2.16" # Required by Nheko to work
               "electron-39.8.10" # Bitwarden
             ];
           };
-          nixpkgs-patched = (import inputs.nixpkgs {inherit config system;}).applyPatches {
-            name = "nixpkgs-patched";
-            src = inputs.nixpkgs;
-            patches = [inputs.nixpkgs-fix-openrazer-pr inputs.nixpkgs-fix-pyopenjtalk-pr inputs.nixpkgs-fix-openwebui-pr inputs.nixpkgs-fix-audacity-pr];
-          };
+          nixpkgs-patched =
+            (import inputs.nixpkgs {
+              config = nixpkgs_config;
+              inherit system;
+            }).applyPatches {
+              name = "nixpkgs-patched";
+              src = inputs.nixpkgs;
+              patches = [inputs.nixpkgs-fix-openrazer-pr inputs.nixpkgs-fix-pyopenjtalk-pr inputs.nixpkgs-fix-openwebui-pr inputs.nixpkgs-fix-audacity-pr];
+            };
         in {
           # Initialize one central nixpkgs instance, including config and all required overlays
           _module.args = {
             pkgs = import nixpkgs-patched {
-              inherit config system;
+              config = nixpkgs_config;
+              inherit system;
               overlays = [
                 (_: prev: {
                   _deploy-rs-original = prev.deploy-rs;
@@ -222,7 +229,10 @@
                   };
                 })
                 (final: prev: {
-                  nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};
+                  nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {
+                    config = nixpkgs_config;
+                    inherit system;
+                  };
                 })
                 inputs.nixos-raspberrypi.overlays.bootloader
                 inputs.nixos-raspberrypi.overlays.vendor-kernel
