@@ -375,12 +375,12 @@
           warp-mouse-to-focus.enable = true;
           focus-follows-mouse = {
             enable = true;
-            max-scroll-amount = "25%";
+            max-scroll-amount = "50%";
           };
         };
 
         workspaces."socials" = {};
-        layout = rec {
+        layout = {
           background-color = "transparent";
           gaps = 24;
           empty-workspace-above-first = true;
