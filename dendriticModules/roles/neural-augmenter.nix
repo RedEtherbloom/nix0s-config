@@ -73,8 +73,8 @@ in {
               daemonIOSchedClass = "idle";
 
               settings = {
-                keep-outputs = true; # TODO: Needed?
-                keep-derivations = true; # TODO: Needed?
+                keep-outputs = true;
+                keep-derivations = true;
                 tarball-ttl = 7 * 24 * 3600; # Cache tars for seven days to improve dev experience
               };
             };
@@ -180,7 +180,7 @@ in {
               earlyoom.enable = true; # Out of memory management
               pulseaudio = {
                 enable = false;
-                zeroconf.discovery.enable = true; # Just for the port. Check if I have to do this
+                zeroconf.discovery.enable = true; # Just for pipewire-pulse. Check if I have to do this
               };
               pipewire = {
                 enable = true;
@@ -223,9 +223,8 @@ in {
                   General = {
                     Experimental = true;
                     KernelExperimental = true;
-                    # ControllerMode = "bredr"; # Problems with Bose
                     FastConnectable = true;
-                    # Class = "0x000100"; # Generic desktop TODO: Do I need object major class as well?
+                    # ControllerMode = "bredr"; # Problems with Bose
                     # JustWorksRepairing = true; # Security implications?
                   };
                 };
@@ -236,14 +235,14 @@ in {
               rtl-sdr.enable = true;
             };
             environment = let
-              # askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+              askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
             in {
               # EXPERIMENT: Try if noctalia automatically picks up the slack
-              # sessionVariables = {
-              #   SUDO_ASKPASS = askpass_helper;
-              #   SSH_ASKPASS = askpass_helper;
-              # };
-              # variables.SSH_ASKPASS = lib.mkForce askpass_helper; # Required due to nix conflict
+              sessionVariables = {
+                SUDO_ASKPASS = askpass_helper;
+                SSH_ASKPASS = askpass_helper;
+              };
+              variables.SSH_ASKPASS = lib.mkForce askpass_helper; # Required due to nix conflict
               systemPackages = [
                 inputs.nix-alien.packages.${pkgs.stdenv.hostPlatform.system}.nix-alien
                 appimage-run-with-libs
@@ -547,7 +546,7 @@ in {
               pkgs.wev
 
               # Emacs
-              pkgs.git
+              pkgs.gitFull
               pkgs.ripgrep
               pkgs.coreutils
               pkgs.fd
@@ -616,14 +615,14 @@ in {
             ]);
 
           sessionVariables = let
-            # askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
+            askpass_helper = "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
           in {
             MOZ_USE_XINPUT2 = "1"; # Smooth scrolling
             # QT_LOGGING_RULES = "*.debug=true";
             NIXOS_OZONE_WL = "1"; # Native Wayland for Chromium apps
             # EXPERIMENT: Try if noctalia automatically picks up the slack
-            # SUDO_ASKPASS = askpass_helper;
-            # SSH_ASKPASS = askpass_helper;
+            SUDO_ASKPASS = askpass_helper;
+            SSH_ASKPASS = askpass_helper;
           };
           sessionPath = [
             "$HOME/.emacs.d/bin"
@@ -687,18 +686,13 @@ in {
             theme = ../../dotfiles/rofi/launcher.rasi;
           };
           bat.enable = true;
-          broot.enable = true; # TODO: Give a try for better comparison
-          fish = {
-            enable = true;
-            functions = {
-              "fish_greeting" = "";
-            };
-          };
+          fish.enable = true;
           sioyek.enable = true;
           emacs = {
             enable = true;
             package = pkgs.emacs;
           };
+          vim.defaultEditor = false;
           mpv = {
             enable = true;
             config = {
@@ -729,11 +723,14 @@ in {
               # cursor = "#2ccc1b";
               confirm_os_window_close = 0;
             };
+            keybindings = {
+              # Paste commands on screen to execute
+              "ctrl+shift+p>$" = "kitten hints --program \"-\" --type regex --regex '(?m)^\\s*\\$\\s(.*)$'";
+            };
           };
           tmux = {
             enable = true;
             clock24 = true;
-            historyLimit = 10000;
             # Hope this doesn't blow up
             keyMode = "vi";
             mouse = true;
@@ -743,7 +740,6 @@ in {
               set -g allow-passthrough on
             '';
           };
-          fzf.tmux.enableShellIntegration = true;
           btop.enable = true;
         };
 
