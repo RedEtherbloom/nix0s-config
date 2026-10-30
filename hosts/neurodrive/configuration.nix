@@ -85,20 +85,23 @@
           '';
         };
         fileSystems = {
-          "/mnt/windows_data" = {
+          "Windows Data" = {
             device = "/dev/disk/by-uuid/587488F374FD109E";
             fsType = "ntfs3";
             options = ["nofail"];
+            mountPoint = "/mnt/windows_data";
           };
-          "/mnt/restic_data" = {
+          "Restic Data" = {
             device = "/dev/mapper/restic_storage--4096bsize-restic_storage";
             fsType = "ext4";
             options = ["nofail"];
+            mountPoint = "/mnt/restic_data";
           };
-          "/mnt/cryptostorage" = {
+          "Crypto Storage" = {
             device = "/dev/mapper/cryptostorage--512bsize-cryptostorage";
             fsType = "ext4";
             options = ["nofail"];
+            mountPoint = "/mnt/cryptostorage";
           };
         };
         networking = {
@@ -160,8 +163,8 @@
           restic.server = {
             enable = true;
             privateRepos = true;
-            dataDir = "/mnt/restic_data/restic";
             listenAddress = "8193";
+            dataDir = "${config.filesystems."Restic Data".mountPoint}/restic";
             extraFlags = [
               "--tls"
               "--tls-key"
@@ -188,7 +191,7 @@
             group = "users";
             settings = {
               Address = "0.0.0.0";
-              MusicFolder = "/mnt/cryptostorage/Music";
+              MusicFolder = "${config.filesystems."Crypto Storage".mountPoint}/Music";
             };
           };
           open-webui = {
@@ -238,7 +241,7 @@
         virtualisation = {
           docker.daemon.settings = {
             ipv6 = true;
-            data-root = "/mnt/cryptostorage/var/lib/containers";
+            data-root = "${config.filesystems."Crypto Storage".mountPoint}/var/lib/containers";
           };
           oci-containers = {
             containers = {
@@ -305,7 +308,7 @@
             after = [
               "mnt-cryptostorage.mount"
             ];
-            serviceConfig.BindReadOnlyPaths = ["/mnt/cryptostorage/inf/Torrent/Finished/lidarr"];
+            serviceConfig.BindReadOnlyPaths = ["${config.filesystems."Crypto Storage".mountPoint}/inf/Torrent/Finished/lidarr"];
           };
         };
 
