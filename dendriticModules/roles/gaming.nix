@@ -11,10 +11,8 @@
           dedicatedServer.openFirewall = true;
           localNetworkGameTransfers.openFirewall = true;
           protontricks.enable = true;
-          extest.enable = true;
           package = pkgs.steam.override {
-            # Disable the GUI popping up on startup
-            extraArgs = "-silent";
+            extraArgs = "-silent"; # Disable the GUI popping up on startup
 
             extraPkgs = pkgs: [
               pkgs.keyutils
@@ -44,10 +42,8 @@
         };
         gamescope = {
           enable = true;
-          enableWsi = true;
           capSysNice = false;
         };
-        steam.gamescopeSession.enable = true;
       };
     };
     homeModules.gaming = {pkgs, ...}: {
@@ -66,7 +62,7 @@
             pkgs.vulkan-tools
           ];
         })
-        pkgs.melonDS
+        pkgs.melonds
       ];
     };
   };

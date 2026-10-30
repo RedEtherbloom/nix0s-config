@@ -8,6 +8,7 @@
       audiosink = {
         config,
         lib,
+        nixos-raspberrypi,
         pkgs,
         secrets,
         ...
@@ -15,7 +16,8 @@
         networkSinkPort = 4713;
       in {
         imports = [
-          inputs.nixos-hardware.nixosModules.raspberry-pi-3
+          inputs.nixos-raspberrypi.nixosModules.raspberry-pi-3.base
+          inputs.nixos-raspberrypi.nixosModules.usb-gadget-ethernet
           inputs.sops-nix.nixosModules.sops
 
           self.nixosModules.audiosink-hardware-configuration
@@ -28,6 +30,19 @@
         home-manager.sharedModules = [
           self.homeModules.audiosink
         ];
+
+        boot.supportedFilesystems.zfs = lib.mkForce false;
+        boot.kernelPackages = pkgs.linuxPackagesFor (
+          nixos-raspberrypi.packages.${pkgs.stdenv.hostPlatform.system}.linuxPackages_rpi3.kernel.overrideAttrs
+          (prev: {
+            passthru =
+              prev.passthru
+              // {
+                buildDTBs = true;
+                target = "Image";
+              };
+          })
+        );
 
         swapDevices = [
           {
@@ -132,6 +147,16 @@
             enable = true;
             openDefaultPorts = true;
           };
+          minidlna = {
+            enable = true;
+            openFirewall = true;
+            settings = {
+              inotify = "yes";
+              log_level = "info";
+              media_dir = ["/srv/media-directory/"];
+              wide_links = "yes";
+            };
+          };
         };
 
         # Should probably be redone with home-manager(Clara: Learning curve, yayyy...)
@@ -172,7 +197,7 @@
               conflicts = ["restart-network-sink.service"];
             };
             restart-network-sink = {
-              description = "Restart librespot in the morning.";
+              description = "Re-open network sink port in the morning.";
               serviceConfig = {
                 Type = "oneshot";
                 ExecStart = lib.getExe (
@@ -304,57 +329,12 @@
             pkgs.mopidy-mpris
           ];
           settings = {
+            mpd.hostname = "::";
             file = {
               media_dirs = [
                 "$HOME/Music|Music"
               ];
               followSymlinks = true;
-            };
-          };
-        };
-      };
-
-      systemd.user = {
-        services = {
-          stop-librespot = {
-            Unit = {
-              Description = "Stop librespot during the night.";
-            };
-            Service = {
-              Type = "oneshot";
-              # TODO: Insert systemd unit name
-              # Maybe this should be a list?
-              Conflicts = "librespot.service restart-librespot.service";
-            };
-          };
-          restart-librespot = {
-            Unit = {
-              Description = "Restart librespot in the morning.";
-            };
-            Service = {
-              Wants = "librespot.service";
-            };
-          };
-        };
-        timers = {
-          # Stop during the night to avoid accidental pairing
-          stop-librespot = {
-            Unit = {
-              Description = "Stop librespot during the night.";
-            };
-            Timer = {
-              Persistent = true;
-              OnCalendar = "*-*-* 22:00:00";
-            };
-          };
-          restart-librespot = {
-            Unit = {
-              Description = "Restart librespot on the new day.";
-            };
-            Timer = {
-              # Avoid accidental start durng the night, in case of inconvenient reboot
-              Persistent = false;
-              OnCalendar = "*-*-* 08:00:00";
             };
           };
         };

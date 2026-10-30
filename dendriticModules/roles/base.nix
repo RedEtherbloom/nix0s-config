@@ -17,6 +17,7 @@
         inputs.nix-index-database.nixosModules.default
         # cache.nixos.org is implicitly imported
         self.nixosModules.cachix-nix-community
+        self.nixosModules.cachix-nixos-raspberrypi
         self.nixosModules.security
         self.nixosModules.utilities
         self.nixosModules.tailscale

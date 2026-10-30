@@ -70,6 +70,10 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+    nixos-raspberrypi = {
+      url = "github:nvmd/nixos-raspberrypi";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgs-fix-openrazer-pr = {
       url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/576293.patch";
       flake = false;
@@ -103,31 +107,59 @@
             ./hosts
           ])
         ];
-        debug = true;
+        debug = false;
         systems = [
           "x86_64-linux"
           "aarch64-linux"
         ];
-        flake = {
+        flake = {lib, ...}: {
           nixosConfigurations = let
-            mkSystem = hostname: system:
+            mkSystem = {
+              hostname,
+              system,
+              extraSpecialArgs ? {},
+              extraNixosModules ? [],
+            }:
               withSystem system (
-                {pkgs, ...}:
+                {
+                  pkgs,
+                  config,
+                  ...
+                }: let
+                  inherit (config.allModuleArgs) flakeSpecialArgs;
+                in
                   inputs.nixpkgs.lib.nixosSystem {
-                    specialArgs = {
-                      inherit inputs self;
-                      inherit (inputs) home-manager secrets;
-                    };
-                    modules = [
-                      {nixpkgs.pkgs = pkgs;}
-                      self.nixosModules.${hostname}
-                    ];
+                    specialArgs = lib.attrsets.recursiveUpdate (lib.attrsets.recursiveUpdate {
+                        inherit inputs self;
+                        inherit (inputs) home-manager secrets;
+                      }
+                      extraSpecialArgs)
+                    flakeSpecialArgs;
+                    modules =
+                      [
+                        {
+                          nixpkgs.pkgs = pkgs;
+                          system.extraDependencies = flakeSpecialArgs.extraDependencies;
+                        }
+                        self.nixosModules.${hostname}
+                      ]
+                      ++ extraNixosModules;
                   }
               );
           in {
-            fractor = mkSystem "fractor" "x86_64-linux";
-            neurodrive = mkSystem "neurodrive" "x86_64-linux";
-            audiosink = mkSystem "audiosink" "aarch64-linux";
+            fractor = mkSystem {
+              hostname = "fractor";
+              system = "x86_64-linux";
+            };
+            neurodrive = mkSystem {
+              hostname = "neurodrive";
+              system = "x86_64-linux";
+            };
+            audiosink = mkSystem {
+              hostname = "audiosink";
+              system = "aarch64-linux";
+              extraSpecialArgs = {inherit (inputs) nixos-raspberrypi;};
+            };
           };
           deploy.nodes = withSystem "x86_64-linux" (
             {pkgs, ...}: {
@@ -146,7 +178,7 @@
                 };
               };
               audiosink = {
-                hostname = "audiosink.tail83ad26.ts.net"; # TODO: Connect to tailscale
+                hostname = "audiosink.tail83ad26.ts.net";
                 profiles.system = {
                   user = "root";
                   path = pkgs.deploy-rs.lib.activate.nixos self.nixosConfigurations.audiosink;
@@ -167,16 +199,15 @@
               "electron-39.8.10" # Bitwarden
             ];
           };
+          nixpkgs-patched = (import inputs.nixpkgs {inherit config system;}).applyPatches {
+            name = "nixpkgs-patched";
+            src = inputs.nixpkgs;
+            patches = [inputs.nixpkgs-fix-openrazer-pr inputs.nixpkgs-fix-pyopenjtalk-pr inputs.nixpkgs-fix-openwebui-pr inputs.nixpkgs-fix-audacity-pr];
+          };
         in {
           # Initialize one central nixpkgs instance, including config and all required overlays
-          _module.args.pkgs = let
-            nixpkgs-patched = (import inputs.nixpkgs {inherit config system;}).applyPatches {
-              name = "nixpkgs-patched";
-              src = inputs.nixpkgs;
-              patches = [inputs.nixpkgs-fix-openrazer-pr inputs.nixpkgs-fix-pyopenjtalk-pr inputs.nixpkgs-fix-openwebui-pr inputs.nixpkgs-fix-audacity-pr];
-            };
-          in
-            import nixpkgs-patched {
+          _module.args = {
+            pkgs = import nixpkgs-patched {
               inherit config system;
               overlays = [
                 (_: prev: {
@@ -193,9 +224,21 @@
                 (final: prev: {
                   nixpkgs-unstable-small = import inputs.nixpkgs-unstable-small {inherit system config;};
                 })
+                inputs.nixos-raspberrypi.overlays.bootloader
+                inputs.nixos-raspberrypi.overlays.vendor-kernel
+                inputs.nixos-raspberrypi.overlays.vendor-firmware
+                inputs.nixos-raspberrypi.overlays.kernel-and-firmware
+                inputs.nixos-raspberrypi.overlays.vendor-pkgs
                 self.overlays.default
               ];
             };
+            flakeSpecialArgs = {
+              nixpkgs-patched = nixpkgs-patched;
+              extraDependencies = [
+                nixpkgs-patched
+              ];
+            };
+          };
           formatter = pkgs.alejandra;
           devShells.default = pkgs.mkShell {
             buildInputs = [
