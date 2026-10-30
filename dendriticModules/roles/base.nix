@@ -54,9 +54,9 @@
             comma.enable = lib.mkDefault true;
           };
           # Fallback in case of e.g. broken system
-          neovim = {
+          vim = {
             enable = true;
-            defaultEditor = true; # TODO: Change to emacs
+            defaultEditor = lib.mkDefault true; # TODO: Change to emacs
           };
           fish.enable = true;
           starship.enable = true;

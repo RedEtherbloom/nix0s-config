@@ -1,4 +1,4 @@
-{
+{self, ...}: {
   # TODO: Split out into seperate e.g. language modules
   flake.homeModules.development = {
     config,
@@ -9,6 +9,10 @@
   }: let
     cfg = config.myOptions.roles.development;
   in {
+    imports = [
+      self.homeModules.email
+    ];
+
     options.myOptions.roles.development = {
       rust = lib.mkOption {
         type = lib.types.bool;
@@ -169,7 +173,7 @@
               pkgs.python3Packages.flake8
             ]
             ++ lib.optionals cfg.git [
-              pkgs.git
+              pkgs.gitFull
               pkgs.git-lfs
               pkgs.git-xet
               pkgs.git-filter-repo
@@ -185,16 +189,33 @@
           programs.go.enable = cfg.go;
         }
         (lib.mkIf cfg.git {
+          sops.templates."git-smtp-password".content = ''
+            [sendemail]
+                    smtpUser = "${config.accounts.email.accounts."Main-Mailbox".userName}"
+                    smtpPass = "${config.sops.placeholder."primary-mailbox/password"}"
+          '';
           programs = {
             git = {
               enable = true;
+              package = pkgs.gitFull;
               settings = {
                 user = {
                   name = "RedEtherbloom";
                   email = "etherbloom@mailbox.org";
                 };
+                sendemail = {
+                  smtpServer = "smtp.mailbox.org";
+                  smtpServerPort = 587;
+                  smtpEncryption = "tls";
+                  from = "etherbloom@mailbox.org";
+                };
                 push.autoSetupRemote = true;
               };
+              includes = [
+                {
+                  path = config.sops.templates."git-smtp-password".path;
+                }
+              ];
             };
             lazygit = {
               enable = true;

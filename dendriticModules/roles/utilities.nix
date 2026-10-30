@@ -109,7 +109,7 @@
               pkgs.fuse3
             ]
             ++ lib.optionals cfg.git [
-              pkgs.git
+              pkgs.gitFull
               pkgs.git-lfs
             ]
             ++ lib.optionals cfg.python [
