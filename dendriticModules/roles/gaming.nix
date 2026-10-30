@@ -51,6 +51,7 @@
         # pkgs._2ship2harkinian # Ocarina of Time
         # (pkgs.olympus.override {celesteWrapper = pkgs.steam-run;})
         pkgs.ut1999
+        pkgs.xonotic
 
         (pkgs.lutris.override {
           extraLibraries = pkgs: [
