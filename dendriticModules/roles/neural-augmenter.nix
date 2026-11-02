@@ -28,6 +28,7 @@ in {
         self.nixosModules.base
         self.nixosModules.office
         self.nixosModules.email
+        self.nixosModules.calendar
         self.nixosModules.vtubing
         self.nixosModules.niri
         self.nixosModules.openrazer
