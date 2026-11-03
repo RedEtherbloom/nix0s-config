@@ -187,6 +187,7 @@
             ];
 
           programs.go.enable = cfg.go;
+          programs.devenv.enable = true;
         }
         (lib.mkIf cfg.git {
           sops.templates."git-smtp-password".content = ''
