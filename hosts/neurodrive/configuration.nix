@@ -18,6 +18,7 @@
             self.nixosModules.neurodrive-hardware-configuration
             self.nixosModules.cachix-cuda
             self.nixosModules.gitea
+            self.nixosModules.neurodrive-remote-deploy
           ]
           ++ (with inputs.nixos-hardware.nixosModules; [
             common-pc
@@ -443,6 +444,39 @@
       };
       neurodrive-hardware-configuration = {
         imports = [./hardware-configuration.nix];
+      };
+      neurodrive-remote-deploy = {
+        config,
+        pkgs,
+        secrets,
+        ...
+      }: {
+        users = {
+          users.deploy = {
+            isSystemUser = true;
+            shell = "${pkgs.util-linux}/bin/nologin";
+            home = "/var/lib/deploy-rs-user";
+            homeMode = "0400";
+            group = "deploy";
+          };
+          groups.deploy = {};
+        };
+
+        sops.secrets."ssh_deploy_keys/main" = {
+          sopsFile = "${secrets}/secrets/neural-augmenter/deploy.yaml";
+          owner = "deploy";
+          group = "deploy";
+          mode = "0400";
+          path = "${config.users.users.deploy.home}/.ssh/id_ed25519";
+        };
+
+        systemd.tmpfiles.rules = [
+          "d ${config.users.users.deploy.home}/.ssh 0700 deploy ${config.users.users.deploy.group} -"
+          "L+ ${config.users.users.deploy.home}/.ssh/id_ed25519.pub - - - - ${secrets}/secrets/neural-augmenter/main_deploy_key.pub"
+        ];
+        nix.settings.trusted-users = [
+          "deploy"
+        ];
       };
     };
     homeModules.neurodrive = {

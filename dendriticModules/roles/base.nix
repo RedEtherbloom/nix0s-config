@@ -21,6 +21,7 @@
         self.nixosModules.security
         self.nixosModules.utilities
         self.nixosModules.tailscale
+        self.nixosModules.deploy
       ];
 
       config = {
