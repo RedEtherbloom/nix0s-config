@@ -20,7 +20,6 @@
           self.homeModules.fractor
         ];
 
-        # TODO: Lookup proper X270 settings
         nix.settings = {
           max-jobs = 6;
           cores = 6;
