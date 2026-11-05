@@ -34,6 +34,8 @@ in {
         self.nixosModules.openrazer
         self.nixosModules.gaming
         self.nixosModules.zswap
+        self.nixosModules.accessibility
+        self.nixosModules.gnome-dependencies
       ];
       options.myOptions.hostRoles.neural-augmenter = {
         setupGrubOptions = lib.mkOption {
@@ -742,6 +744,7 @@ in {
             enable = true;
             entries = ["${pkgs.bitwarden-desktop}/share/applications/bitwarden.desktop"];
           };
+          # FIX: Current implementation doesn't pick up everything. Some services/calls like e.g. gnome-calendars call to gnome-online-accounts don't get properly resolved
           portal = {
             enable = lib.mkForce true;
             xdgOpenUsePortal = true;
