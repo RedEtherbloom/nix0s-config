@@ -294,6 +294,8 @@
             };
             libvirtd = {
               enable = true;
+              onBoot = "start";
+              onShutdown = "shutdown";
               qemu = {
                 package = pkgs.qemu_kvm;
                 runAsRoot = true;
