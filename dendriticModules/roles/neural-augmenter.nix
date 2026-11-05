@@ -740,10 +740,6 @@ in {
         };
 
         xdg = {
-          autostart = {
-            enable = true;
-            entries = ["${pkgs.bitwarden-desktop}/share/applications/bitwarden.desktop"];
-          };
           # FIX: Current implementation doesn't pick up everything. Some services/calls like e.g. gnome-calendars call to gnome-online-accounts don't get properly resolved
           portal = {
             enable = lib.mkForce true;
@@ -751,7 +747,9 @@ in {
             extraPortals =
               [
                 pkgs.gnome-keyring
+                pkgs.xdg-desktop-portal-wlr
                 pkgs.xdg-desktop-portal-gtk
+                pkgs.xdg-desktop-portal-gnome
               ]
               ++ osConfig.xdg.portal.extraPortals; # See github.com/nix-community/home-manager/issues/7124
           };
