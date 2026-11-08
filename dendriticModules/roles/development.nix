@@ -330,8 +330,8 @@
 
               models = [
                 {
-                  id = "chatgpt-gpt-5.5";
-                  name = "GPT-5.5 via astarion";
+                  id = "chatgpt-gpt-6-astra";
+                  name = "The new flagship model astra.";
                   reasoning = true;
                   input = [
                     "text"
@@ -341,8 +341,8 @@
                   maxTokens = 128000;
                 }
                 {
-                  id = "chatgpt-gpt-5.5-pro";
-                  name = "GPT-5.5 Pro via astarion";
+                  id = "chatgpt-gpt-6.1-sol";
+                  name = "GPT-6.1 Sol via astarion";
                   reasoning = true;
                   input = [
                     "text"
@@ -352,16 +352,8 @@
                   maxTokens = 128000;
                 }
                 {
-                  id = "chatgpt-gpt-5.3-codex-spark";
-                  name = "GPT-5.3 Codex Spark via astarion";
-                  reasoning = true;
-                  input = ["text"];
-                  contextWindow = 128000;
-                  maxTokens = 128000;
-                }
-                {
-                  id = "chatgpt-gpt-5.6-sol";
-                  name = "GPT-5.6 Sol via astarion";
+                  id = "chatgpt-gpt-6.1-terra";
+                  name = "GPT-6.1 Terra via astarion";
                   reasoning = true;
                   input = [
                     "text"
@@ -371,19 +363,8 @@
                   maxTokens = 128000;
                 }
                 {
-                  id = "chatgpt-gpt-5.6-terra";
-                  name = "GPT-5.6 Terra via astarion";
-                  reasoning = true;
-                  input = [
-                    "text"
-                    "image"
-                  ];
-                  contextWindow = 272000;
-                  maxTokens = 128000;
-                }
-                {
-                  id = "chatgpt-gpt-5.6-luna";
-                  name = "GPT-5.6 Luna via astarion";
+                  id = "chatgpt-gpt-6.1-luna";
+                  name = "GPT-6.1 Luna via astarion";
                   reasoning = true;
                   input = [
                     "text"
