@@ -672,8 +672,6 @@ in {
               ++ osConfig.xdg.portal.extraPortals; # See github.com/nix-community/home-manager/issues/7124
           };
           stateFile = {
-            # REFACTOR: piper module
-            "piper-models/.keep".text = "";
             "home-manager-user-files/wallpapers" = {
               source = "${secrets}/dotfiles/wallpapers";
               recursive = true;
