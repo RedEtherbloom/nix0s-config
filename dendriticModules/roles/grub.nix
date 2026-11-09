@@ -1,9 +1,5 @@
 {
-  flake.nixosModules.grub = {
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.nixosModules.grub = {lib, ...}: {
     boot = {
       loader = {
         efi.canTouchEfiVariables = true;
@@ -28,10 +24,6 @@
             }
           '';
         };
-      };
-      initrd.systemd = {
-        enable = true;
-        package = pkgs.systemd-token-timeout-patched;
       };
     };
   };

@@ -227,6 +227,10 @@
               enable = true;
               environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
             };
+            rustdesk-server = {
+              enable = true;
+              openFirewall = true;
+            };
           };
 
           hardware = {

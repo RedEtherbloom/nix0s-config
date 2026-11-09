@@ -511,6 +511,8 @@ in {
               pkgs.pear-desktop
               pkgs.youtube-tui
 
+              pkgs.rustdesk
+
               pkgs.kdePackages.ark
               pkgs.kdePackages.gwenview
               pkgs.kdePackages.okular
