@@ -668,12 +668,13 @@ in {
           portal = {
             enable = lib.mkForce true;
             xdgOpenUsePortal = true;
+            config.common.default = ["gnome"];
             extraPortals =
               [
-                pkgs.gnome-keyring
-                pkgs.xdg-desktop-portal-wlr
-                pkgs.xdg-desktop-portal-gtk
                 pkgs.xdg-desktop-portal-gnome
+                pkgs.xdg-desktop-portal-wlr
+                pkgs.gnome-keyring
+                pkgs.xdg-desktop-portal-gtk
               ]
               ++ osConfig.xdg.portal.extraPortals; # See github.com/nix-community/home-manager/issues/7124
           };
