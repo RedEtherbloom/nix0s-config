@@ -179,7 +179,6 @@
               pkgs.git-filter-repo
             ]
             ++ lib.optionals cfg.mcu [
-              pkgs.esphome
               pkgs.platformio
               pkgs.esptool
               pkgs.espflash

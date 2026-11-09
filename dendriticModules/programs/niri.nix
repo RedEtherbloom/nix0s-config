@@ -459,7 +459,7 @@
           {
             matches = [
               {
-                app-id = "^discord|vesktop|org.telegram.desktop|signal|nheko$";
+                app-id = "^discord|vesktop|org.telegram.desktop|signal|sable$";
                 is-floating = false;
               }
             ];

@@ -73,6 +73,7 @@
       };
     };
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi";
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
   };
 
   outputs = inputs:
@@ -175,13 +176,7 @@
           system,
           ...
         }: let
-          nixpkgs_config = {
-            allowUnfree = true;
-            permittedInsecurePackages = [
-              "olm-3.2.16" # Required by Nheko to work
-              "electron-39.8.10" # Bitwarden
-            ];
-          };
+          nixpkgs_config.allowUnfree = true;
           nixpkgs-patched =
             (import inputs.nixpkgs {
               config = nixpkgs_config;

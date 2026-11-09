@@ -351,6 +351,7 @@ in {
         self.homeModules.art
         self.homeModules.development
         self.homeModules.social
+        self.homeModules.flatpak
       ];
       config = {
         myOptions = {

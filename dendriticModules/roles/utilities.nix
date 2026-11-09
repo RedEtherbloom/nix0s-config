@@ -89,7 +89,6 @@
           ];
           environment.systemPackages =
             lib.optionals cfg.minimum [
-              pkgs.age
               pkgs.ssh-to-age
               pkgs.sops
             ]

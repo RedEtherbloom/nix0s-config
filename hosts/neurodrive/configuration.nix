@@ -205,6 +205,7 @@
             };
             udev.extraRules = ''
               SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="zigbee-ap"
+              ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", RUN+="${pkgs.hdparm}/bin/hdparm -B 90 -S 41 /dev/%k"
             '';
             navidrome = {
               enable = true;
@@ -295,30 +296,10 @@
             };
             spiceUSBRedirection.enable = true;
           };
-          systemd.services = let
-            hddSleepCommand = ''${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.hdparm} -S 90 -B 1 $(${pkgs.util-linux}/bin/lsblk -dnp -o name,rota | ${lib.getExe pkgs.gnugrep} ".*\s1" | ${pkgs.coreutils}/bin/cut -d " " -f 1)''; # Spin HDDs down when inactive. Taken from: https://www.reddit.com/r/NixOS/comments/751i5t/comment
-          in {
+          systemd.services = {
             "${config.virtualisation.oci-containers.containers.comfyui.serviceName}".after = [
               "network-online.target"
             ];
-            powerUpHdd = {
-              description = "Configure sleep time on HDDs.";
-              wantedBy = ["multi-user.target"];
-              serviceConfig = {
-                Type = "oneshot";
-                ExecStart = hddSleepCommand;
-              };
-            };
-            afterSleepHdd = {
-              description = "Configure sleep time on HDDs after coming back from suspend.";
-              wantedBy = ["sleep.target"];
-              unitConfig.StopWhenUnneeded = true;
-              serviceConfig = {
-                Type = "oneshot";
-                RemainAfterExit = true;
-                ExecStop = hddSleepCommand;
-              };
-            };
             navidrome = {
               after = [
                 "mnt-cryptostorage.mount"
