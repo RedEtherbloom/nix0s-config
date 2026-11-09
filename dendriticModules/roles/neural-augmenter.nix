@@ -668,7 +668,15 @@ in {
           portal = {
             enable = lib.mkForce true;
             xdgOpenUsePortal = true;
-            config.common.default = ["gnome"];
+            configPackages = [
+              pkgs.xdg-desktop-portal-gnome # TODO: Patch out the 'UseIn' directive to make it generic
+              pkgs.xdg-desktop-portal-gtk
+              pkgs.xdg-desktop-portal-wlr
+            ];
+            config.common = {
+              default = ["gnome"];
+              "org.freedesktop.impl.portal.RemoteDesktop" = ["gnome"];
+            };
             extraPortals =
               [
                 pkgs.xdg-desktop-portal-gnome
