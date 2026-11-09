@@ -73,11 +73,10 @@
               kernelModules = [
                 "aesni_intel"
               ];
-              systemd.enable = true;
               luks.devices = {
                 "nixos-root" = {
                   device = "/dev/disk/by-uuid/36e0d35b-4ac0-41a9-a8a9-15a07696c2c4";
-                  crypttabExtraOpts = ["fido2-device=auto"];
+                  crypttabExtraOpts = ["token-timeout=1"];
                   bypassWorkqueues = true;
                   # Weakens security
                   allowDiscards = true;
@@ -230,6 +229,10 @@
             rustdesk-server = {
               enable = true;
               openFirewall = true;
+              signal.relayHosts = [
+                "neurodrive.lan"
+                "neurodrive"
+              ];
             };
           };
 

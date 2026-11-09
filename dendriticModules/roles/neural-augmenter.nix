@@ -387,6 +387,8 @@ in {
               pkgs.usbutils
 
               pkgs.ffmpeg-full
+              pkgs.gst_all_1.gstreamer
+              pkgs.gst_all_1.gst-plugins-base
               pkgs.gst_all_1.gst-plugins-good
               pkgs.gst_all_1.gst-plugins-bad
               pkgs.imagemagick
@@ -668,13 +670,13 @@ in {
           portal = {
             enable = lib.mkForce true;
             xdgOpenUsePortal = true;
-            configPackages = [
-              pkgs.xdg-desktop-portal-gnome # TODO: Patch out the 'UseIn' directive to make it generic
-              pkgs.xdg-desktop-portal-gtk
-              pkgs.xdg-desktop-portal-wlr
-            ];
             config.common = {
-              default = ["gnome"];
+              default = [
+                "luminous"
+                "wlr"
+                "gnome"
+                "gtk"
+              ];
               "org.freedesktop.impl.portal.RemoteDesktop" = ["luminous"];
             };
             extraPortals =
