@@ -675,11 +675,12 @@ in {
             ];
             config.common = {
               default = ["gnome"];
-              "org.freedesktop.impl.portal.RemoteDesktop" = ["gnome"];
+              "org.freedesktop.impl.portal.RemoteDesktop" = ["luminous"];
             };
             extraPortals =
               [
                 pkgs.xdg-desktop-portal-gnome
+                pkgs.xdg-desktop-portal-luminous
                 pkgs.xdg-desktop-portal-wlr
                 pkgs.gnome-keyring
                 pkgs.xdg-desktop-portal-gtk
