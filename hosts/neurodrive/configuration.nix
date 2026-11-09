@@ -463,7 +463,7 @@
             isSystemUser = true;
             shell = "${pkgs.util-linux}/bin/nologin";
             home = "/var/lib/deploy-rs-user";
-            homeMode = "0400";
+            createHome = true;
             group = "deploy";
           };
           groups.deploy = {};
