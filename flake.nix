@@ -76,22 +76,6 @@
       url = "github:nvmd/nixos-raspberrypi";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs-fix-openrazer-pr = {
-      url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/576293.patch";
-      flake = false;
-    };
-    nixpkgs-fix-pyopenjtalk-pr = {
-      url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/576063.patch";
-      flake = false;
-    };
-    nixpkgs-fix-openwebui-pr = {
-      url = "https://github.com/NixOS/nixpkgs/pull/576653.patch";
-      flake = false;
-    };
-    nixpkgs-fix-audacity-pr = {
-      url = "https://github.com/NixOS/nixpkgs/pull/577022.patch";
-      flake = false;
-    };
   };
 
   outputs = inputs:
@@ -208,7 +192,7 @@
             }).applyPatches {
               name = "nixpkgs-patched";
               src = inputs.nixpkgs;
-              patches = [inputs.nixpkgs-fix-openrazer-pr inputs.nixpkgs-fix-pyopenjtalk-pr inputs.nixpkgs-fix-openwebui-pr inputs.nixpkgs-fix-audacity-pr];
+              patches = [];
             };
         in {
           # Initialize one central nixpkgs instance, including config and all required overlays

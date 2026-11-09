@@ -51,7 +51,7 @@
             max-jobs = 8;
             cores = 8;
           };
-          # It is not entirely clear if this would have an effect with readOnlyPkgs
+          # It is not entirely clear if this has an effect with readOnlyPkgs
           nixpkgs.config = lib.mkForce {
             cudaSupport = true;
             cudnnSupport = true;
@@ -85,7 +85,7 @@
                 "nixos-swap" = {
                   device = "/dev/disk/by-uuid/69bd8d21-1c47-4aff-8533-31bf2610c181";
                   # Necessary?
-                  crypttabExtraOpts = ["fido2-device=auto"];
+                  crypttabExtraOpts = ["token-timeout=1"];
                   bypassWorkqueues = true;
                   # Weakens security
                   allowDiscards = true;
