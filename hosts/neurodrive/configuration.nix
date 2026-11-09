@@ -282,10 +282,8 @@
                   extraOptions = [
                     "--security-opt=label=disable"
                   ];
-                  # TODO: How to set this as default
                   login = {
                     username = "redetherbloom";
-                    # TODO: May need podman user id
                     passwordFile = config.sops.secrets."registry/dockerhub/password".path;
                     registry = "docker.io";
                   };

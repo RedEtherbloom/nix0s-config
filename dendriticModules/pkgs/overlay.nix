@@ -130,6 +130,7 @@
         };
       });
 
+      # TODO: This needs more work and the timeout mismatch realization should be mentioned upstream
       systemd-token-timeout-patched = final.systemd.overrideAttrs (finalAttrs: prevAttrs: {
         patches =
           (prevAttrs.patches or [])

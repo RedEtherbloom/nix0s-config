@@ -592,12 +592,16 @@ in {
             enable = lib.mkDefault true;
             package = pkgs.chromium.override {enableWideVine = true;};
           };
-          nushell.enable = true;
+          nushell = {
+            enable = true;
+            loadSessionVariables = true;
+          };
           rofi = {
             enable = lib.mkDefault true;
-            terminal = "${lib.getExe pkgs.kitty}";
-            extraConfig.show-icons = true;
-            theme = ../../dotfiles/rofi/launcher.rasi;
+            settings = {
+              terminal = "${lib.getExe pkgs.kitty}";
+              show-icons = true;
+            };
           };
           bat.enable = true;
           fish.enable = true;
