@@ -600,6 +600,7 @@ in {
           };
           rofi = {
             enable = lib.mkDefault true;
+            theme = "noctalia";
             settings = {
               terminal = "${lib.getExe pkgs.kitty}";
               show-icons = true;
