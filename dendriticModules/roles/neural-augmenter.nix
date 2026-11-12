@@ -36,6 +36,7 @@ in {
         self.nixosModules.gnome-dependencies
         self.nixosModules.hibernate
         self.nixosModules.grub
+        self.nixosModules.desktop-streaming
       ];
       home-manager.sharedModules = [
         self.homeModules.neural-augmenter

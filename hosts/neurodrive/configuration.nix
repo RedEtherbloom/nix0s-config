@@ -227,7 +227,6 @@
             graphics = {
               enable = true;
               enable32Bit = true;
-              # TODO: Sort through installed packages. Perhaps one of them leads to e.g. weird behaviour with gamescope
               extraPackages = [
                 pkgs.nvidia-vaapi-driver
                 pkgs.libva-vdpau-driver
