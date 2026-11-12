@@ -8,9 +8,7 @@
     final,
     ...
   }: {
-    overlayAttrs = {
-      inherit (config.packages) koboldcpp-with-psutil gnupg-with-pin-caching starsector-gl-fix thunarWithExtensions rofi-home-assistant rofi-home-assistant-verbose rofi-home-assistant-changed wlr-which-key-fork systemd-token-timeout-patched voxd sd-switch;
-    };
+    overlayAttrs = config.packages;
     packages = {
       koboldcpp-with-psutil = pkgs.koboldcpp.overrideAttrs (
         _: pythonPrev: {

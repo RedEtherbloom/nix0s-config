@@ -215,24 +215,10 @@
                 MusicFolder = "${config.fileSystems."Crypto Storage".mountPoint}/Music";
               };
             };
-            open-webui = {
-              enable = true;
-              host = "0.0.0.0";
-              port = 11435;
-              openFirewall = true;
-            };
             # avahi.reflector = true;
             ollama = {
               enable = true;
               environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
-            };
-            rustdesk-server = {
-              enable = true;
-              openFirewall = true;
-              signal.relayHosts = [
-                "neurodrive.lan"
-                "neurodrive"
-              ];
             };
           };
 
@@ -296,6 +282,7 @@
                   };
                 };
               };
+              # IDEA: Re-install ollama-openwebui as docker, as it was broken on Nix and only rarely used
             };
             libvirtd = {
               enable = true;
@@ -360,10 +347,6 @@
 
           programs = {
             coolercontrol.enable = true;
-            alvr = {
-              enable = true;
-              openFirewall = true;
-            };
             nix-ld.libraries = [
               pkgs.libxkbcommon
               pkgs.libGL
