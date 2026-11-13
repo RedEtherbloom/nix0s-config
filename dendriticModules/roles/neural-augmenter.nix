@@ -201,6 +201,7 @@ in {
           ];
         };
         speechd.enable = true;
+        lorri.enable = true;
       };
 
       hardware = {
