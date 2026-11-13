@@ -153,8 +153,10 @@ in {
         };
         wivrn = {
           enable = true;
+          autoStart = true;
           openFirewall = true;
           steam.importOXRRuntimes = true;
+          highPriority = true;
         };
         displayManager.gdm.enable = true;
         avahi = {
@@ -274,7 +276,7 @@ in {
       sops.secrets."registry/dockerhub/password".sopsFile = "${secrets}/secrets/services/docker.yaml";
       users = {
         users."inf" = {
-          autoSubUidGidRange = true; # Needed for podman
+          autoSubUidGidRange = true; # Required by podman
           extraGroups = [
             "plugdev"
             "ydotool"
@@ -291,7 +293,7 @@ in {
       };
 
       systemd = {
-        oomd.enable = true; # Out of memory management
+        oomd.enable = true;
         services.NetworkManager-wait-online.enable = lib.mkForce false;
       };
       networking = {
@@ -323,6 +325,7 @@ in {
           pkgs.noto-fonts-cjk-sans
           pkgs.noto-fonts-color-emoji
           pkgs.noto-fonts-monochrome-emoji
+          pkgs.symbola
         ];
         fontconfig = {
           hinting.style = "medium";
@@ -429,7 +432,6 @@ in {
               pkgs.hledger-fmt
               pkgs.aqbanking
 
-              pkgs.wivrn
               pkgs.wayvr
 
               # dbus debugging
@@ -472,8 +474,6 @@ in {
               pkgs.coreutils
               pkgs.fd
               pkgs.clang
-              pkgs.symbola
-              pkgs.shellcheck # Bash
               pkgs.pandoc # Markdown
               pkgs.gopls
               pkgs.gomodifytags
@@ -489,12 +489,12 @@ in {
               pkgs.cmake
               pkgs.libtool
               pkgs.bash
-              pkgs.shfmt
               pkgs.nodejs
               pkgs.graphviz-nox
               pkgs.python314Packages.black
               pkgs.python314Packages.pyflakes
               pkgs.python314Packages.pytest
+              pkgs.scrot
 
               pkgs.blanket # Local noise generator
 

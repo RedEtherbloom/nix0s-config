@@ -221,6 +221,7 @@
               enable = true;
               environmentVariables.OLLAMA_ORIGINS = "*"; # Fix CORS errors on localhost
             };
+            wivrn.package = pkgs.wivrn.override {cudaSupport = true;};
           };
 
           hardware = {
@@ -467,26 +468,15 @@
             pkgs.zenity
             pkgs.yad
 
-            # pkgs.koboldcpp-with-psutil
-            # pkgs.sillytavern
-
-            # pkgs.coolercontrol.coolercontrol-gui
             pkgs.gsmartcontrol
 
             # VRChat tools
             pkgs.oscavmgr
             pkgs.vrcadvert
             pkgs.vrcx
-            # pkgs.sidequest
-            pkgs.wivrn
-            # pkgs.beyond-all-reason
-            # pkgs.starsector-gl-fix
-
-            pkgs.shikane
           ];
         };
 
-        # Let's try out McFly on our beefier machine
         programs = {
           btop.package = pkgs.btop-cuda;
           obs-studio.enable = true;
