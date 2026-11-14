@@ -25,7 +25,6 @@
       ];
 
       programs.vesktop.enable = true;
-
       services.flatpak.packages = [
         {
           appId = "moe.sable.client";
@@ -57,6 +56,12 @@
           "${signal-non-kde}/share/applications/${signal-non-kde.name}"
           "${pkgs.beeper}/share/applications/beepertexts.desktop"
         ];
+      };
+      xdg.desktopEntries.body-doubling = {
+        name = "Body Doubling Free Movement";
+        exec = "${pkgs.xdg-utils}/bin/xdg-open discord://-/channels/887345506190250015/894946556397097000";
+        icon = "media-playback-start-symbolic";
+        comment = "Open the free movement channel in Vesktop.";
       };
     };
   };
