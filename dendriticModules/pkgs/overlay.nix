@@ -151,6 +151,17 @@
           ./0001-fix-add-missing-KeepOld-restart-path.patch
         ];
       });
+
+      vesktop = pkgs.vesktop.overrideAttrs (_: prevAttrs: {
+        patches =
+          (prevAttrs.patches or [])
+          ++ [
+            (final.fetchurl {
+              url = "https://patch-diff.githubusercontent.com/raw/Vencord/Vesktop/pull/1403.patch";
+              hash = "sha256-v3OZ2w2lQFgmIm6vfWkWbCYQjE9zv6pwP1xTGsDSzNA=";
+            })
+          ];
+      });
     };
   };
 }
