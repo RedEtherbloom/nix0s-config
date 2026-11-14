@@ -774,9 +774,51 @@
       };
     };
 
+    # TODO: Install noctalia cache
     programs.noctalia = {
       enable = true;
       package = inputs.noctalia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      # Defaults that will get overriden by local noctalia
+      settings = {
+        shell = {
+          polkit_colorize_icons = true;
+          polkit_agent = true;
+        };
+        theme.templates = {
+          builtin_ids = [
+            "btop"
+            "cava"
+            "emacs"
+            "gtk3"
+            "gtk4"
+            "kcolorscheme"
+            "kitty"
+            "niri"
+            "qt"
+          ];
+          community_ids = [
+            "codex"
+            "pi-agent"
+            "feishin"
+            "chromium-based"
+            "zen-browser"
+            "discord"
+            "telegram"
+            "prismlauncher"
+            "steam"
+            "rofi"
+            "sioyek"
+            "thunderbird"
+            "zellij"
+            "thunar"
+            "bat"
+            "fzf"
+            "starship"
+            "tmux"
+            "yazi"
+          ];
+        };
+      };
     };
     stylix.targets.noctalia-shell.enable = false;
 
