@@ -469,10 +469,19 @@
             matches = [
               {
                 app-id = "thunderbird";
+                # TODO: Doesn't match
                 title = "\\d+\\sReminder(s)?$";
               }
             ];
             open-floating = true;
+          }
+          {
+            matches = [
+              {
+                app-id = "zen-beta|zen|firefox|firefox-beta|discord|vesktop|chromium";
+              }
+            ];
+            open-fullscreen = false;
           }
         ];
         layer-rules = [
@@ -499,6 +508,7 @@
         };
         spawn-at-startup = [
           {sh = "noctalia";}
+          {sh = "niriusd";}
         ];
         switch-events.lid-close.action.spawn = splitSpace (noctaliaIpcCommand "session lock");
         binds = {
@@ -770,6 +780,18 @@
             hotkey-overlay.title = "Dev tools and note taking";
             action.spawn-sh = "${lib.getExe wlrLaunchers.dev-tools}";
           };
+          "Mod+S" = {
+            hotkey-overlay.title = "Toggle scratchpads";
+            action.spawn-sh = "${pkgs.nirius}/bin/nirius scratchpad-toggle --no-move";
+          };
+          "Mod+Shift+S" = {
+            hotkey-overlay.title = "Toggle scratchpad status of window";
+            action.spawn-sh = "${pkgs.nirius}/bin/nirius scratchpad-toggle";
+          };
+          "Mod+Shift+Y" = {
+            hotkey-overlay.title = "Make the window/player follow you";
+            action.spawn-sh = "${pkgs.nirius}/bin/nirius toggle-follow-mode --policy if-invisible";
+          };
         };
       };
     };
@@ -868,6 +890,9 @@
         pkgs.thunarWithExtensions
         pkgs.ytui-music
         pkgs.gnome-calendar
+
+        pkgs.nirius
+        pkgs.niri-sidebar
       ];
     };
 
