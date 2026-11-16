@@ -37,6 +37,7 @@ in {
         self.nixosModules.hibernate
         self.nixosModules.grub
         self.nixosModules.desktop-streaming
+        self.nixosModules.vtubing
       ];
       home-manager.sharedModules = [
         self.homeModules.neural-augmenter
@@ -459,7 +460,7 @@ in {
               (pkgs.writeShellScriptBin "rofi-home-assistant-sops.sh" ''
                 set -e
 
-                export HASS_SERVER="http://${self.deploy.nodes.neurodrive.hostname}:8123"
+                export HASS_SERVER="http://homeassistant.tail83ad26.ts.net:8123"
                 HASS_TOKEN="$(cat ${config.sops.secrets.hass_cli_token.path})"
                 export HASS_TOKEN
 

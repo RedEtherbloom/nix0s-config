@@ -338,6 +338,9 @@
               pkgs.glib
             ];
             virt-manager.enable = true;
+            steam.extraCompatPackages = [
+              pkgs.proton-ge-bin-rtsp
+            ];
           };
 
           environment = {
@@ -472,14 +475,12 @@
 
             # VRChat tools
             pkgs.oscavmgr
-            pkgs.vrcadvert
             pkgs.vrcx
           ];
         };
 
         programs = {
           btop.package = pkgs.btop-cuda;
-          obs-studio.enable = true;
           niri.settings.binds."Mod+Ctrl+Equal" = {
             hotkey-overlay.title = "Reset displays to dual layout";
             allow-inhibiting = false;
@@ -495,15 +496,12 @@
                 name = "launch-oscavmgr";
                 runtimeInputs = [
                   pkgs.oscavmgr
-                  pkgs.vrcadvert
                 ];
                 text = ''
                   # Kill all applications once the non-bged exits
                   trap 'jobs -p | xargs kill' EXIT
 
-                  VrcAdvert OscAvMgr 9402 9002 --tracking &
-                  # Wivrn support
-                  oscavmgr openxr
+                  oscavmgr openxr # wivrn
                 '';
               };
               launch-vrchat = pkgs.writeShellApplication {

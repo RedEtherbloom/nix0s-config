@@ -162,6 +162,17 @@
             })
           ];
       });
+
+      proton-ge-bin-rtsp = pkgs.proton-ge-bin.overrideAttrs (finalAttrs: prevAttrs: {
+        pname = "proton-ge-bin-rtsp";
+        version = "proton-rtsp-11.0-20260609-4";
+        toolName = finalAttrs.version;
+        steamDisplayName = "GE-Proton-RTSP-Fix";
+        src = final.fetchzip {
+          url = "https://github.com/SpookySkeletons/proton-rtsp/releases/download/${finalAttrs.version}/${finalAttrs.version}.tar.gz";
+          hash = "sha256-ENLAPkz6PhqBpGibwjnWJE8NEnUnmoM81IuPQB9Ufoc";
+        };
+      });
     };
   };
 }

@@ -93,15 +93,9 @@
             };
           };
           firewall.allowedTCPPorts = [
-            # MPD1
-            6600
-            # MPD2
-            6601
-            # Modidy HTTP
-            6680
-            # TODO: Insert mediatomb port
-            # Home Assistant
-            8123
+            6600 # MPD1
+            6601 # MPD2
+            6680 # Modidy HTTP
           ];
         };
 

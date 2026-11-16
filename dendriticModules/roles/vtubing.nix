@@ -28,9 +28,7 @@
             obs-vkcapture
           ];
         };
-        noisetorch.enable = true;
       };
-      services.flatpak.enable = true;
     };
     homeModules.vtubing = {pkgs, ...}: {
       home.packages = [
