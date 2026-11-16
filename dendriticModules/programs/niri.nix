@@ -478,7 +478,7 @@
           {
             matches = [
               {
-                app-id = "zen-beta|zen|firefox|firefox-beta|discord|vesktop|chromium";
+                app-id = "zen-beta|zen|firefox|firefox-beta|discord|vesktop|chromium|kitty";
               }
             ];
             open-fullscreen = false;
