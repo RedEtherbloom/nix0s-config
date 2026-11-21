@@ -338,6 +338,9 @@ in {
           };
         };
       };
+      system.extraDependencies = [
+        pkgs.base16-schemes
+      ];
     };
 
     homeModules.neural-augmenter = {
