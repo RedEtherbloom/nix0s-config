@@ -57,10 +57,7 @@
       url = "github:pyproject-nix/pyproject.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    noctalia-shell = {
-      url = "github:noctalia-dev/noctalia-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    noctalia-shell.url = "github:noctalia-dev/noctalia/cachix";
     niri-flake = {
       url = "github:epireyn/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";

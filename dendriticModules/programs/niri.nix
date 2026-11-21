@@ -6,6 +6,7 @@
   flake.nixosModules.niri = {pkgs, ...}: {
     imports = [
       inputs.niri-flake.nixosModules.niri
+      self.nixosModules.cachix-noctalia
     ];
     programs = {
       niri = {
@@ -796,10 +797,8 @@
       };
     };
 
-    # TODO: Install noctalia cache
     programs.noctalia = {
       enable = true;
-      package = inputs.noctalia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
       # Defaults that will get overriden by local noctalia
       settings = {
         shell = {
