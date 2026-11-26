@@ -173,6 +173,34 @@
           hash = "sha256-ENLAPkz6PhqBpGibwjnWJE8NEnUnmoM81IuPQB9Ufoc";
         };
       });
+
+      # NOTE: AppImages cannot be easily patched sadly
+      betterdiscord-installer-fixed = final.appimageTools.wrapType2 (finalAttrs: {
+        pname = "betterdiscord-installer";
+        version = "2.0.0";
+        src = "${final.fetchzip {
+          url = "https://github.com/BetterDiscord/Installer/releases/download/v${finalAttrs.version}/BetterDiscord-Installer-Linux.AppImage.zip";
+          hash = "sha256-W6bFv8TY7SDvbelu/wbDrSfQkD9mRn+m5D1OOxUjEzw=";
+        }}/BetterDiscord-Installer-Linux.AppImage";
+
+        # NOTE: Would require re-running in clean environment without our appimage libs before it could be upstreamed
+        extraPkgs = pkgs: [
+          pkgs.webkitgtk_4_1
+          pkgs.libsoup_3
+        ];
+
+        passthru.updateScript = final.nix-update-script {};
+
+        meta = {
+          description = "Installer for BetterDiscord";
+          homepage = "https://betterdiscord.app";
+          license = final.lib.licenses.mit;
+          maintainers = with final.lib.maintainers; [chillcicada];
+          platforms = ["x86_64-linux"];
+          mainProgram = "betterdiscord-installer";
+          sourceProvenance = with final.lib.sourceTypes; [binaryNativeCode];
+        };
+      });
     };
   };
 }

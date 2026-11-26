@@ -30,6 +30,10 @@
           appId = "moe.sable.client";
           origin = "flathub";
         }
+        {
+          appId = "com.discordapp.Discord";
+          origin = "flathub";
+        }
       ];
       xdg.autostart = lib.mkIf config.roles.social.autostart {
         enable = true;
