@@ -38,6 +38,7 @@ in {
         self.nixosModules.grub
         self.nixosModules.desktop-streaming
         self.nixosModules.vtubing
+        self.nixosModules.umbriel
       ];
       home-manager.sharedModules = [
         self.homeModules.neural-augmenter

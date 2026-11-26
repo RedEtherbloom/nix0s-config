@@ -58,6 +58,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     noctalia-shell.url = "github:noctalia-dev/noctalia/cachix";
+    umbriel.url = "github:noctalia-dev/umbriel/cachix";
     niri-flake = {
       url = "github:epireyn/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
